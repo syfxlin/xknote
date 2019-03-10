@@ -2,7 +2,7 @@
 
 > 一个集各种神奇功能的云笔记
 
-![Version](https://img.shields.io/github/release/syfxlin/xknote.svg?label=Version&style=flat-square) ![Author](https://img.shields.io/badge/Author-Otstar%20Lin-blue.svg?style=flat-square) ![PHP](https://img.shields.io/badge/php-5.6%2B-green.svg?style=flat-square) ![Lincense](https://img.shields.io/github/license/syfxlin/xknote.svg?style=flat-square)
+![Version](https://img.shields.io/github/release/syfxlin/xknote.svg?label=Version&style=flat) ![Author](https://img.shields.io/badge/Author-Otstar%20Lin-blue.svg?style=flat) ![PHP](https://img.shields.io/badge/php-5.6%2B-green.svg?style=flat) ![Lincense](https://img.shields.io/github/license/syfxlin/xknote.svg?style=flat)
 
 ## 目录 Contents
 - [XK-Note](#xk-note)
@@ -74,7 +74,7 @@ XK-Note 由 [Otstar Lin](https://ixk.me/)和下列[贡献者](https://github.com
 
 ## 许可证 License
 
-![lincense](https://img.shields.io/github/license/syfxlin/xknote.svg?style=flat-square)
+![lincense](https://img.shields.io/github/license/syfxlin/xknote.svg?style=flat)
 
 根据 Apache License 2.0 许可证开源。
 
