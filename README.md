@@ -2,7 +2,7 @@
 
 > 一个集各种神奇功能的云笔记
 
-![Version](https://img.shields.io/github/release/syfxlin/xknote.svg?label=Version&style=flat-square) ![Author](https://img.shields.io/badge/Author-Otstar%20Lin-blue.svg?style=flat-square) ![PHP](https://img.shields.io/badge/php-5.6%2B-green.svg?style=flat-square) ![Lincense](https://img.shields.io/github/license/syfxlin/xknote.svg?style=flat)
+![Version](https://img.shields.io/github/release/syfxlin/xknote.svg?label=Version&style=flat-square) ![Author](https://img.shields.io/badge/Author-Otstar%20Lin-blue.svg?style=flat-square) ![PHP](https://img.shields.io/badge/php-5.6%2B-green.svg?style=flat-square) ![Lincense](https://img.shields.io/github/license/syfxlin/xknote.svg?style=flat-square)
 
 ## 目录 Contents
 - [XK-Note](#xk-note)
