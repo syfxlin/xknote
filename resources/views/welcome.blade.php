@@ -13,7 +13,7 @@
                 <a class="btn btn-primary" href="/read">探索</a>
                 <div>
                     <a class="label label-badge label-primary label-outline" href="https://github.com/syfxlin/xknote">Github</a>
-                    <a class="label label-badge label-primary label-outline" href="https://blog.ixk.me/xknote">Introduction</a>
+                    <a class="label label-badge label-primary label-outline" href="https://blog.ixk.me/xknote.html">Introduction</a>
                     <a class="label label-badge label-primary label-outline" href="https://www.ixk.me">Author</a>
                 </div>
             </div>
