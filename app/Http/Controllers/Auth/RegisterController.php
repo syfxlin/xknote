@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use App\Http\Models\SystemModel;
+use Illuminate\Support\Facades\Storage;
 
 class RegisterController extends Controller
 {
@@ -65,11 +66,13 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         if(SystemModel::all()[0]['open_register'] == 'true') {
-            return User::create([
+            $user_info = User::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
             ]);
+            Storage::makeDirectory('uid_'.$user_info->id);
+            return $user_info;
         } else {
             abort(404);
         }
