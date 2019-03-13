@@ -37,6 +37,8 @@
 ## 演示 Demo
 
 [XK-Note](https://note.ixk.me)
+**账号：** demo@ixk.me
+**密码：** demo
 
 ## 安装 Install
 
