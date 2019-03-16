@@ -74,13 +74,11 @@
             background-position: center;
             background-size: cover;
             width: 100%;
-            height: 83vh;
             text-align: center;
             border-bottom: 1px solid #ddd;
         }
         .header-bg-content {
             width: 100%;
-            position: absolute;
             top: 15vh;
         }
         .header-bg-content img {
