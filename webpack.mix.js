@@ -11,5 +11,21 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css');
+mix.js('resources/js/app.js', 'public/js').extract([
+   'vue',
+   'vue-router',
+   '@fortawesome/fontawesome-svg-core',
+   '@fortawesome/free-solid-svg-icons',
+   '@fortawesome/vue-fontawesome',
+   '@tinymce/tinymce-vue',
+   'ace-builds',
+   'emoji-js',
+   'katex',
+   'marked',
+   'mermaid',
+   'prismjs',
+   'tinymce',
+   'turndown',
+   'turndown-plugin-gfm'
+]);
+mix.sass('resources/sass/app.scss', 'public/css');
