@@ -62,10 +62,10 @@ import { axiosPro, axios } from "../utils/axiosPro.js"
 //HTML和Markdown互转
 import { toHtml, toMarkdown, getTocHtml } from '../utils/switchContent.js'
 
-import katex from "katex"
-import "katex/dist/katex.min.css"
-import renderMathInElement from "katex/dist/contrib/auto-render"
-import mermaid from "mermaid"
+// import katex from "katex"
+// import "katex/dist/katex.min.css"
+// import renderMathInElement from "katex/dist/contrib/auto-render"
+// import mermaid from "mermaid"
 
 //fa icon
 import { library } from "@fortawesome/fontawesome-svg-core"

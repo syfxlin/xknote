@@ -12,20 +12,21 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js').extract([
-   'vue',
-   'vue-router',
-   '@fortawesome/fontawesome-svg-core',
-   '@fortawesome/free-solid-svg-icons',
-   '@fortawesome/vue-fontawesome',
-   '@tinymce/tinymce-vue',
-   'ace-builds',
-   'emoji-js',
-   'katex',
-   'marked',
-   'mermaid',
-   'prismjs',
-   'tinymce',
-   'turndown',
-   'turndown-plugin-gfm'
+    'vue',
+    // 'vue-router',
+    // '@fortawesome/fontawesome-svg-core',
+    // '@fortawesome/free-solid-svg-icons',
+    // '@fortawesome/vue-fontawesome'
 ]);
 mix.sass('resources/sass/app.scss', 'public/css');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const config = {
+    plugins: [
+        new BundleAnalyzerPlugin({
+            analyzerHost: '0.0.0.0',
+            analyzerPort: 8081
+        }),
+    ]
+};
+
+mix.webpackConfig(config);

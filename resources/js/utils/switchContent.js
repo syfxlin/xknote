@@ -3,24 +3,13 @@ import marked from "marked"
 import turndown from "turndown"
 var turndownGfm = require("turndown-plugin-gfm")
 
-import Prism from 'prismjs'
-import 'prismjs/themes/prism-okaidia.css'
-import 'prismjs/plugins/line-numbers/prism-line-numbers.css'
-import 'prismjs/plugins/toolbar/prism-toolbar.css'
-import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.min'
-var prismComponents = [
-  'markup-templating', 'markup',
-  'apacheconf', 'bash', 'clike', 'css', 'git', 'ini', 'javascript',
-  'jsx', 'json', 'makefile', 'nginx', 'php', 'python', 'sass', 'scss',
-  'sql', 'aspnet', 'c', 'cpp', 'csharp', 'django', 'docker', 'go',
-  'java', 'kotlin', 'latex', 'less', 'objectivec', 'ruby',
-  'rust', 'tsx', 'typescript', 'yaml'
-]
-for (var item in prismComponents) {
-  require('prismjs/components/prism-' + prismComponents[item] + '.js')
-}
+// import Prism from 'prismjs'
+// import 'prismjs/themes/prism-okaidia.css'
+// import 'prismjs/plugins/line-numbers/prism-line-numbers.css'
+// import 'prismjs/plugins/toolbar/prism-toolbar.css'
+// import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.min'
+// import EmojiConvertor from "emoji-js"
 
-import EmojiConvertor from "emoji-js"
 var emoji = new EmojiConvertor()
 emoji.replace_mode = 'unified'
 

@@ -18,7 +18,8 @@
         "sass": "^1.15.2",
         "sass-loader": "^7.1.0",
         "vue": "^2.5.17",
-        "vue-template-compiler": "^2.6.10"
+        "vue-template-compiler": "^2.6.10",
+        "webpack-bundle-analyzer": "^3.3.2"
     },
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^1.2.18",

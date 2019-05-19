@@ -318,14 +318,14 @@
 </template>
 
 <script>
-import ace from "ace-builds"
-import "ace-builds/webpack-resolver" // 在 webpack 环境中使用必须要导入
-import "ace-builds/src-noconflict/theme-solarized_light" // 默认设置的主题
-import "ace-builds/src-noconflict/mode-markdown"
-import "ace-builds/src-noconflict/snippets/markdown"
-import "ace-builds/src-noconflict/mode-html"
-import "ace-builds/src-noconflict/snippets/html"
-import "ace-builds/src-noconflict/ext-language_tools"
+// import ace from "ace-builds"
+// import "ace-builds/webpack-resolver" // 在 webpack 环境中使用必须要导入
+// import "ace-builds/src-noconflict/theme-solarized_light" // 默认设置的主题
+// import "ace-builds/src-noconflict/mode-markdown"
+// import "ace-builds/src-noconflict/snippets/markdown"
+// import "ace-builds/src-noconflict/mode-html"
+// import "ace-builds/src-noconflict/snippets/html"
+// import "ace-builds/src-noconflict/ext-language_tools"
 
 //fa icon
 import { library } from "@fortawesome/fontawesome-svg-core"
@@ -632,6 +632,7 @@ export default {
   mounted() {
     //初始化Value
     this.setting.value = this.value ? this.value : ""
+    ace.config.set('basePath', 'https://cdn.jsdelivr.net/npm/ace-builds@1.4.4/src-noconflict/')
     this.aceEditor = ace.edit(this.$refs.ace,
       this.setting
     )
