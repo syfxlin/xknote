@@ -35,6 +35,7 @@
         "tinymce": "^5.0.5",
         "turndown": "^5.0.3",
         "turndown-plugin-gfm": "^1.0.2",
-        "vue-router": "^3.0.6"
+        "vue-router": "^3.0.6",
+        "xkeditor": "^1.1.0"
     }
 }

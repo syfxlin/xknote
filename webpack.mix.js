@@ -13,10 +13,11 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/js').extract([
     'vue',
-    // 'vue-router',
-    // '@fortawesome/fontawesome-svg-core',
-    // '@fortawesome/free-solid-svg-icons',
-    // '@fortawesome/vue-fontawesome'
+    'vue-router',
+    'lodash',
+    '@fortawesome/fontawesome-svg-core',
+    '@fortawesome/free-solid-svg-icons',
+    '@fortawesome/vue-fontawesome'
 ]);
 mix.sass('resources/sass/app.scss', 'public/css');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;

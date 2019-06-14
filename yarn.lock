@@ -640,14 +640,14 @@
   resolved "https://registry.npm.taobao.org/@fortawesome/fontawesome-common-types/download/@fortawesome/fontawesome-common-types-0.2.18.tgz#c0d8f073a5116b2de0a2c8a7aba66093a6956ce7"
   integrity sha1-wNjwc6URay3gosinq6Zgk6aVbOc=
 
-"@fortawesome/fontawesome-svg-core@^1.2.18":
+"@fortawesome/fontawesome-svg-core@^1.2.17", "@fortawesome/fontawesome-svg-core@^1.2.18":
   version "1.2.18"
   resolved "https://registry.npm.taobao.org/@fortawesome/fontawesome-svg-core/download/@fortawesome/fontawesome-svg-core-1.2.18.tgz#c26cbded461895ebe260f0dea771ca29d8cb3517"
   integrity sha1-wmy97UYYleviYPDep3HKKdjLNRc=
   dependencies:
     "@fortawesome/fontawesome-common-types" "^0.2.18"
 
-"@fortawesome/free-solid-svg-icons@^5.8.2":
+"@fortawesome/free-solid-svg-icons@^5.8.1", "@fortawesome/free-solid-svg-icons@^5.8.2":
   version "5.8.2"
   resolved "https://registry.npm.taobao.org/@fortawesome/free-solid-svg-icons/download/@fortawesome/free-solid-svg-icons-5.8.2.tgz#aa2f042f73aca43eb4a26149907e63bf26d2e31c"
   integrity sha1-qi8EL3OspD60omFJkH5jvybS4xw=
@@ -897,7 +897,7 @@ accepts@~1.3.4, accepts@~1.3.5, accepts@~1.3.7:
     mime-types "~2.1.24"
     negotiator "0.6.2"
 
-ace-builds@^1.4.4:
+ace-builds@^1.4.3, ace-builds@^1.4.4:
   version "1.4.4"
   resolved "https://registry.npm.taobao.org/ace-builds/download/ace-builds-1.4.4.tgz#b1ad500f99b451710ce51d20f43313027e9fb73a"
   integrity sha1-sa1QD5m0UXEM5R0g9DMTAn6ftzo=
@@ -1173,7 +1173,7 @@ aws4@^1.8.0:
   resolved "https://registry.npm.taobao.org/aws4/download/aws4-1.8.0.tgz#f0e003d9ca9e7f59c7a508945d7b2ef9a04a542f"
   integrity sha1-8OAD2cqef1nHpQiUXXsu+aBKVC8=
 
-axios@^0.18:
+axios@^0.18, axios@^0.18.0:
   version "0.18.0"
   resolved "https://registry.npm.taobao.org/axios/download/axios-0.18.0.tgz#32d53e4851efdc0a11993b6cd000789d70c05102"
   integrity sha1-MtU+SFHv3AoRmTts0AB4nXDAUQI=
@@ -4274,7 +4274,7 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
-katex@^0.10.2:
+katex@^0.10.1, katex@^0.10.2:
   version "0.10.2"
   resolved "https://registry.npm.taobao.org/katex/download/katex-0.10.2.tgz#39973edbb65eda5b6f9e7f41648781e557dd4932"
   integrity sha1-OZc+27Ze2ltvnn9BZIeB5VfdSTI=
@@ -4586,7 +4586,7 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-marked@^0.6.2:
+marked@^0.6.1, marked@^0.6.2:
   version "0.6.2"
   resolved "https://registry.npm.taobao.org/marked/download/marked-0.6.2.tgz#c574be8b545a8b48641456ca1dbe0e37b6dccc1a"
   integrity sha1-xXS+i1Rai0hkFFbKHb4ON7bczBo=
@@ -6914,7 +6914,7 @@ tiny-emitter@^2.0.0:
   resolved "https://registry.npm.taobao.org/tiny-emitter/download/tiny-emitter-2.1.0.tgz#1d1a56edfc51c43e863cbb5382a72330e3555423"
   integrity sha1-HRpW7fxRxD6GPLtTgqcjMONVVCM=
 
-tinymce@^5.0.5:
+tinymce@^5.0.3, tinymce@^5.0.5:
   version "5.0.5"
   resolved "https://registry.npm.taobao.org/tinymce/download/tinymce-5.0.5.tgz#4e46cb61a095605db1ed457253447f2ec28466b9"
   integrity sha1-TkbLYaCVYF2x7UVyU0R/LsKEZrk=
@@ -7287,7 +7287,7 @@ vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.npm.taobao.org/vue-template-es2015-compiler/download/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha1-HuO8mhbsv1EYvjNLsV+cRvgvWCU=
 
-vue@^2.5.17:
+vue@^2.5.17, vue@^2.6.10:
   version "2.6.10"
   resolved "https://registry.npm.taobao.org/vue/download/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
   integrity sha1-pysaQqTYKnIepDjRtr9V5mGVxjc=
@@ -7564,6 +7564,27 @@ ws@^6.0.0:
   integrity sha1-RC/fCkftZPWbal2P8TD0dI7VJPs=
   dependencies:
     async-limiter "~1.0.0"
+
+xkeditor@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/xkeditor/download/xkeditor-1.1.0.tgz#0528058b470a6eb0d794ae64f2d9d1dd738fe0e5"
+  integrity sha1-BSgFi0cKbrDXlK5k8tnR3XOP4OU=
+  dependencies:
+    "@fortawesome/fontawesome-svg-core" "^1.2.17"
+    "@fortawesome/free-solid-svg-icons" "^5.8.1"
+    "@fortawesome/vue-fontawesome" "^0.1.6"
+    "@tinymce/tinymce-vue" "^2.0.0"
+    ace-builds "^1.4.3"
+    axios "^0.18.0"
+    emoji-js "^3.4.1"
+    katex "^0.10.1"
+    marked "^0.6.1"
+    mermaid "^8.0.0"
+    prismjs "^1.16.0"
+    tinymce "^5.0.3"
+    turndown "^5.0.3"
+    turndown-plugin-gfm "^1.0.2"
+    vue "^2.6.10"
 
 xml-name-validator@^3.0.0:
   version "3.0.0"

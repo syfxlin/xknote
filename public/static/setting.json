@@ -37,7 +37,9 @@
         "previewClass":"markdown-body",
         "delayToHtml":500,
         "scrollBind":"both",
-        "imgUpload":false,
-        "scrollMode":"javascript"
+        "imgUpload":"127.0.0.1",
+        "scrollMode":"javascript",
+        "pasteFormat":true,
+        "pasteImageUpload":true
     }
 }
