@@ -4,6 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+/**
+ * @SWG\Swagger(
+ *   @OA\Info(
+ *     title="XK-Note API",
+ *     version="0.1",
+ *     description="**This documentation describes the XK-Note API.**",
+ *     @OA\Contact(
+ *       name="Otstar Lin",
+ *       email="syfxlin@gmail.com"
+ *     )
+ *   )
+ * )
+ */
 class HomeController extends Controller
 {
     /**
@@ -16,11 +29,6 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     public function index()
     {
         return view('home');
