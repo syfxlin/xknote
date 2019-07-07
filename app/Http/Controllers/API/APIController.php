@@ -8,8 +8,7 @@ use Illuminate\Http\Request;
 class APIController extends Controller
 {
     public function __construct()
-    {
-    }
+    { }
 
     /**
      * @OA\Get(
@@ -61,7 +60,8 @@ class APIController extends Controller
      *     )
      * )
      */
-    public function user(Request $request) {
+    public function user(Request $request)
+    {
         return $request->user();
     }
 
@@ -148,7 +148,8 @@ class APIController extends Controller
      *     )
      * )
      */
-    public function createUser(Request $request) {
+    public function createUser(Request $request)
+    {
         return json_encode($request->all());
     }
 }
