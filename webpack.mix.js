@@ -20,14 +20,14 @@ mix.js('resources/js/app.js', 'public/js').extract([
     '@fortawesome/vue-fontawesome'
 ]);
 mix.sass('resources/sass/app.scss', 'public/css');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const config = {
-    plugins: [
-        new BundleAnalyzerPlugin({
-            analyzerHost: '0.0.0.0',
-            analyzerPort: 8081
-        }),
-    ]
-};
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// const config = {
+//     plugins: [
+//         new BundleAnalyzerPlugin({
+//             analyzerHost: '0.0.0.0',
+//             analyzerPort: 8081
+//         }),
+//     ]
+// };
 
-mix.webpackConfig(config);
+// mix.webpackConfig(config);
