@@ -11302,6 +11302,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Home",
@@ -11408,7 +11436,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nbody {\r\n  background-color: #fff;\r\n  color: #3f536e;\r\n  line-height: 1.5;\r\n  font-family: -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Helvetica,\r\n    \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", \"\\5FAE\\8F6F\\96C5\\9ED1\",\r\n    Arial, sans-serif;\r\n  font-size: 14px;\r\n  -webkit-font-smoothing: antialiased;\n}\nhtml,\r\nbody {\r\n  width: 100%;\r\n  height: 100%;\n}\nbody {\r\n  margin: 0;\n}\np {\r\n  margin: 0;\n}\r\n/* 滚动槽 */\n::-webkit-scrollbar {\r\n  width: 6px;\r\n  height: 6px;\n}\n::-webkit-scrollbar-track {\r\n  border-radius: 3px;\r\n  background: rgba(0, 0, 0, 0.06);\r\n  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);\n}\r\n/* 滚动条滑块 */\n::-webkit-scrollbar-thumb {\r\n  border-radius: 3px;\r\n  background: rgba(0, 0, 0, 0.12);\r\n  -webkit-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);\n}\n#app {\r\n  width: 100%;\r\n  height: 100%;\n}\n.home {\r\n  height: 100%;\n}\n#xknote-menu {\r\n  height: 65px;\r\n  margin: 0px;\n}\n#xknote-menu .xknote-menu-inner {\r\n  transform: translateY(-50%);\r\n  top: 50%;\r\n  position: relative;\n}\n#xknote-editor {\r\n  height: calc(100% - 65px);\r\n  border: 1px solid #ddd;\r\n  padding: 0px;\n}\n.dropdown-menu {\r\n    background: #fff !important;\n}\n.xknote-new {\r\n  margin-top: 5px;\n}\r\n", ""]);
+exports.push([module.i, "\nbody {\n  background-color: #fff;\n  color: #3f536e;\n  line-height: 1.5;\n  font-family: -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Helvetica,\n    \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", \"\\5FAE\\8F6F\\96C5\\9ED1\",\n    Arial, sans-serif;\n  font-size: 14px;\n  -webkit-font-smoothing: antialiased;\n}\nhtml,\nbody {\n  width: 100%;\n  height: 100%;\n}\nbody {\n  margin: 0;\n}\np {\n  margin: 0;\n}\n/* 滚动槽 */\n::-webkit-scrollbar {\n  width: 6px;\n  height: 6px;\n}\n::-webkit-scrollbar-track {\n  border-radius: 3px;\n  background: rgba(0, 0, 0, 0.06);\n  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);\n}\n/* 滚动条滑块 */\n::-webkit-scrollbar-thumb {\n  border-radius: 3px;\n  background: rgba(0, 0, 0, 0.12);\n  -webkit-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);\n}\n#app {\n  width: 100%;\n  height: 100%;\n}\n.home {\n  height: 100%;\n}\n#xknote-menu {\n  height: 65px;\n  margin: 0px;\n}\n#xknote-menu .xknote-menu-inner {\n  transform: translateY(-50%);\n  top: 50%;\n  position: relative;\n  z-index: 1000;\n}\n#xknote-editor {\n  height: calc(100% - 65px);\n  border: 1px solid #ddd;\n  padding: 0px;\n}\n.dropdown-menu {\n  background: #fff !important;\n}\n.xknote-left-nav {\n  font-size: 23px;\n  min-width: 16%;\n}\n.xknote-left-nav .xknote-icon {\n  width: 39px;\n  height: 39px;\n}\n.xknote-left-nav li a {\n  color: #145ccd;\n  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1);\n}\n.xknote-left-nav li a:hover {\n  color: #0d3d88;\n}\n.xknote-left-nav,\n.xknote-center-nav,\n.xknote-right-nav {\n  display: flex;\n  align-items: center;\n}\n", ""]);
 
 // exports
 
@@ -20451,51 +20479,70 @@ var staticRenderFns = [
         attrs: { id: "xknote-menu", role: "navigation" }
       },
       [
-        _c("div", { staticClass: "container-fluid xknote-menu-inner" }, [
-          _c("div", { staticClass: "collapse navbar-collapse" }, [
-            _c("ul", { staticClass: "nav navbar-nav" }, [
-              _c("li", { staticClass: "active" }, [
-                _c("a", { attrs: { href: "" } }, [_vm._v("项目")])
-              ]),
-              _vm._v(" "),
-              _c("li", [_c("a", { attrs: { href: "" } }, [_vm._v("需求")])])
+        _c("div", { staticClass: "container-fluid row xknote-menu-inner" }, [
+          _c("ul", { staticClass: "nav navbar-nav xknote-left-nav col-md-2" }, [
+            _c("li", [
+              _c("img", {
+                staticClass: "xknote-icon",
+                attrs: {
+                  src: "https://note.ixk.me/img/logo.png",
+                  alt: "XK-Note icon"
+                }
+              })
             ]),
             _vm._v(" "),
-            _c("ul", { staticClass: "nav navbar-nav navbar-right" }, [
-              _c("div", { staticClass: "btn-group xknote-new" }, [
-                _c(
-                  "button",
-                  { staticClass: "btn btn-primary", attrs: { type: "button" } },
-                  [_vm._v("新建MD笔记")]
-                ),
-                _vm._v(" "),
+            _c("li", [_c("a", { attrs: { href: "" } }, [_vm._v("XK-Note")])])
+          ]),
+          _vm._v(" "),
+          _c(
+            "ul",
+            { staticClass: "nav navbar-nav xknote-center-nav col-md-5" },
+            [_c("li", [_c("a", { attrs: { href: "" } }, [_vm._v("XK-Note")])])]
+          ),
+          _vm._v(" "),
+          _c(
+            "ul",
+            { staticClass: "nav navbar-nav navbar-right xknote-right-nav" },
+            [
+              _c("li", [
                 _c("div", { staticClass: "btn-group" }, [
                   _c(
                     "button",
                     {
-                      staticClass: "btn btn-primary dropdown-toggle",
-                      attrs: { type: "button", "data-toggle": "dropdown" }
+                      staticClass: "btn btn-primary",
+                      attrs: { type: "button" }
                     },
-                    [
-                      _c("span", { staticClass: "caret" }),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "sr-only" }, [
-                        _vm._v("新建MD笔记")
-                      ])
-                    ]
+                    [_vm._v("新建MD笔记")]
                   ),
                   _vm._v(" "),
-                  _c(
-                    "ul",
-                    { staticClass: "dropdown-menu", attrs: { role: "menu" } },
-                    [
-                      _c("li", [
-                        _c("a", { attrs: { href: "#" } }, [
-                          _vm._v("新建文件夹")
+                  _c("div", { staticClass: "btn-group" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary dropdown-toggle",
+                        attrs: { type: "button", "data-toggle": "dropdown" }
+                      },
+                      [
+                        _c("span", { staticClass: "caret" }),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "sr-only" }, [
+                          _vm._v("新建MD笔记")
                         ])
-                      ])
-                    ]
-                  )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "ul",
+                      { staticClass: "dropdown-menu", attrs: { role: "menu" } },
+                      [
+                        _c("li", [
+                          _c("a", { attrs: { href: "#" } }, [
+                            _vm._v("新建文件夹")
+                          ])
+                        ])
+                      ]
+                    )
+                  ])
                 ])
               ]),
               _vm._v(" "),
@@ -20514,7 +20561,10 @@ var staticRenderFns = [
                     staticClass: "dropdown-toggle",
                     attrs: { href: "", "data-toggle": "dropdown" }
                   },
-                  [_vm._v("{ name } "), _c("b", { staticClass: "caret" })]
+                  [
+                    _vm._v("\n            { name }\n            "),
+                    _c("b", { staticClass: "caret" })
+                  ]
                 ),
                 _vm._v(" "),
                 _c(
@@ -20545,8 +20595,8 @@ var staticRenderFns = [
                   ]
                 )
               ])
-            ])
-          ])
+            ]
+          )
         ])
       ]
     )
