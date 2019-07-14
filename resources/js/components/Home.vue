@@ -11,8 +11,11 @@
           </li>
         </ul>
         <ul class="nav navbar-nav xknote-center-nav col-md-5">
-          <li>
-            <a href>XK-Note</a>
+          <li class="col-md-8">
+            <input type="text" class="xknote-title" value="{ note-title }" />
+          </li>
+          <li class="col-md-4">
+            <button class="btn xknote-tip">保存</button>
           </li>
         </ul>
         <ul class="nav navbar-nav navbar-right xknote-right-nav">
@@ -143,20 +146,29 @@ p {
 #xknote-menu {
   height: 65px;
   margin: 0px;
+  padding: 0px;
+  border-bottom: 1px solid #ddd;
 }
 #xknote-menu .xknote-menu-inner {
-  transform: translateY(-50%);
-  top: 50%;
-  position: relative;
   z-index: 1000;
+  height: 100%;
+  padding: 0px;
 }
 #xknote-editor {
   height: calc(100% - 65px);
-  border: 1px solid #ddd;
   padding: 0px;
 }
 .dropdown-menu {
   background: #fff !important;
+}
+.xknote-left-nav,
+.xknote-center-nav,
+.xknote-right-nav {
+  display: flex;
+  align-items: center;
+  transform: translateY(-50%);
+  top: 50%;
+  position: relative;
 }
 .xknote-left-nav {
   font-size: 23px;
@@ -165,6 +177,7 @@ p {
 .xknote-left-nav .xknote-icon {
   width: 39px;
   height: 39px;
+  margin-left: 20px;
 }
 .xknote-left-nav li a {
   color: #145ccd;
@@ -173,10 +186,32 @@ p {
 .xknote-left-nav li a:hover {
   color: #0d3d88;
 }
-.xknote-left-nav,
-.xknote-center-nav,
-.xknote-right-nav {
-  display: flex;
-  align-items: center;
+.xknote-center-nav .col-md-8 {
+  padding: 0px;
+}
+.xknote-title {
+  width: 100%;
+  display: inline-block;
+  background-color: transparent;
+  border: 1.5px solid #ddd;
+  font-size: 18px;
+  color: #393939;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 30px;
+  outline: none;
+  padding: 4px 14px;
+}
+.xknote-tip {
+  width: 80px;
+  height: 30px;
+  color: #82b6f4;
+  border-radius: 6px;
+  border: 1px solid #e2e2e2;
+  background-color: #fff;
+}
+.xknote-tip:hover {
+  color: #398dee;
+  border: 1px solid #b9bbc5;
 }
 </style>
