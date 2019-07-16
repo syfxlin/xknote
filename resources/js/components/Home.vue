@@ -189,6 +189,9 @@ p {
 .xknote-center-nav .col-md-8 {
   padding: 0px;
 }
+.xknote-right-nav {
+  margin: 0;
+}
 .xknote-title {
   width: 100%;
   display: inline-block;
