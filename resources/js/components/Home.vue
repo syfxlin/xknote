@@ -148,6 +148,7 @@ p {
   margin: 0px;
   padding: 0px;
   border-bottom: 1px solid #ddd;
+  z-index: 1000;
 }
 #xknote-menu .xknote-menu-inner {
   z-index: 1000;
@@ -196,7 +197,7 @@ p {
   width: 100%;
   display: inline-block;
   background-color: transparent;
-  border: 1.5px solid #ddd;
+  border: 1px solid #ddd;
   font-size: 18px;
   color: #393939;
   overflow: hidden;

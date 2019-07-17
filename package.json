@@ -11,7 +11,13 @@
     },
     "devDependencies": {
         "axios": "^0.18",
+        "babel-eslint": "^10.0.2",
         "cross-env": "^5.1",
+        "eslint": "^6.0.1",
+        "eslint-friendly-formatter": "^4.0.1",
+        "eslint-loader": "^2.2.1",
+        "eslint-plugin-html": "^6.0.0",
+        "eslint-plugin-vue": "^5.2.3",
         "laravel-mix": "^4.0.7",
         "lodash": "^4.17.5",
         "resolve-url-loader": "^2.3.1",
