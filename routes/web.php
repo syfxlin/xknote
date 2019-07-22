@@ -12,11 +12,11 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('newhome');
 });
 
 Auth::routes();
 
-Route::get('/home', function() {
+Route::get('/home', function () {
     return view('home');
 });
