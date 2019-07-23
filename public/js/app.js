@@ -11313,6 +11313,209 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Home",
@@ -11325,7 +11528,15 @@ __webpack_require__.r(__webpack_exports__);
       content: "/static/md_content.md"
     };
   },
-  methods: {},
+  methods: {
+    switchTab: function switchTab(tabName, e) {
+      document.querySelector(".xknote-tab > .active").classList.remove("active");
+      e.target.parentElement.classList.add("active");
+      var tabId = "tab-item-" + tabName;
+      document.querySelector(".xknote-tab-content > li:not(.d-none)").className = "d-none";
+      document.getElementById(tabId).className = "";
+    }
+  },
   mounted: function mounted() {}
 });
 
@@ -11419,7 +11630,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nhtml,\nbody {\n  width: 100%;\n  height: 100%;\n}\nbody {\n  margin: 0;\n}\np {\n  margin: 0;\n}\n/* 滚动槽 */\n::-webkit-scrollbar {\n  width: 6px;\n  height: 6px;\n}\n::-webkit-scrollbar-track {\n  border-radius: 3px;\n  background: rgba(0, 0, 0, 0.06);\n  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);\n}\n/* 滚动条滑块 */\n::-webkit-scrollbar-thumb {\n  border-radius: 3px;\n  background: rgba(0, 0, 0, 0.12);\n  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);\n}\n#app {\n  width: 100%;\n  height: 100%;\n}\n.home {\n  height: 100%;\n}\n.home .columns {\n  height: calc(100% - 60px);\n  margin: 0;\n}\n#xknote-editor {\n  height: 100%;\n  padding: 0px;\n}\n#xknote-editor .ace-toolbar .xk-button {\n  font-size: 0.85em;\n}\n.xknote-header {\n  height: 60px;\n  z-index: 100;\n  border-bottom: 1px solid #dfdfdf;\n  padding: 0 20px 0 0;\n}\n.xknote-header .btn {\n  margin-left: 5px;\n}\n.xknote-header .btn-link:focus,\n.xknote-header .btn-link:hover {\n  box-shadow: 0 0 0 0.1rem rgba(87, 85, 217, 0.2);\n\n  text-decoration: none;\n}\n.xknote-header .btn-link:focus {\n  background: #f1f1fc;\n}\n.xknote-header .navbar-section.col-2 {\n  flex: 0 0 auto !important;\n  margin-right: 0.3rem;\n}\n.xknote-icon {\n  width: 39px;\n  height: 39px;\n  margin-left: 20px;\n}\n", ""]);
+exports.push([module.i, "\nhtml,\nbody {\n  width: 100%;\n  height: 100%;\n}\nbody {\n  margin: 0;\n}\np {\n  margin: 0;\n}\n/* 滚动槽 */\n::-webkit-scrollbar {\n  width: 6px;\n  height: 6px;\n}\n::-webkit-scrollbar-track {\n  border-radius: 3px;\n  background: rgba(0, 0, 0, 0.06);\n  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);\n}\n/* 滚动条滑块 */\n::-webkit-scrollbar-thumb {\n  border-radius: 3px;\n  background: rgba(0, 0, 0, 0.12);\n  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);\n}\n#app {\n  width: 100%;\n  height: 100%;\n}\n.home {\n  height: 100%;\n}\n.home .columns {\n  height: calc(100% - 60px);\n  margin: 0;\n}\n#xknote-editor {\n  height: 100%;\n  padding: 0px;\n}\n#xknote-editor .ace-toolbar .xk-button {\n  font-size: 0.85em;\n}\n.xknote-header {\n  height: 60px;\n  z-index: 100;\n  border-bottom: 1px solid #dfdfdf;\n  padding: 0 20px 0 0;\n}\n.xknote-header .btn {\n  margin-left: 5px;\n}\n.xknote-header .btn-link:focus,\n.xknote-header .btn-link:hover {\n  box-shadow: 0 0 0 0.1rem rgba(87, 85, 217, 0.2);\n\n  text-decoration: none;\n}\n.xknote-header .btn-link:focus {\n  background: #f1f1fc;\n}\n.xknote-header .navbar-section.col-2 {\n  flex: 0 0 auto !important;\n  margin-right: 0.3rem;\n}\n.xknote-header .form-input {\n  width: auto;\n}\n/* Fix xknote-header button hover and active color */\n.dropdown .btn-group a:not(.btn-primary):hover {\n  color: #5755d9;\n}\n.dropdown .btn-group a:not(.btn-primary):active {\n  color: #5755d9;\n  background: #f1f1fc;\n  border-color: #4b48d6;\n}\n.xknote-icon {\n  width: 39px;\n  height: 39px;\n  margin-left: 20px;\n}\n.xknote-tab-content {\n  margin: 0.4rem;\n}\n.xknote-tab-content li {\n  list-style: none;\n}\n.xknote-tab-content .menu {\n  padding: 0;\n}\n.xknote-tab-content .menu .menu-item {\n  padding-right: 0;\n}\n/* Fix tab tile */\n.xknote-tab-content .menu-item > a.tile {\n  display: flex;\n}\n.xknote-tab-content .tile.badge:after {\n  transform: none;\n}\n.xknote-tab-content .tile-content {\n  pointer-events: none;\n}\n.xknote-tab-content .tile-action {\n  display: none;\n}\n.xknote-tab-content .tile:hover .tile-action {\n  display: block;\n}\n.xknote-tab-content .accordion .accordion-header .icon {\n  transform: none !important;\n}\n.xknote-tab-content .tile-subtitle,\n.xknote-tab-content .tile-title {\n  line-height: 1rem;\n  font-size: 0.67rem;\n}\n.xknote-tab-content .accordion-header {\n  padding: 0.2rem 0;\n  display: flex;\n  align-items: center;\n}\n.xknote-tab-content .accordion-header span {\n  flex: 1 1 auto;\n}\n.xknote-tab-content .accordion-header button {\n  flex: 0 0 auto;\n  display: none;\n}\n.xknote-tab-content .accordion-header:hover button {\n  display: block;\n  width: 1.8em;\n  height: 1.5em;\n  padding: 0;\n  margin-right: 0.2rem;\n}\n.xknote-tab-content .accordion-header:hover button img {\n  vertical-align: auto;\n}\n.xknote-tab-content .accordion-body .menu {\n  border-left: 3.5px solid #5755d940;\n  padding-left: 0.2rem;\n  margin-left: 0.3rem;\n  border-radius: 0;\n}\n", ""]);
 
 // exports
 
@@ -20437,7 +20648,58 @@ var render = function() {
     _vm._m(0),
     _vm._v(" "),
     _c("div", { staticClass: "columns" }, [
-      _c("section", { staticClass: "column col-2" }, [_vm._v("col-auto")]),
+      _c("section", { staticClass: "column col-2" }, [
+        _c("ul", { staticClass: "tab tab-block xknote-tab" }, [
+          _c("li", { staticClass: "tab-item" }, [
+            _c(
+              "a",
+              {
+                staticClass: "badge",
+                attrs: { href: "#", "data-badge": "2" },
+                on: {
+                  click: function($event) {
+                    return _vm.switchTab("curr", $event)
+                  }
+                }
+              },
+              [_vm._v("当前")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "tab-item active" }, [
+            _c(
+              "a",
+              {
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    return _vm.switchTab("cloud", $event)
+                  }
+                }
+              },
+              [_vm._v("云端")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "tab-item" }, [
+            _c(
+              "a",
+              {
+                staticClass: "badge",
+                attrs: { href: "#", "data-badge": "9" },
+                on: {
+                  click: function($event) {
+                    return _vm.switchTab("local", $event)
+                  }
+                }
+              },
+              [_vm._v("本地")]
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _vm._m(1)
+      ]),
       _vm._v(" "),
       _c(
         "section",
@@ -20477,8 +20739,147 @@ var staticRenderFns = [
       _c("section", { staticClass: "navbar-center" }, [
         _c("input", {
           staticClass: "form-input",
-          attrs: { type: "text", placeholder: "" }
-        })
+          attrs: { type: "text", placeholder: "Title" }
+        }),
+        _vm._v(" "),
+        _c("div", { staticClass: "dropdown" }, [
+          _c("div", { staticClass: "btn-group" }, [
+            _c("a", { staticClass: "btn", attrs: { href: "#" } }, [
+              _vm._v("云端保存")
+            ]),
+            _vm._v(" "),
+            _c(
+              "a",
+              {
+                staticClass: "btn dropdown-toggle",
+                attrs: { href: "#", tabindex: "0" }
+              },
+              [_c("i", { staticClass: "icon icon-caret" })]
+            ),
+            _vm._v(" "),
+            _c("ul", { staticClass: "menu" }, [
+              _c("li", { staticClass: "menu-item" }, [
+                _c("a", { attrs: { href: "#" } }, [_vm._v("本地保存")])
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "menu-item" }, [
+                _c("a", { attrs: { href: "#" } }, [_vm._v("全部保存到云端")])
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "menu-item" }, [
+                _c("a", { attrs: { href: "#" } }, [_vm._v("全部保存到本地")])
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "dropdown" }, [
+          _c("div", { staticClass: "btn-group" }, [
+            _c(
+              "a",
+              {
+                staticClass: "btn dropdown-toggle",
+                attrs: { href: "#", tabindex: "0" }
+              },
+              [
+                _vm._v("\n            导出\n            "),
+                _c("i", { staticClass: "icon icon-caret" })
+              ]
+            ),
+            _vm._v(" "),
+            _c("ul", { staticClass: "menu" }, [
+              _c("li", { staticClass: "menu-item" }, [
+                _c("a", { attrs: { href: "#" } }, [
+                  _vm._v("导出为Markdown文件")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "menu-item" }, [
+                _c("a", { attrs: { href: "#" } }, [_vm._v("导出HTML文件")])
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "menu-item" }, [
+                _c("a", { attrs: { href: "#" } }, [
+                  _vm._v("导出带样式的HTML文件")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "menu-item" }, [
+                _c("a", { attrs: { href: "#" } }, [
+                  _vm._v("导出阅读模式的HTML文件")
+                ])
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "dropdown" }, [
+          _c("div", { staticClass: "btn-group" }, [
+            _c(
+              "a",
+              {
+                staticClass: "btn dropdown-toggle",
+                attrs: { href: "#", tabindex: "0" }
+              },
+              [
+                _vm._v("\n            操作\n            "),
+                _c("i", { staticClass: "icon icon-caret" })
+              ]
+            ),
+            _vm._v(" "),
+            _c("ul", { staticClass: "menu" }, [
+              _c("li", {
+                staticClass: "divider",
+                attrs: { "data-content": "Git" }
+              }),
+              _vm._v(" "),
+              _c("li", { staticClass: "menu-item" }, [
+                _c("a", { attrs: { href: "#" } }, [_vm._v("Push")])
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "menu-item" }, [
+                _c("a", { attrs: { href: "#" } }, [_vm._v("Pull")])
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "menu-item" }, [
+                _c("a", { attrs: { href: "#" } }, [_vm._v("Clone")])
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "menu-item" }, [
+                _c("a", { attrs: { href: "#" } }, [_vm._v("Init")])
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "menu-item" }, [
+                _c("a", { attrs: { href: "#" } }, [_vm._v("Push force")])
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "popover popover-bottom" }, [
+          _c("button", { staticClass: "btn" }, [_vm._v("信息")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "popover-container" }, [
+            _c("div", { staticClass: "card" }, [
+              _c("div", { staticClass: "card-body" }, [
+                _c("p", [
+                  _vm._v("\n                创建时间：\n                "),
+                  _c("span", [_vm._v("{ createTime }")])
+                ]),
+                _vm._v(" "),
+                _c("p", [
+                  _vm._v("\n                修改时间：\n                "),
+                  _c("span", [_vm._v("{ updateTime }")])
+                ]),
+                _vm._v(" "),
+                _c("p", [
+                  _vm._v("\n                路径：\n                "),
+                  _c("span", [_vm._v("{ path }")])
+                ])
+              ])
+            ])
+          ])
+        ])
       ]),
       _vm._v(" "),
       _c("section", { staticClass: "navbar-section" }, [
@@ -20548,6 +20949,231 @@ var staticRenderFns = [
             _c("li", { staticClass: "menu-item" }, [
               _c("a", { attrs: { href: "" } }, [_vm._v("登出")])
             ])
+          ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("ul", { staticClass: "xknote-tab-content" }, [
+      _c("li", { staticClass: "d-none", attrs: { id: "tab-item-curr" } }, [
+        _c("ul", { staticClass: "menu menu-nav" }, [
+          _c("li", { staticClass: "menu-item" }, [
+            _c(
+              "a",
+              {
+                staticClass: "tile tile-centered badge",
+                attrs: { "data-badge": "N" }
+              },
+              [
+                _c("img", {
+                  staticClass: "icon",
+                  attrs: { src: "/static/svg/file-text.svg" }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "tile-content" }, [
+                  _c("div", { staticClass: "tile-title text-bold" }, [
+                    _vm._v("{ noteName }")
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "tile-subtitle" }, [
+                    _vm._v("{ notePath }")
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "tile-action" }, [
+                  _c("button", { staticClass: "btn btn-link btn-action" }, [
+                    _c("img", {
+                      staticClass: "icon",
+                      attrs: { src: "/static/svg/settings.svg" }
+                    })
+                  ])
+                ])
+              ]
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("li", { attrs: { id: "tab-item-cloud" } }, [
+        _c("div", { staticClass: "accordion" }, [
+          _c("input", {
+            attrs: {
+              id: "accordion-1",
+              type: "checkbox",
+              name: "accordion-checkbox",
+              checked: "",
+              hidden: ""
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "label",
+            {
+              staticClass: "accordion-header c-hand",
+              attrs: { for: "accordion-1" }
+            },
+            [
+              _c("img", {
+                staticClass: "icon mr-1",
+                attrs: { src: "/static/svg/folder.svg" }
+              }),
+              _vm._v(" "),
+              _c("span", [_vm._v("{ folderName }")]),
+              _vm._v(" "),
+              _c("button", { staticClass: "btn btn-link btn-action" }, [
+                _c("img", {
+                  staticClass: "icon",
+                  attrs: { src: "/static/svg/settings.svg" }
+                })
+              ])
+            ]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "accordion-body" }, [
+            _c("ul", { staticClass: "menu menu-nav" }, [
+              _c("li", { staticClass: "menu-item" }, [
+                _c("a", { staticClass: "tile tile-centered" }, [
+                  _c("img", {
+                    staticClass: "icon",
+                    attrs: { src: "/static/svg/file-text.svg" }
+                  }),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "tile-content" }, [
+                    _c("div", { staticClass: "tile-title text-bold" }, [
+                      _vm._v("{ noteName }")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "tile-subtitle" }, [
+                      _vm._v("{ notePath }")
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "tile-action" }, [
+                    _c("button", { staticClass: "btn btn-link btn-action" }, [
+                      _c("img", {
+                        staticClass: "icon",
+                        attrs: { src: "/static/svg/settings.svg" }
+                      })
+                    ])
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "menu-item" }, [
+                _c("div", { staticClass: "accordion" }, [
+                  _c("input", {
+                    attrs: {
+                      id: "accordion-2",
+                      type: "checkbox",
+                      name: "accordion-checkbox",
+                      hidden: ""
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "label",
+                    {
+                      staticClass: "accordion-header c-hand",
+                      attrs: { for: "accordion-2" }
+                    },
+                    [
+                      _c("img", {
+                        staticClass: "icon mr-1",
+                        attrs: { src: "/static/svg/folder.svg" }
+                      }),
+                      _vm._v(" "),
+                      _c("span", [_vm._v("{ folderName }")]),
+                      _vm._v(" "),
+                      _c("button", { staticClass: "btn btn-link btn-action" }, [
+                        _c("img", {
+                          staticClass: "icon",
+                          attrs: { src: "/static/svg/settings.svg" }
+                        })
+                      ])
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "accordion-body" }, [
+                    _c("ul", { staticClass: "menu menu-nav" }, [
+                      _c("li", { staticClass: "menu-item" }, [
+                        _c("a", { staticClass: "tile tile-centered" }, [
+                          _c("img", {
+                            staticClass: "icon",
+                            attrs: { src: "/static/svg/file-text.svg" }
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "tile-content" }, [
+                            _c("div", { staticClass: "tile-title text-bold" }, [
+                              _vm._v("{ noteName }")
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "tile-subtitle" }, [
+                              _vm._v("{ notePath }")
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "tile-action" }, [
+                            _c(
+                              "button",
+                              { staticClass: "btn btn-link btn-action" },
+                              [
+                                _c("img", {
+                                  staticClass: "icon",
+                                  attrs: { src: "/static/svg/settings.svg" }
+                                })
+                              ]
+                            )
+                          ])
+                        ])
+                      ])
+                    ])
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("li", { staticClass: "d-none", attrs: { id: "tab-item-local" } }, [
+        _c("ul", { staticClass: "menu menu-nav" }, [
+          _c("li", { staticClass: "menu-item" }, [
+            _c(
+              "a",
+              {
+                staticClass: "tile tile-centered badge",
+                attrs: { "data-badge": "N" }
+              },
+              [
+                _c("img", {
+                  staticClass: "icon",
+                  attrs: { src: "/static/svg/file-text.svg" }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "tile-content" }, [
+                  _c("div", { staticClass: "tile-title text-bold" }, [
+                    _vm._v("{ noteName }")
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "tile-subtitle" }, [
+                    _vm._v("{ notePath }")
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "tile-action" }, [
+                  _c("button", { staticClass: "btn btn-link btn-action" }, [
+                    _c("img", {
+                      staticClass: "icon",
+                      attrs: { src: "/static/svg/settings.svg" }
+                    })
+                  ])
+                ])
+              ]
+            )
           ])
         ])
       ])
