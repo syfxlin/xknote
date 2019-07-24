@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,3 +17,4 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', 'API\APIController@user');
 Route::post('/admin/users', 'API\APIController@createUser');
+Route::middleware('auth:api')->get('/folders', 'API\APIController@folders');

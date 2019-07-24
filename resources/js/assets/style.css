@@ -1,0 +1,168 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+body {
+    margin: 0;
+}
+p {
+    margin: 0;
+}
+/* 滚动槽 */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.06);
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);
+}
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.12);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+#app {
+    width: 100%;
+    height: 100%;
+}
+.home {
+    height: 100%;
+}
+.home .columns {
+    height: calc(100% - 60px);
+    margin: 0;
+}
+#xknote-editor {
+    height: 100%;
+    padding: 0px;
+}
+#xknote-editor .ace-toolbar .xk-button {
+    font-size: 0.85em;
+}
+.xknote-header {
+    height: 60px;
+    z-index: 100;
+    border-bottom: 1px solid #dfdfdf;
+    padding: 0 20px 0 0;
+}
+.xknote-header .btn {
+    margin-left: 5px;
+}
+.xknote-header .btn-link:focus,
+.xknote-header .btn-link:hover {
+    box-shadow: 0 0 0 0.1rem rgba(87, 85, 217, 0.2);
+
+    text-decoration: none;
+}
+.xknote-header .btn-link:focus {
+    background: #f1f1fc;
+}
+.xknote-header .navbar-section.col-2 {
+    flex: 0 0 auto !important;
+    margin-right: 0.3rem;
+}
+.xknote-header .form-input {
+    width: auto;
+}
+/* Fix xknote-header button hover and active color */
+.dropdown .btn-group a:not(.btn-primary):hover {
+    color: #5755d9;
+}
+.dropdown .btn-group a:not(.btn-primary):active {
+    color: #5755d9;
+    background: #f1f1fc;
+    border-color: #4b48d6;
+}
+.xknote-icon {
+    width: 39px;
+    height: 39px;
+    margin-left: 20px;
+}
+.xknote-sidebar {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+.xknote-tab-content {
+    margin: 0 0.8rem;
+    flex: 1;
+}
+.xknote-tab-content li {
+    list-style: none;
+}
+.xknote-tab-content .menu {
+    padding: 0;
+}
+.xknote-tab-content .menu .menu-item {
+    padding-right: 0;
+}
+/* Fix tab tile */
+.xknote-tab-content .menu-item > a.tile {
+    display: flex;
+}
+.xknote-tab-content .tile.badge:after {
+    transform: none;
+}
+.xknote-tab-content .tile-content {
+    pointer-events: none;
+}
+.xknote-tab-content .tile-action {
+    display: none;
+}
+.xknote-tab-content .tile:hover .tile-action {
+    display: block;
+}
+.xknote-tab-content .accordion .accordion-header .icon {
+    transform: none !important;
+}
+.xknote-tab-content .tile-subtitle,
+.xknote-tab-content .tile-title {
+    line-height: 1rem;
+    font-size: 0.67rem;
+}
+.xknote-tab-content .accordion-header {
+    margin: 0 -0.4rem;
+    padding: 0.2rem 0.4rem;
+    display: flex;
+    align-items: center;
+}
+.xknote-tab-content .accordion-header:hover {
+    background: #f1f1fc;
+    color: #5755d9;
+}
+.xknote-tab-content .accordion-header span {
+    flex: 1 1 auto;
+}
+.xknote-tab-content .accordion-header button {
+    flex: 0 0 auto;
+    display: none;
+}
+.xknote-tab-content .accordion-header:hover button {
+    display: block;
+    width: 1.8em;
+    height: 1.5em;
+    padding: 0;
+    margin-right: 0.2rem;
+}
+.xknote-tab-content .accordion-header:hover button img {
+    vertical-align: auto;
+}
+.xknote-tab-content .accordion-body .menu {
+    border-left: 3.5px solid #5755d940;
+    padding-left: 0.2rem;
+    margin-left: 0.3rem;
+    border-radius: 0;
+}
+.xknote-copyright {
+    padding: 0.8em 0;
+    text-align: center;
+}
+
+.note-settings,
+.folder-settings {
+    position: fixed;
+}
