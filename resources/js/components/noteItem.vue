@@ -3,6 +3,7 @@
     :class="'tile tile-centered' + (badge ? ' badge' : '')"
     :data-badge="badge"
     :title="hoverTitle"
+    :data-index="index"
   >
     <img class="icon" src="/static/svg/file-text.svg" />
     <div class="tile-content">
@@ -20,7 +21,7 @@
 <script>
 export default {
   name: "note-item",
-  props: ["info", "badge"],
+  props: ["info", "badge", "index"],
   data() {
     return {
       hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path
@@ -51,6 +52,8 @@ export default {
         document.removeEventListener("click", closeN);
       };
       document.addEventListener("click", closeN);
+      window.xknote.currClickTarget =
+        e.target.parentElement.parentElement.parentElement;
     }
   }
 };

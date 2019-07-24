@@ -167,15 +167,20 @@
           <ul class="xknote-tab-content">
             <li id="tab-item-curr" class="d-none">
               <ul class="menu menu-nav">
-                <li class="menu-item" v-for="item in currList" :key="item.id">
+                <li class="menu-item" v-for="(item, index) in currList" :key="item.id">
                   <!-- mark data-badge: N为未保存，L为已经保存到本地，若已经保存到云端则不显示badge -->
-                  <note-item :info="item" :badge="item.badge" />
+                  <note-item :info="item" :badge="item.badge" :index="'curr:' + index" />
                 </li>
                 <div class="text-gray text-center" v-if="currList.length===0">这里什么都没有哦（￣︶￣）↗</div>
               </ul>
             </li>
             <li id="tab-item-cloud">
-              <folder-item v-for="item in cloudList" :key="item.id" :info="item" />
+              <folder-item
+                v-for="(item, index) in cloudList"
+                :key="item.id"
+                :info="item"
+                :index="'cloud:' + index"
+              />
               <template v-if="cloudList.length===0">
                 <div class="loading loading-lg"></div>
                 <div class="text-gray text-center">正在加载，客官莫急。</div>
@@ -183,9 +188,9 @@
             </li>
             <li id="tab-item-local" class="d-none">
               <ul class="menu menu-nav">
-                <li class="menu-item" v-for="item in localList" :key="item.id">
+                <li class="menu-item" v-for="(item, index) in localList" :key="item.id">
                   <!-- mark data-badge: N为未保存，L为已经保存到本地，若已经保存到云端则不显示badge -->
-                  <note-item :info="item" :badge="item.badge" />
+                  <note-item :info="item" :badge="item.badge" :index="'local:' + index" />
                 </li>
                 <div class="text-gray text-center" v-if="localList.length===0">这里什么都没有哦（￣︶￣）↗</div>
               </ul>
@@ -215,9 +220,24 @@
             <a href="#">重命名(移动)</a>
           </li>
           <li class="menu-item">
-            <a href>删除</a>
+            <a @click="noteOperate('delete', 'cloud')">删除</a>
           </li>
         </ul>
+        <div :class="'modal modal-sm xknote-sm-modal' + (smModal.show ? ' active' : '')">
+          <a href="#close" class="modal-overlay" aria-label="Close"></a>
+          <div class="modal-container">
+            <div class="modal-header">
+              <div class="modal-title h5">{{ smModal.title }}</div>
+            </div>
+            <div class="modal-body">
+              <div class="content">{{ smModal.content }}</div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-primary" @click="smModal.confirm()">确认</button>
+              <button class="btn btn-link" @click="smModal.cancel()">取消</button>
+            </div>
+          </div>
+        </div>
       </div>
     </template>
   </main>
@@ -254,6 +274,13 @@ export default {
       ],
       cloudList: [],
       localList: [],
+      smModal: {
+        show: false,
+        title: "",
+        content: "",
+        confirm: () => {},
+        cancel: () => {}
+      },
       setting: "/static/setting.json",
       content: "/static/md_content.md"
     };
@@ -290,56 +317,6 @@ export default {
       ).className = "d-none";
       document.getElementById(tabId).className = "";
     },
-    showFolderSetting(e) {
-      var f = document.getElementsByClassName("folder-settings")[0];
-      f.style.top = e.clientY + "px";
-      f.style.left = e.clientX + "px";
-      f.classList.remove("d-none");
-      var offset = {
-        xS: e.clientX,
-        yS: e.clientY,
-        xE: e.clientX + f.clientWidth,
-        yE: e.clientY + f.clientHeight
-      };
-      e.stopPropagation();
-      var closeF = function(ev) {
-        if (
-          ev.clientX < offset.xS ||
-          ev.clientX > offset.xE ||
-          ev.clientY < offset.yS ||
-          ev.clientY > offset.yE
-        ) {
-          f.classList.add("d-none");
-        }
-        document.removeEventListener("click", closeF);
-      };
-      document.addEventListener("click", closeF);
-    },
-    showNoteSettings(e) {
-      var n = document.getElementsByClassName("note-settings")[0];
-      n.style.top = e.clientY + "px";
-      n.style.left = e.clientX + "px";
-      n.classList.remove("d-none");
-      var offset = {
-        xS: e.clientX,
-        yS: e.clientY,
-        xE: e.clientX + n.clientWidth,
-        yE: e.clientY + n.clientHeight
-      };
-      e.stopPropagation();
-      var closeN = function(ev) {
-        if (
-          ev.clientX < offset.xS ||
-          ev.clientX > offset.xE ||
-          ev.clientY < offset.yS ||
-          ev.clientY > offset.yE
-        ) {
-          n.classList.add("d-none");
-        }
-        document.removeEventListener("click", closeN);
-      };
-      document.addEventListener("click", closeN);
-    },
     loadCloudFolders() {
       window.axios
         .get("/api/folders")
@@ -351,7 +328,6 @@ export default {
         });
     },
     loadLocalNotes() {
-      let _this = this;
       this.noteLocalDB("readAll", "", (e, data) => {
         this.localList = data;
       });
@@ -440,6 +416,16 @@ export default {
             callE(e);
           };
         }
+        if (operate === "put") {
+          let req = os.put(data);
+          req.onsuccess = e => {
+            callS(e);
+          };
+          req.onerror = e => {
+            console.log("数据更新失败: " + e);
+            callE(e);
+          };
+        }
       };
       requset.onupgradeneeded = e => {
         db = e.target.result;
@@ -450,11 +436,46 @@ export default {
           });
         }
       };
+    },
+    listOperate(operate, index) {
+      let arr = [];
+      arr = index.split(":");
+      let list = this[arr[0] + "List"];
+      for (let i = 1; i < arr.length - 1; i++) {
+        if (i === 1) {
+          list = list[arr[i]].sub;
+        } else {
+          list = list.sub[arr[i]];
+        }
+      }
+      if (operate === "delete") {
+        list.splice(arr[arr.length - 1], 1);
+      }
+    },
+    noteOperate(operate, storage) {
+      let curr = window.xknote.currClickTarget;
+      if (operate === "delete") {
+        document
+          .getElementsByClassName("note-settings")[0]
+          .classList.add("d-none");
+        this.smModal.title = "删除";
+        this.smModal.content = "是否删除该文件(文件夹)，此操作不可逆！";
+        this.smModal.show = true;
+        this.smModal.confirm = () => {
+          this.listOperate("delete", curr.getAttribute("data-index"));
+          this.smModal.show = false;
+        };
+        this.smModal.cancel = () => {
+          this.smModal.show = false;
+        };
+      }
     }
   },
   mounted() {
     this.loadCloudFolders();
     this.loadLocalNotes();
+    window.noteOperate = this.noteOperate;
+    window.xknote = {};
   }
 };
 </script>

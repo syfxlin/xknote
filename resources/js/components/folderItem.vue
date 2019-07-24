@@ -1,5 +1,5 @@
 <template>
-  <div class="accordion">
+  <div class="accordion" :data-index="index">
     <!-- mark checked代表已经开启 -->
     <input :id="'accordion-' + idHash" type="checkbox" name="accordion-checkbox" hidden />
     <label class="accordion-header c-hand" :for="'accordion-' + idHash">
@@ -11,9 +11,9 @@
     </label>
     <div class="accordion-body">
       <ul class="menu menu-nav">
-        <li class="menu-item" v-for="item in info.sub" :key="item.id">
-          <note-item v-if="item.type==='note'" :info="item" :badge="null" />
-          <folder-item v-if="item.type==='folder'" :info="item" />
+        <li class="menu-item" v-for="(item, i) in info.sub" :key="item.id">
+          <note-item v-if="item.type==='note'" :info="item" :badge="null" :index="index + ':' + i" />
+          <folder-item v-if="item.type==='folder'" :info="item" :index="index + ':' + i" />
         </li>
       </ul>
     </div>
@@ -24,7 +24,7 @@
 import noteItem from "./noteItem.vue";
 export default {
   name: "folder-item",
-  props: ["info"],
+  props: ["info", "index"],
   data() {
     return {
       idHash: Math.random()
@@ -60,6 +60,8 @@ export default {
         document.removeEventListener("click", closeF);
       };
       document.addEventListener("click", closeF);
+      window.xknote.currClickTarget =
+        e.target.parentElement.parentElement.parentElement;
     }
   }
 };

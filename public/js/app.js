@@ -11481,6 +11481,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -11508,6 +11528,13 @@ __webpack_require__.r(__webpack_exports__);
       }],
       cloudList: [],
       localList: [],
+      smModal: {
+        show: false,
+        title: "",
+        content: "",
+        confirm: function confirm() {},
+        cancel: function cancel() {}
+      },
       setting: "/static/setting.json",
       content: "/static/md_content.md"
     };
@@ -11540,68 +11567,20 @@ __webpack_require__.r(__webpack_exports__);
       document.querySelector(".xknote-tab-content > li:not(.d-none)").className = "d-none";
       document.getElementById(tabId).className = "";
     },
-    showFolderSetting: function showFolderSetting(e) {
-      var f = document.getElementsByClassName("folder-settings")[0];
-      f.style.top = e.clientY + "px";
-      f.style.left = e.clientX + "px";
-      f.classList.remove("d-none");
-      var offset = {
-        xS: e.clientX,
-        yS: e.clientY,
-        xE: e.clientX + f.clientWidth,
-        yE: e.clientY + f.clientHeight
-      };
-      e.stopPropagation();
-
-      var closeF = function closeF(ev) {
-        if (ev.clientX < offset.xS || ev.clientX > offset.xE || ev.clientY < offset.yS || ev.clientY > offset.yE) {
-          f.classList.add("d-none");
-        }
-
-        document.removeEventListener("click", closeF);
-      };
-
-      document.addEventListener("click", closeF);
-    },
-    showNoteSettings: function showNoteSettings(e) {
-      var n = document.getElementsByClassName("note-settings")[0];
-      n.style.top = e.clientY + "px";
-      n.style.left = e.clientX + "px";
-      n.classList.remove("d-none");
-      var offset = {
-        xS: e.clientX,
-        yS: e.clientY,
-        xE: e.clientX + n.clientWidth,
-        yE: e.clientY + n.clientHeight
-      };
-      e.stopPropagation();
-
-      var closeN = function closeN(ev) {
-        if (ev.clientX < offset.xS || ev.clientX > offset.xE || ev.clientY < offset.yS || ev.clientY > offset.yE) {
-          n.classList.add("d-none");
-        }
-
-        document.removeEventListener("click", closeN);
-      };
-
-      document.addEventListener("click", closeN);
-    },
     loadCloudFolders: function loadCloudFolders() {
-      var _this2 = this;
+      var _this = this;
 
       window.axios.get("/api/folders").then(function (res) {
-        _this2.cloudList = res.data;
+        _this.cloudList = res.data;
       })["catch"](function (err) {
         console.error(err);
       });
     },
     loadLocalNotes: function loadLocalNotes() {
-      var _this3 = this;
-
-      var _this = this;
+      var _this2 = this;
 
       this.noteLocalDB("readAll", "", function (e, data) {
-        _this3.localList = data;
+        _this2.localList = data;
       });
     },
     noteLocalDB: function noteLocalDB(operate) {
@@ -11708,6 +11687,19 @@ __webpack_require__.r(__webpack_exports__);
             callE(e);
           };
         }
+
+        if (operate === "put") {
+          var _req6 = os.put(data);
+
+          _req6.onsuccess = function (e) {
+            callS(e);
+          };
+
+          _req6.onerror = function (e) {
+            console.log("数据更新失败: " + e);
+            callE(e);
+          };
+        }
       };
 
       requset.onupgradeneeded = function (e) {
@@ -11720,11 +11712,52 @@ __webpack_require__.r(__webpack_exports__);
           });
         }
       };
+    },
+    listOperate: function listOperate(operate, index) {
+      var arr = [];
+      arr = index.split(":");
+      var list = this[arr[0] + "List"];
+
+      for (var i = 1; i < arr.length - 1; i++) {
+        if (i === 1) {
+          list = list[arr[i]].sub;
+        } else {
+          list = list.sub[arr[i]];
+        }
+      }
+
+      if (operate === "delete") {
+        list.splice(arr[arr.length - 1], 1);
+      }
+    },
+    noteOperate: function noteOperate(operate, storage) {
+      var _this3 = this;
+
+      var curr = window.xknote.currClickTarget;
+
+      if (operate === "delete") {
+        document.getElementsByClassName("note-settings")[0].classList.add("d-none");
+        this.smModal.title = "删除";
+        this.smModal.content = "是否删除该文件(文件夹)，此操作不可逆！";
+        this.smModal.show = true;
+
+        this.smModal.confirm = function () {
+          _this3.listOperate("delete", curr.getAttribute("data-index"));
+
+          _this3.smModal.show = false;
+        };
+
+        this.smModal.cancel = function () {
+          _this3.smModal.show = false;
+        };
+      }
     }
   },
   mounted: function mounted() {
     this.loadCloudFolders();
     this.loadLocalNotes();
+    window.noteOperate = this.noteOperate;
+    window.xknote = {};
   }
 });
 
@@ -11765,7 +11798,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "folder-item",
-  props: ["info"],
+  props: ["info", "index"],
   data: function data() {
     return {
       idHash: Math.random().toString(36).substring(2, 8)
@@ -11797,6 +11830,7 @@ __webpack_require__.r(__webpack_exports__);
       };
 
       document.addEventListener("click", closeF);
+      window.xknote.currClickTarget = e.target.parentElement.parentElement.parentElement;
     }
   }
 });
@@ -11831,9 +11865,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "note-item",
-  props: ["info", "badge"],
+  props: ["info", "badge", "index"],
   data: function data() {
     return {
       hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path
@@ -11862,6 +11897,7 @@ __webpack_require__.r(__webpack_exports__);
       };
 
       document.addEventListener("click", closeN);
+      window.xknote.currClickTarget = e.target.parentElement.parentElement.parentElement;
     }
   }
 });
@@ -11899,7 +11935,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "html,\nbody {\n    width: 100%;\n    height: 100%;\n}\nbody {\n    margin: 0;\n}\np {\n    margin: 0;\n}\n/* 滚动槽 */\n::-webkit-scrollbar {\n    width: 6px;\n    height: 6px;\n}\n::-webkit-scrollbar-track {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.06);\n    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);\n}\n/* 滚动条滑块 */\n::-webkit-scrollbar-thumb {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.12);\n    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);\n}\n#app {\n    width: 100%;\n    height: 100%;\n}\n.home {\n    height: 100%;\n}\n.home .columns {\n    height: calc(100% - 60px);\n    margin: 0;\n}\n#xknote-editor {\n    height: 100%;\n    padding: 0px;\n}\n#xknote-editor .ace-toolbar .xk-button {\n    font-size: 0.85em;\n}\n.xknote-header {\n    height: 60px;\n    z-index: 100;\n    border-bottom: 1px solid #dfdfdf;\n    padding: 0 20px 0 0;\n}\n.xknote-header .btn {\n    margin-left: 5px;\n}\n.xknote-header .btn-link:focus,\n.xknote-header .btn-link:hover {\n    box-shadow: 0 0 0 0.1rem rgba(87, 85, 217, 0.2);\n\n    text-decoration: none;\n}\n.xknote-header .btn-link:focus {\n    background: #f1f1fc;\n}\n.xknote-header .navbar-section.col-2 {\n    flex: 0 0 auto !important;\n    margin-right: 0.3rem;\n}\n.xknote-header .form-input {\n    width: auto;\n}\n/* Fix xknote-header button hover and active color */\n.dropdown .btn-group a:not(.btn-primary):hover {\n    color: #5755d9;\n}\n.dropdown .btn-group a:not(.btn-primary):active {\n    color: #5755d9;\n    background: #f1f1fc;\n    border-color: #4b48d6;\n}\n.xknote-icon {\n    width: 39px;\n    height: 39px;\n    margin-left: 20px;\n}\n.xknote-sidebar {\n    display: flex;\n    flex-direction: column;\n    padding: 0;\n}\n.xknote-tab-content {\n    margin: 0 0.8rem;\n    flex: 1;\n}\n.xknote-tab-content li {\n    list-style: none;\n}\n.xknote-tab-content .menu {\n    padding: 0;\n}\n.xknote-tab-content .menu .menu-item {\n    padding-right: 0;\n}\n/* Fix tab tile */\n.xknote-tab-content .menu-item > a.tile {\n    display: flex;\n}\n.xknote-tab-content .tile.badge:after {\n    transform: none;\n}\n.xknote-tab-content .tile-content {\n    pointer-events: none;\n}\n.xknote-tab-content .tile-action {\n    display: none;\n}\n.xknote-tab-content .tile:hover .tile-action {\n    display: block;\n}\n.xknote-tab-content .accordion .accordion-header .icon {\n    transform: none !important;\n}\n.xknote-tab-content .tile-subtitle,\n.xknote-tab-content .tile-title {\n    line-height: 1rem;\n    font-size: 0.67rem;\n}\n.xknote-tab-content .accordion-header {\n    margin: 0 -0.4rem;\n    padding: 0.2rem 0.4rem;\n    display: flex;\n    align-items: center;\n}\n.xknote-tab-content .accordion-header:hover {\n    background: #f1f1fc;\n    color: #5755d9;\n}\n.xknote-tab-content .accordion-header span {\n    flex: 1 1 auto;\n}\n.xknote-tab-content .accordion-header button {\n    flex: 0 0 auto;\n    display: none;\n}\n.xknote-tab-content .accordion-header:hover button {\n    display: block;\n    width: 1.8em;\n    height: 1.5em;\n    padding: 0;\n    margin-right: 0.2rem;\n}\n.xknote-tab-content .accordion-header:hover button img {\n    vertical-align: auto;\n}\n.xknote-tab-content .accordion-body .menu {\n    border-left: 3.5px solid #5755d940;\n    padding-left: 0.2rem;\n    margin-left: 0.3rem;\n    border-radius: 0;\n}\n.xknote-copyright {\n    padding: 0.8em 0;\n    text-align: center;\n}\n\n.note-settings,\n.folder-settings {\n    position: fixed;\n}\n", ""]);
+exports.push([module.i, "html,\nbody {\n    width: 100%;\n    height: 100%;\n}\nbody {\n    margin: 0;\n}\np {\n    margin: 0;\n}\n/* 滚动槽 */\n::-webkit-scrollbar {\n    width: 6px;\n    height: 6px;\n}\n::-webkit-scrollbar-track {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.06);\n    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);\n}\n/* 滚动条滑块 */\n::-webkit-scrollbar-thumb {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.12);\n    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);\n}\n#app {\n    width: 100%;\n    height: 100%;\n}\n.home {\n    height: 100%;\n}\n.home .columns {\n    height: calc(100% - 60px);\n    margin: 0;\n}\n#xknote-editor {\n    height: 100%;\n    padding: 0px;\n}\n#xknote-editor .ace-toolbar .xk-button {\n    font-size: 0.85em;\n}\n.xknote-header {\n    height: 60px;\n    z-index: 100;\n    border-bottom: 1px solid #dfdfdf;\n    padding: 0 20px 0 0;\n}\n.xknote-header .btn {\n    margin-left: 5px;\n}\n.xknote-header .btn-link:focus,\n.xknote-header .btn-link:hover {\n    box-shadow: 0 0 0 0.1rem rgba(87, 85, 217, 0.2);\n\n    text-decoration: none;\n}\n.xknote-header .btn-link:focus {\n    background: #f1f1fc;\n}\n.xknote-header .navbar-section.col-2 {\n    flex: 0 0 auto !important;\n    margin-right: 0.3rem;\n}\n.xknote-header .form-input {\n    width: auto;\n}\n/* Fix xknote-header button hover and active color */\n.dropdown .btn-group a:not(.btn-primary):hover {\n    color: #5755d9;\n}\n.dropdown .btn-group a:not(.btn-primary):active {\n    color: #5755d9;\n    background: #f1f1fc;\n    border-color: #4b48d6;\n}\n.xknote-icon {\n    width: 39px;\n    height: 39px;\n    margin-left: 20px;\n}\n.xknote-sidebar {\n    display: flex;\n    flex-direction: column;\n    padding: 0;\n}\n.xknote-tab-content {\n    margin: 0 0.8rem;\n    flex: 1;\n}\n.xknote-tab-content li {\n    list-style: none;\n}\n.xknote-tab-content .menu {\n    padding: 0;\n}\n.xknote-tab-content .menu .menu-item {\n    padding-right: 0;\n}\n/* Fix tab tile */\n.xknote-tab-content .menu-item > a.tile {\n    display: flex;\n}\n.xknote-tab-content .tile.badge:after {\n    transform: none;\n}\n.xknote-tab-content .tile-content {\n    pointer-events: none;\n}\n.xknote-tab-content .tile-action {\n    display: none;\n}\n.xknote-tab-content .tile:hover .tile-action {\n    display: block;\n}\n.xknote-tab-content .accordion .accordion-header .icon {\n    transform: none !important;\n}\n.xknote-tab-content .tile-subtitle,\n.xknote-tab-content .tile-title {\n    line-height: 1rem;\n    font-size: 0.67rem;\n}\n.xknote-tab-content .accordion-header {\n    margin: 0 -0.4rem;\n    padding: 0.2rem 0.4rem;\n    display: flex;\n    align-items: center;\n}\n.xknote-tab-content .accordion-header:hover {\n    background: #f1f1fc;\n    color: #5755d9;\n}\n.xknote-tab-content .accordion-header span {\n    flex: 1 1 auto;\n}\n.xknote-tab-content .accordion-header button {\n    flex: 0 0 auto;\n    display: none;\n}\n.xknote-tab-content .accordion-header:hover button {\n    display: block;\n    width: 1.8em;\n    height: 1.5em;\n    padding: 0;\n    margin-right: 0.2rem;\n}\n.xknote-tab-content .accordion-header:hover button img {\n    vertical-align: auto;\n}\n.xknote-tab-content .accordion-body .menu {\n    border-left: 3.5px solid #5755d940;\n    padding-left: 0.2rem;\n    margin-left: 0.3rem;\n    border-radius: 0;\n}\n.xknote-copyright {\n    padding: 0.8em 0;\n    text-align: center;\n}\n\n.note-settings,\n.folder-settings {\n    position: fixed;\n}\n.xknote-sm-modal {\n    color: #585858;\n}\n", ""]);
 
 // exports
 
@@ -21007,13 +21043,17 @@ var render = function() {
                     "ul",
                     { staticClass: "menu menu-nav" },
                     [
-                      _vm._l(_vm.currList, function(item) {
+                      _vm._l(_vm.currList, function(item, index) {
                         return _c(
                           "li",
                           { key: item.id, staticClass: "menu-item" },
                           [
                             _c("note-item", {
-                              attrs: { info: item, badge: item.badge }
+                              attrs: {
+                                info: item,
+                                badge: item.badge,
+                                index: "curr:" + index
+                              }
                             })
                           ],
                           1
@@ -21035,10 +21075,10 @@ var render = function() {
                 "li",
                 { attrs: { id: "tab-item-cloud" } },
                 [
-                  _vm._l(_vm.cloudList, function(item) {
+                  _vm._l(_vm.cloudList, function(item, index) {
                     return _c("folder-item", {
                       key: item.id,
-                      attrs: { info: item }
+                      attrs: { info: item, index: "cloud:" + index }
                     })
                   }),
                   _vm._v(" "),
@@ -21063,13 +21103,17 @@ var render = function() {
                     "ul",
                     { staticClass: "menu menu-nav" },
                     [
-                      _vm._l(_vm.localList, function(item) {
+                      _vm._l(_vm.localList, function(item, index) {
                         return _c(
                           "li",
                           { key: item.id, staticClass: "menu-item" },
                           [
                             _c("note-item", {
-                              attrs: { info: item, badge: item.badge }
+                              attrs: {
+                                info: item,
+                                badge: item.badge,
+                                index: "local:" + index
+                              }
                             })
                           ],
                           1
@@ -21103,7 +21147,84 @@ var render = function() {
           )
         ]),
         _vm._v(" "),
-        _vm._m(2)
+        _c("div", { staticClass: "components" }, [
+          _vm._m(2),
+          _vm._v(" "),
+          _c("ul", { staticClass: "menu note-settings col-1 d-none" }, [
+            _vm._m(3),
+            _vm._v(" "),
+            _c("li", { staticClass: "menu-item" }, [
+              _c(
+                "a",
+                {
+                  on: {
+                    click: function($event) {
+                      return _vm.noteOperate("delete", "cloud")
+                    }
+                  }
+                },
+                [_vm._v("删除")]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              class:
+                "modal modal-sm xknote-sm-modal" +
+                (_vm.smModal.show ? " active" : "")
+            },
+            [
+              _c("a", {
+                staticClass: "modal-overlay",
+                attrs: { href: "#close", "aria-label": "Close" }
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-container" }, [
+                _c("div", { staticClass: "modal-header" }, [
+                  _c("div", { staticClass: "modal-title h5" }, [
+                    _vm._v(_vm._s(_vm.smModal.title))
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-body" }, [
+                  _c("div", { staticClass: "content" }, [
+                    _vm._v(_vm._s(_vm.smModal.content))
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-footer" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary",
+                      on: {
+                        click: function($event) {
+                          return _vm.smModal.confirm()
+                        }
+                      }
+                    },
+                    [_vm._v("确认")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-link",
+                      on: {
+                        click: function($event) {
+                          return _vm.smModal.cancel()
+                        }
+                      }
+                    },
+                    [_vm._v("取消")]
+                  )
+                ])
+              ])
+            ]
+          )
+        ])
       ]
     ],
     2
@@ -21366,26 +21487,22 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "components" }, [
-      _c("ul", { staticClass: "menu folder-settings col-1 d-none" }, [
-        _c("li", { staticClass: "menu-item" }, [
-          _c("a", { attrs: { href: "#" } }, [_vm._v("重命名")])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "menu-item" }, [
-          _c("a", { attrs: { href: "" } }, [_vm._v("删除")])
-        ])
+    return _c("ul", { staticClass: "menu folder-settings col-1 d-none" }, [
+      _c("li", { staticClass: "menu-item" }, [
+        _c("a", { attrs: { href: "#" } }, [_vm._v("重命名")])
       ]),
       _vm._v(" "),
-      _c("ul", { staticClass: "menu note-settings col-1 d-none" }, [
-        _c("li", { staticClass: "menu-item" }, [
-          _c("a", { attrs: { href: "#" } }, [_vm._v("重命名(移动)")])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "menu-item" }, [
-          _c("a", { attrs: { href: "" } }, [_vm._v("删除")])
-        ])
+      _c("li", { staticClass: "menu-item" }, [
+        _c("a", { attrs: { href: "" } }, [_vm._v("删除")])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("li", { staticClass: "menu-item" }, [
+      _c("a", { attrs: { href: "#" } }, [_vm._v("重命名(移动)")])
     ])
   }
 ]
@@ -21410,74 +21527,86 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "accordion" }, [
-    _c("input", {
-      attrs: {
-        id: "accordion-" + _vm.idHash,
-        type: "checkbox",
-        name: "accordion-checkbox",
-        hidden: ""
-      }
-    }),
-    _vm._v(" "),
-    _c(
-      "label",
-      {
-        staticClass: "accordion-header c-hand",
-        attrs: { for: "accordion-" + _vm.idHash }
-      },
-      [
-        _c("img", {
-          staticClass: "icon mr-1",
-          attrs: { src: "/static/svg/folder.svg" }
-        }),
-        _vm._v(" "),
-        _c("span", [_vm._v(_vm._s(_vm.info.name))]),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-link btn-action",
-            on: {
-              click: function($event) {
-                return _vm.showFolderSetting($event)
-              }
-            }
-          },
-          [
-            _c("img", {
-              staticClass: "icon",
-              attrs: { src: "/static/svg/settings.svg" }
-            })
-          ]
-        )
-      ]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "accordion-body" }, [
+  return _c(
+    "div",
+    { staticClass: "accordion", attrs: { "data-index": _vm.index } },
+    [
+      _c("input", {
+        attrs: {
+          id: "accordion-" + _vm.idHash,
+          type: "checkbox",
+          name: "accordion-checkbox",
+          hidden: ""
+        }
+      }),
+      _vm._v(" "),
       _c(
-        "ul",
-        { staticClass: "menu menu-nav" },
-        _vm._l(_vm.info.sub, function(item) {
-          return _c(
-            "li",
-            { key: item.id, staticClass: "menu-item" },
+        "label",
+        {
+          staticClass: "accordion-header c-hand",
+          attrs: { for: "accordion-" + _vm.idHash }
+        },
+        [
+          _c("img", {
+            staticClass: "icon mr-1",
+            attrs: { src: "/static/svg/folder.svg" }
+          }),
+          _vm._v(" "),
+          _c("span", [_vm._v(_vm._s(_vm.info.name))]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-link btn-action",
+              on: {
+                click: function($event) {
+                  return _vm.showFolderSetting($event)
+                }
+              }
+            },
             [
-              item.type === "note"
-                ? _c("note-item", { attrs: { info: item, badge: null } })
-                : _vm._e(),
-              _vm._v(" "),
-              item.type === "folder"
-                ? _c("folder-item", { attrs: { info: item } })
-                : _vm._e()
-            ],
-            1
+              _c("img", {
+                staticClass: "icon",
+                attrs: { src: "/static/svg/settings.svg" }
+              })
+            ]
           )
-        }),
-        0
-      )
-    ])
-  ])
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "accordion-body" }, [
+        _c(
+          "ul",
+          { staticClass: "menu menu-nav" },
+          _vm._l(_vm.info.sub, function(item, i) {
+            return _c(
+              "li",
+              { key: item.id, staticClass: "menu-item" },
+              [
+                item.type === "note"
+                  ? _c("note-item", {
+                      attrs: {
+                        info: item,
+                        badge: null,
+                        index: _vm.index + ":" + i
+                      }
+                    })
+                  : _vm._e(),
+                _vm._v(" "),
+                item.type === "folder"
+                  ? _c("folder-item", {
+                      attrs: { info: item, index: _vm.index + ":" + i }
+                    })
+                  : _vm._e()
+              ],
+              1
+            )
+          }),
+          0
+        )
+      ])
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -21505,7 +21634,11 @@ var render = function() {
     "a",
     {
       class: "tile tile-centered" + (_vm.badge ? " badge" : ""),
-      attrs: { "data-badge": _vm.badge, title: _vm.hoverTitle }
+      attrs: {
+        "data-badge": _vm.badge,
+        title: _vm.hoverTitle,
+        "data-index": _vm.index
+      }
     },
     [
       _c("img", {
