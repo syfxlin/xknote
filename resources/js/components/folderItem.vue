@@ -1,5 +1,5 @@
 <template>
-  <div class="accordion" :data-index="index">
+  <div class="accordion" :data-index="index" :data-storage="storage">
     <!-- mark checked代表已经开启 -->
     <input :id="'accordion-' + idHash" type="checkbox" name="accordion-checkbox" hidden />
     <label class="accordion-header c-hand" :for="'accordion-' + idHash">
@@ -12,8 +12,19 @@
     <div class="accordion-body">
       <ul class="menu menu-nav">
         <li class="menu-item" v-for="(item, i) in info.sub" :key="item.id">
-          <note-item v-if="item.type==='note'" :info="item" :badge="null" :index="index + ':' + i" />
-          <folder-item v-if="item.type==='folder'" :info="item" :index="index + ':' + i" />
+          <note-item
+            v-if="item.type==='note'"
+            :info="item"
+            :badge="null"
+            :index="index + ':' + i"
+            :storage="storage"
+          />
+          <folder-item
+            v-if="item.type==='folder'"
+            :info="item"
+            :index="index + ':' + i"
+            :storage="storage"
+          />
         </li>
       </ul>
     </div>
@@ -24,12 +35,45 @@
 import noteItem from "./noteItem.vue";
 export default {
   name: "folder-item",
-  props: ["info", "index"],
+  props: ["info", "index", "storage"],
   data() {
     return {
       idHash: Math.random()
         .toString(36)
-        .substring(2, 8)
+        .substring(2, 8),
+      home: this.$root.$children[0],
+      floatMenuItems: {
+        curr: [
+          {
+            name: "重命名",
+            operate: "rename"
+          },
+          {
+            name: "删除",
+            operate: "delete"
+          }
+        ],
+        cloud: [
+          {
+            name: "重命名",
+            operate: "rename"
+          },
+          {
+            name: "删除",
+            operate: "delete"
+          }
+        ],
+        local: [
+          {
+            name: "重命名",
+            operate: "rename"
+          },
+          {
+            name: "删除",
+            operate: "delete"
+          }
+        ]
+      }
     };
   },
   components: {
@@ -37,10 +81,11 @@ export default {
   },
   methods: {
     showFolderSetting(e) {
-      var f = document.getElementsByClassName("folder-settings")[0];
+      var f = document.getElementsByClassName("float-menu")[0];
       f.style.top = e.clientY + "px";
       f.style.left = e.clientX + "px";
-      f.classList.remove("d-none");
+      this.home.floatMenu.show = true;
+      this.home.floatMenu.items = this.floatMenuItems[this.storage];
       var offset = {
         xS: e.clientX,
         yS: e.clientY,
@@ -48,14 +93,14 @@ export default {
         yE: e.clientY + f.clientHeight
       };
       e.stopPropagation();
-      var closeF = function(ev) {
+      var closeF = ev => {
         if (
           ev.clientX < offset.xS ||
           ev.clientX > offset.xE ||
           ev.clientY < offset.yS ||
           ev.clientY > offset.yE
         ) {
-          f.classList.add("d-none");
+          this.home.floatMenu.show = false;
         }
         document.removeEventListener("click", closeF);
       };

@@ -11501,12 +11501,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "Home",
+  name: "home",
   components: {
     "xk-editor": xkeditor__WEBPACK_IMPORTED_MODULE_0__["default"],
     "note-item": _noteItem_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
@@ -11514,18 +11515,49 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      xknoteOpened: {
+        type: "note",
+        path: "uid_1/C语言学习笔记.md",
+        name: "C语言学习笔记.md",
+        badge: "N",
+        note: {
+          title: "C语言学习笔记",
+          author: "Otstar Lin",
+          content: "C语言学习笔记-content",
+          created_at: "2019-7-25",
+          updated_at: "2019-7-25"
+        }
+      },
+      xknoteSetting: "/static/setting.json",
       xknoteMode: "normal",
-      currList: [{
-        type: "note",
-        path: "uid_1/C语言学习笔记2.md",
-        name: "C语言学习笔记2.md",
-        badge: "N"
-      }, {
-        type: "note",
-        path: "uid_1/public/PHP学习笔记2.md",
-        name: "PHP学习笔记2.md",
-        badge: "L"
-      }],
+      xknoteTab: "cloud",
+      currList: [// {
+        //   type: "note",
+        //   path: "uid_1/C语言学习笔记.md",
+        //   name: "C语言学习笔记.md",
+        //   badge: "N",
+        //   note: {
+        //     title: "C语言学习笔记",
+        //     author: "Otstar Lin",
+        //     content: "C语言学习笔记-content",
+        //     created_at: "2019-7-25",
+        //     updated_at: "2019-7-25"
+        //   }
+        // },
+        // {
+        //   type: "note",
+        //   path: "uid_1/public/PHP学习笔记.md",
+        //   name: "PHP学习笔记.md",
+        //   badge: "N",
+        //   note: {
+        //     title: "PHP学习笔记",
+        //     author: "Otstar Lin",
+        //     content: "PHP学习笔记-content",
+        //     created_at: "2019-7-25",
+        //     updated_at: "2019-7-25"
+        //   }
+        // }
+      ],
       cloudList: [],
       localList: [],
       smModal: {
@@ -11535,8 +11567,11 @@ __webpack_require__.r(__webpack_exports__);
         confirm: function confirm() {},
         cancel: function cancel() {}
       },
-      setting: "/static/setting.json",
-      content: "/static/md_content.md"
+      floatMenu: {
+        show: false,
+        items: [],
+        saveAndClose: true
+      }
     };
   },
   computed: {
@@ -11560,12 +11595,8 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
-    switchTab: function switchTab(tabName, e) {
-      document.querySelector(".xknote-tab > .active").classList.remove("active");
-      e.target.parentElement.classList.add("active");
-      var tabId = "tab-item-" + tabName;
-      document.querySelector(".xknote-tab-content > li:not(.d-none)").className = "d-none";
-      document.getElementById(tabId).className = "";
+    switchTab: function switchTab(tabName) {
+      this.xknoteTab = tabName;
     },
     loadCloudFolders: function loadCloudFolders() {
       var _this = this;
@@ -11579,8 +11610,8 @@ __webpack_require__.r(__webpack_exports__);
     loadLocalNotes: function loadLocalNotes() {
       var _this2 = this;
 
-      this.noteLocalDB("readAll", "", function (e, data) {
-        _this2.localList = data;
+      this.noteLocalDB("readAll", "", function (e, list) {
+        _this2.localList = list;
       });
     },
     noteLocalDB: function noteLocalDB(operate) {
@@ -11631,13 +11662,13 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         if (operate === "read") {
-          var reData = null;
+          var noteInfo = null;
 
           var _req2 = os.getAll(data);
 
           _req2.onsuccess = function (e) {
-            reData = _req2.result;
-            callS(e, reData);
+            noteInfo = _req2.result;
+            callS(e, noteInfo);
           };
 
           _req2.onerror = function (e) {
@@ -11647,13 +11678,13 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         if (operate === "readAll") {
-          var _reData = null;
+          var noteList = null;
 
           var _req3 = os.getAll();
 
           _req3.onsuccess = function (e) {
-            _reData = _req3.result;
-            callS(e, _reData);
+            noteList = _req3.result;
+            callS(e, noteList);
           };
 
           _req3.onerror = function (e) {
@@ -11713,13 +11744,17 @@ __webpack_require__.r(__webpack_exports__);
         }
       };
     },
-    listOperate: function listOperate(operate, index) {
+    // 操作列表
+    listOperate: function listOperate(operate, storage) {
+      var index = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
+      var noteInfo = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
       var arr = [];
+      var list;
       arr = index.split(":");
-      var list = this[arr[0] + "List"];
+      list = this[storage + "List"];
 
-      for (var i = 1; i < arr.length - 1; i++) {
-        if (i === 1) {
+      for (var i = 0; i < arr.length - 1; i++) {
+        if (i === 0) {
           list = list[arr[i]].sub;
         } else {
           list = list.sub[arr[i]];
@@ -11727,37 +11762,132 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       if (operate === "delete") {
-        list.splice(arr[arr.length - 1], 1);
+        var noteList = list.splice(arr[arr.length - 1], 1);
+        return noteList[0];
+      }
+
+      if (operate === "add") {
+        if (storage === "curr" || storage === "local") {
+          this[storage + "List"].push(noteInfo);
+        }
+      }
+
+      if (operate === "get") {
+        return list[arr[arr.length - 1]];
       }
     },
+    // 操作笔记
     noteOperate: function noteOperate(operate, storage) {
-      var _this3 = this;
-
-      var curr = window.xknote.currClickTarget;
+      var noteInfo = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
       if (operate === "delete") {
-        document.getElementsByClassName("note-settings")[0].classList.add("d-none");
+        if (storage === "local") {
+          this.noteLocalDB("delete", noteInfo.name);
+        } // TODO: 云端删除
+
+      }
+
+      if (operate === "save") {
+        if (storage === "local") {
+          this.noteLocalDB("add", noteInfo);
+        }
+      }
+
+      if (operate === "rename") {
+        if (storage === "local") {
+          console.log(noteInfo);
+          this.noteLocalDB("delete", noteInfo.oldName);
+          this.noteLocalDB("add", noteInfo.note);
+        }
+      }
+    },
+    floatMenuClick: function floatMenuClick(operate) {
+      var _this3 = this;
+
+      this.floatMenu.show = false;
+      var curr = window.xknote.currClickTarget;
+      var storage = curr.getAttribute("data-storage");
+      var index = curr.getAttribute("data-index");
+
+      if (operate === "delete") {
         this.smModal.title = "删除";
         this.smModal.content = "是否删除该文件(文件夹)，此操作不可逆！";
         this.smModal.show = true;
 
         this.smModal.confirm = function () {
-          _this3.listOperate("delete", curr.getAttribute("data-index"));
-
+          var note = null;
+          note = _this3.listOperate("delete", storage, index);
           _this3.smModal.show = false;
+
+          _this3.noteOperate(operate, storage, note);
         };
 
         this.smModal.cancel = function () {
           _this3.smModal.show = false;
         };
       }
+
+      if (operate === "saveLocal") {
+        var note = null;
+
+        if (this.floatMenu.saveAndClose) {
+          note = this.listOperate("delete", "curr", index);
+        } else {
+          note = this.listOperate("get", "curr", index);
+        }
+
+        note.badge = "L";
+        this.listOperate("add", "local", "", note);
+        this.noteOperate("save", "local", note);
+      }
+
+      if (operate === "rename") {
+        var _note = this.listOperate("get", storage, index);
+
+        var oldName = _note.name;
+        curr.querySelector(".tile-content").setAttribute("children", "input");
+        var input = curr.querySelector(".tile-content > input");
+
+        var keyEv = function keyEv(e) {
+          if (e.key === "Enter") {
+            var value = e.target.value;
+            _note.path = _note.path.replace(_note.name, value);
+            _note.name = value;
+            curr.querySelector(".tile-content").removeAttribute("children");
+            input.removeEventListener("keydown", keyEv);
+
+            _this3.noteOperate(operate, storage, {
+              oldName: oldName,
+              note: _note
+            });
+          }
+        };
+
+        input.addEventListener("keydown", keyEv);
+      }
+    },
+    openNote: function openNote(note) {
+      this.xknoteOpened = note;
+      this.currList.push(note);
+      this.xknoteTab = "curr"; // TODO: 开启的Note在当前列表中获得active效果
     }
   },
   mounted: function mounted() {
     this.loadCloudFolders();
     this.loadLocalNotes();
-    window.noteOperate = this.noteOperate;
     window.xknote = {};
+  },
+  watch: {
+    xknoteOpened: function xknoteOpened(val) {
+      if (window.eThis.e.editorMode === "ace") {
+        window.XKEditor.setMarkdown(val.note.content);
+      } else {
+        window.XKEditor.switchEditor();
+        window.XKEditor.setMarkdown(val.note.content);
+      }
+
+      window.XKEditor.ace.gotoLine(1);
+    }
   }
 });
 
@@ -11795,13 +11925,48 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "folder-item",
-  props: ["info", "index"],
+  props: ["info", "index", "storage"],
   data: function data() {
     return {
-      idHash: Math.random().toString(36).substring(2, 8)
+      idHash: Math.random().toString(36).substring(2, 8),
+      home: this.$root.$children[0],
+      floatMenuItems: {
+        curr: [{
+          name: "重命名",
+          operate: "rename"
+        }, {
+          name: "删除",
+          operate: "delete"
+        }],
+        cloud: [{
+          name: "重命名",
+          operate: "rename"
+        }, {
+          name: "删除",
+          operate: "delete"
+        }],
+        local: [{
+          name: "重命名",
+          operate: "rename"
+        }, {
+          name: "删除",
+          operate: "delete"
+        }]
+      }
     };
   },
   components: {
@@ -11809,10 +11974,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     showFolderSetting: function showFolderSetting(e) {
-      var f = document.getElementsByClassName("folder-settings")[0];
+      var _this = this;
+
+      var f = document.getElementsByClassName("float-menu")[0];
       f.style.top = e.clientY + "px";
       f.style.left = e.clientX + "px";
-      f.classList.remove("d-none");
+      this.home.floatMenu.show = true;
+      this.home.floatMenu.items = this.floatMenuItems[this.storage];
       var offset = {
         xS: e.clientX,
         yS: e.clientY,
@@ -11823,7 +11991,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var closeF = function closeF(ev) {
         if (ev.clientX < offset.xS || ev.clientX > offset.xE || ev.clientY < offset.yS || ev.clientY > offset.yE) {
-          f.classList.add("d-none");
+          _this.home.floatMenu.show = false;
         }
 
         document.removeEventListener("click", closeF);
@@ -11866,38 +12034,82 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "note-item",
-  props: ["info", "badge", "index"],
+  props: ["info", "badge", "index", "storage"],
   data: function data() {
     return {
-      hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path
+      hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path,
+      home: this.$root.$children[0],
+      floatMenuItems: {
+        curr: [{
+          name: "保存到云端",
+          operate: "saveCloud"
+        }, {
+          name: "保存到本地",
+          operate: "saveLocal"
+        }, {
+          name: "重命名",
+          operate: "rename"
+        }, {
+          name: "关闭",
+          operate: "closeCurr"
+        }, {
+          name: "saveAndClose"
+        }],
+        cloud: [{
+          name: "重命名",
+          operate: "rename"
+        }, {
+          name: "删除",
+          operate: "delete"
+        }],
+        local: [{
+          name: "重命名",
+          operate: "rename"
+        }, {
+          name: "删除",
+          operate: "delete"
+        }]
+      }
     };
   },
   methods: {
     showNoteSettings: function showNoteSettings(e) {
-      var n = document.getElementsByClassName("note-settings")[0];
+      var _this = this;
+
+      var n = document.getElementsByClassName("float-menu")[0];
       n.style.top = e.clientY + "px";
       n.style.left = e.clientX + "px";
-      n.classList.remove("d-none");
-      var offset = {
-        xS: e.clientX,
-        yS: e.clientY,
-        xE: e.clientX + n.clientWidth,
-        yE: e.clientY + n.clientHeight
-      };
-      e.stopPropagation();
+      this.home.floatMenu.show = true;
+      this.home.floatMenu.items = this.floatMenuItems[this.storage];
+      this.$nextTick(function () {
+        var offset = {
+          xS: e.clientX,
+          yS: e.clientY,
+          xE: e.clientX + n.clientWidth,
+          yE: e.clientY + n.clientHeight
+        };
+        e.stopPropagation();
 
-      var closeN = function closeN(ev) {
-        if (ev.clientX < offset.xS || ev.clientX > offset.xE || ev.clientY < offset.yS || ev.clientY > offset.yE) {
-          n.classList.add("d-none");
-        }
+        var closeN = function closeN(ev) {
+          if (ev.clientX < offset.xS || ev.clientX > offset.xE || ev.clientY < offset.yS || ev.clientY > offset.yE) {
+            _this.home.floatMenu.show = false;
+          }
 
-        document.removeEventListener("click", closeN);
-      };
+          document.removeEventListener("click", closeN);
+        };
 
-      document.addEventListener("click", closeN);
+        document.addEventListener("click", closeN);
+      });
       window.xknote.currClickTarget = e.target.parentElement.parentElement.parentElement;
+    },
+    openNote: function openNote(e) {
+      this.home.openNote(this.info);
     }
   }
 });
@@ -11935,7 +12147,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "html,\nbody {\n    width: 100%;\n    height: 100%;\n}\nbody {\n    margin: 0;\n}\np {\n    margin: 0;\n}\n/* 滚动槽 */\n::-webkit-scrollbar {\n    width: 6px;\n    height: 6px;\n}\n::-webkit-scrollbar-track {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.06);\n    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);\n}\n/* 滚动条滑块 */\n::-webkit-scrollbar-thumb {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.12);\n    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);\n}\n#app {\n    width: 100%;\n    height: 100%;\n}\n.home {\n    height: 100%;\n}\n.home .columns {\n    height: calc(100% - 60px);\n    margin: 0;\n}\n#xknote-editor {\n    height: 100%;\n    padding: 0px;\n}\n#xknote-editor .ace-toolbar .xk-button {\n    font-size: 0.85em;\n}\n.xknote-header {\n    height: 60px;\n    z-index: 100;\n    border-bottom: 1px solid #dfdfdf;\n    padding: 0 20px 0 0;\n}\n.xknote-header .btn {\n    margin-left: 5px;\n}\n.xknote-header .btn-link:focus,\n.xknote-header .btn-link:hover {\n    box-shadow: 0 0 0 0.1rem rgba(87, 85, 217, 0.2);\n\n    text-decoration: none;\n}\n.xknote-header .btn-link:focus {\n    background: #f1f1fc;\n}\n.xknote-header .navbar-section.col-2 {\n    flex: 0 0 auto !important;\n    margin-right: 0.3rem;\n}\n.xknote-header .form-input {\n    width: auto;\n}\n/* Fix xknote-header button hover and active color */\n.dropdown .btn-group a:not(.btn-primary):hover {\n    color: #5755d9;\n}\n.dropdown .btn-group a:not(.btn-primary):active {\n    color: #5755d9;\n    background: #f1f1fc;\n    border-color: #4b48d6;\n}\n.xknote-icon {\n    width: 39px;\n    height: 39px;\n    margin-left: 20px;\n}\n.xknote-sidebar {\n    display: flex;\n    flex-direction: column;\n    padding: 0;\n}\n.xknote-tab-content {\n    margin: 0 0.8rem;\n    flex: 1;\n}\n.xknote-tab-content li {\n    list-style: none;\n}\n.xknote-tab-content .menu {\n    padding: 0;\n}\n.xknote-tab-content .menu .menu-item {\n    padding-right: 0;\n}\n/* Fix tab tile */\n.xknote-tab-content .menu-item > a.tile {\n    display: flex;\n}\n.xknote-tab-content .tile.badge:after {\n    transform: none;\n}\n.xknote-tab-content .tile-content {\n    pointer-events: none;\n}\n.xknote-tab-content .tile-action {\n    display: none;\n}\n.xknote-tab-content .tile:hover .tile-action {\n    display: block;\n}\n.xknote-tab-content .accordion .accordion-header .icon {\n    transform: none !important;\n}\n.xknote-tab-content .tile-subtitle,\n.xknote-tab-content .tile-title {\n    line-height: 1rem;\n    font-size: 0.67rem;\n}\n.xknote-tab-content .accordion-header {\n    margin: 0 -0.4rem;\n    padding: 0.2rem 0.4rem;\n    display: flex;\n    align-items: center;\n}\n.xknote-tab-content .accordion-header:hover {\n    background: #f1f1fc;\n    color: #5755d9;\n}\n.xknote-tab-content .accordion-header span {\n    flex: 1 1 auto;\n}\n.xknote-tab-content .accordion-header button {\n    flex: 0 0 auto;\n    display: none;\n}\n.xknote-tab-content .accordion-header:hover button {\n    display: block;\n    width: 1.8em;\n    height: 1.5em;\n    padding: 0;\n    margin-right: 0.2rem;\n}\n.xknote-tab-content .accordion-header:hover button img {\n    vertical-align: auto;\n}\n.xknote-tab-content .accordion-body .menu {\n    border-left: 3.5px solid #5755d940;\n    padding-left: 0.2rem;\n    margin-left: 0.3rem;\n    border-radius: 0;\n}\n.xknote-copyright {\n    padding: 0.8em 0;\n    text-align: center;\n}\n\n.note-settings,\n.folder-settings {\n    position: fixed;\n}\n.xknote-sm-modal {\n    color: #585858;\n}\n", ""]);
+exports.push([module.i, "html,\nbody {\n    width: 100%;\n    height: 100%;\n}\nbody {\n    margin: 0;\n}\np {\n    margin: 0;\n}\n/* 滚动槽 */\n::-webkit-scrollbar {\n    width: 6px;\n    height: 6px;\n}\n::-webkit-scrollbar-track {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.06);\n    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);\n}\n/* 滚动条滑块 */\n::-webkit-scrollbar-thumb {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.12);\n    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);\n}\n#app {\n    width: 100%;\n    height: 100%;\n}\n.home {\n    height: 100%;\n}\n.home .columns {\n    height: calc(100% - 60px);\n    margin: 0;\n}\n#xknote-editor {\n    height: 100%;\n    padding: 0px;\n}\n#xknote-editor .ace-toolbar .xk-button {\n    font-size: 0.85em;\n}\n.xknote-header {\n    height: 60px;\n    z-index: 100;\n    border-bottom: 1px solid #dfdfdf;\n    padding: 0 20px 0 0;\n}\n.xknote-header .btn {\n    margin-left: 5px;\n}\n.xknote-header .btn-link:focus,\n.xknote-header .btn-link:hover {\n    box-shadow: 0 0 0 0.1rem rgba(87, 85, 217, 0.2);\n\n    text-decoration: none;\n}\n.xknote-header .btn-link:focus {\n    background: #f1f1fc;\n}\n.xknote-header .navbar-section.col-2 {\n    flex: 0 0 auto !important;\n    margin-right: 0.3rem;\n}\n.xknote-header .form-input {\n    width: auto;\n}\n/* Fix xknote-header button hover and active color */\n.dropdown .btn-group a:not(.btn-primary):hover {\n    color: #5755d9;\n}\n.dropdown .btn-group a:not(.btn-primary):active {\n    color: #5755d9;\n    background: #f1f1fc;\n    border-color: #4b48d6;\n}\n.xknote-icon {\n    width: 39px;\n    height: 39px;\n    margin-left: 20px;\n}\n.xknote-sidebar {\n    display: flex;\n    flex-direction: column;\n    padding: 0;\n}\n.xknote-tab-content {\n    margin: 0 0.8rem;\n    flex: 1;\n}\n.xknote-tab-content li {\n    list-style: none;\n}\n.xknote-tab-content .menu {\n    padding: 0;\n}\n.xknote-tab-content .menu .menu-item {\n    padding-right: 0;\n}\n/* Fix tab tile */\n.xknote-tab-content .menu-item > a.tile {\n    display: flex;\n}\n.xknote-tab-content .tile.badge:after {\n    transform: none;\n}\n.xknote-tab-content .tile-action {\n    display: none;\n}\n.xknote-tab-content .tile:hover .tile-action {\n    display: block;\n}\n.xknote-tab-content .accordion .accordion-header .icon {\n    transform: none !important;\n}\n.xknote-tab-content .tile-subtitle,\n.xknote-tab-content .tile-title {\n    line-height: 1rem;\n    font-size: 0.67rem;\n}\n.xknote-tab-content .tile-click {\n    cursor: pointer;\n}\n.xknote-tab-content .tile-content[children=\"input\"] .tile-click {\n    display: none;\n}\n.xknote-tab-content .tile-content input {\n    display: none;\n}\n.xknote-tab-content .tile-content[children=\"input\"] input {\n    display: block;\n}\n.xknote-tab-content .accordion-header {\n    margin: 0 -0.4rem;\n    padding: 0.2rem 0.4rem;\n    display: flex;\n    align-items: center;\n}\n.xknote-tab-content .accordion-header:hover {\n    background: #f1f1fc;\n    color: #5755d9;\n}\n.xknote-tab-content .accordion-header span {\n    flex: 1 1 auto;\n}\n.xknote-tab-content .accordion-header button {\n    flex: 0 0 auto;\n    display: none;\n}\n.xknote-tab-content .accordion-header:hover button {\n    display: block;\n    width: 1.8em;\n    height: 1.5em;\n    padding: 0;\n    margin-right: 0.2rem;\n}\n.xknote-tab-content .accordion-header:hover button img {\n    vertical-align: auto;\n}\n.xknote-tab-content .accordion-body .menu {\n    border-left: 3.5px solid #5755d940;\n    padding-left: 0.2rem;\n    margin-left: 0.3rem;\n    border-radius: 0;\n}\n.xknote-copyright {\n    padding: 0.8em 0;\n    text-align: center;\n}\n\n.float-menu {\n    position: fixed;\n}\n.float-menu .menu-item a {\n    cursor: pointer;\n}\n.xknote-sm-modal {\n    color: #585858;\n}\n", ""]);
 
 // exports
 
@@ -20978,10 +21190,61 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "main",
-    { staticClass: "home" },
+    { ref: "home", staticClass: "home" },
     [
       [
-        _vm._m(0),
+        _c("header", { staticClass: "navbar xknote-header" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("section", { staticClass: "navbar-center" }, [
+            _c("input", {
+              staticClass: "form-input",
+              attrs: { type: "text", placeholder: "Title" },
+              domProps: { value: _vm.xknoteOpened.note.title }
+            }),
+            _vm._v(" "),
+            _vm._m(1),
+            _vm._v(" "),
+            _vm._m(2),
+            _vm._v(" "),
+            _vm._m(3),
+            _vm._v(" "),
+            _c("div", { staticClass: "popover popover-bottom" }, [
+              _c("button", { staticClass: "btn" }, [_vm._v("信息")]),
+              _vm._v(" "),
+              _c("div", { staticClass: "popover-container" }, [
+                _c("div", { staticClass: "card" }, [
+                  _c("div", { staticClass: "card-body" }, [
+                    _c("p", [
+                      _vm._v(
+                        "\n                  创建时间：\n                  "
+                      ),
+                      _c("span", [
+                        _vm._v(_vm._s(_vm.xknoteOpened.note.created_at))
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("p", [
+                      _vm._v(
+                        "\n                  修改时间：\n                  "
+                      ),
+                      _c("span", [
+                        _vm._v(_vm._s(_vm.xknoteOpened.note.updated_at))
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("p", [
+                      _vm._v("\n                  路径：\n                  "),
+                      _c("span", [_vm._v(_vm._s(_vm.xknoteOpened.path))])
+                    ])
+                  ])
+                ])
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _vm._m(4)
+        ]),
         _vm._v(" "),
         _c("div", { staticClass: "columns" }, [
           _c("section", { staticClass: "column col-2 xknote-sidebar" }, [
@@ -20990,11 +21253,13 @@ var render = function() {
                 _c(
                   "a",
                   {
-                    class: _vm.currBadgeCount !== 0 ? "badge" : "",
+                    class:
+                      (_vm.currBadgeCount !== 0 ? "badge " : "") +
+                      (_vm.xknoteTab === "curr" ? "active" : ""),
                     attrs: { href: "#", "data-badge": _vm.currBadgeCount },
                     on: {
                       click: function($event) {
-                        return _vm.switchTab("curr", $event)
+                        return _vm.switchTab("curr")
                       }
                     }
                   },
@@ -21002,30 +21267,39 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              _c("li", { staticClass: "tab-item active" }, [
-                _c(
-                  "a",
-                  {
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        return _vm.switchTab("cloud", $event)
+              _c(
+                "li",
+                {
+                  class:
+                    "tab-item " + (_vm.xknoteTab === "cloud" ? "active" : "")
+                },
+                [
+                  _c(
+                    "a",
+                    {
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          return _vm.switchTab("cloud")
+                        }
                       }
-                    }
-                  },
-                  [_vm._v("云端")]
-                )
-              ]),
+                    },
+                    [_vm._v("云端")]
+                  )
+                ]
+              ),
               _vm._v(" "),
               _c("li", { staticClass: "tab-item" }, [
                 _c(
                   "a",
                   {
-                    class: _vm.localBadgeCount !== 0 ? "badge" : "",
+                    class:
+                      (_vm.localBadgeCount !== 0 ? "badge " : "") +
+                      (_vm.xknoteTab === "local" ? "active" : ""),
                     attrs: { href: "#", "data-badge": _vm.localBadgeCount },
                     on: {
                       click: function($event) {
-                        return _vm.switchTab("local", $event)
+                        return _vm.switchTab("local")
                       }
                     }
                   },
@@ -21037,7 +21311,16 @@ var render = function() {
             _c("ul", { staticClass: "xknote-tab-content" }, [
               _c(
                 "li",
-                { staticClass: "d-none", attrs: { id: "tab-item-curr" } },
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.xknoteTab === "curr",
+                      expression: "xknoteTab==='curr'"
+                    }
+                  ]
+                },
                 [
                   _c(
                     "ul",
@@ -21052,7 +21335,8 @@ var render = function() {
                               attrs: {
                                 info: item,
                                 badge: item.badge,
-                                index: "curr:" + index
+                                index: index,
+                                storage: "curr"
                               }
                             })
                           ],
@@ -21073,12 +21357,21 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "li",
-                { attrs: { id: "tab-item-cloud" } },
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.xknoteTab === "cloud",
+                      expression: "xknoteTab==='cloud'"
+                    }
+                  ]
+                },
                 [
                   _vm._l(_vm.cloudList, function(item, index) {
                     return _c("folder-item", {
                       key: item.id,
-                      attrs: { info: item, index: "cloud:" + index }
+                      attrs: { info: item, index: index, storage: "cloud" }
                     })
                   }),
                   _vm._v(" "),
@@ -21097,7 +21390,16 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "li",
-                { staticClass: "d-none", attrs: { id: "tab-item-local" } },
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.xknoteTab === "local",
+                      expression: "xknoteTab==='local'"
+                    }
+                  ]
+                },
                 [
                   _c(
                     "ul",
@@ -21112,7 +21414,8 @@ var render = function() {
                               attrs: {
                                 info: item,
                                 badge: item.badge,
-                                index: "local:" + index
+                                index: index,
+                                storage: "local"
                               }
                             })
                           ],
@@ -21132,7 +21435,7 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _vm._m(1)
+            _vm._m(5)
           ]),
           _vm._v(" "),
           _c(
@@ -21140,7 +21443,10 @@ var render = function() {
             { staticClass: "column col-10", attrs: { id: "xknote-editor" } },
             [
               _c("xk-editor", {
-                attrs: { settingApi: _vm.setting, contentApi: _vm.content }
+                attrs: {
+                  settingApi: _vm.xknoteSetting,
+                  contentProps: _vm.xknoteOpened.note.content
+                }
               })
             ],
             1
@@ -21148,25 +21454,95 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "components" }, [
-          _vm._m(2),
-          _vm._v(" "),
-          _c("ul", { staticClass: "menu note-settings col-1 d-none" }, [
-            _vm._m(3),
-            _vm._v(" "),
-            _c("li", { staticClass: "menu-item" }, [
-              _c(
-                "a",
+          _c(
+            "ul",
+            {
+              directives: [
                 {
-                  on: {
-                    click: function($event) {
-                      return _vm.noteOperate("delete", "cloud")
-                    }
-                  }
-                },
-                [_vm._v("删除")]
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.floatMenu.show,
+                  expression: "floatMenu.show"
+                }
+              ],
+              staticClass: "menu float-menu col-1"
+            },
+            _vm._l(_vm.floatMenu.items, function(item) {
+              return _c(
+                "li",
+                { key: item.id, staticClass: "menu-item" },
+                [
+                  item.name === "saveAndClose"
+                    ? [
+                        _c("label", { staticClass: "form-switch" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.floatMenu.saveAndClose,
+                                expression: "floatMenu.saveAndClose"
+                              }
+                            ],
+                            attrs: { type: "checkbox" },
+                            domProps: {
+                              checked: Array.isArray(_vm.floatMenu.saveAndClose)
+                                ? _vm._i(_vm.floatMenu.saveAndClose, null) > -1
+                                : _vm.floatMenu.saveAndClose
+                            },
+                            on: {
+                              change: function($event) {
+                                var $$a = _vm.floatMenu.saveAndClose,
+                                  $$el = $event.target,
+                                  $$c = $$el.checked ? true : false
+                                if (Array.isArray($$a)) {
+                                  var $$v = null,
+                                    $$i = _vm._i($$a, $$v)
+                                  if ($$el.checked) {
+                                    $$i < 0 &&
+                                      _vm.$set(
+                                        _vm.floatMenu,
+                                        "saveAndClose",
+                                        $$a.concat([$$v])
+                                      )
+                                  } else {
+                                    $$i > -1 &&
+                                      _vm.$set(
+                                        _vm.floatMenu,
+                                        "saveAndClose",
+                                        $$a
+                                          .slice(0, $$i)
+                                          .concat($$a.slice($$i + 1))
+                                      )
+                                  }
+                                } else {
+                                  _vm.$set(_vm.floatMenu, "saveAndClose", $$c)
+                                }
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("i", { staticClass: "form-icon" }),
+                          _vm._v(" 保存后关闭\n            ")
+                        ])
+                      ]
+                    : _c(
+                        "a",
+                        {
+                          on: {
+                            click: function($event) {
+                              return _vm.floatMenuClick(item.operate)
+                            }
+                          }
+                        },
+                        [_vm._v(_vm._s(item.name))]
+                      )
+                ],
+                2
               )
-            ])
-          ]),
+            }),
+            0
+          ),
           _vm._v(" "),
           _c(
             "div",
@@ -21235,236 +21611,211 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("header", { staticClass: "navbar xknote-header" }, [
-      _c("section", { staticClass: "navbar-section col-2" }, [
-        _c("img", {
-          staticClass: "xknote-icon",
-          attrs: {
-            src: "https://note.ixk.me/img/logo.png",
-            alt: "XK-Note icon"
-          }
-        }),
+    return _c("section", { staticClass: "navbar-section col-2" }, [
+      _c("img", {
+        staticClass: "xknote-icon",
+        attrs: { src: "https://note.ixk.me/img/logo.png", alt: "XK-Note icon" }
+      }),
+      _vm._v(" "),
+      _c(
+        "a",
+        { staticClass: "btn btn-link text-large", attrs: { href: "#" } },
+        [_vm._v("{ XK-Note }")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "dropdown" }, [
+      _c("div", { staticClass: "btn-group" }, [
+        _c("a", { staticClass: "btn", attrs: { href: "#" } }, [
+          _vm._v("云端保存")
+        ]),
         _vm._v(" "),
         _c(
           "a",
-          { staticClass: "btn btn-link text-large", attrs: { href: "#" } },
-          [_vm._v("{ XK-Note }")]
-        )
-      ]),
-      _vm._v(" "),
-      _c("section", { staticClass: "navbar-center" }, [
-        _c("input", {
-          staticClass: "form-input",
-          attrs: { type: "text", placeholder: "Title" }
-        }),
+          {
+            staticClass: "btn dropdown-toggle",
+            attrs: { href: "#", tabindex: "0" }
+          },
+          [_c("i", { staticClass: "icon icon-caret" })]
+        ),
         _vm._v(" "),
-        _c("div", { staticClass: "dropdown" }, [
-          _c("div", { staticClass: "btn-group" }, [
-            _c("a", { staticClass: "btn", attrs: { href: "#" } }, [
-              _vm._v("云端保存")
-            ]),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "btn dropdown-toggle",
-                attrs: { href: "#", tabindex: "0" }
-              },
-              [_c("i", { staticClass: "icon icon-caret" })]
-            ),
-            _vm._v(" "),
-            _c("ul", { staticClass: "menu" }, [
-              _c("li", { staticClass: "menu-item" }, [
-                _c("a", { attrs: { href: "#" } }, [_vm._v("本地保存")])
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c("a", { attrs: { href: "#" } }, [_vm._v("全部保存到云端")])
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c("a", { attrs: { href: "#" } }, [_vm._v("全部保存到本地")])
-              ])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "dropdown" }, [
-          _c("div", { staticClass: "btn-group" }, [
-            _c(
-              "a",
-              {
-                staticClass: "btn dropdown-toggle",
-                attrs: { href: "#", tabindex: "0" }
-              },
-              [
-                _vm._v("\n              导出\n              "),
-                _c("i", { staticClass: "icon icon-caret" })
-              ]
-            ),
-            _vm._v(" "),
-            _c("ul", { staticClass: "menu" }, [
-              _c("li", { staticClass: "menu-item" }, [
-                _c("a", { attrs: { href: "#" } }, [
-                  _vm._v("导出为Markdown文件")
-                ])
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c("a", { attrs: { href: "#" } }, [_vm._v("导出HTML文件")])
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c("a", { attrs: { href: "#" } }, [
-                  _vm._v("导出带样式的HTML文件")
-                ])
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c("a", { attrs: { href: "#" } }, [
-                  _vm._v("导出阅读模式的HTML文件")
-                ])
-              ])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "dropdown" }, [
-          _c("div", { staticClass: "btn-group" }, [
-            _c(
-              "a",
-              {
-                staticClass: "btn dropdown-toggle",
-                attrs: { href: "#", tabindex: "0" }
-              },
-              [
-                _vm._v("\n              操作\n              "),
-                _c("i", { staticClass: "icon icon-caret" })
-              ]
-            ),
-            _vm._v(" "),
-            _c("ul", { staticClass: "menu" }, [
-              _c("li", {
-                staticClass: "divider",
-                attrs: { "data-content": "Git" }
-              }),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c("a", { attrs: { href: "#" } }, [_vm._v("Push")])
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c("a", { attrs: { href: "#" } }, [_vm._v("Pull")])
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c("a", { attrs: { href: "#" } }, [_vm._v("Clone")])
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c("a", { attrs: { href: "#" } }, [_vm._v("Init")])
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c("a", { attrs: { href: "#" } }, [_vm._v("Push force")])
-              ])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "popover popover-bottom" }, [
-          _c("button", { staticClass: "btn" }, [_vm._v("信息")]),
+        _c("ul", { staticClass: "menu" }, [
+          _c("li", { staticClass: "menu-item" }, [
+            _c("a", { attrs: { href: "#" } }, [_vm._v("本地保存")])
+          ]),
           _vm._v(" "),
-          _c("div", { staticClass: "popover-container" }, [
-            _c("div", { staticClass: "card" }, [
-              _c("div", { staticClass: "card-body" }, [
-                _c("p", [
-                  _vm._v("\n                  创建时间：\n                  "),
-                  _c("span", [_vm._v("{ createTime }")])
-                ]),
-                _vm._v(" "),
-                _c("p", [
-                  _vm._v("\n                  修改时间：\n                  "),
-                  _c("span", [_vm._v("{ updateTime }")])
-                ]),
-                _vm._v(" "),
-                _c("p", [
-                  _vm._v("\n                  路径：\n                  "),
-                  _c("span", [_vm._v("{ path }")])
-                ])
-              ])
+          _c("li", { staticClass: "menu-item" }, [
+            _c("a", { attrs: { href: "#" } }, [_vm._v("全部保存到云端")])
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "menu-item" }, [
+            _c("a", { attrs: { href: "#" } }, [_vm._v("全部保存到本地")])
+          ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "dropdown" }, [
+      _c("div", { staticClass: "btn-group" }, [
+        _c(
+          "a",
+          {
+            staticClass: "btn dropdown-toggle",
+            attrs: { href: "#", tabindex: "0" }
+          },
+          [
+            _vm._v("\n              导出\n              "),
+            _c("i", { staticClass: "icon icon-caret" })
+          ]
+        ),
+        _vm._v(" "),
+        _c("ul", { staticClass: "menu" }, [
+          _c("li", { staticClass: "menu-item" }, [
+            _c("a", { attrs: { href: "#" } }, [_vm._v("导出为Markdown文件")])
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "menu-item" }, [
+            _c("a", { attrs: { href: "#" } }, [_vm._v("导出HTML文件")])
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "menu-item" }, [
+            _c("a", { attrs: { href: "#" } }, [_vm._v("导出带样式的HTML文件")])
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "menu-item" }, [
+            _c("a", { attrs: { href: "#" } }, [
+              _vm._v("导出阅读模式的HTML文件")
+            ])
+          ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "dropdown" }, [
+      _c("div", { staticClass: "btn-group" }, [
+        _c(
+          "a",
+          {
+            staticClass: "btn dropdown-toggle",
+            attrs: { href: "#", tabindex: "0" }
+          },
+          [
+            _vm._v("\n              操作\n              "),
+            _c("i", { staticClass: "icon icon-caret" })
+          ]
+        ),
+        _vm._v(" "),
+        _c("ul", { staticClass: "menu" }, [
+          _c("li", {
+            staticClass: "divider",
+            attrs: { "data-content": "Git" }
+          }),
+          _vm._v(" "),
+          _c("li", { staticClass: "menu-item" }, [
+            _c("a", { attrs: { href: "#" } }, [_vm._v("Push")])
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "menu-item" }, [
+            _c("a", { attrs: { href: "#" } }, [_vm._v("Pull")])
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "menu-item" }, [
+            _c("a", { attrs: { href: "#" } }, [_vm._v("Clone")])
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "menu-item" }, [
+            _c("a", { attrs: { href: "#" } }, [_vm._v("Init")])
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "menu-item" }, [
+            _c("a", { attrs: { href: "#" } }, [_vm._v("Push force")])
+          ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("section", { staticClass: "navbar-section" }, [
+      _c("div", { staticClass: "dropdown" }, [
+        _c("div", { staticClass: "btn-group" }, [
+          _c("a", { staticClass: "btn btn-primary", attrs: { href: "#" } }, [
+            _vm._v("新建MD笔记")
+          ]),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "btn btn-primary dropdown-toggle",
+              attrs: { href: "#", tabindex: "0" }
+            },
+            [_c("i", { staticClass: "icon icon-caret" })]
+          ),
+          _vm._v(" "),
+          _c("ul", { staticClass: "menu" }, [
+            _c("li", { staticClass: "menu-item" }, [
+              _c("a", { attrs: { href: "#" } }, [_vm._v("新建文件夹")])
             ])
           ])
         ])
       ]),
       _vm._v(" "),
-      _c("section", { staticClass: "navbar-section" }, [
-        _c("div", { staticClass: "dropdown" }, [
-          _c("div", { staticClass: "btn-group" }, [
-            _c("a", { staticClass: "btn btn-primary", attrs: { href: "#" } }, [
-              _vm._v("新建MD笔记")
-            ]),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "btn btn-primary dropdown-toggle",
-                attrs: { href: "#", tabindex: "0" }
-              },
-              [_c("i", { staticClass: "icon icon-caret" })]
-            ),
-            _vm._v(" "),
-            _c("ul", { staticClass: "menu" }, [
-              _c("li", { staticClass: "menu-item" }, [
-                _c("a", { attrs: { href: "#" } }, [_vm._v("新建文件夹")])
-              ])
-            ])
-          ])
-        ]),
+      _c("a", { staticClass: "btn btn-link", attrs: { href: "#" } }, [
+        _vm._v("阅读模式")
+      ]),
+      _vm._v(" "),
+      _c("a", { staticClass: "btn btn-link", attrs: { href: "#" } }, [
+        _vm._v("写作模式")
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "dropdown dropdown-right" }, [
+        _c(
+          "a",
+          {
+            staticClass: "btn btn-link dropdown-toggle",
+            attrs: { href: "#", tabindex: "0" }
+          },
+          [
+            _vm._v("\n            { name }\n            "),
+            _c("i", { staticClass: "icon icon-caret" })
+          ]
+        ),
         _vm._v(" "),
-        _c("a", { staticClass: "btn btn-link", attrs: { href: "#" } }, [
-          _vm._v("阅读模式")
-        ]),
-        _vm._v(" "),
-        _c("a", { staticClass: "btn btn-link", attrs: { href: "#" } }, [
-          _vm._v("写作模式")
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "dropdown dropdown-right" }, [
-          _c(
-            "a",
-            {
-              staticClass: "btn btn-link dropdown-toggle",
-              attrs: { href: "#", tabindex: "0" }
-            },
-            [
-              _vm._v("\n            { name }\n            "),
-              _c("i", { staticClass: "icon icon-caret" })
-            ]
-          ),
+        _c("ul", { staticClass: "menu" }, [
+          _c("li", { staticClass: "menu-item" }, [
+            _c("a", { attrs: { href: "" } }, [_vm._v("个人中心")])
+          ]),
           _vm._v(" "),
-          _c("ul", { staticClass: "menu" }, [
-            _c("li", { staticClass: "menu-item" }, [
-              _c("a", { attrs: { href: "" } }, [_vm._v("个人中心")])
-            ]),
-            _vm._v(" "),
-            _c("li", { staticClass: "menu-item" }, [
-              _c("a", { attrs: { href: "" } }, [_vm._v("用户设置")])
-            ]),
-            _vm._v(" "),
-            _c("li", { staticClass: "menu-item" }, [
-              _c("a", { attrs: { href: "" } }, [_vm._v("Git设置")])
-            ]),
-            _vm._v(" "),
-            _c("li", { staticClass: "menu-item" }, [
-              _c("a", { attrs: { href: "" } }, [_vm._v("系统管理")])
-            ]),
-            _vm._v(" "),
-            _c("li", { staticClass: "divider" }),
-            _vm._v(" "),
-            _c("li", { staticClass: "menu-item" }, [
-              _c("a", { attrs: { href: "" } }, [_vm._v("登出")])
-            ])
+          _c("li", { staticClass: "menu-item" }, [
+            _c("a", { attrs: { href: "" } }, [_vm._v("用户设置")])
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "menu-item" }, [
+            _c("a", { attrs: { href: "" } }, [_vm._v("Git设置")])
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "menu-item" }, [
+            _c("a", { attrs: { href: "" } }, [_vm._v("系统管理")])
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "divider" }),
+          _vm._v(" "),
+          _c("li", { staticClass: "menu-item" }, [
+            _c("a", { attrs: { href: "" } }, [_vm._v("登出")])
           ])
         ])
       ])
@@ -21481,28 +21832,6 @@ var staticRenderFns = [
       ]),
       _vm._v(" By\n          "),
       _c("a", { attrs: { href: "https://ixk.me" } }, [_vm._v("Otstar Lin")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("ul", { staticClass: "menu folder-settings col-1 d-none" }, [
-      _c("li", { staticClass: "menu-item" }, [
-        _c("a", { attrs: { href: "#" } }, [_vm._v("重命名")])
-      ]),
-      _vm._v(" "),
-      _c("li", { staticClass: "menu-item" }, [
-        _c("a", { attrs: { href: "" } }, [_vm._v("删除")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "menu-item" }, [
-      _c("a", { attrs: { href: "#" } }, [_vm._v("重命名(移动)")])
     ])
   }
 ]
@@ -21529,7 +21858,10 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "accordion", attrs: { "data-index": _vm.index } },
+    {
+      staticClass: "accordion",
+      attrs: { "data-index": _vm.index, "data-storage": _vm.storage }
+    },
     [
       _c("input", {
         attrs: {
@@ -21588,14 +21920,19 @@ var render = function() {
                       attrs: {
                         info: item,
                         badge: null,
-                        index: _vm.index + ":" + i
+                        index: _vm.index + ":" + i,
+                        storage: _vm.storage
                       }
                     })
                   : _vm._e(),
                 _vm._v(" "),
                 item.type === "folder"
                   ? _c("folder-item", {
-                      attrs: { info: item, index: _vm.index + ":" + i }
+                      attrs: {
+                        info: item,
+                        index: _vm.index + ":" + i,
+                        storage: _vm.storage
+                      }
                     })
                   : _vm._e()
               ],
@@ -21637,7 +21974,8 @@ var render = function() {
       attrs: {
         "data-badge": _vm.badge,
         title: _vm.hoverTitle,
-        "data-index": _vm.index
+        "data-index": _vm.index,
+        "data-storage": _vm.storage
       }
     },
     [
@@ -21647,13 +21985,32 @@ var render = function() {
       }),
       _vm._v(" "),
       _c("div", { staticClass: "tile-content" }, [
-        _c("div", { staticClass: "tile-title text-bold" }, [
-          _vm._v(_vm._s(_vm.info.name))
-        ]),
+        _c(
+          "div",
+          {
+            staticClass: "tile-click",
+            on: {
+              click: function($event) {
+                return _vm.openNote()
+              }
+            }
+          },
+          [
+            _c("div", { staticClass: "tile-title text-bold" }, [
+              _vm._v(_vm._s(_vm.info.name))
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "tile-subtitle" }, [
+              _vm._v(_vm._s(_vm.info.path))
+            ])
+          ]
+        ),
         _vm._v(" "),
-        _c("div", { staticClass: "tile-subtitle" }, [
-          _vm._v(_vm._s(_vm.info.path))
-        ])
+        _c("input", {
+          staticClass: "form-input",
+          attrs: { type: "text", placeholder: "Name" },
+          domProps: { value: _vm.info.name }
+        })
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "tile-action" }, [
@@ -23385,8 +23742,8 @@ vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]({
   routes: _routes__WEBPACK_IMPORTED_MODULE_3__["default"]
 });
-var app = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
-  el: '#app',
+window.vm = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
+  el: "#app",
   router: router
 });
 

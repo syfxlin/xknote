@@ -1,5 +1,5 @@
 <template>
-  <main class="home">
+  <main class="home" ref="home">
     <template v-show="xknoteMode==='normal'">
       <header class="navbar xknote-header">
         <section class="navbar-section col-2">
@@ -7,7 +7,12 @@
           <a href="#" class="btn btn-link text-large">{ XK-Note }</a>
         </section>
         <section class="navbar-center">
-          <input class="form-input" type="text" placeholder="Title" />
+          <input
+            class="form-input"
+            type="text"
+            placeholder="Title"
+            :value="xknoteOpened.note.title"
+          />
           <div class="dropdown">
             <div class="btn-group">
               <a href="#" class="btn">云端保存</a>
@@ -82,15 +87,15 @@
                 <div class="card-body">
                   <p>
                     创建时间：
-                    <span>{ createTime }</span>
+                    <span>{{ xknoteOpened.note.created_at }}</span>
                   </p>
                   <p>
                     修改时间：
-                    <span>{ updateTime }</span>
+                    <span>{{ xknoteOpened.note.updated_at }}</span>
                   </p>
                   <p>
                     路径：
-                    <span>{ path }</span>
+                    <span>{{ xknoteOpened.path }}</span>
                   </p>
                 </div>
               </div>
@@ -146,51 +151,52 @@
               <!-- mark data-badge: 当前未保存的文章数量 -->
               <a
                 href="#"
-                :class="currBadgeCount!==0 ? 'badge' : ''"
+                :class="(currBadgeCount!==0 ? 'badge ' : '') + (xknoteTab==='curr' ? 'active' : '')"
                 :data-badge="currBadgeCount"
-                @click="switchTab('curr', $event)"
+                @click="switchTab('curr')"
               >当前</a>
             </li>
-            <li class="tab-item active">
-              <a href="#" @click="switchTab('cloud', $event)">云端</a>
+            <li :class="'tab-item ' + (xknoteTab==='cloud' ? 'active' : '')">
+              <a href="#" @click="switchTab('cloud')">云端</a>
             </li>
             <li class="tab-item">
               <!-- mark data-badge: 未保存到云端的数量 -->
               <a
                 href="#"
-                :class="localBadgeCount!==0 ? 'badge' : ''"
+                :class="(localBadgeCount!==0 ? 'badge ' : '') + (xknoteTab==='local' ? 'active' : '')"
                 :data-badge="localBadgeCount"
-                @click="switchTab('local', $event)"
+                @click="switchTab('local')"
               >本地</a>
             </li>
           </ul>
           <ul class="xknote-tab-content">
-            <li id="tab-item-curr" class="d-none">
+            <li v-show="xknoteTab==='curr'">
               <ul class="menu menu-nav">
                 <li class="menu-item" v-for="(item, index) in currList" :key="item.id">
                   <!-- mark data-badge: N为未保存，L为已经保存到本地，若已经保存到云端则不显示badge -->
-                  <note-item :info="item" :badge="item.badge" :index="'curr:' + index" />
+                  <note-item :info="item" :badge="item.badge" :index="index" :storage="'curr'" />
                 </li>
                 <div class="text-gray text-center" v-if="currList.length===0">这里什么都没有哦（￣︶￣）↗</div>
               </ul>
             </li>
-            <li id="tab-item-cloud">
+            <li v-show="xknoteTab==='cloud'">
               <folder-item
                 v-for="(item, index) in cloudList"
                 :key="item.id"
                 :info="item"
-                :index="'cloud:' + index"
+                :index="index"
+                :storage="'cloud'"
               />
               <template v-if="cloudList.length===0">
                 <div class="loading loading-lg"></div>
                 <div class="text-gray text-center">正在加载，客官莫急。</div>
               </template>
             </li>
-            <li id="tab-item-local" class="d-none">
+            <li v-show="xknoteTab==='local'">
               <ul class="menu menu-nav">
                 <li class="menu-item" v-for="(item, index) in localList" :key="item.id">
                   <!-- mark data-badge: N为未保存，L为已经保存到本地，若已经保存到云端则不显示badge -->
-                  <note-item :info="item" :badge="item.badge" :index="'local:' + index" />
+                  <note-item :info="item" :badge="item.badge" :index="index" :storage="'local'" />
                 </li>
                 <div class="text-gray text-center" v-if="localList.length===0">这里什么都没有哦（￣︶￣）↗</div>
               </ul>
@@ -203,24 +209,19 @@
           </div>
         </section>
         <section class="column col-10" id="xknote-editor">
-          <xk-editor :settingApi="setting" :contentApi="content" />
+          <xk-editor :settingApi="xknoteSetting" :contentProps="xknoteOpened.note.content" />
         </section>
       </div>
       <div class="components">
-        <ul class="menu folder-settings col-1 d-none">
-          <li class="menu-item">
-            <a href="#">重命名</a>
-          </li>
-          <li class="menu-item">
-            <a href>删除</a>
-          </li>
-        </ul>
-        <ul class="menu note-settings col-1 d-none">
-          <li class="menu-item">
-            <a href="#">重命名(移动)</a>
-          </li>
-          <li class="menu-item">
-            <a @click="noteOperate('delete', 'cloud')">删除</a>
+        <ul class="menu float-menu col-1" v-show="floatMenu.show">
+          <li class="menu-item" v-for="item in floatMenu.items" :key="item.id">
+            <template v-if="item.name==='saveAndClose'">
+              <label class="form-switch">
+                <input type="checkbox" v-model="floatMenu.saveAndClose" />
+                <i class="form-icon"></i> 保存后关闭
+              </label>
+            </template>
+            <a @click="floatMenuClick(item.operate)" v-else>{{ item.name }}</a>
           </li>
         </ul>
         <div :class="'modal modal-sm xknote-sm-modal' + (smModal.show ? ' active' : '')">
@@ -249,7 +250,7 @@ import noteItem from "./noteItem.vue";
 import folderItem from "./folderItem.vue";
 import "../assets/style.css";
 export default {
-  name: "Home",
+  name: "home",
   components: {
     "xk-editor": XK_Editor,
     "note-item": noteItem,
@@ -257,20 +258,49 @@ export default {
   },
   data() {
     return {
-      xknoteMode: "normal",
-      currList: [
-        {
-          type: "note",
-          path: "uid_1/C语言学习笔记2.md",
-          name: "C语言学习笔记2.md",
-          badge: "N"
-        },
-        {
-          type: "note",
-          path: "uid_1/public/PHP学习笔记2.md",
-          name: "PHP学习笔记2.md",
-          badge: "L"
+      xknoteOpened: {
+        type: "note",
+        path: "uid_1/C语言学习笔记.md",
+        name: "C语言学习笔记.md",
+        badge: "N",
+        note: {
+          title: "C语言学习笔记",
+          author: "Otstar Lin",
+          content: "C语言学习笔记-content",
+          created_at: "2019-7-25",
+          updated_at: "2019-7-25"
         }
+      },
+      xknoteSetting: "/static/setting.json",
+      xknoteMode: "normal",
+      xknoteTab: "cloud",
+      currList: [
+        // {
+        //   type: "note",
+        //   path: "uid_1/C语言学习笔记.md",
+        //   name: "C语言学习笔记.md",
+        //   badge: "N",
+        //   note: {
+        //     title: "C语言学习笔记",
+        //     author: "Otstar Lin",
+        //     content: "C语言学习笔记-content",
+        //     created_at: "2019-7-25",
+        //     updated_at: "2019-7-25"
+        //   }
+        // },
+        // {
+        //   type: "note",
+        //   path: "uid_1/public/PHP学习笔记.md",
+        //   name: "PHP学习笔记.md",
+        //   badge: "N",
+        //   note: {
+        //     title: "PHP学习笔记",
+        //     author: "Otstar Lin",
+        //     content: "PHP学习笔记-content",
+        //     created_at: "2019-7-25",
+        //     updated_at: "2019-7-25"
+        //   }
+        // }
       ],
       cloudList: [],
       localList: [],
@@ -281,8 +311,11 @@ export default {
         confirm: () => {},
         cancel: () => {}
       },
-      setting: "/static/setting.json",
-      content: "/static/md_content.md"
+      floatMenu: {
+        show: false,
+        items: [],
+        saveAndClose: true
+      }
     };
   },
   computed: {
@@ -306,16 +339,8 @@ export default {
     }
   },
   methods: {
-    switchTab(tabName, e) {
-      document
-        .querySelector(".xknote-tab > .active")
-        .classList.remove("active");
-      e.target.parentElement.classList.add("active");
-      var tabId = "tab-item-" + tabName;
-      document.querySelector(
-        ".xknote-tab-content > li:not(.d-none)"
-      ).className = "d-none";
-      document.getElementById(tabId).className = "";
+    switchTab(tabName) {
+      this.xknoteTab = tabName;
     },
     loadCloudFolders() {
       window.axios
@@ -328,8 +353,8 @@ export default {
         });
     },
     loadLocalNotes() {
-      this.noteLocalDB("readAll", "", (e, data) => {
-        this.localList = data;
+      this.noteLocalDB("readAll", "", (e, list) => {
+        this.localList = list;
       });
     },
     noteLocalDB(
@@ -373,11 +398,11 @@ export default {
           }
         }
         if (operate === "read") {
-          let reData = null;
+          let noteInfo = null;
           let req = os.getAll(data);
           req.onsuccess = e => {
-            reData = req.result;
-            callS(e, reData);
+            noteInfo = req.result;
+            callS(e, noteInfo);
           };
           req.onerror = e => {
             console.log("数据读取失败: " + e);
@@ -385,11 +410,11 @@ export default {
           };
         }
         if (operate === "readAll") {
-          let reData = null;
+          let noteList = null;
           let req = os.getAll();
           req.onsuccess = e => {
-            reData = req.result;
-            callS(e, reData);
+            noteList = req.result;
+            callS(e, noteList);
           };
           req.onerror = e => {
             console.log("数据读取失败: " + e);
@@ -437,45 +462,126 @@ export default {
         }
       };
     },
-    listOperate(operate, index) {
+    // 操作列表
+    listOperate(operate, storage, index = "", noteInfo = null) {
       let arr = [];
+      let list;
       arr = index.split(":");
-      let list = this[arr[0] + "List"];
-      for (let i = 1; i < arr.length - 1; i++) {
-        if (i === 1) {
+      list = this[storage + "List"];
+      for (let i = 0; i < arr.length - 1; i++) {
+        if (i === 0) {
           list = list[arr[i]].sub;
         } else {
           list = list.sub[arr[i]];
         }
       }
       if (operate === "delete") {
-        list.splice(arr[arr.length - 1], 1);
+        let noteList = list.splice(arr[arr.length - 1], 1);
+        return noteList[0];
+      }
+      if (operate === "add") {
+        if (storage === "curr" || storage === "local") {
+          this[storage + "List"].push(noteInfo);
+        }
+      }
+      if (operate === "get") {
+        return list[arr[arr.length - 1]];
       }
     },
-    noteOperate(operate, storage) {
-      let curr = window.xknote.currClickTarget;
+    // 操作笔记
+    noteOperate(operate, storage, noteInfo = null) {
       if (operate === "delete") {
-        document
-          .getElementsByClassName("note-settings")[0]
-          .classList.add("d-none");
+        if (storage === "local") {
+          this.noteLocalDB("delete", noteInfo.name);
+        }
+        // TODO: 云端删除
+      }
+      if (operate === "save") {
+        if (storage === "local") {
+          this.noteLocalDB("add", noteInfo);
+        }
+      }
+      if (operate === "rename") {
+        if (storage === "local") {
+          console.log(noteInfo);
+          this.noteLocalDB("delete", noteInfo.oldName);
+          this.noteLocalDB("add", noteInfo.note);
+        }
+      }
+    },
+    floatMenuClick(operate) {
+      this.floatMenu.show = false;
+      let curr = window.xknote.currClickTarget;
+      let storage = curr.getAttribute("data-storage");
+      let index = curr.getAttribute("data-index");
+      if (operate === "delete") {
         this.smModal.title = "删除";
         this.smModal.content = "是否删除该文件(文件夹)，此操作不可逆！";
         this.smModal.show = true;
         this.smModal.confirm = () => {
-          this.listOperate("delete", curr.getAttribute("data-index"));
+          let note = null;
+          note = this.listOperate("delete", storage, index);
           this.smModal.show = false;
+          this.noteOperate(operate, storage, note);
         };
         this.smModal.cancel = () => {
           this.smModal.show = false;
         };
       }
+      if (operate === "saveLocal") {
+        let note = null;
+        if (this.floatMenu.saveAndClose) {
+          note = this.listOperate("delete", "curr", index);
+        } else {
+          note = this.listOperate("get", "curr", index);
+        }
+        note.badge = "L";
+        this.listOperate("add", "local", "", note);
+        this.noteOperate("save", "local", note);
+      }
+      if (operate === "rename") {
+        let note = this.listOperate("get", storage, index);
+        let oldName = note.name;
+        curr.querySelector(".tile-content").setAttribute("children", "input");
+        let input = curr.querySelector(".tile-content > input");
+        let keyEv = e => {
+          if (e.key === "Enter") {
+            let value = e.target.value;
+            note.path = note.path.replace(note.name, value);
+            note.name = value;
+            curr.querySelector(".tile-content").removeAttribute("children");
+            input.removeEventListener("keydown", keyEv);
+            this.noteOperate(operate, storage, {
+              oldName: oldName,
+              note: note
+            });
+          }
+        };
+        input.addEventListener("keydown", keyEv);
+      }
+    },
+    openNote(note) {
+      this.xknoteOpened = note;
+      this.currList.push(note);
+      this.xknoteTab = "curr";
+      // TODO: 开启的Note在当前列表中获得active效果
     }
   },
   mounted() {
     this.loadCloudFolders();
     this.loadLocalNotes();
-    window.noteOperate = this.noteOperate;
     window.xknote = {};
+  },
+  watch: {
+    xknoteOpened(val) {
+      if (window.eThis.e.editorMode === "ace") {
+        window.XKEditor.setMarkdown(val.note.content);
+      } else {
+        window.XKEditor.switchEditor();
+        window.XKEditor.setMarkdown(val.note.content);
+      }
+      window.XKEditor.ace.gotoLine(1);
+    }
   }
 };
 </script>

@@ -107,9 +107,6 @@ p {
 .xknote-tab-content .tile.badge:after {
     transform: none;
 }
-.xknote-tab-content .tile-content {
-    pointer-events: none;
-}
 .xknote-tab-content .tile-action {
     display: none;
 }
@@ -123,6 +120,18 @@ p {
 .xknote-tab-content .tile-title {
     line-height: 1rem;
     font-size: 0.67rem;
+}
+.xknote-tab-content .tile-click {
+    cursor: pointer;
+}
+.xknote-tab-content .tile-content[children="input"] .tile-click {
+    display: none;
+}
+.xknote-tab-content .tile-content input {
+    display: none;
+}
+.xknote-tab-content .tile-content[children="input"] input {
+    display: block;
 }
 .xknote-tab-content .accordion-header {
     margin: 0 -0.4rem;
@@ -162,9 +171,11 @@ p {
     text-align: center;
 }
 
-.note-settings,
-.folder-settings {
+.float-menu {
     position: fixed;
+}
+.float-menu .menu-item a {
+    cursor: pointer;
 }
 .xknote-sm-modal {
     color: #585858;

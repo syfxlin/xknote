@@ -4,11 +4,15 @@
     :data-badge="badge"
     :title="hoverTitle"
     :data-index="index"
+    :data-storage="storage"
   >
     <img class="icon" src="/static/svg/file-text.svg" />
     <div class="tile-content">
-      <div class="tile-title text-bold">{{ info.name }}</div>
-      <div class="tile-subtitle">{{ info.path }}</div>
+      <div class="tile-click" @click="openNote()">
+        <div class="tile-title text-bold">{{ info.name }}</div>
+        <div class="tile-subtitle">{{ info.path }}</div>
+      </div>
+      <input class="form-input" type="text" placeholder="Name" :value="info.name" />
     </div>
     <div class="tile-action">
       <button class="btn btn-link btn-action" @click="showNoteSettings($event)">
@@ -21,39 +25,89 @@
 <script>
 export default {
   name: "note-item",
-  props: ["info", "badge", "index"],
+  props: ["info", "badge", "index", "storage"],
   data() {
     return {
-      hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path
+      hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path,
+      home: this.$root.$children[0],
+      floatMenuItems: {
+        curr: [
+          {
+            name: "保存到云端",
+            operate: "saveCloud"
+          },
+          {
+            name: "保存到本地",
+            operate: "saveLocal"
+          },
+          {
+            name: "重命名",
+            operate: "rename"
+          },
+          {
+            name: "关闭",
+            operate: "closeCurr"
+          },
+          {
+            name: "saveAndClose"
+          }
+        ],
+        cloud: [
+          {
+            name: "重命名",
+            operate: "rename"
+          },
+          {
+            name: "删除",
+            operate: "delete"
+          }
+        ],
+        local: [
+          {
+            name: "重命名",
+            operate: "rename"
+          },
+          {
+            name: "删除",
+            operate: "delete"
+          }
+        ]
+      }
     };
   },
   methods: {
     showNoteSettings(e) {
-      var n = document.getElementsByClassName("note-settings")[0];
+      var n = document.getElementsByClassName("float-menu")[0];
       n.style.top = e.clientY + "px";
       n.style.left = e.clientX + "px";
-      n.classList.remove("d-none");
-      var offset = {
-        xS: e.clientX,
-        yS: e.clientY,
-        xE: e.clientX + n.clientWidth,
-        yE: e.clientY + n.clientHeight
-      };
-      e.stopPropagation();
-      var closeN = function(ev) {
-        if (
-          ev.clientX < offset.xS ||
-          ev.clientX > offset.xE ||
-          ev.clientY < offset.yS ||
-          ev.clientY > offset.yE
-        ) {
-          n.classList.add("d-none");
-        }
-        document.removeEventListener("click", closeN);
-      };
-      document.addEventListener("click", closeN);
+      this.home.floatMenu.show = true;
+      this.home.floatMenu.items = this.floatMenuItems[this.storage];
+      this.$nextTick(() => {
+        var offset = {
+          xS: e.clientX,
+          yS: e.clientY,
+          xE: e.clientX + n.clientWidth,
+          yE: e.clientY + n.clientHeight
+        };
+        e.stopPropagation();
+        var closeN = ev => {
+          if (
+            ev.clientX < offset.xS ||
+            ev.clientX > offset.xE ||
+            ev.clientY < offset.yS ||
+            ev.clientY > offset.yE
+          ) {
+            this.home.floatMenu.show = false;
+          }
+          document.removeEventListener("click", closeN);
+        };
+        document.addEventListener("click", closeN);
+      });
       window.xknote.currClickTarget =
         e.target.parentElement.parentElement.parentElement;
+    },
+    openNote(e) {
+      this.home.openNote(this.info);
     }
   }
 };
