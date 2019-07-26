@@ -15,7 +15,7 @@
           <note-item
             v-if="item.type==='note'"
             :info="item"
-            :badge="null"
+            :status="'C'"
             :index="index + ':' + i"
             :storage="storage"
           />

@@ -1,7 +1,7 @@
 <template>
   <a
-    :class="'tile tile-centered' + (badge ? ' badge' : '')"
-    :data-badge="badge"
+    :class="'tile tile-centered' + (status!=='C' ? ' badge' : '')"
+    :data-badge="status"
     :title="hoverTitle"
     :data-index="index"
     :data-storage="storage"
@@ -25,7 +25,7 @@
 <script>
 export default {
   name: "note-item",
-  props: ["info", "badge", "index", "storage"],
+  props: ["info", "status", "index", "storage"],
   data() {
     return {
       hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path,
@@ -107,7 +107,10 @@ export default {
         e.target.parentElement.parentElement.parentElement;
     },
     openNote(e) {
-      this.home.openNote(this.info);
+      this.home.openNote(this.info, {
+        index: this.index,
+        storage: this.storage
+      });
     }
   }
 };
