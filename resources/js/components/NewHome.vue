@@ -210,7 +210,11 @@
           </div>
         </section>
         <section class="column col-10" id="xknote-editor">
-          <xk-editor :settingApi="xknoteSetting" :contentProps="xknoteOpened.note.content" />
+          <xk-editor
+            :settingApi="xknoteSetting"
+            :contentProps="xknoteOpened.note.content"
+            v-on:loadHook="editorLoaded"
+          />
         </section>
       </div>
       <div class="components">
@@ -296,13 +300,15 @@ export default {
           storage: ""
         }
       },
+      // 防止openNote时的文档修改引发的标记改变
+      xknoteOpenedChangeFlag: true,
       xknoteSetting: "/static/setting.json",
       // 暂时无用，即正常模式，阅读模式，写作模式
       xknoteMode: "normal",
       xknoteTab: "cloud",
       // currList的扩展信息
       currListSource: [
-        //   index
+        //   {}, {}
       ],
       currList: [
         // {
@@ -314,8 +320,8 @@ export default {
         //     title: "C语言学习笔记",
         //     author: "Otstar Lin",
         //     content: "C语言学习笔记-content",
-        //     created_at: "2019-7-25",
-        //     updated_at: "2019-7-25"
+        //     created_at: "2019/7/27 21:52:15",
+        //     updated_at: "2019/7/27 21:52:15"
         //   }
         // },
         // {
@@ -327,8 +333,8 @@ export default {
         //     title: "PHP学习笔记",
         //     author: "Otstar Lin",
         //     content: "PHP学习笔记-content",
-        //     created_at: "2019-7-25",
-        //     updated_at: "2019-7-25"
+        //     created_at: "2019/7/27 21:52:15",
+        //     updated_at: "2019/7/27 21:52:15"
         //   }
         // }
       ],
@@ -512,11 +518,14 @@ export default {
       }
       if (operate === "delete") {
         let noteList = list.splice(arr[arr.length - 1], 1);
+        if (storage === "curr") {
+          this.currListSource.splice(arr[arr.length - 1], 1);
+        }
         return noteList[0];
       }
       if (operate === "add") {
         if (storage === "curr" || storage === "local") {
-          this[storage + "List"].push(noteInfo);
+          return this[storage + "List"].push(noteInfo) - 1;
         }
       }
       if (operate === "get") {
@@ -542,7 +551,7 @@ export default {
       }
       if (operate === "rename") {
         if (storage === "local") {
-          this.noteLocalDB("delete", noteInfo.oldName);
+          this.noteLocalDB("delete", noteInfo.oldNote.name);
           this.noteLocalDB("add", noteInfo.note);
         }
         if (storage === "cloud") {
@@ -559,7 +568,7 @@ export default {
       let index = curr.getAttribute("data-index");
       if (operate === "delete") {
         this.smModal.title = "删除";
-        this.smModal.content = "是否删除该文件(文件夹)，此操作不可逆！";
+        this.smModal.content = "是否删除该文件(文件夹)？(此操作不可逆)";
         this.smModal.show = true;
         this.smModal.confirm = () => {
           let note = null;
@@ -575,6 +584,13 @@ export default {
       if (operate === "saveLocal") {
         if (storage === "curr") {
           let note = null;
+          if (this.currListSource[index]) {
+            this.listOperate(
+              "delete",
+              "local",
+              this.currListSource[index].index + ""
+            );
+          }
           if (this.floatMenu.saveAndClose) {
             note = this.listOperate("delete", "curr", index);
             this.setXknoteOpened(this.noteBaseInfo);
@@ -582,12 +598,13 @@ export default {
             note = this.listOperate("get", "curr", index);
           }
           note.status = "L";
-          this.listOperate(
-            "delete",
-            "local",
-            this.currListSource[index].index + ""
-          );
-          this.listOperate("add", "local", "", note);
+          let localIndex = this.listOperate("add", "local", "", note);
+          if (!this.floatMenu.saveAndClose) {
+            this.currListSource[index] = {
+              index: localIndex,
+              storage: "local"
+            };
+          }
           this.noteOperate("save", "local", note);
         }
         if (storage === "cloud") {
@@ -596,8 +613,9 @@ export default {
         }
       }
       if (operate === "rename") {
+        // TODO: currList中的笔记重命名影响至实体，即本地存储和云端存储
         let note = this.listOperate("get", storage, index);
-        let oldName = note.name;
+        let oldNote = note;
         curr.querySelector(".tile-content").setAttribute("children", "input");
         let input = curr.querySelector(".tile-content > input");
         let keyEv = e => {
@@ -608,7 +626,7 @@ export default {
             curr.querySelector(".tile-content").removeAttribute("children");
             input.removeEventListener("keydown", keyEv);
             this.noteOperate(operate, storage, {
-              oldName: oldName,
+              oldNote: oldNote,
               note: note
             });
           }
@@ -616,42 +634,48 @@ export default {
         input.addEventListener("keydown", keyEv);
       }
       if (operate === "closeCurr") {
-        if (index == this.xknoteOpenedIndex.curr) {
-          this.setXknoteOpened(this.noteBaseInfo);
+        let closeCurr = () => {
+          if (index == this.xknoteOpenedIndex.curr) {
+            this.setXknoteOpened(this.noteBaseInfo);
+          }
+          this.listOperate("delete", "curr", index);
+        };
+        if (this.listOperate("get", storage, index).status === "N") {
+          this.smModal.title = "关闭";
+          this.smModal.content = "该文件未保存，是否关闭该文件？(此操作不可逆)";
+          this.smModal.show = true;
+          this.smModal.confirm = () => {
+            closeCurr();
+            this.smModal.show = false;
+          };
+          this.smModal.cancel = () => {
+            this.smModal.show = false;
+          };
+        } else {
+          closeCurr();
         }
-        this.listOperate("delete", "curr", index);
       }
     },
     // 打开笔记
     openNote(note, source) {
+      this.xknoteOpenedChangeFlag = false;
       // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
       this.setXknoteOpened(note);
       // 添加到currList，同时将源数据添加到currListSource
-      let len = this.currList.push(note);
-      this.currListSource.push(source);
-      this.xknoteOpenedIndex.curr = len - 1;
+      let len;
+      if (source.storage !== "curr") {
+        len = this.currList.push(note);
+        this.currListSource.push(source);
+        this.xknoteOpenedIndex.curr = len - 1;
+      } else {
+        this.xknoteOpenedIndex.curr = parseInt(source.index);
+      }
       this.xknoteOpenedIndex.source = source;
       this.xknoteTab = "curr";
       this.$nextTick(() => {
-        // 当前文件修改的时候将标记（status）设为未保存状态（N）
-        let changeStatus = () => {
-          this.xknoteOpened.status = "N";
-          document
-            .getElementById("xknote-title")
-            .removeEventListener("change", changeStatus);
-          window.XKEditor.ace.getSession().off("change", changeStatus);
-        };
-        document
-          .getElementById("xknote-title")
-          .addEventListener("change", changeStatus);
-        window.XKEditor.ace.getSession().on("change", changeStatus);
-      });
-      window.XKEditor.ace.getSession().on("change", () => {
-        this.xknoteOpened.note.content = window.XKEditor.getMarkdown();
+        this.xknoteOpenedChangeFlag = true;
       });
       // TODO: 开启的Note在当前列表中获得active效果
-      // TODO: 切换currList中其他项时 调整editor change的监听，防止意外的改变status
-      // TODO: 关闭当前文档时如果未保存则弹出提示框
     },
     setXknoteOpened(noteInfo) {
       this.xknoteOpened = noteInfo;
@@ -661,6 +685,30 @@ export default {
         window.XKEditor.switchEditor();
         window.XKEditor.setMarkdown(noteInfo.note.content);
       }
+    },
+    editorLoaded(e) {
+      if (e === "interfaceLoad") {
+        window.XKEditor.ace.getSession().on("change", () => {
+          this.xknoteOpened.note.content = window.XKEditor.getMarkdown();
+        });
+      }
+    },
+    watchNote() {
+      if (!this.xknoteOpenedChangeFlag) return;
+      this.xknoteOpened.status = "N";
+      var d = new Date();
+      this.xknoteOpened.note.updated_at =
+        d.getFullYear() +
+        "/" +
+        (d.getMonth() + 1) +
+        "/" +
+        d.getDate() +
+        " " +
+        d.getHours() +
+        ":" +
+        d.getMinutes() +
+        ":" +
+        d.getSeconds();
     }
   },
   mounted() {
@@ -668,7 +716,10 @@ export default {
     this.loadLocalNotes();
     window.xknote = {};
   },
-  watch: {}
+  watch: {
+    "xknoteOpened.note.content": "watchNote",
+    "xknoteOpened.note.title": "watchNote"
+  }
 };
 </script>
 

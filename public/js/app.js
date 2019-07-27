@@ -11503,6 +11503,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -11553,12 +11557,14 @@ __webpack_require__.r(__webpack_exports__);
           storage: ""
         }
       },
+      // 防止openNote时的文档修改引发的标记改变
+      xknoteOpenedChangeFlag: true,
       xknoteSetting: "/static/setting.json",
       // 暂时无用，即正常模式，阅读模式，写作模式
       xknoteMode: "normal",
       xknoteTab: "cloud",
       // currList的扩展信息
-      currListSource: [//   index
+      currListSource: [//   {}, {}
       ],
       currList: [// {
         //   type: "note",
@@ -11569,8 +11575,8 @@ __webpack_require__.r(__webpack_exports__);
         //     title: "C语言学习笔记",
         //     author: "Otstar Lin",
         //     content: "C语言学习笔记-content",
-        //     created_at: "2019-7-25",
-        //     updated_at: "2019-7-25"
+        //     created_at: "2019/7/27 21:52:15",
+        //     updated_at: "2019/7/27 21:52:15"
         //   }
         // },
         // {
@@ -11582,8 +11588,8 @@ __webpack_require__.r(__webpack_exports__);
         //     title: "PHP学习笔记",
         //     author: "Otstar Lin",
         //     content: "PHP学习笔记-content",
-        //     created_at: "2019-7-25",
-        //     updated_at: "2019-7-25"
+        //     created_at: "2019/7/27 21:52:15",
+        //     updated_at: "2019/7/27 21:52:15"
         //   }
         // }
       ],
@@ -11797,12 +11803,17 @@ __webpack_require__.r(__webpack_exports__);
 
       if (operate === "delete") {
         var noteList = list.splice(arr[arr.length - 1], 1);
+
+        if (storage === "curr") {
+          this.currListSource.splice(arr[arr.length - 1], 1);
+        }
+
         return noteList[0];
       }
 
       if (operate === "add") {
         if (storage === "curr" || storage === "local") {
-          this[storage + "List"].push(noteInfo);
+          return this[storage + "List"].push(noteInfo) - 1;
         }
       }
 
@@ -11833,7 +11844,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (operate === "rename") {
         if (storage === "local") {
-          this.noteLocalDB("delete", noteInfo.oldName);
+          this.noteLocalDB("delete", noteInfo.oldNote.name);
           this.noteLocalDB("add", noteInfo.note);
         }
 
@@ -11853,7 +11864,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (operate === "delete") {
         this.smModal.title = "删除";
-        this.smModal.content = "是否删除该文件(文件夹)，此操作不可逆！";
+        this.smModal.content = "是否删除该文件(文件夹)？(此操作不可逆)";
         this.smModal.show = true;
 
         this.smModal.confirm = function () {
@@ -11874,6 +11885,10 @@ __webpack_require__.r(__webpack_exports__);
         if (storage === "curr") {
           var note = null;
 
+          if (this.currListSource[index]) {
+            this.listOperate("delete", "local", this.currListSource[index].index + "");
+          }
+
           if (this.floatMenu.saveAndClose) {
             note = this.listOperate("delete", "curr", index);
             this.setXknoteOpened(this.noteBaseInfo);
@@ -11882,8 +11897,15 @@ __webpack_require__.r(__webpack_exports__);
           }
 
           note.status = "L";
-          this.listOperate("delete", "local", this.currListSource[index].index + "");
-          this.listOperate("add", "local", "", note);
+          var localIndex = this.listOperate("add", "local", "", note);
+
+          if (!this.floatMenu.saveAndClose) {
+            this.currListSource[index] = {
+              index: localIndex,
+              storage: "local"
+            };
+          }
+
           this.noteOperate("save", "local", note);
         }
 
@@ -11893,9 +11915,10 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       if (operate === "rename") {
+        // TODO: currList中的笔记重命名影响至实体，即本地存储和云端存储
         var _note = this.listOperate("get", storage, index);
 
-        var oldName = _note.name;
+        var oldNote = _note;
         curr.querySelector(".tile-content").setAttribute("children", "input");
         var input = curr.querySelector(".tile-content > input");
 
@@ -11908,7 +11931,7 @@ __webpack_require__.r(__webpack_exports__);
             input.removeEventListener("keydown", keyEv);
 
             _this3.noteOperate(operate, storage, {
-              oldName: oldName,
+              oldNote: oldNote,
               note: _note
             });
           }
@@ -11918,41 +11941,55 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       if (operate === "closeCurr") {
-        if (index == this.xknoteOpenedIndex.curr) {
-          this.setXknoteOpened(this.noteBaseInfo);
-        }
+        var closeCurr = function closeCurr() {
+          if (index == _this3.xknoteOpenedIndex.curr) {
+            _this3.setXknoteOpened(_this3.noteBaseInfo);
+          }
 
-        this.listOperate("delete", "curr", index);
+          _this3.listOperate("delete", "curr", index);
+        };
+
+        if (this.listOperate("get", storage, index).status === "N") {
+          this.smModal.title = "关闭";
+          this.smModal.content = "该文件未保存，是否关闭该文件？(此操作不可逆)";
+          this.smModal.show = true;
+
+          this.smModal.confirm = function () {
+            closeCurr();
+            _this3.smModal.show = false;
+          };
+
+          this.smModal.cancel = function () {
+            _this3.smModal.show = false;
+          };
+        } else {
+          closeCurr();
+        }
       }
     },
     // 打开笔记
     openNote: function openNote(note, source) {
       var _this4 = this;
 
-      // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
+      this.xknoteOpenedChangeFlag = false; // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
+
       this.setXknoteOpened(note); // 添加到currList，同时将源数据添加到currListSource
 
-      var len = this.currList.push(note);
-      this.currListSource.push(source);
-      this.xknoteOpenedIndex.curr = len - 1;
+      var len;
+
+      if (source.storage !== "curr") {
+        len = this.currList.push(note);
+        this.currListSource.push(source);
+        this.xknoteOpenedIndex.curr = len - 1;
+      } else {
+        this.xknoteOpenedIndex.curr = parseInt(source.index);
+      }
+
       this.xknoteOpenedIndex.source = source;
       this.xknoteTab = "curr";
       this.$nextTick(function () {
-        // 当前文件修改的时候将标记（status）设为未保存状态（N）
-        var changeStatus = function changeStatus() {
-          _this4.xknoteOpened.status = "N";
-          document.getElementById("xknote-title").removeEventListener("change", changeStatus);
-          window.XKEditor.ace.getSession().off("change", changeStatus);
-        };
-
-        document.getElementById("xknote-title").addEventListener("change", changeStatus);
-        window.XKEditor.ace.getSession().on("change", changeStatus);
-      });
-      window.XKEditor.ace.getSession().on("change", function () {
-        _this4.xknoteOpened.note.content = window.XKEditor.getMarkdown();
+        _this4.xknoteOpenedChangeFlag = true;
       }); // TODO: 开启的Note在当前列表中获得active效果
-      // TODO: 切换currList中其他项时 调整editor change的监听，防止意外的改变status
-      // TODO: 关闭当前文档时如果未保存则弹出提示框
     },
     setXknoteOpened: function setXknoteOpened(noteInfo) {
       this.xknoteOpened = noteInfo;
@@ -11963,6 +12000,21 @@ __webpack_require__.r(__webpack_exports__);
         window.XKEditor.switchEditor();
         window.XKEditor.setMarkdown(noteInfo.note.content);
       }
+    },
+    editorLoaded: function editorLoaded(e) {
+      var _this5 = this;
+
+      if (e === "interfaceLoad") {
+        window.XKEditor.ace.getSession().on("change", function () {
+          _this5.xknoteOpened.note.content = window.XKEditor.getMarkdown();
+        });
+      }
+    },
+    watchNote: function watchNote() {
+      if (!this.xknoteOpenedChangeFlag) return;
+      this.xknoteOpened.status = "N";
+      var d = new Date();
+      this.xknoteOpened.note.updated_at = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
     }
   },
   mounted: function mounted() {
@@ -11970,7 +12022,10 @@ __webpack_require__.r(__webpack_exports__);
     this.loadLocalNotes();
     window.xknote = {};
   },
-  watch: {}
+  watch: {
+    "xknoteOpened.note.content": "watchNote",
+    "xknoteOpened.note.title": "watchNote"
+  }
 });
 
 /***/ }),
@@ -21550,7 +21605,8 @@ var render = function() {
                 attrs: {
                   settingApi: _vm.xknoteSetting,
                   contentProps: _vm.xknoteOpened.note.content
-                }
+                },
+                on: { loadHook: _vm.editorLoaded }
               })
             ],
             1
