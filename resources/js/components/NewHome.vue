@@ -557,6 +557,7 @@ export default {
         if (storage === "cloud") {
           // TODO: 云端重命名
         }
+        // TODO: 重命名成功后提示
       }
     },
     // 浮动菜单选项点击事件
@@ -584,6 +585,7 @@ export default {
       if (operate === "saveLocal") {
         if (storage === "curr") {
           let note = null;
+          // 若是从localList中打开的笔记，为了保存不重复，需要先清空
           if (this.currListSource[index]) {
             this.listOperate(
               "delete",
@@ -591,6 +593,7 @@ export default {
               this.currListSource[index].index + ""
             );
           }
+          // 判断保存时是否需要关闭currList的副本
           if (this.floatMenu.saveAndClose) {
             note = this.listOperate("delete", "curr", index);
             this.setXknoteOpened(this.noteBaseInfo);
@@ -599,12 +602,14 @@ export default {
           }
           note.status = "L";
           let localIndex = this.listOperate("add", "local", "", note);
+          // 若不是从localList中打开的文件就不会有currListSource的信息，如果用户选择不关闭保存，则需要添加source信息，防止后续操作出现问题
           if (!this.floatMenu.saveAndClose) {
             this.currListSource[index] = {
               index: localIndex,
               storage: "local"
             };
           }
+          // 保存到本地（实际操作）
           this.noteOperate("save", "local", note);
         }
         if (storage === "cloud") {
@@ -613,9 +618,10 @@ export default {
         }
       }
       if (operate === "rename") {
-        // TODO: currList中的笔记重命名影响至实体，即本地存储和云端存储
+        // 先获取到旧的Note信息，为了防止对象的变动所以需要克隆对象，利用json转换即可方便克隆对象
         let note = this.listOperate("get", storage, index);
-        let oldNote = note;
+        let oldNote = JSON.parse(JSON.stringify(note));
+        // 更改item为输入框
         curr.querySelector(".tile-content").setAttribute("children", "input");
         let input = curr.querySelector(".tile-content > input");
         let keyEv = e => {
@@ -625,7 +631,11 @@ export default {
             note.name = value;
             curr.querySelector(".tile-content").removeAttribute("children");
             input.removeEventListener("keydown", keyEv);
-            this.noteOperate(operate, storage, {
+            let s = storage;
+            if (storage === "curr") {
+              s = this.currListSource[index].storage;
+            }
+            this.noteOperate(operate, s, {
               oldNote: oldNote,
               note: note
             });
@@ -634,6 +644,7 @@ export default {
         input.addEventListener("keydown", keyEv);
       }
       if (operate === "closeCurr") {
+        // 如果笔记在未保存状态关闭则先弹出modal提示是否下关闭
         let closeCurr = () => {
           if (index == this.xknoteOpenedIndex.curr) {
             this.setXknoteOpened(this.noteBaseInfo);
@@ -662,20 +673,31 @@ export default {
       // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
       this.setXknoteOpened(note);
       // 添加到currList，同时将源数据添加到currListSource
-      let len;
+      let currIndex;
       if (source.storage !== "curr") {
-        len = this.currList.push(note);
+        currIndex = this.currList.push(note) - 1;
         this.currListSource.push(source);
-        this.xknoteOpenedIndex.curr = len - 1;
+        this.xknoteOpenedIndex.curr = currIndex;
       } else {
         this.xknoteOpenedIndex.curr = parseInt(source.index);
+        currIndex = source.index;
       }
       this.xknoteOpenedIndex.source = source;
       this.xknoteTab = "curr";
       this.$nextTick(() => {
+        // 添加当前打开的文件的active效果
+        let ele;
+        ele = document.querySelector(".active[data-storage='curr']");
+        if (ele) {
+          ele.classList.remove("active");
+        }
+        document
+          .querySelector(
+            "[data-storage='curr'][data-index='" + currIndex + "']"
+          )
+          .classList.add("active");
         this.xknoteOpenedChangeFlag = true;
       });
-      // TODO: 开启的Note在当前列表中获得active效果
     },
     setXknoteOpened(noteInfo) {
       this.xknoteOpened = noteInfo;
