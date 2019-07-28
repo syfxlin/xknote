@@ -68,6 +68,9 @@ p {
 .xknote-header .form-input {
     width: auto;
 }
+.navbar-center .menu-item a {
+    cursor: pointer;
+}
 /* Fix xknote-header button hover and active color */
 .dropdown .btn-group a:not(.btn-primary):hover {
     color: #5755d9;

@@ -16,19 +16,19 @@
           />
           <div class="dropdown">
             <div class="btn-group">
-              <a href="#" class="btn">云端保存</a>
+              <a @click="navBarOperate('saveCloud')" class="btn">云端保存</a>
               <a href="#" class="btn dropdown-toggle" tabindex="0">
                 <i class="icon icon-caret"></i>
               </a>
               <ul class="menu">
                 <li class="menu-item">
-                  <a href="#">本地保存</a>
+                  <a @click="navBarOperate('saveLocal')">本地保存</a>
                 </li>
                 <li class="menu-item">
-                  <a href="#">全部保存到云端</a>
+                  <a @click="navBarOperate('saveAllCloud')">全部保存到云端</a>
                 </li>
                 <li class="menu-item">
-                  <a href="#">全部保存到本地</a>
+                  <a @click="navBarOperate('saveAllLocal')">全部保存到本地</a>
                 </li>
               </ul>
             </div>
@@ -41,16 +41,16 @@
               </a>
               <ul class="menu">
                 <li class="menu-item">
-                  <a href="#">导出为Markdown文件</a>
+                  <a @click="navBarOperate('downloadMarkdown')">导出为Markdown文件</a>
                 </li>
                 <li class="menu-item">
-                  <a href="#">导出HTML文件</a>
+                  <a @click="navBarOperate('downloadHTML')">导出HTML文件</a>
                 </li>
                 <li class="menu-item">
-                  <a href="#">导出带样式的HTML文件</a>
+                  <a @click="navBarOperate('downloadFullHTML')">导出带样式的HTML文件</a>
                 </li>
                 <li class="menu-item">
-                  <a href="#">导出阅读模式的HTML文件</a>
+                  <a @click="navBarOperate('downloadReadHTML')">导出阅读模式的HTML文件</a>
                 </li>
               </ul>
             </div>
@@ -226,7 +226,7 @@
                 <i class="form-icon"></i> 保存后关闭
               </label>
             </template>
-            <a @click="floatMenuClick(item.operate)" v-else>{{ item.name }}</a>
+            <a @click="floatMenuOperate(item.operate)" v-else>{{ item.name }}</a>
           </li>
         </ul>
         <div :class="'modal modal-sm xknote-sm-modal' + (smModal.show ? ' active' : '')">
@@ -272,7 +272,7 @@ export default {
         note: {
           title: "",
           author: "",
-          content: " ",
+          content: "暂未打开任何文件，请选择文件。",
           created_at: "",
           updated_at: ""
         }
@@ -285,7 +285,7 @@ export default {
         note: {
           title: "",
           author: "",
-          content: " ",
+          content: "暂未打开任何文件，请选择文件。",
           created_at: "",
           updated_at: ""
         }
@@ -307,9 +307,7 @@ export default {
       xknoteMode: "normal",
       xknoteTab: "cloud",
       // currList的扩展信息
-      currListSource: [
-        //   {}, {}
-      ],
+      currListSource: [],
       currList: [
         // {
         //   type: "note",
@@ -380,6 +378,11 @@ export default {
     switchTab(tabName) {
       this.xknoteTab = tabName;
     },
+    loadRememberNote() {
+      this.optionsDB("read", "rememberNote", (e, data) => {
+        this.setXknoteOpened(data.note);
+      });
+    },
     // 读取云端的文件夹及笔记
     loadCloudFolders() {
       window.axios
@@ -397,8 +400,75 @@ export default {
         this.localList = list;
       });
     },
+    editorLoaded(e) {
+      if (e === "interfaceLoad") {
+        window.XKEditor.ace.getSession().on("change", () => {
+          this.xknoteOpened.note.content = window.XKEditor.getMarkdown();
+        });
+      }
+      this.loadRememberNote();
+    },
+    watchNote() {
+      if (!this.xknoteOpenedChangeFlag) return;
+      this.xknoteOpened.status = "N";
+      var d = new Date();
+      this.xknoteOpened.note.updated_at =
+        d.getFullYear() +
+        "/" +
+        (d.getMonth() + 1) +
+        "/" +
+        d.getDate() +
+        " " +
+        d.getHours() +
+        ":" +
+        d.getMinutes() +
+        ":" +
+        d.getSeconds();
+    },
+    setXknoteOpened(noteInfo) {
+      this.xknoteOpened = noteInfo;
+      if (window.eThis.e.editorMode === "ace") {
+        window.XKEditor.setMarkdown(noteInfo.note.content);
+      } else {
+        window.XKEditor.switchEditor();
+        window.XKEditor.setMarkdown(noteInfo.note.content);
+      }
+    },
+    // 打开笔记
+    openNote(note, source) {
+      this.xknoteOpenedChangeFlag = false;
+      // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
+      this.setXknoteOpened(note);
+      // 添加到currList，同时将源数据添加到currListSource
+      let currIndex;
+      if (source.storage !== "curr") {
+        currIndex = this.currList.push(note) - 1;
+        this.currListSource.push(source);
+        this.xknoteOpenedIndex.curr = currIndex;
+      } else {
+        this.xknoteOpenedIndex.curr = parseInt(source.index);
+        currIndex = source.index;
+      }
+      this.xknoteOpenedIndex.source = source;
+      this.xknoteTab = "curr";
+      this.$nextTick(() => {
+        // 添加当前打开的文件的active效果
+        let ele;
+        ele = document.querySelector(".active[data-storage='curr']");
+        if (ele) {
+          ele.classList.remove("active");
+        }
+        document
+          .querySelector(
+            "[data-storage='curr'][data-index='" + currIndex + "']"
+          )
+          .classList.add("active");
+        this.xknoteOpenedChangeFlag = true;
+      });
+    },
     // 操作本地笔记数据库
-    noteLocalDB(
+    xknoteDB(
+      table,
       operate,
       data = null,
       callS = (e, data = null) => {},
@@ -411,11 +481,24 @@ export default {
         console.error("indexedDB开启失败: " + e);
         callE(e);
       };
+      requset.onupgradeneeded = e => {
+        db = e.target.result;
+        if (!db.objectStoreNames.contains("localList")) {
+          console.log("indexedDB中不存在localList表");
+          os = db.createObjectStore("localList", {
+            keyPath: "name"
+          });
+        }
+        if (!db.objectStoreNames.contains("options")) {
+          console.log("indexedDB中不存在options表");
+          os = db.createObjectStore("options", {
+            keyPath: "name"
+          });
+        }
+      };
       requset.onsuccess = () => {
         db = requset.result;
-        os = db
-          .transaction(["localList"], "readwrite")
-          .objectStore("localList");
+        os = db.transaction([table], "readwrite").objectStore(table);
         if (operate === "add") {
           let req = os.add(data);
           req.onsuccess = e => {
@@ -439,11 +522,11 @@ export default {
           }
         }
         if (operate === "read") {
-          let noteInfo = null;
-          let req = os.getAll(data);
+          let reData = null;
+          let req = os.get(data);
           req.onsuccess = e => {
-            noteInfo = req.result;
-            callS(e, noteInfo);
+            reData = req.result;
+            callS(e, reData);
           };
           req.onerror = e => {
             console.log("数据读取失败: " + e);
@@ -451,11 +534,11 @@ export default {
           };
         }
         if (operate === "readAll") {
-          let noteList = null;
+          let reData = null;
           let req = os.getAll();
           req.onsuccess = e => {
-            noteList = req.result;
-            callS(e, noteList);
+            reData = req.result;
+            callS(e, reData);
           };
           req.onerror = e => {
             console.log("数据读取失败: " + e);
@@ -492,21 +575,32 @@ export default {
             callE(e);
           };
         }
+        db.close();
       };
-      requset.onupgradeneeded = e => {
-        db = e.target.result;
-        if (!db.objectStoreNames.contains("localList")) {
-          console.log("indexedDB中不存在localList表");
-          os = db.createObjectStore("localList", {
-            keyPath: "name"
-          });
-        }
-      };
+    },
+    noteLocalDB(
+      operate,
+      data = null,
+      callS = (e, data = null) => {},
+      callE = e => {}
+    ) {
+      this.xknoteDB("localList", operate, data, callS, callE);
+    },
+    optionsDB(
+      operate,
+      data = null,
+      callS = (e, data = null) => {},
+      callE = e => {}
+    ) {
+      this.xknoteDB("options", operate, data, callS, callE);
     },
     // 操作列表
     listOperate(operate, storage, index = "", noteInfo = null) {
       let arr = [];
       let list;
+      if (typeof index !== "string") {
+        index = index + "";
+      }
       arr = index.split(":");
       list = this[storage + "List"];
       for (let i = 0; i < arr.length - 1; i++) {
@@ -560,13 +654,8 @@ export default {
         // TODO: 重命名成功后提示
       }
     },
-    // 浮动菜单选项点击事件
-    floatMenuClick(operate) {
+    memuOperate(operate, storage, index, curr = null) {
       this.floatMenu.show = false;
-      // 以下的curr storage index对应点击的笔记
-      let curr = window.xknote.currClickTarget;
-      let storage = curr.getAttribute("data-storage");
-      let index = curr.getAttribute("data-index");
       if (operate === "delete") {
         this.smModal.title = "删除";
         this.smModal.content = "是否删除该文件(文件夹)？(此操作不可逆)";
@@ -590,7 +679,7 @@ export default {
             this.listOperate(
               "delete",
               "local",
-              this.currListSource[index].index + ""
+              this.currListSource[index].index
             );
           }
           // 判断保存时是否需要关闭currList的副本
@@ -667,76 +756,57 @@ export default {
         }
       }
     },
-    // 打开笔记
-    openNote(note, source) {
-      this.xknoteOpenedChangeFlag = false;
-      // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
-      this.setXknoteOpened(note);
-      // 添加到currList，同时将源数据添加到currListSource
-      let currIndex;
-      if (source.storage !== "curr") {
-        currIndex = this.currList.push(note) - 1;
-        this.currListSource.push(source);
-        this.xknoteOpenedIndex.curr = currIndex;
-      } else {
-        this.xknoteOpenedIndex.curr = parseInt(source.index);
-        currIndex = source.index;
-      }
-      this.xknoteOpenedIndex.source = source;
-      this.xknoteTab = "curr";
-      this.$nextTick(() => {
-        // 添加当前打开的文件的active效果
-        let ele;
-        ele = document.querySelector(".active[data-storage='curr']");
-        if (ele) {
-          ele.classList.remove("active");
-        }
-        document
-          .querySelector(
-            "[data-storage='curr'][data-index='" + currIndex + "']"
-          )
-          .classList.add("active");
-        this.xknoteOpenedChangeFlag = true;
-      });
+    // 浮动菜单选项点击事件
+    floatMenuOperate(operate) {
+      // 以下的curr storage index对应点击的笔记
+      let curr = window.xknote.currClickTarget;
+      let storage = curr.getAttribute("data-storage");
+      let index = curr.getAttribute("data-index");
+      this.memuOperate(operate, storage, index, curr);
     },
-    setXknoteOpened(noteInfo) {
-      this.xknoteOpened = noteInfo;
-      if (window.eThis.e.editorMode === "ace") {
-        window.XKEditor.setMarkdown(noteInfo.note.content);
-      } else {
-        window.XKEditor.switchEditor();
-        window.XKEditor.setMarkdown(noteInfo.note.content);
+    navBarOperate(operate) {
+      let saveLocal = i => {
+        this.floatMenu.saveAndClose = false;
+        this.memuOperate("saveLocal", "curr", i);
+        this.floatMenu.saveAndClose = true;
+      };
+      if (operate === "saveLocal") {
+        saveLocal(this.xknoteOpenedIndex.curr);
       }
-    },
-    editorLoaded(e) {
-      if (e === "interfaceLoad") {
-        window.XKEditor.ace.getSession().on("change", () => {
-          this.xknoteOpened.note.content = window.XKEditor.getMarkdown();
+      if (operate === "saveAllLocal") {
+        this.currList.forEach((item, index) => {
+          if (item.status !== "L") {
+            saveLocal(index);
+          }
         });
       }
-    },
-    watchNote() {
-      if (!this.xknoteOpenedChangeFlag) return;
-      this.xknoteOpened.status = "N";
-      var d = new Date();
-      this.xknoteOpened.note.updated_at =
-        d.getFullYear() +
-        "/" +
-        (d.getMonth() + 1) +
-        "/" +
-        d.getDate() +
-        " " +
-        d.getHours() +
-        ":" +
-        d.getMinutes() +
-        ":" +
-        d.getSeconds();
+      if (operate === "downloadMarkdown") {
+        window.XKEditor.download(
+          this.xknoteOpened.name.replace(".md", ""),
+          "markdown"
+        );
+      }
+      if (operate === "downloadHTML") {
+        window.XKEditor.download(
+          this.xknoteOpened.name.replace(".md", ""),
+          "html"
+        );
+      }
+      if (operate === "downloadFullHTML") {
+        window.XKEditor.download(
+          this.xknoteOpened.name.replace(".md", ""),
+          "fullhtml"
+        );
+      }
+      // TODO: 导出阅读模式的HTML
     }
   },
   mounted() {
-    this.loadCloudFolders();
     this.loadLocalNotes();
+    this.loadCloudFolders();
+    // this.loadRememberNote(); --> editorLoaded
     window.xknote = {};
+    // TODO: 浏览器关闭时将xknoteOpened添加到rememberNote
   },
   watch: {
     "xknoteOpened.note.content": "watchNote",

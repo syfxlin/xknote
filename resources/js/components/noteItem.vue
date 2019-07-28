@@ -45,6 +45,10 @@ export default {
             operate: "rename"
           },
           {
+            name: "导出",
+            operate: "download"
+          },
+          {
             name: "关闭",
             operate: "closeCurr"
           },
@@ -64,12 +68,23 @@ export default {
         ],
         local: [
           {
+            name: "保存至云端",
+            operate: "saveCloud"
+          },
+          {
+            name: "导出",
+            operate: "download"
+          },
+          {
             name: "重命名",
             operate: "rename"
           },
           {
             name: "删除",
             operate: "delete"
+          },
+          {
+            name: "saveAndClose" // TODO: 是否在保存到云端的同时删除本地中的存储
           }
         ]
       }
