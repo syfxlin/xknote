@@ -11242,10 +11242,10 @@ module.exports = function isBuffer (obj) {
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewHome.vue?vue&type=script&lang=js&":
-/*!******************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/NewHome.vue?vue&type=script&lang=js& ***!
-  \******************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Home.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Home.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -11256,8 +11256,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _folderItem_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./folderItem.vue */ "./resources/js/components/folderItem.vue");
 /* harmony import */ var _assets_style_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../assets/style.css */ "./resources/js/assets/style.css");
 /* harmony import */ var _assets_style_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_assets_style_css__WEBPACK_IMPORTED_MODULE_3__);
-//
-//
 //
 //
 //
@@ -11560,8 +11558,6 @@ __webpack_require__.r(__webpack_exports__);
       // 防止openNote时的文档修改引发的标记改变
       xknoteOpenedChangeFlag: true,
       xknoteSetting: "/static/setting.json",
-      // 暂时无用，即正常模式，阅读模式，写作模式
-      xknoteMode: "normal",
       xknoteTab: "cloud",
       // currList的扩展信息
       currListSource: [],
@@ -11630,18 +11626,37 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
-    // 切换Tab
+    /**
+     * 切换Tab
+     * @param {string} tabName 要切换到的Tab名称
+     * @returns void
+     */
     switchTab: function switchTab(tabName) {
       this.xknoteTab = tabName;
     },
+
+    /**
+     * 读取之前开启的笔记
+     * @param void
+     * @returns void
+     */
     loadRememberNote: function loadRememberNote() {
       var _this = this;
 
       this.optionsDB("read", "rememberNote", function (e, data) {
-        _this.setXknoteOpened(data.note);
+        if (data) {
+          _this.openNote(data.note, data.index.source);
+        }
+
+        _this.timedTask("saveCurrOpenedNote");
       });
     },
-    // 读取云端的文件夹及笔记
+
+    /**
+     * 读取云端的文件夹及笔记
+     * @param void
+     * @returns void
+     */
     loadCloudFolders: function loadCloudFolders() {
       var _this2 = this;
 
@@ -11651,7 +11666,12 @@ __webpack_require__.r(__webpack_exports__);
         console.error(err);
       });
     },
-    // 读取本地的笔记
+
+    /**
+     * 读取本地的笔记
+     * @param void
+     * @returns void
+     */
     loadLocalNotes: function loadLocalNotes() {
       var _this3 = this;
 
@@ -11659,6 +11679,12 @@ __webpack_require__.r(__webpack_exports__);
         _this3.localList = list;
       });
     },
+
+    /**
+     * 在XK Editor加载完成时触发的事件
+     * @param {string} e event的名称
+     * @returns void
+     */
     editorLoaded: function editorLoaded(e) {
       var _this4 = this;
 
@@ -11668,14 +11694,28 @@ __webpack_require__.r(__webpack_exports__);
         });
       }
 
-      this.loadRememberNote();
+      if (e === "componentLoad") {
+        this.loadRememberNote();
+      }
     },
+
+    /**
+     * 监听当前打开的笔记改变事件触发的函数
+     * @param void
+     * @returns void
+     */
     watchNote: function watchNote() {
       if (!this.xknoteOpenedChangeFlag) return;
       this.xknoteOpened.status = "N";
       var d = new Date();
       this.xknoteOpened.note.updated_at = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
     },
+
+    /**
+     * 设置当前开启的文档
+     * @param {object} noteInfo 笔记信息，结构同this.noteBaseInfo
+     * @returns void
+     */
     setXknoteOpened: function setXknoteOpened(noteInfo) {
       this.xknoteOpened = noteInfo;
 
@@ -11686,7 +11726,15 @@ __webpack_require__.r(__webpack_exports__);
         window.XKEditor.setMarkdown(noteInfo.note.content);
       }
     },
-    // 打开笔记
+
+    /**
+     * 打开笔记
+     * @param {object} note 笔记信息，结构同this.noteBaseInfo
+     * @param {object} source 笔记的来源
+     *   @param {string} source.index 笔记来源的索引
+     *   @param {string} source.storage 笔记来源的存储位置（local，cloud）
+     * @returns void
+     */
     openNote: function openNote(note, source) {
       var _this5 = this;
 
@@ -11697,8 +11745,10 @@ __webpack_require__.r(__webpack_exports__);
       var currIndex;
 
       if (source.storage !== "curr") {
-        currIndex = this.currList.push(note) - 1;
-        this.currListSource.push(source);
+        currIndex = this.listOperate("add", "curr", "", {
+          note: note,
+          source: source
+        });
         this.xknoteOpenedIndex.curr = currIndex;
       } else {
         this.xknoteOpenedIndex.curr = parseInt(source.index);
@@ -11720,7 +11770,16 @@ __webpack_require__.r(__webpack_exports__);
         _this5.xknoteOpenedChangeFlag = true;
       });
     },
-    // 操作本地笔记数据库
+
+    /**
+     * 操作本地数据库
+     * @param {string} table 本地数据库table的名称
+     * @param {string} operate 操作名称
+     * @param {object=} data 数据
+     * @param {function(e, data)=} callS 成功的回调
+     * @param {function(e)=} callE 失败的回调
+     * @returns void
+     */
     xknoteDB: function xknoteDB(table, operate) {
       var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
       var callS = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : function (e) {
@@ -11860,6 +11919,15 @@ __webpack_require__.r(__webpack_exports__);
         db.close();
       };
     },
+
+    /**
+     * 操作本地笔记数据库
+     * @param {string} operate
+     * @param {object=} data 数据
+     * @param {function(e, data)=} callS 成功的回调
+     * @param {function(e)=} callE 失败的回调
+     * @returns void
+     */
     noteLocalDB: function noteLocalDB(operate) {
       var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
       var callS = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function (e) {
@@ -11868,6 +11936,15 @@ __webpack_require__.r(__webpack_exports__);
       var callE = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : function (e) {};
       this.xknoteDB("localList", operate, data, callS, callE);
     },
+
+    /**
+     * 操作本地选项设置数据库
+     * @param {string} operate
+     * @param {object=} data 数据
+     * @param {function(e, data)=} callS 成功的回调
+     * @param {function(e)=} callE 失败的回调
+     * @returns void
+     */
     optionsDB: function optionsDB(operate) {
       var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
       var callS = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function (e) {
@@ -11876,7 +11953,17 @@ __webpack_require__.r(__webpack_exports__);
       var callE = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : function (e) {};
       this.xknoteDB("options", operate, data, callS, callE);
     },
-    // 操作列表
+
+    /**
+     * 操作列表
+     * @param {string} operate 操作名称
+     * @param {string} storage 要操作对象存储的位置
+     * @param {string=} index 要操作对象的索引
+     * @param {object=} noteInfo 笔记信息，正常情况下结构同this.noteBaseInfo
+     *   @param {object=} noteInfo.note （add curr）笔记信息，结构同this.noteBaseInfo
+     *   @param {object=} noteInfo.source （add curr）笔记来源
+     * @returns {object | number} 笔记信息（get,delete）或者当前笔记的索引（add）
+     */
     listOperate: function listOperate(operate, storage) {
       var index = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
       var noteInfo = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
@@ -11909,7 +11996,13 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       if (operate === "add") {
-        if (storage === "curr" || storage === "local") {
+        if (storage === "curr") {
+          var currIndex = this.currList.push(noteInfo.note) - 1;
+          this.currListSource.push(noteInfo.source);
+          return currIndex;
+        }
+
+        if (storage === "local") {
           return this[storage + "List"].push(noteInfo) - 1;
         }
       }
@@ -11918,7 +12011,16 @@ __webpack_require__.r(__webpack_exports__);
         return list[arr[arr.length - 1]];
       }
     },
-    // 操作笔记
+
+    /**
+     * 操作笔记
+     * @param {string} operate 操作名称
+     * @param {string} storage 要操作对象存储的位置
+     * @param {object=} noteInfo 笔记信息，正常情况下结构同this.noteBaseInfo
+     *   @param {object=} noteInfo.oldNote (rename) 旧的笔记信息
+     *   @param {object=} noteInfo.note (rename) 新的笔记信息
+     * @returns void
+     */
     noteOperate: function noteOperate(operate, storage) {
       var noteInfo = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
@@ -11950,6 +12052,15 @@ __webpack_require__.r(__webpack_exports__);
 
       }
     },
+
+    /**
+     * 操作列表
+     * @param {string} operate 操作名称
+     * @param {string} storage 要操作对象存储的位置
+     * @param {string} index 要操作对象的索引
+     * @param {object=} curr 当前操作的item的dom对象
+     * @returns void
+     */
     memuOperate: function memuOperate(operate, storage, index) {
       var _this6 = this;
 
@@ -12070,7 +12181,12 @@ __webpack_require__.r(__webpack_exports__);
         }
       }
     },
-    // 浮动菜单选项点击事件
+
+    /**
+     * 浮动菜单选项点击事件
+     * @param {string} operate 操作名称
+     * @returns void
+     */
     floatMenuOperate: function floatMenuOperate(operate) {
       // 以下的curr storage index对应点击的笔记
       var curr = window.xknote.currClickTarget;
@@ -12078,6 +12194,12 @@ __webpack_require__.r(__webpack_exports__);
       var index = curr.getAttribute("data-index");
       this.memuOperate(operate, storage, index, curr);
     },
+
+    /**
+     * header菜单选项点击事件
+     * @param {string} operate 操作名称
+     * @returns void
+     */
     navBarOperate: function navBarOperate(operate) {
       var _this7 = this;
 
@@ -12113,17 +12235,122 @@ __webpack_require__.r(__webpack_exports__);
         window.XKEditor.download(this.xknoteOpened.name.replace(".md", ""), "fullhtml");
       } // TODO: 导出阅读模式的HTML
 
+    },
+
+    /**
+     * 定时执行任务，包括循环任务
+     * @param {string} task 任务名称
+     * @returns void
+     */
+    timedTask: function timedTask(task) {
+      var _this8 = this;
+
+      if (task === "saveCurrOpenedNote") {
+        // 每10秒中将当前打开的笔记信息保存至本地数据库，用以下次开启做准备
+        setInterval(function () {
+          _this8.optionsDB("put", {
+            name: "rememberNote",
+            index: _this8.xknoteOpenedIndex,
+            note: _this8.xknoteOpened
+          });
+        }, 10000);
+      }
     }
   },
   mounted: function mounted() {
     this.loadLocalNotes();
     this.loadCloudFolders(); // this.loadRememberNote(); --> editorLoaded
+    // this.timedTask(); --> this.this.loadRememberNote
 
-    window.xknote = {}; // TODO: 浏览器关闭时将xknoteOpened添加到rememberNote
+    window.optionsDB = this.optionsDB;
+    window.xknote = {};
   },
   watch: {
     "xknoteOpened.note.content": "watchNote",
     "xknoteOpened.note.title": "watchNote"
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Read.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Read.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "read-mode",
+  data: function data() {
+    return {};
   }
 });
 
@@ -12456,6 +12683,25 @@ exports = module.exports = __webpack_require__(/*! ../../../css-loader/lib/css-b
 
 // module
 exports.push([module.i, "\n.xkeditor {\n  height: 100%;\n  overflow-x: hidden;\n  overflow-y: hidden;\n}\n.xkeditor .row {\n  height: 100%;\n  -webkit-transform: translate(0, 0);\n          transform: translate(0, 0);\n}\n.xkeditor .row .xk-col-12 {\n  height: 100%;\n}\n#previewHtml {\n  overflow: auto;\n  max-height: 100%;\n  padding: 15px 15px;\n  word-break: break-word;\n  white-space: normal;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n}\n.xk-col-24 #previewHtml {\n  float: left;\n  width: 80%;\n}\n.toc,\n#toc {\n  word-break: break-word;\n  white-space: normal;\n  overflow-y: auto;\n  height: 100%;\n}\n.toc ul,\n#toc ul {\n  margin: 0px;\n  padding-left: 20px;\n}\n.toc li,\n#toc li {\n  list-style: none;\n  padding-left: 5px;\n}\n.toc li img,\n#toc li img {\n  display: inline-block;\n  width: 14px;\n  vertical-align: middle;\n  padding-right: 5px;\n}\n.toc a,\n#toc a {\n  color: #0366d6;\n  text-decoration: none;\n  font-size: 1.05em;\n}\n.row {\n  margin: 0px;\n}\n.row .xk-col-12 {\n  float: left;\n  border-left: 1px solid #ddd;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n}\n.xk-col-24 {\n  padding: 0px;\n  width: 100%;\n  height: 100%;\n}\n.xk-col-12 {\n  padding: 0px;\n  width: 50%;\n  height: 100%;\n}\n.close-preview-full {\n  position: fixed;\n  right: 20px;\n  top: 20px;\n  z-index: 1000;\n}\n#toc {\n  position: fixed;\n  top: 0px;\n  right: 0px;\n  width: 20%;\n  background: #f5f5f5;\n  border-left: 1px solid #ddd;\n  z-index: 999;\n  padding: 20px;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n}\n#toc-button {\n  position: fixed;\n  right: 20px;\n  bottom: 20px;\n  width: 20px;\n  height: 20px;\n  padding: 6px;\n  z-index: 1000;\n  -webkit-box-sizing: content-box;\n          box-sizing: content-box;\n}\n.xk-button {\n  display: inline-block;\n  padding: 6px 16px;\n  outline: 0;\n  font-size: 0.85em;\n  line-height: 1.5;\n  text-align: center;\n  white-space: nowrap;\n  border: 1px solid #c5d9e8;\n  border-radius: 4px;\n  background-color: #fff;\n  -webkit-transition: background 0.2s;\n  transition: background 0.2s;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n  cursor: pointer;\n}\n@media (max-width: 991px) {\n.xk-col-24 #previewHtml {\n    float: left;\n    width: 100%;\n}\n#toc {\n    width: 80%;\n}\n}\n\n/* 可以设置不同的进入和离开动画 */\n/* 设置持续时间和动画函数 */\n.slide-fade-enter-active {\n  -webkit-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n.slide-fade-leave-active {\n  -webkit-transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);\n  transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);\n}\n.slide-fade-enter, .slide-fade-leave-to\n/* .slide-fade-leave-active for below version 2.1.8 */ {\n  -webkit-transform: translateX(10px);\n          transform: translateX(10px);\n  opacity: 0;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Read.vue?vue&type=style&index=0&lang=css&":
+/*!**********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Read.vue?vue&type=style&index=0&lang=css& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.read-sidebar {\n  top: 0;\n  right: 0;\n  height: 100%;\n}\n.read-container {\n  display: flex;\n  flex-direction: column;\n  min-height: 100vh;\n  border-right: 1px solid #ddd;\n}\n.read-header .hero-body {\n  padding: 0.4rem 3rem;\n}\n.read-content {\n  flex: 1;\n}\n.read-footer {\n  padding: 1.5em 0;\n}\n", ""]);
 
 // exports
 
@@ -15563,6 +15809,36 @@ options.transform = transform
 options.insertInto = undefined;
 
 var update = __webpack_require__(/*! ../../../style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Read.vue?vue&type=style&index=0&lang=css&":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Read.vue?vue&type=style&index=0&lang=css& ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./Read.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Read.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
 
 if(content.locals) module.exports = content.locals;
 
@@ -21427,10 +21703,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewHome.vue?vue&type=template&id=056b0484&":
-/*!**********************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/NewHome.vue?vue&type=template&id=056b0484& ***!
-  \**********************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Home.vue?vue&type=template&id=f2b6376c&":
+/*!*******************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Home.vue?vue&type=template&id=f2b6376c& ***!
+  \*******************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -21442,563 +21718,545 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "main",
-    { ref: "home", staticClass: "home" },
-    [
-      [
-        _c("header", { staticClass: "navbar xknote-header" }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c("section", { staticClass: "navbar-center" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.xknoteOpened.note.title,
-                  expression: "xknoteOpened.note.title"
-                }
-              ],
-              staticClass: "form-input",
-              attrs: { id: "xknote-title", type: "text", placeholder: "Title" },
-              domProps: { value: _vm.xknoteOpened.note.title },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.xknoteOpened.note, "title", $event.target.value)
-                }
+  return _c("main", { ref: "home", staticClass: "home" }, [
+    _c("header", { staticClass: "navbar xknote-header" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("section", { staticClass: "navbar-center" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.xknoteOpened.note.title,
+              expression: "xknoteOpened.note.title"
+            }
+          ],
+          staticClass: "form-input",
+          attrs: { id: "xknote-title", type: "text", placeholder: "Title" },
+          domProps: { value: _vm.xknoteOpened.note.title },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
               }
-            }),
-            _vm._v(" "),
-            _c("div", { staticClass: "dropdown" }, [
-              _c("div", { staticClass: "btn-group" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "btn",
-                    on: {
-                      click: function($event) {
-                        return _vm.navBarOperate("saveCloud")
-                      }
-                    }
-                  },
-                  [_vm._v("云端保存")]
-                ),
-                _vm._v(" "),
-                _vm._m(1),
-                _vm._v(" "),
-                _c("ul", { staticClass: "menu" }, [
-                  _c("li", { staticClass: "menu-item" }, [
-                    _c(
-                      "a",
-                      {
-                        on: {
-                          click: function($event) {
-                            return _vm.navBarOperate("saveLocal")
-                          }
-                        }
-                      },
-                      [_vm._v("本地保存")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "menu-item" }, [
-                    _c(
-                      "a",
-                      {
-                        on: {
-                          click: function($event) {
-                            return _vm.navBarOperate("saveAllCloud")
-                          }
-                        }
-                      },
-                      [_vm._v("全部保存到云端")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "menu-item" }, [
-                    _c(
-                      "a",
-                      {
-                        on: {
-                          click: function($event) {
-                            return _vm.navBarOperate("saveAllLocal")
-                          }
-                        }
-                      },
-                      [_vm._v("全部保存到本地")]
-                    )
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "dropdown" }, [
-              _c("div", { staticClass: "btn-group" }, [
-                _vm._m(2),
-                _vm._v(" "),
-                _c("ul", { staticClass: "menu" }, [
-                  _c("li", { staticClass: "menu-item" }, [
-                    _c(
-                      "a",
-                      {
-                        on: {
-                          click: function($event) {
-                            return _vm.navBarOperate("downloadMarkdown")
-                          }
-                        }
-                      },
-                      [_vm._v("导出为Markdown文件")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "menu-item" }, [
-                    _c(
-                      "a",
-                      {
-                        on: {
-                          click: function($event) {
-                            return _vm.navBarOperate("downloadHTML")
-                          }
-                        }
-                      },
-                      [_vm._v("导出HTML文件")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "menu-item" }, [
-                    _c(
-                      "a",
-                      {
-                        on: {
-                          click: function($event) {
-                            return _vm.navBarOperate("downloadFullHTML")
-                          }
-                        }
-                      },
-                      [_vm._v("导出带样式的HTML文件")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "menu-item" }, [
-                    _c(
-                      "a",
-                      {
-                        on: {
-                          click: function($event) {
-                            return _vm.navBarOperate("downloadReadHTML")
-                          }
-                        }
-                      },
-                      [_vm._v("导出阅读模式的HTML文件")]
-                    )
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _vm._m(3),
-            _vm._v(" "),
-            _c("div", { staticClass: "popover popover-bottom" }, [
-              _c("button", { staticClass: "btn" }, [_vm._v("信息")]),
-              _vm._v(" "),
-              _c("div", { staticClass: "popover-container" }, [
-                _c("div", { staticClass: "card" }, [
-                  _c("div", { staticClass: "card-body" }, [
-                    _c("p", [
-                      _vm._v(
-                        "\n                  创建时间：\n                  "
-                      ),
-                      _c("span", [
-                        _vm._v(_vm._s(_vm.xknoteOpened.note.created_at))
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("p", [
-                      _vm._v(
-                        "\n                  修改时间：\n                  "
-                      ),
-                      _c("span", [
-                        _vm._v(_vm._s(_vm.xknoteOpened.note.updated_at))
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("p", [
-                      _vm._v("\n                  路径：\n                  "),
-                      _c("span", [_vm._v(_vm._s(_vm.xknoteOpened.path))])
-                    ])
-                  ])
-                ])
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _vm._m(4)
-        ]),
+              _vm.$set(_vm.xknoteOpened.note, "title", $event.target.value)
+            }
+          }
+        }),
         _vm._v(" "),
-        _c("div", { staticClass: "columns" }, [
-          _c("section", { staticClass: "column col-2 xknote-sidebar" }, [
-            _c("ul", { staticClass: "tab tab-block xknote-tab" }, [
-              _c("li", { staticClass: "tab-item" }, [
+        _c("div", { staticClass: "dropdown" }, [
+          _c("div", { staticClass: "btn-group" }, [
+            _c(
+              "a",
+              {
+                staticClass: "btn",
+                on: {
+                  click: function($event) {
+                    return _vm.navBarOperate("saveCloud")
+                  }
+                }
+              },
+              [_vm._v("云端保存")]
+            ),
+            _vm._v(" "),
+            _vm._m(1),
+            _vm._v(" "),
+            _c("ul", { staticClass: "menu" }, [
+              _c("li", { staticClass: "menu-item" }, [
                 _c(
                   "a",
                   {
-                    class:
-                      (_vm.currBadgeCount !== 0 ? "badge " : "") +
-                      (_vm.xknoteTab === "curr" ? "active" : ""),
-                    attrs: { href: "#", "data-badge": _vm.currBadgeCount },
                     on: {
                       click: function($event) {
-                        return _vm.switchTab("curr")
+                        return _vm.navBarOperate("saveLocal")
                       }
                     }
                   },
-                  [_vm._v("当前")]
+                  [_vm._v("本地保存")]
                 )
               ]),
               _vm._v(" "),
-              _c(
-                "li",
-                {
-                  class:
-                    "tab-item " + (_vm.xknoteTab === "cloud" ? "active" : "")
-                },
-                [
-                  _c(
-                    "a",
-                    {
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          return _vm.switchTab("cloud")
-                        }
-                      }
-                    },
-                    [_vm._v("云端")]
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("li", { staticClass: "tab-item" }, [
+              _c("li", { staticClass: "menu-item" }, [
                 _c(
                   "a",
                   {
-                    class:
-                      (_vm.localBadgeCount !== 0 ? "badge " : "") +
-                      (_vm.xknoteTab === "local" ? "active" : ""),
-                    attrs: { href: "#", "data-badge": _vm.localBadgeCount },
                     on: {
                       click: function($event) {
-                        return _vm.switchTab("local")
+                        return _vm.navBarOperate("saveAllCloud")
                       }
                     }
                   },
-                  [_vm._v("本地")]
+                  [_vm._v("全部保存到云端")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "menu-item" }, [
+                _c(
+                  "a",
+                  {
+                    on: {
+                      click: function($event) {
+                        return _vm.navBarOperate("saveAllLocal")
+                      }
+                    }
+                  },
+                  [_vm._v("全部保存到本地")]
                 )
               ])
-            ]),
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "dropdown" }, [
+          _c("div", { staticClass: "btn-group" }, [
+            _vm._m(2),
             _vm._v(" "),
-            _c("ul", { staticClass: "xknote-tab-content" }, [
-              _c(
-                "li",
-                {
-                  directives: [
-                    {
-                      name: "show",
-                      rawName: "v-show",
-                      value: _vm.xknoteTab === "curr",
-                      expression: "xknoteTab==='curr'"
+            _c("ul", { staticClass: "menu" }, [
+              _c("li", { staticClass: "menu-item" }, [
+                _c(
+                  "a",
+                  {
+                    on: {
+                      click: function($event) {
+                        return _vm.navBarOperate("downloadMarkdown")
+                      }
                     }
-                  ]
-                },
-                [
-                  _c(
-                    "ul",
-                    { staticClass: "menu menu-nav" },
-                    [
-                      _vm._l(_vm.currList, function(item, index) {
-                        return _c(
-                          "li",
-                          { key: item.id, staticClass: "menu-item" },
-                          [
-                            _c("note-item", {
-                              attrs: {
-                                info: item,
-                                status: item.status,
-                                index: index,
-                                storage: "curr"
-                              }
-                            })
-                          ],
-                          1
-                        )
-                      }),
-                      _vm._v(" "),
-                      _vm.currList.length === 0
-                        ? _c("div", { staticClass: "text-gray text-center" }, [
-                            _vm._v("这里什么都没有哦（￣︶￣）↗")
-                          ])
-                        : _vm._e()
-                    ],
-                    2
-                  )
-                ]
-              ),
+                  },
+                  [_vm._v("导出为Markdown文件")]
+                )
+              ]),
               _vm._v(" "),
-              _c(
-                "li",
-                {
-                  directives: [
-                    {
-                      name: "show",
-                      rawName: "v-show",
-                      value: _vm.xknoteTab === "cloud",
-                      expression: "xknoteTab==='cloud'"
+              _c("li", { staticClass: "menu-item" }, [
+                _c(
+                  "a",
+                  {
+                    on: {
+                      click: function($event) {
+                        return _vm.navBarOperate("downloadHTML")
+                      }
                     }
-                  ]
-                },
-                [
-                  _vm._l(_vm.cloudList, function(item, index) {
-                    return _c("folder-item", {
-                      key: item.id,
-                      attrs: { info: item, index: index, storage: "cloud" }
-                    })
-                  }),
-                  _vm._v(" "),
-                  _vm.cloudList.length === 0
-                    ? [
-                        _c("div", { staticClass: "loading loading-lg" }),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "text-gray text-center" }, [
-                          _vm._v("正在加载，客官莫急。")
-                        ])
-                      ]
-                    : _vm._e()
-                ],
-                2
-              ),
+                  },
+                  [_vm._v("导出HTML文件")]
+                )
+              ]),
               _vm._v(" "),
-              _c(
-                "li",
-                {
-                  directives: [
-                    {
-                      name: "show",
-                      rawName: "v-show",
-                      value: _vm.xknoteTab === "local",
-                      expression: "xknoteTab==='local'"
+              _c("li", { staticClass: "menu-item" }, [
+                _c(
+                  "a",
+                  {
+                    on: {
+                      click: function($event) {
+                        return _vm.navBarOperate("downloadFullHTML")
+                      }
                     }
-                  ]
-                },
-                [
-                  _c(
-                    "ul",
-                    { staticClass: "menu menu-nav" },
-                    [
-                      _vm._l(_vm.localList, function(item, index) {
-                        return _c(
-                          "li",
-                          { key: item.id, staticClass: "menu-item" },
-                          [
-                            _c("note-item", {
-                              attrs: {
-                                info: item,
-                                status: item.status,
-                                index: index,
-                                storage: "local"
-                              }
-                            })
-                          ],
-                          1
-                        )
-                      }),
-                      _vm._v(" "),
-                      _vm.localList.length === 0
-                        ? _c("div", { staticClass: "text-gray text-center" }, [
-                            _vm._v("这里什么都没有哦（￣︶￣）↗")
-                          ])
-                        : _vm._e()
-                    ],
-                    2
-                  )
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _vm._m(5)
+                  },
+                  [_vm._v("导出带样式的HTML文件")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "menu-item" }, [
+                _c(
+                  "a",
+                  {
+                    on: {
+                      click: function($event) {
+                        return _vm.navBarOperate("downloadReadHTML")
+                      }
+                    }
+                  },
+                  [_vm._v("导出阅读模式的HTML文件")]
+                )
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _vm._m(3),
+        _vm._v(" "),
+        _c("div", { staticClass: "popover popover-bottom" }, [
+          _c("button", { staticClass: "btn" }, [_vm._v("信息")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "popover-container" }, [
+            _c("div", { staticClass: "card" }, [
+              _c("div", { staticClass: "card-body" }, [
+                _c("p", [
+                  _vm._v("\n                创建时间：\n                "),
+                  _c("span", [_vm._v(_vm._s(_vm.xknoteOpened.note.created_at))])
+                ]),
+                _vm._v(" "),
+                _c("p", [
+                  _vm._v("\n                修改时间：\n                "),
+                  _c("span", [_vm._v(_vm._s(_vm.xknoteOpened.note.updated_at))])
+                ]),
+                _vm._v(" "),
+                _c("p", [
+                  _vm._v("\n                路径：\n                "),
+                  _c("span", [_vm._v(_vm._s(_vm.xknoteOpened.path))])
+                ])
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _vm._m(4)
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "columns" }, [
+      _c("section", { staticClass: "column col-2 xknote-sidebar" }, [
+        _c("ul", { staticClass: "tab tab-block xknote-tab" }, [
+          _c("li", { staticClass: "tab-item" }, [
+            _c(
+              "a",
+              {
+                class:
+                  (_vm.currBadgeCount !== 0 ? "badge " : "") +
+                  (_vm.xknoteTab === "curr" ? "active" : ""),
+                attrs: { href: "#", "data-badge": _vm.currBadgeCount },
+                on: {
+                  click: function($event) {
+                    return _vm.switchTab("curr")
+                  }
+                }
+              },
+              [_vm._v("当前")]
+            )
           ]),
           _vm._v(" "),
           _c(
-            "section",
-            { staticClass: "column col-10", attrs: { id: "xknote-editor" } },
+            "li",
+            {
+              class: "tab-item " + (_vm.xknoteTab === "cloud" ? "active" : "")
+            },
             [
-              _c("xk-editor", {
-                attrs: {
-                  settingApi: _vm.xknoteSetting,
-                  contentProps: _vm.xknoteOpened.note.content
+              _c(
+                "a",
+                {
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      return _vm.switchTab("cloud")
+                    }
+                  }
                 },
-                on: { loadHook: _vm.editorLoaded }
-              })
-            ],
-            1
-          )
+                [_vm._v("云端")]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c("li", { staticClass: "tab-item" }, [
+            _c(
+              "a",
+              {
+                class:
+                  (_vm.localBadgeCount !== 0 ? "badge " : "") +
+                  (_vm.xknoteTab === "local" ? "active" : ""),
+                attrs: { href: "#", "data-badge": _vm.localBadgeCount },
+                on: {
+                  click: function($event) {
+                    return _vm.switchTab("local")
+                  }
+                }
+              },
+              [_vm._v("本地")]
+            )
+          ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "components" }, [
+        _c("ul", { staticClass: "xknote-tab-content" }, [
           _c(
-            "ul",
+            "li",
             {
               directives: [
                 {
                   name: "show",
                   rawName: "v-show",
-                  value: _vm.floatMenu.show,
-                  expression: "floatMenu.show"
+                  value: _vm.xknoteTab === "curr",
+                  expression: "xknoteTab==='curr'"
                 }
-              ],
-              staticClass: "menu float-menu col-1"
+              ]
             },
-            _vm._l(_vm.floatMenu.items, function(item) {
-              return _c(
-                "li",
-                { key: item.id, staticClass: "menu-item" },
+            [
+              _c(
+                "ul",
+                { staticClass: "menu menu-nav" },
                 [
-                  item.name === "saveAndClose"
-                    ? [
-                        _c("label", { staticClass: "form-switch" }, [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.floatMenu.saveAndClose,
-                                expression: "floatMenu.saveAndClose"
-                              }
-                            ],
-                            attrs: { type: "checkbox" },
-                            domProps: {
-                              checked: Array.isArray(_vm.floatMenu.saveAndClose)
-                                ? _vm._i(_vm.floatMenu.saveAndClose, null) > -1
-                                : _vm.floatMenu.saveAndClose
-                            },
-                            on: {
-                              change: function($event) {
-                                var $$a = _vm.floatMenu.saveAndClose,
-                                  $$el = $event.target,
-                                  $$c = $$el.checked ? true : false
-                                if (Array.isArray($$a)) {
-                                  var $$v = null,
-                                    $$i = _vm._i($$a, $$v)
-                                  if ($$el.checked) {
-                                    $$i < 0 &&
-                                      _vm.$set(
-                                        _vm.floatMenu,
-                                        "saveAndClose",
-                                        $$a.concat([$$v])
-                                      )
-                                  } else {
-                                    $$i > -1 &&
-                                      _vm.$set(
-                                        _vm.floatMenu,
-                                        "saveAndClose",
-                                        $$a
-                                          .slice(0, $$i)
-                                          .concat($$a.slice($$i + 1))
-                                      )
-                                  }
-                                } else {
-                                  _vm.$set(_vm.floatMenu, "saveAndClose", $$c)
-                                }
-                              }
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("i", { staticClass: "form-icon" }),
-                          _vm._v(" 保存后关闭\n            ")
-                        ])
-                      ]
-                    : _c(
-                        "a",
-                        {
-                          on: {
-                            click: function($event) {
-                              return _vm.floatMenuOperate(item.operate)
-                            }
+                  _vm._l(_vm.currList, function(item, index) {
+                    return _c(
+                      "li",
+                      { key: item.id, staticClass: "menu-item" },
+                      [
+                        _c("note-item", {
+                          attrs: {
+                            info: item,
+                            status: item.status,
+                            index: index,
+                            storage: "curr"
                           }
-                        },
-                        [_vm._v(_vm._s(item.name))]
-                      )
+                        })
+                      ],
+                      1
+                    )
+                  }),
+                  _vm._v(" "),
+                  _vm.currList.length === 0
+                    ? _c("div", { staticClass: "text-gray text-center" }, [
+                        _vm._v("这里什么都没有哦（￣︶￣）↗")
+                      ])
+                    : _vm._e()
                 ],
                 2
               )
-            }),
-            0
+            ]
           ),
           _vm._v(" "),
           _c(
-            "div",
+            "li",
             {
-              class:
-                "modal modal-sm xknote-sm-modal" +
-                (_vm.smModal.show ? " active" : "")
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.xknoteTab === "cloud",
+                  expression: "xknoteTab==='cloud'"
+                }
+              ]
             },
             [
-              _c("a", {
-                staticClass: "modal-overlay",
-                attrs: { href: "#close", "aria-label": "Close" }
+              _vm._l(_vm.cloudList, function(item, index) {
+                return _c("folder-item", {
+                  key: item.id,
+                  attrs: { info: item, index: index, storage: "cloud" }
+                })
               }),
               _vm._v(" "),
-              _c("div", { staticClass: "modal-container" }, [
-                _c("div", { staticClass: "modal-header" }, [
-                  _c("div", { staticClass: "modal-title h5" }, [
-                    _vm._v(_vm._s(_vm.smModal.title))
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "modal-body" }, [
-                  _c("div", { staticClass: "content" }, [
-                    _vm._v(_vm._s(_vm.smModal.content))
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "modal-footer" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-primary",
-                      on: {
-                        click: function($event) {
-                          return _vm.smModal.confirm()
-                        }
-                      }
-                    },
-                    [_vm._v("确认")]
-                  ),
+              _vm.cloudList.length === 0
+                ? [
+                    _c("div", { staticClass: "loading loading-lg" }),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "text-gray text-center" }, [
+                      _vm._v("正在加载，客官莫急。")
+                    ])
+                  ]
+                : _vm._e()
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.xknoteTab === "local",
+                  expression: "xknoteTab==='local'"
+                }
+              ]
+            },
+            [
+              _c(
+                "ul",
+                { staticClass: "menu menu-nav" },
+                [
+                  _vm._l(_vm.localList, function(item, index) {
+                    return _c(
+                      "li",
+                      { key: item.id, staticClass: "menu-item" },
+                      [
+                        _c("note-item", {
+                          attrs: {
+                            info: item,
+                            status: item.status,
+                            index: index,
+                            storage: "local"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  }),
                   _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-link",
-                      on: {
-                        click: function($event) {
-                          return _vm.smModal.cancel()
-                        }
-                      }
-                    },
-                    [_vm._v("取消")]
-                  )
-                ])
-              ])
+                  _vm.localList.length === 0
+                    ? _c("div", { staticClass: "text-gray text-center" }, [
+                        _vm._v("这里什么都没有哦（￣︶￣）↗")
+                      ])
+                    : _vm._e()
+                ],
+                2
+              )
             ]
           )
-        ])
-      ]
-    ],
-    2
-  )
+        ]),
+        _vm._v(" "),
+        _vm._m(5)
+      ]),
+      _vm._v(" "),
+      _c(
+        "section",
+        { staticClass: "column col-10", attrs: { id: "xknote-editor" } },
+        [
+          _c("xk-editor", {
+            attrs: {
+              settingApi: _vm.xknoteSetting,
+              contentProps: _vm.xknoteOpened.note.content
+            },
+            on: { loadHook: _vm.editorLoaded }
+          })
+        ],
+        1
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "components" }, [
+      _c(
+        "ul",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.floatMenu.show,
+              expression: "floatMenu.show"
+            }
+          ],
+          staticClass: "menu float-menu col-1"
+        },
+        _vm._l(_vm.floatMenu.items, function(item) {
+          return _c(
+            "li",
+            { key: item.id, staticClass: "menu-item" },
+            [
+              item.name === "saveAndClose"
+                ? [
+                    _c("label", { staticClass: "form-switch" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.floatMenu.saveAndClose,
+                            expression: "floatMenu.saveAndClose"
+                          }
+                        ],
+                        attrs: { type: "checkbox" },
+                        domProps: {
+                          checked: Array.isArray(_vm.floatMenu.saveAndClose)
+                            ? _vm._i(_vm.floatMenu.saveAndClose, null) > -1
+                            : _vm.floatMenu.saveAndClose
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.floatMenu.saveAndClose,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = null,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 &&
+                                  _vm.$set(
+                                    _vm.floatMenu,
+                                    "saveAndClose",
+                                    $$a.concat([$$v])
+                                  )
+                              } else {
+                                $$i > -1 &&
+                                  _vm.$set(
+                                    _vm.floatMenu,
+                                    "saveAndClose",
+                                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                  )
+                              }
+                            } else {
+                              _vm.$set(_vm.floatMenu, "saveAndClose", $$c)
+                            }
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("i", { staticClass: "form-icon" }),
+                      _vm._v(" 保存后关闭\n          ")
+                    ])
+                  ]
+                : _c(
+                    "a",
+                    {
+                      on: {
+                        click: function($event) {
+                          return _vm.floatMenuOperate(item.operate)
+                        }
+                      }
+                    },
+                    [_vm._v(_vm._s(item.name))]
+                  )
+            ],
+            2
+          )
+        }),
+        0
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          class:
+            "modal modal-sm xknote-sm-modal" +
+            (_vm.smModal.show ? " active" : "")
+        },
+        [
+          _c("a", {
+            staticClass: "modal-overlay",
+            attrs: { href: "#close", "aria-label": "Close" }
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "modal-container" }, [
+            _c("div", { staticClass: "modal-header" }, [
+              _c("div", { staticClass: "modal-title h5" }, [
+                _vm._v(_vm._s(_vm.smModal.title))
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-body" }, [
+              _c("div", { staticClass: "content" }, [
+                _vm._v(_vm._s(_vm.smModal.content))
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-footer" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  on: {
+                    click: function($event) {
+                      return _vm.smModal.confirm()
+                    }
+                  }
+                },
+                [_vm._v("确认")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-link",
+                  on: {
+                    click: function($event) {
+                      return _vm.smModal.cancel()
+                    }
+                  }
+                },
+                [_vm._v("取消")]
+              )
+            ])
+          ])
+        ]
+      )
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
@@ -22042,7 +22300,7 @@ var staticRenderFns = [
         attrs: { href: "#", tabindex: "0" }
       },
       [
-        _vm._v("\n              导出\n              "),
+        _vm._v("\n            导出\n            "),
         _c("i", { staticClass: "icon icon-caret" })
       ]
     )
@@ -22060,7 +22318,7 @@ var staticRenderFns = [
             attrs: { href: "#", tabindex: "0" }
           },
           [
-            _vm._v("\n              操作\n              "),
+            _vm._v("\n            操作\n            "),
             _c("i", { staticClass: "icon icon-caret" })
           ]
         ),
@@ -22138,7 +22396,7 @@ var staticRenderFns = [
             attrs: { href: "#", tabindex: "0" }
           },
           [
-            _vm._v("\n            { name }\n            "),
+            _vm._v("\n          { name }\n          "),
             _c("i", { staticClass: "icon icon-caret" })
           ]
         ),
@@ -22174,12 +22432,76 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "xknote-copyright bg-gray" }, [
-      _vm._v("\n          ©\n          "),
+      _vm._v("\n        ©\n        "),
       _c("a", { attrs: { href: "https://github.com/syfxlin/xknote" } }, [
         _vm._v("XK-Note")
       ]),
-      _vm._v(" By\n          "),
+      _vm._v(" By\n        "),
       _c("a", { attrs: { href: "https://ixk.me" } }, [_vm._v("Otstar Lin")])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Read.vue?vue&type=template&id=6fea1581&":
+/*!*******************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Read.vue?vue&type=template&id=6fea1581& ***!
+  \*******************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("main", { staticClass: "read-home container" }, [
+      _c("div", { staticClass: "columns" }, [
+        _c("section", { staticClass: "col-9 read-container" }, [
+          _c("header", { staticClass: "hero hero-sm bg-gray read-header" }, [
+            _c("div", { staticClass: "hero-body" }, [
+              _c("h1", [_vm._v("Hero title")]),
+              _vm._v(" "),
+              _c("p", [_vm._v("This is a hero example")])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("article", { staticClass: "markdown-body read-content" }),
+          _vm._v(" "),
+          _c(
+            "footer",
+            { staticClass: "xknote-copyright bg-gray read-footer" },
+            [
+              _vm._v("\n        ©\n        "),
+              _c(
+                "a",
+                { attrs: { href: "https://github.com/syfxlin/xknote" } },
+                [_vm._v("XK-Note")]
+              ),
+              _vm._v(" By\n        "),
+              _c("a", { attrs: { href: "https://ixk.me" } }, [
+                _vm._v("Otstar Lin")
+              ])
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("aside", { staticClass: "col-3 p-fixed read-sidebar" })
+      ])
     ])
   }
 ]
@@ -24179,17 +24501,17 @@ if (apiToken) {
 
 /***/ }),
 
-/***/ "./resources/js/components/NewHome.vue":
-/*!*********************************************!*\
-  !*** ./resources/js/components/NewHome.vue ***!
-  \*********************************************/
+/***/ "./resources/js/components/Home.vue":
+/*!******************************************!*\
+  !*** ./resources/js/components/Home.vue ***!
+  \******************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _NewHome_vue_vue_type_template_id_056b0484___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./NewHome.vue?vue&type=template&id=056b0484& */ "./resources/js/components/NewHome.vue?vue&type=template&id=056b0484&");
-/* harmony import */ var _NewHome_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./NewHome.vue?vue&type=script&lang=js& */ "./resources/js/components/NewHome.vue?vue&type=script&lang=js&");
+/* harmony import */ var _Home_vue_vue_type_template_id_f2b6376c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Home.vue?vue&type=template&id=f2b6376c& */ "./resources/js/components/Home.vue?vue&type=template&id=f2b6376c&");
+/* harmony import */ var _Home_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Home.vue?vue&type=script&lang=js& */ "./resources/js/components/Home.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -24199,9 +24521,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _NewHome_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _NewHome_vue_vue_type_template_id_056b0484___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _NewHome_vue_vue_type_template_id_056b0484___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _Home_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Home_vue_vue_type_template_id_f2b6376c___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Home_vue_vue_type_template_id_f2b6376c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -24211,38 +24533,125 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/NewHome.vue"
+component.options.__file = "resources/js/components/Home.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/components/NewHome.vue?vue&type=script&lang=js&":
-/*!**********************************************************************!*\
-  !*** ./resources/js/components/NewHome.vue?vue&type=script&lang=js& ***!
-  \**********************************************************************/
+/***/ "./resources/js/components/Home.vue?vue&type=script&lang=js&":
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/Home.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_NewHome_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./NewHome.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewHome.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_NewHome_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./Home.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Home.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/components/NewHome.vue?vue&type=template&id=056b0484&":
-/*!****************************************************************************!*\
-  !*** ./resources/js/components/NewHome.vue?vue&type=template&id=056b0484& ***!
-  \****************************************************************************/
+/***/ "./resources/js/components/Home.vue?vue&type=template&id=f2b6376c&":
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/Home.vue?vue&type=template&id=f2b6376c& ***!
+  \*************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NewHome_vue_vue_type_template_id_056b0484___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./NewHome.vue?vue&type=template&id=056b0484& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/NewHome.vue?vue&type=template&id=056b0484&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NewHome_vue_vue_type_template_id_056b0484___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_template_id_f2b6376c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./Home.vue?vue&type=template&id=f2b6376c& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Home.vue?vue&type=template&id=f2b6376c&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_template_id_f2b6376c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_NewHome_vue_vue_type_template_id_056b0484___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Home_vue_vue_type_template_id_f2b6376c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/Read.vue":
+/*!******************************************!*\
+  !*** ./resources/js/components/Read.vue ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Read_vue_vue_type_template_id_6fea1581___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Read.vue?vue&type=template&id=6fea1581& */ "./resources/js/components/Read.vue?vue&type=template&id=6fea1581&");
+/* harmony import */ var _Read_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Read.vue?vue&type=script&lang=js& */ "./resources/js/components/Read.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _Read_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Read.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/Read.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _Read_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Read_vue_vue_type_template_id_6fea1581___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Read_vue_vue_type_template_id_6fea1581___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Read.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Read.vue?vue&type=script&lang=js&":
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/Read.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Read_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./Read.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Read.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Read_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Read.vue?vue&type=style&index=0&lang=css&":
+/*!***************************************************************************!*\
+  !*** ./resources/js/components/Read.vue?vue&type=style&index=0&lang=css& ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Read_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./Read.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Read.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Read_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Read_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Read_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Read_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Read_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Read.vue?vue&type=template&id=6fea1581&":
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/Read.vue?vue&type=template&id=6fea1581& ***!
+  \*************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Read_vue_vue_type_template_id_6fea1581___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./Read.vue?vue&type=template&id=6fea1581& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Read.vue?vue&type=template&id=6fea1581&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Read_vue_vue_type_template_id_6fea1581___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Read_vue_vue_type_template_id_6fea1581___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -24395,12 +24804,18 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_NewHome_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/NewHome.vue */ "./resources/js/components/NewHome.vue");
+/* harmony import */ var _components_Home_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/Home.vue */ "./resources/js/components/Home.vue");
+/* harmony import */ var _components_Read_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/Read.vue */ "./resources/js/components/Read.vue");
+
 
 var routes = [{
   path: "/",
   name: "Home",
-  component: _components_NewHome_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  component: _components_Home_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+}, {
+  path: "/read",
+  name: "Read",
+  component: _components_Read_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
 }];
 /* harmony default export */ __webpack_exports__["default"] = (routes);
 

@@ -14,3 +14,4 @@ yarn-error.log
 /public/js/manifest.js
 /public/js/vendor.js
 /public/mix-manifest.json
+.history
