@@ -1,5 +1,5 @@
 <template>
-  <main class="home" ref="home">
+  <main class="home">
     <header class="navbar xknote-header">
       <section class="navbar-section col-2">
         <img class="xknote-icon" src="https://note.ixk.me/img/logo.png" alt="XK-Note icon" />
@@ -116,8 +116,8 @@
             </ul>
           </div>
         </div>
-        <a href="#" class="btn btn-link">阅读模式</a>
-        <a href="#" class="btn btn-link">写作模式</a>
+        <router-link to="/read" class="btn btn-link">阅读模式</router-link>
+        <router-link to="/write" class="btn btn-link">写作模式</router-link>
         <div class="dropdown dropdown-right">
           <a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
             { name }
@@ -150,19 +150,17 @@
           <li class="tab-item">
             <!-- mark data-badge: 当前未保存的文章数量 -->
             <a
-              href="#"
               :class="(currBadgeCount!==0 ? 'badge ' : '') + (xknoteTab==='curr' ? 'active' : '')"
               :data-badge="currBadgeCount"
               @click="switchTab('curr')"
             >当前</a>
           </li>
           <li :class="'tab-item ' + (xknoteTab==='cloud' ? 'active' : '')">
-            <a href="#" @click="switchTab('cloud')">云端</a>
+            <a @click="switchTab('cloud')">云端</a>
           </li>
           <li class="tab-item">
             <!-- mark data-badge: 未保存到云端的数量 -->
             <a
-              href="#"
               :class="(localBadgeCount!==0 ? 'badge ' : '') + (xknoteTab==='local' ? 'active' : '')"
               :data-badge="localBadgeCount"
               @click="switchTab('local')"
@@ -174,7 +172,13 @@
             <ul class="menu menu-nav">
               <li class="menu-item" v-for="(item, index) in currList" :key="item.id">
                 <!-- mark data-badge: N为未保存，L为已经保存到本地，若已经保存到云端则不显示badge -->
-                <note-item :info="item" :status="item.status" :index="index" :storage="'curr'" />
+                <note-item
+                  :info="item"
+                  :status="item.status"
+                  :index="index"
+                  :storage="'curr'"
+                  :showSetting="true"
+                />
               </li>
               <div class="text-gray text-center" v-if="currList.length===0">这里什么都没有哦（￣︶￣）↗</div>
             </ul>
@@ -186,6 +190,7 @@
               :info="item"
               :index="index"
               :storage="'cloud'"
+              :showSetting="true"
             />
             <template v-if="cloudList.length===0">
               <div class="loading loading-lg"></div>
@@ -196,7 +201,13 @@
             <ul class="menu menu-nav">
               <li class="menu-item" v-for="(item, index) in localList" :key="item.id">
                 <!-- mark data-badge: N为未保存，L为已经保存到本地，若已经保存到云端则不显示(C)badge -->
-                <note-item :info="item" :status="item.status" :index="index" :storage="'local'" />
+                <note-item
+                  :info="item"
+                  :status="item.status"
+                  :index="index"
+                  :storage="'local'"
+                  :showSetting="true"
+                />
               </li>
               <div class="text-gray text-center" v-if="localList.length===0">这里什么都没有哦（￣︶￣）↗</div>
             </ul>
@@ -251,7 +262,6 @@
 import XK_Editor from "xkeditor";
 import noteItem from "./noteItem.vue";
 import folderItem from "./folderItem.vue";
-import "../assets/style.css";
 export default {
   name: "home",
   components: {
@@ -259,81 +269,27 @@ export default {
     "note-item": noteItem,
     "folder-item": folderItem
   },
+  created() {
+    window.nThis.home = this;
+  },
+  props: [
+    "xknoteTab",
+    "switchTab",
+    "currListSource",
+    "currList",
+    "cloudList",
+    "localList",
+    "xknoteOpened",
+    "xknoteOpenedIndex",
+    "noteBaseInfo",
+    "loadRememberNote",
+    "listOperate",
+    "noteOperate",
+    "setXknoteOpened"
+  ],
   data() {
     return {
-      // 存储当前开启的文档信息（开启于Editor中）
-      noteBaseInfo: {
-        type: "note",
-        path: "",
-        name: "",
-        status: "N",
-        note: {
-          title: "",
-          author: "",
-          content: "暂未打开任何文件，请选择文件。",
-          created_at: "",
-          updated_at: ""
-        }
-      },
-      xknoteOpened: {
-        type: "note",
-        path: "",
-        name: "",
-        status: "N",
-        note: {
-          title: "",
-          author: "",
-          content: "暂未打开任何文件，请选择文件。",
-          created_at: "",
-          updated_at: ""
-        }
-      },
-      // 存储当前开启的文档的位置，当前位置和源位置
-      // curr存储的是位于currList的索引
-      // source存储的分别是源的位置 本地or云端（data-storage） 在其列表中的index（data-index）
-      xknoteOpenedIndex: {
-        curr: "",
-        source: {
-          index: "",
-          storage: ""
-        }
-      },
-      // 防止openNote时的文档修改引发的标记改变
-      xknoteOpenedChangeFlag: true,
       xknoteSetting: "/static/setting.json",
-      xknoteTab: "cloud",
-      // currList的扩展信息
-      currListSource: [],
-      currList: [
-        // {
-        //   type: "note",
-        //   path: "uid_1/C语言学习笔记.md",
-        //   name: "C语言学习笔记.md",
-        //   status: "N",
-        //   note: {
-        //     title: "C语言学习笔记",
-        //     author: "Otstar Lin",
-        //     content: "C语言学习笔记-content",
-        //     created_at: "2019/7/27 21:52:15",
-        //     updated_at: "2019/7/27 21:52:15"
-        //   }
-        // },
-        // {
-        //   type: "note",
-        //   path: "uid_1/public/PHP学习笔记.md",
-        //   name: "PHP学习笔记.md",
-        //   status: "N",
-        //   note: {
-        //     title: "PHP学习笔记",
-        //     author: "Otstar Lin",
-        //     content: "PHP学习笔记-content",
-        //     created_at: "2019/7/27 21:52:15",
-        //     updated_at: "2019/7/27 21:52:15"
-        //   }
-        // }
-      ],
-      cloudList: [],
-      localList: [],
       smModal: {
         show: false,
         title: "",
@@ -371,52 +327,6 @@ export default {
   },
   methods: {
     /**
-     * 切换Tab
-     * @param {string} tabName 要切换到的Tab名称
-     * @returns void
-     */
-    switchTab(tabName) {
-      this.xknoteTab = tabName;
-    },
-    /**
-     * 读取之前开启的笔记
-     * @param void
-     * @returns void
-     */
-    loadRememberNote() {
-      this.optionsDB("read", "rememberNote", (e, data) => {
-        if (data) {
-          this.openNote(data.note, data.index.source);
-        }
-        this.timedTask("saveCurrOpenedNote");
-      });
-    },
-    /**
-     * 读取云端的文件夹及笔记
-     * @param void
-     * @returns void
-     */
-    loadCloudFolders() {
-      window.axios
-        .get("/api/folders")
-        .then(res => {
-          this.cloudList = res.data;
-        })
-        .catch(err => {
-          console.error(err);
-        });
-    },
-    /**
-     * 读取本地的笔记
-     * @param void
-     * @returns void
-     */
-    loadLocalNotes() {
-      this.noteLocalDB("readAll", "", (e, list) => {
-        this.localList = list;
-      });
-    },
-    /**
      * 在XK Editor加载完成时触发的事件
      * @param {string} e event的名称
      * @returns void
@@ -424,322 +334,13 @@ export default {
     editorLoaded(e) {
       if (e === "interfaceLoad") {
         window.XKEditor.ace.getSession().on("change", () => {
-          this.xknoteOpened.note.content = window.XKEditor.getMarkdown();
+          if (window.xknoteOpenedChangeFlag) {
+            this.xknoteOpened.note.content = window.XKEditor.getMarkdown();
+          }
         });
       }
       if (e === "componentLoad") {
         this.loadRememberNote();
-      }
-    },
-    /**
-     * 监听当前打开的笔记改变事件触发的函数
-     * @param void
-     * @returns void
-     */
-    watchNote() {
-      if (!this.xknoteOpenedChangeFlag) return;
-      this.xknoteOpened.status = "N";
-      var d = new Date();
-      this.xknoteOpened.note.updated_at =
-        d.getFullYear() +
-        "/" +
-        (d.getMonth() + 1) +
-        "/" +
-        d.getDate() +
-        " " +
-        d.getHours() +
-        ":" +
-        d.getMinutes() +
-        ":" +
-        d.getSeconds();
-    },
-    /**
-     * 设置当前开启的文档
-     * @param {object} noteInfo 笔记信息，结构同this.noteBaseInfo
-     * @returns void
-     */
-    setXknoteOpened(noteInfo) {
-      this.xknoteOpened = noteInfo;
-      if (window.eThis.e.editorMode === "ace") {
-        window.XKEditor.setMarkdown(noteInfo.note.content);
-      } else {
-        window.XKEditor.switchEditor();
-        window.XKEditor.setMarkdown(noteInfo.note.content);
-      }
-    },
-    /**
-     * 打开笔记
-     * @param {object} note 笔记信息，结构同this.noteBaseInfo
-     * @param {object} source 笔记的来源
-     *   @param {string} source.index 笔记来源的索引
-     *   @param {string} source.storage 笔记来源的存储位置（local，cloud）
-     * @returns void
-     */
-    openNote(note, source) {
-      this.xknoteOpenedChangeFlag = false;
-      // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
-      this.setXknoteOpened(note);
-      // 添加到currList，同时将源数据添加到currListSource
-      let currIndex;
-      if (source.storage !== "curr") {
-        currIndex = this.listOperate("add", "curr", "", {
-          note: note,
-          source: source
-        });
-        this.xknoteOpenedIndex.curr = currIndex;
-      } else {
-        this.xknoteOpenedIndex.curr = parseInt(source.index);
-        currIndex = source.index;
-      }
-      this.xknoteOpenedIndex.source = source;
-      this.xknoteTab = "curr";
-      this.$nextTick(() => {
-        // 添加当前打开的文件的active效果
-        let ele;
-        ele = document.querySelector(".active[data-storage='curr']");
-        if (ele) {
-          ele.classList.remove("active");
-        }
-        document
-          .querySelector(
-            "[data-storage='curr'][data-index='" + currIndex + "']"
-          )
-          .classList.add("active");
-        this.xknoteOpenedChangeFlag = true;
-      });
-    },
-    /**
-     * 操作本地数据库
-     * @param {string} table 本地数据库table的名称
-     * @param {string} operate 操作名称
-     * @param {object=} data 数据
-     * @param {function(e, data)=} callS 成功的回调
-     * @param {function(e)=} callE 失败的回调
-     * @returns void
-     */
-    xknoteDB(
-      table,
-      operate,
-      data = null,
-      callS = (e, data = null) => {},
-      callE = e => {}
-    ) {
-      var requset = window.indexedDB.open("xknote");
-      var db = null;
-      var os = null;
-      requset.onerror = e => {
-        console.error("indexedDB开启失败: " + e);
-        callE(e);
-      };
-      requset.onupgradeneeded = e => {
-        db = e.target.result;
-        if (!db.objectStoreNames.contains("localList")) {
-          console.log("indexedDB中不存在localList表");
-          os = db.createObjectStore("localList", {
-            keyPath: "name"
-          });
-        }
-        if (!db.objectStoreNames.contains("options")) {
-          console.log("indexedDB中不存在options表");
-          os = db.createObjectStore("options", {
-            keyPath: "name"
-          });
-        }
-      };
-      requset.onsuccess = () => {
-        db = requset.result;
-        os = db.transaction([table], "readwrite").objectStore(table);
-        if (operate === "add") {
-          let req = os.add(data);
-          req.onsuccess = e => {
-            callS(e);
-          };
-          req.onerror = e => {
-            console.log("数据写入失败: " + e);
-            callE(e);
-          };
-        }
-        if (operate === "addAll") {
-          for (let i = 0; i < data.length; i++) {
-            let req = os.add(data[i]);
-            req.onsuccess = e => {
-              callS(e);
-            };
-            req.onerror = e => {
-              console.log("数据写入失败: " + e);
-              callE(e);
-            };
-          }
-        }
-        if (operate === "read") {
-          let reData = null;
-          let req = os.get(data);
-          req.onsuccess = e => {
-            reData = req.result;
-            callS(e, reData);
-          };
-          req.onerror = e => {
-            console.log("数据读取失败: " + e);
-            callE(e);
-          };
-        }
-        if (operate === "readAll") {
-          let reData = null;
-          let req = os.getAll();
-          req.onsuccess = e => {
-            reData = req.result;
-            callS(e, reData);
-          };
-          req.onerror = e => {
-            console.log("数据读取失败: " + e);
-            callE(e);
-          };
-        }
-        if (operate === "delete") {
-          let req = os.delete(data);
-          req.onsuccess = e => {
-            callS(e);
-          };
-          req.onerror = e => {
-            console.error("删除数据失败:" + e);
-            callE(e);
-          };
-        }
-        if (operate === "deleteAll") {
-          let req = os.clear();
-          req.onsuccess = e => {
-            callS(e);
-          };
-          req.onerror = e => {
-            console.error("删除数据失败:" + e);
-            callE(e);
-          };
-        }
-        if (operate === "put") {
-          let req = os.put(data);
-          req.onsuccess = e => {
-            callS(e);
-          };
-          req.onerror = e => {
-            console.log("数据更新失败: " + e);
-            callE(e);
-          };
-        }
-        db.close();
-      };
-    },
-    /**
-     * 操作本地笔记数据库
-     * @param {string} operate
-     * @param {object=} data 数据
-     * @param {function(e, data)=} callS 成功的回调
-     * @param {function(e)=} callE 失败的回调
-     * @returns void
-     */
-    noteLocalDB(
-      operate,
-      data = null,
-      callS = (e, data = null) => {},
-      callE = e => {}
-    ) {
-      this.xknoteDB("localList", operate, data, callS, callE);
-    },
-    /**
-     * 操作本地选项设置数据库
-     * @param {string} operate
-     * @param {object=} data 数据
-     * @param {function(e, data)=} callS 成功的回调
-     * @param {function(e)=} callE 失败的回调
-     * @returns void
-     */
-    optionsDB(
-      operate,
-      data = null,
-      callS = (e, data = null) => {},
-      callE = e => {}
-    ) {
-      this.xknoteDB("options", operate, data, callS, callE);
-    },
-    /**
-     * 操作列表
-     * @param {string} operate 操作名称
-     * @param {string} storage 要操作对象存储的位置
-     * @param {string=} index 要操作对象的索引
-     * @param {object=} noteInfo 笔记信息，正常情况下结构同this.noteBaseInfo
-     *   @param {object=} noteInfo.note （add curr）笔记信息，结构同this.noteBaseInfo
-     *   @param {object=} noteInfo.source （add curr）笔记来源
-     * @returns {object | number} 笔记信息（get,delete）或者当前笔记的索引（add）
-     */
-    listOperate(operate, storage, index = "", noteInfo = null) {
-      let arr = [];
-      let list;
-      if (typeof index !== "string") {
-        index = index + "";
-      }
-      arr = index.split(":");
-      list = this[storage + "List"];
-      for (let i = 0; i < arr.length - 1; i++) {
-        if (i === 0) {
-          list = list[arr[i]].sub;
-        } else {
-          list = list.sub[arr[i]];
-        }
-      }
-      if (operate === "delete") {
-        let noteList = list.splice(arr[arr.length - 1], 1);
-        if (storage === "curr") {
-          this.currListSource.splice(arr[arr.length - 1], 1);
-        }
-        return noteList[0];
-      }
-      if (operate === "add") {
-        if (storage === "curr") {
-          let currIndex = this.currList.push(noteInfo.note) - 1;
-          this.currListSource.push(noteInfo.source);
-          return currIndex;
-        }
-        if (storage === "local") {
-          return this[storage + "List"].push(noteInfo) - 1;
-        }
-      }
-      if (operate === "get") {
-        return list[arr[arr.length - 1]];
-      }
-    },
-    /**
-     * 操作笔记
-     * @param {string} operate 操作名称
-     * @param {string} storage 要操作对象存储的位置
-     * @param {object=} noteInfo 笔记信息，正常情况下结构同this.noteBaseInfo
-     *   @param {object=} noteInfo.oldNote (rename) 旧的笔记信息
-     *   @param {object=} noteInfo.note (rename) 新的笔记信息
-     * @returns void
-     */
-    noteOperate(operate, storage, noteInfo = null) {
-      if (operate === "delete") {
-        if (storage === "local") {
-          this.noteLocalDB("delete", noteInfo.name);
-        }
-        // TODO: 云端删除
-      }
-      if (operate === "save") {
-        if (storage === "local") {
-          this.noteLocalDB("delete", noteInfo.name);
-          this.noteLocalDB("add", noteInfo);
-        }
-        if (storage === "cloud") {
-          // TODO: 云端保存
-        }
-      }
-      if (operate === "rename") {
-        if (storage === "local") {
-          this.noteLocalDB("delete", noteInfo.oldNote.name);
-          this.noteLocalDB("add", noteInfo.note);
-        }
-        if (storage === "cloud") {
-          // TODO: 云端重命名
-        }
-        // TODO: 重命名成功后提示
       }
     },
     /**
@@ -781,7 +382,7 @@ export default {
           // 判断保存时是否需要关闭currList的副本
           if (this.floatMenu.saveAndClose) {
             note = this.listOperate("delete", "curr", index);
-            this.setXknoteOpened(this.noteBaseInfo);
+            this.setXknoteOpened(JSON.parse(JSON.stringify(this.noteBaseInfo)));
           } else {
             note = this.listOperate("get", "curr", index);
           }
@@ -793,6 +394,7 @@ export default {
               index: localIndex,
               storage: "local"
             };
+            // this.$emit("update:currListSource", this.currListSource);
           }
           // 保存到本地（实际操作）
           this.noteOperate("save", "local", note);
@@ -832,7 +434,7 @@ export default {
         // 如果笔记在未保存状态关闭则先弹出modal提示是否下关闭
         let closeCurr = () => {
           if (index == this.xknoteOpenedIndex.curr) {
-            this.setXknoteOpened(this.noteBaseInfo);
+            this.setXknoteOpened(JSON.parse(JSON.stringify(this.noteBaseInfo)));
           }
           this.listOperate("delete", "curr", index);
         };
@@ -904,37 +506,9 @@ export default {
         );
       }
       // TODO: 导出阅读模式的HTML
-    },
-    /**
-     * 定时执行任务，包括循环任务
-     * @param {string} task 任务名称
-     * @returns void
-     */
-    timedTask(task) {
-      if (task === "saveCurrOpenedNote") {
-        // 每10秒中将当前打开的笔记信息保存至本地数据库，用以下次开启做准备
-        setInterval(() => {
-          this.optionsDB("put", {
-            name: "rememberNote",
-            index: this.xknoteOpenedIndex,
-            note: this.xknoteOpened
-          });
-        }, 10000);
-      }
     }
   },
-  mounted() {
-    this.loadLocalNotes();
-    this.loadCloudFolders();
-    // this.loadRememberNote(); --> editorLoaded
-    // this.timedTask(); --> this.this.loadRememberNote
-    window.optionsDB = this.optionsDB;
-    window.xknote = {};
-  },
-  watch: {
-    "xknoteOpened.note.content": "watchNote",
-    "xknoteOpened.note.title": "watchNote"
-  }
+  mounted() {}
 };
 </script>
 

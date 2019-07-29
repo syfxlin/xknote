@@ -15,7 +15,7 @@
       <input class="form-input" type="text" placeholder="Name" :value="info.name" />
     </div>
     <div class="tile-action">
-      <button class="btn btn-link btn-action" @click="showNoteSettings($event)">
+      <button class="btn btn-link btn-action" @click="showNoteSettings($event)" v-if="showSetting">
         <img class="icon" src="/static/svg/settings.svg" />
       </button>
     </div>
@@ -25,11 +25,12 @@
 <script>
 export default {
   name: "note-item",
-  props: ["info", "status", "index", "storage"],
+  props: ["info", "status", "index", "storage", "showSetting"],
   data() {
     return {
       hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path,
-      home: this.$root.$children[0],
+      home: window.nThis.home,
+      app: window.nThis.app,
       floatMenuItems: {
         curr: [
           {
@@ -122,7 +123,7 @@ export default {
         e.target.parentElement.parentElement.parentElement;
     },
     openNote(e) {
-      this.home.openNote(this.info, {
+      this.app.openNote(this.info, {
         index: this.index,
         storage: this.storage
       });

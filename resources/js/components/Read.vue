@@ -16,18 +16,18 @@
         </footer>
       </section>
       <aside class="col-3 p-fixed read-sidebar">
-        <!-- <ul class="tab tab-block xknote-tab">
+        <ul class="tab tab-block xknote-tab">
           <li class="tab-item">
-            <a href="#" :class="xknoteTab==='curr' ? 'active' : ''" @click="switchTab('curr')">当前</a>
+            <a :class="xknoteTab==='curr' ? 'active' : ''" @click="switchTab('curr')">当前</a>
           </li>
           <li :class="'tab-item ' + (xknoteTab==='cloud' ? 'active' : '')">
-            <a href="#" @click="switchTab('cloud')">云端</a>
+            <a @click="switchTab('cloud')">云端</a>
           </li>
           <li class="tab-item">
-            <a href="#" :class="xknoteTab==='local' ? 'active' : ''" @click="switchTab('local')">本地</a>
+            <a :class="xknoteTab==='local' ? 'active' : ''" @click="switchTab('local')">本地</a>
           </li>
-        </ul>-->
-        <!-- <ul class="xknote-tab-content">
+        </ul>
+        <ul class="xknote-tab-content">
           <li v-show="xknoteTab==='curr'">
             <ul class="menu menu-nav">
               <li class="menu-item" v-for="(item, index) in currList" :key="item.id">
@@ -57,15 +57,34 @@
               <div class="text-gray text-center" v-if="localList.length===0">这里什么都没有哦（￣︶￣）↗</div>
             </ul>
           </li>
-        </ul>-->
+        </ul>
       </aside>
     </div>
   </main>
 </template>
 
 <script>
+import noteItem from "./noteItem.vue";
+import folderItem from "./folderItem.vue";
 export default {
   name: "read-mode",
+  components: {
+    "note-item": noteItem,
+    "folder-item": folderItem
+  },
+  created() {
+    window.nThis.read = this;
+  },
+  props: [
+    "xknoteTab",
+    "switchTab",
+    "currListSource",
+    "currList",
+    "cloudList",
+    "localList",
+    "xknoteOpened",
+    "xknoteOpenedIndex"
+  ],
   data() {
     return {};
   }

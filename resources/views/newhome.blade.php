@@ -11,9 +11,7 @@
         <title>XK-Note</title>
     </head>
     <body>
-        <div id="app">
-            <router-view></router-view>
-        </div>
+        <div id="app"></div>
         <!-- Vue -->
         {{-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue-router@3.0.6/dist/vue-router.min.js"></script> --}}

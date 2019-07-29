@@ -183,3 +183,7 @@ p {
 .xknote-sm-modal {
     color: #585858;
 }
+
+.tab .tab-item a {
+    cursor: pointer;
+}

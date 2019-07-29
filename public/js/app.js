@@ -11242,20 +11242,17 @@ module.exports = function isBuffer (obj) {
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Home.vue?vue&type=script&lang=js&":
-/*!***************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Home.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/App.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/App.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var xkeditor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! xkeditor */ "./node_modules/xkeditor/src/index.js");
-/* harmony import */ var _noteItem_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./noteItem.vue */ "./resources/js/components/noteItem.vue");
-/* harmony import */ var _folderItem_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./folderItem.vue */ "./resources/js/components/folderItem.vue");
-/* harmony import */ var _assets_style_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../assets/style.css */ "./resources/js/assets/style.css");
-/* harmony import */ var _assets_style_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_assets_style_css__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _assets_style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./assets/style.css */ "./resources/js/assets/style.css");
+/* harmony import */ var _assets_style_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_assets_style_css__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -11277,244 +11274,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "home",
-  components: {
-    "xk-editor": xkeditor__WEBPACK_IMPORTED_MODULE_0__["default"],
-    "note-item": _noteItem_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    "folder-item": _folderItem_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+  name: "App",
+  created: function created() {
+    window.nThis.app = this;
+    window.xknoteOpenedChangeFlag = true;
   },
   data: function data() {
     return {
@@ -11555,75 +11320,18 @@ __webpack_require__.r(__webpack_exports__);
           storage: ""
         }
       },
-      // 防止openNote时的文档修改引发的标记改变
-      xknoteOpenedChangeFlag: true,
-      xknoteSetting: "/static/setting.json",
-      xknoteTab: "cloud",
       // currList的扩展信息
       currListSource: [],
-      currList: [// {
-        //   type: "note",
-        //   path: "uid_1/C语言学习笔记.md",
-        //   name: "C语言学习笔记.md",
-        //   status: "N",
-        //   note: {
-        //     title: "C语言学习笔记",
-        //     author: "Otstar Lin",
-        //     content: "C语言学习笔记-content",
-        //     created_at: "2019/7/27 21:52:15",
-        //     updated_at: "2019/7/27 21:52:15"
-        //   }
-        // },
-        // {
-        //   type: "note",
-        //   path: "uid_1/public/PHP学习笔记.md",
-        //   name: "PHP学习笔记.md",
-        //   status: "N",
-        //   note: {
-        //     title: "PHP学习笔记",
-        //     author: "Otstar Lin",
-        //     content: "PHP学习笔记-content",
-        //     created_at: "2019/7/27 21:52:15",
-        //     updated_at: "2019/7/27 21:52:15"
-        //   }
-        // }
-      ],
+      currList: [],
       cloudList: [],
       localList: [],
-      smModal: {
-        show: false,
-        title: "",
-        content: "",
-        confirm: function confirm() {},
-        cancel: function cancel() {}
-      },
-      floatMenu: {
-        show: false,
-        items: [],
-        saveAndClose: true
-      }
+      xknoteTab: "cloud"
     };
   },
-  computed: {
-    // 计算在Tab bar上的计数
-    currBadgeCount: function currBadgeCount() {
-      var count = 0;
-      this.currList.forEach(function (item) {
-        if (item.status === "N") {
-          count++;
-        }
-      });
-      return count;
-    },
-    localBadgeCount: function localBadgeCount() {
-      var count = 0;
-      this.localList.forEach(function (item) {
-        if (item.status === "L") {
-          count++;
-        }
-      });
-      return count;
-    }
+  mounted: function mounted() {
+    this.loadLocalNotes();
+    this.loadCloudFolders();
+    window.xknote = {};
   },
   methods: {
     /**
@@ -11636,32 +11344,15 @@ __webpack_require__.r(__webpack_exports__);
     },
 
     /**
-     * 读取之前开启的笔记
-     * @param void
-     * @returns void
-     */
-    loadRememberNote: function loadRememberNote() {
-      var _this = this;
-
-      this.optionsDB("read", "rememberNote", function (e, data) {
-        if (data) {
-          _this.openNote(data.note, data.index.source);
-        }
-
-        _this.timedTask("saveCurrOpenedNote");
-      });
-    },
-
-    /**
      * 读取云端的文件夹及笔记
      * @param void
      * @returns void
      */
     loadCloudFolders: function loadCloudFolders() {
-      var _this2 = this;
+      var _this = this;
 
       window.axios.get("/api/folders").then(function (res) {
-        _this2.cloudList = res.data;
+        _this.cloudList = res.data;
       })["catch"](function (err) {
         console.error(err);
       });
@@ -11673,42 +11364,52 @@ __webpack_require__.r(__webpack_exports__);
      * @returns void
      */
     loadLocalNotes: function loadLocalNotes() {
-      var _this3 = this;
+      var _this2 = this;
 
       this.noteLocalDB("readAll", "", function (e, list) {
-        _this3.localList = list;
+        _this2.localList = list;
       });
     },
 
     /**
-     * 在XK Editor加载完成时触发的事件
-     * @param {string} e event的名称
-     * @returns void
-     */
-    editorLoaded: function editorLoaded(e) {
-      var _this4 = this;
-
-      if (e === "interfaceLoad") {
-        window.XKEditor.ace.getSession().on("change", function () {
-          _this4.xknoteOpened.note.content = window.XKEditor.getMarkdown();
-        });
-      }
-
-      if (e === "componentLoad") {
-        this.loadRememberNote();
-      }
-    },
-
-    /**
-     * 监听当前打开的笔记改变事件触发的函数
+     * 读取之前开启的笔记
      * @param void
      * @returns void
      */
-    watchNote: function watchNote() {
-      if (!this.xknoteOpenedChangeFlag) return;
-      this.xknoteOpened.status = "N";
-      var d = new Date();
-      this.xknoteOpened.note.updated_at = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+    loadRememberNote: function loadRememberNote() {
+      var _this3 = this;
+
+      this.optionsDB("read", "rememberNote", function (e, data) {
+        if (data) {
+          _this3.openNote(data.note, data.index.source);
+        }
+
+        _this3.timedTask("saveCurrOpenedNote");
+      });
+    },
+
+    /**
+     * 定时执行任务，包括循环任务
+     * @param {string} task 任务名称
+     * @returns void
+     */
+    timedTask: function timedTask(task) {
+      var _this4 = this;
+
+      if (task === "saveCurrOpenedNote") {
+        // 每10秒中将当前打开的笔记信息保存至本地数据库，用以下次开启做准备
+        setInterval(function () {
+          if (_this4.xknoteOpened.name !== "") {
+            _this4.optionsDB("put", {
+              name: "rememberNote",
+              index: _this4.xknoteOpenedIndex,
+              note: _this4.xknoteOpened
+            });
+
+            console.log("remeberNote");
+          }
+        }, 10000);
+      }
     },
 
     /**
@@ -11717,14 +11418,17 @@ __webpack_require__.r(__webpack_exports__);
      * @returns void
      */
     setXknoteOpened: function setXknoteOpened(noteInfo) {
+      window.xknoteOpenedChangeFlag = false;
       this.xknoteOpened = noteInfo;
 
       if (window.eThis.e.editorMode === "ace") {
-        window.XKEditor.setMarkdown(noteInfo.note.content);
+        window.XKEditor.setMarkdown(this.xknoteOpened.note.content);
       } else {
         window.XKEditor.switchEditor();
-        window.XKEditor.setMarkdown(noteInfo.note.content);
+        window.XKEditor.setMarkdown(this.xknoteOpened.note.content);
       }
+
+      window.xknoteOpenedChangeFlag = true;
     },
 
     /**
@@ -11736,9 +11440,7 @@ __webpack_require__.r(__webpack_exports__);
      * @returns void
      */
     openNote: function openNote(note, source) {
-      var _this5 = this;
-
-      this.xknoteOpenedChangeFlag = false; // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
+      window.xknoteOpenedChangeFlag = false; // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
 
       this.setXknoteOpened(note); // 添加到currList，同时将源数据添加到currListSource
 
@@ -11767,7 +11469,7 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         document.querySelector("[data-storage='curr'][data-index='" + currIndex + "']").classList.add("active");
-        _this5.xknoteOpenedChangeFlag = true;
+        window.xknoteOpenedChangeFlag = true;
       });
     },
 
@@ -12054,6 +11756,372 @@ __webpack_require__.r(__webpack_exports__);
     },
 
     /**
+     * 监听当前打开的笔记改变事件触发的函数
+     * @param void
+     * @returns void
+     */
+    watchNote: function watchNote() {
+      if (!this.xknoteOpenedChangeFlag) return;
+      this.xknoteOpened.status = "N";
+      var d = new Date();
+      this.xknoteOpened.note.updated_at = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+    }
+  },
+  watch: {
+    "xknoteOpened.note.content": "watchNote",
+    "xknoteOpened.note.title": "watchNote"
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Home.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Home.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var xkeditor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! xkeditor */ "./node_modules/xkeditor/src/index.js");
+/* harmony import */ var _noteItem_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./noteItem.vue */ "./resources/js/components/noteItem.vue");
+/* harmony import */ var _folderItem_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./folderItem.vue */ "./resources/js/components/folderItem.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "home",
+  components: {
+    "xk-editor": xkeditor__WEBPACK_IMPORTED_MODULE_0__["default"],
+    "note-item": _noteItem_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    "folder-item": _folderItem_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  created: function created() {
+    window.nThis.home = this;
+  },
+  props: ["xknoteTab", "switchTab", "currListSource", "currList", "cloudList", "localList", "xknoteOpened", "xknoteOpenedIndex", "noteBaseInfo", "loadRememberNote", "listOperate", "noteOperate", "setXknoteOpened"],
+  data: function data() {
+    return {
+      xknoteSetting: "/static/setting.json",
+      smModal: {
+        show: false,
+        title: "",
+        content: "",
+        confirm: function confirm() {},
+        cancel: function cancel() {}
+      },
+      floatMenu: {
+        show: false,
+        items: [],
+        saveAndClose: true
+      }
+    };
+  },
+  computed: {
+    // 计算在Tab bar上的计数
+    currBadgeCount: function currBadgeCount() {
+      var count = 0;
+      this.currList.forEach(function (item) {
+        if (item.status === "N") {
+          count++;
+        }
+      });
+      return count;
+    },
+    localBadgeCount: function localBadgeCount() {
+      var count = 0;
+      this.localList.forEach(function (item) {
+        if (item.status === "L") {
+          count++;
+        }
+      });
+      return count;
+    }
+  },
+  methods: {
+    /**
+     * 在XK Editor加载完成时触发的事件
+     * @param {string} e event的名称
+     * @returns void
+     */
+    editorLoaded: function editorLoaded(e) {
+      var _this = this;
+
+      if (e === "interfaceLoad") {
+        window.XKEditor.ace.getSession().on("change", function () {
+          if (window.xknoteOpenedChangeFlag) {
+            _this.xknoteOpened.note.content = window.XKEditor.getMarkdown();
+          }
+        });
+      }
+
+      if (e === "componentLoad") {
+        this.loadRememberNote();
+      }
+    },
+
+    /**
      * 操作列表
      * @param {string} operate 操作名称
      * @param {string} storage 要操作对象存储的位置
@@ -12062,7 +12130,7 @@ __webpack_require__.r(__webpack_exports__);
      * @returns void
      */
     memuOperate: function memuOperate(operate, storage, index) {
-      var _this6 = this;
+      var _this2 = this;
 
       var curr = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
       this.floatMenu.show = false;
@@ -12074,14 +12142,14 @@ __webpack_require__.r(__webpack_exports__);
 
         this.smModal.confirm = function () {
           var note = null;
-          note = _this6.listOperate("delete", storage, index);
-          _this6.smModal.show = false;
+          note = _this2.listOperate("delete", storage, index);
+          _this2.smModal.show = false;
 
-          _this6.noteOperate(operate, storage, note);
+          _this2.noteOperate(operate, storage, note);
         };
 
         this.smModal.cancel = function () {
-          _this6.smModal.show = false;
+          _this2.smModal.show = false;
         };
       } // 保存到本地
 
@@ -12097,7 +12165,7 @@ __webpack_require__.r(__webpack_exports__);
 
           if (this.floatMenu.saveAndClose) {
             note = this.listOperate("delete", "curr", index);
-            this.setXknoteOpened(this.noteBaseInfo);
+            this.setXknoteOpened(JSON.parse(JSON.stringify(this.noteBaseInfo)));
           } else {
             note = this.listOperate("get", "curr", index);
           }
@@ -12109,7 +12177,7 @@ __webpack_require__.r(__webpack_exports__);
             this.currListSource[index] = {
               index: localIndex,
               storage: "local"
-            };
+            }; // this.$emit("update:currListSource", this.currListSource);
           } // 保存到本地（实际操作）
 
 
@@ -12140,10 +12208,10 @@ __webpack_require__.r(__webpack_exports__);
             var s = storage;
 
             if (storage === "curr") {
-              s = _this6.currListSource[index].storage;
+              s = _this2.currListSource[index].storage;
             }
 
-            _this6.noteOperate(operate, s, {
+            _this2.noteOperate(operate, s, {
               oldNote: oldNote,
               note: _note
             });
@@ -12156,11 +12224,11 @@ __webpack_require__.r(__webpack_exports__);
       if (operate === "closeCurr") {
         // 如果笔记在未保存状态关闭则先弹出modal提示是否下关闭
         var closeCurr = function closeCurr() {
-          if (index == _this6.xknoteOpenedIndex.curr) {
-            _this6.setXknoteOpened(_this6.noteBaseInfo);
+          if (index == _this2.xknoteOpenedIndex.curr) {
+            _this2.setXknoteOpened(JSON.parse(JSON.stringify(_this2.noteBaseInfo)));
           }
 
-          _this6.listOperate("delete", "curr", index);
+          _this2.listOperate("delete", "curr", index);
         };
 
         if (this.listOperate("get", storage, index).status === "N") {
@@ -12170,11 +12238,11 @@ __webpack_require__.r(__webpack_exports__);
 
           this.smModal.confirm = function () {
             closeCurr();
-            _this6.smModal.show = false;
+            _this2.smModal.show = false;
           };
 
           this.smModal.cancel = function () {
-            _this6.smModal.show = false;
+            _this2.smModal.show = false;
           };
         } else {
           closeCurr();
@@ -12201,14 +12269,14 @@ __webpack_require__.r(__webpack_exports__);
      * @returns void
      */
     navBarOperate: function navBarOperate(operate) {
-      var _this7 = this;
+      var _this3 = this;
 
       var saveLocal = function saveLocal(i) {
-        _this7.floatMenu.saveAndClose = false;
+        _this3.floatMenu.saveAndClose = false;
 
-        _this7.memuOperate("saveLocal", "curr", i);
+        _this3.memuOperate("saveLocal", "curr", i);
 
-        _this7.floatMenu.saveAndClose = true;
+        _this3.floatMenu.saveAndClose = true;
       };
 
       if (operate === "saveLocal") {
@@ -12235,40 +12303,9 @@ __webpack_require__.r(__webpack_exports__);
         window.XKEditor.download(this.xknoteOpened.name.replace(".md", ""), "fullhtml");
       } // TODO: 导出阅读模式的HTML
 
-    },
-
-    /**
-     * 定时执行任务，包括循环任务
-     * @param {string} task 任务名称
-     * @returns void
-     */
-    timedTask: function timedTask(task) {
-      var _this8 = this;
-
-      if (task === "saveCurrOpenedNote") {
-        // 每10秒中将当前打开的笔记信息保存至本地数据库，用以下次开启做准备
-        setInterval(function () {
-          _this8.optionsDB("put", {
-            name: "rememberNote",
-            index: _this8.xknoteOpenedIndex,
-            note: _this8.xknoteOpened
-          });
-        }, 10000);
-      }
     }
   },
-  mounted: function mounted() {
-    this.loadLocalNotes();
-    this.loadCloudFolders(); // this.loadRememberNote(); --> editorLoaded
-    // this.timedTask(); --> this.this.loadRememberNote
-
-    window.optionsDB = this.optionsDB;
-    window.xknote = {};
-  },
-  watch: {
-    "xknoteOpened.note.content": "watchNote",
-    "xknoteOpened.note.title": "watchNote"
-  }
+  mounted: function mounted() {}
 });
 
 /***/ }),
@@ -12282,6 +12319,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _noteItem_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./noteItem.vue */ "./resources/js/components/noteItem.vue");
+/* harmony import */ var _folderItem_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./folderItem.vue */ "./resources/js/components/folderItem.vue");
 //
 //
 //
@@ -12347,8 +12386,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "read-mode",
+  components: {
+    "note-item": _noteItem_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    "folder-item": _folderItem_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  created: function created() {
+    window.nThis.read = this;
+  },
+  props: ["xknoteTab", "switchTab", "currListSource", "currList", "cloudList", "localList", "xknoteOpened", "xknoteOpenedIndex"],
   data: function data() {
     return {};
   }
@@ -12399,14 +12448,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "folder-item",
-  props: ["info", "index", "storage"],
+  props: ["info", "index", "storage", "showSetting"],
   data: function data() {
     return {
       idHash: Math.random().toString(36).substring(2, 8),
-      home: this.$root.$children[0],
+      home: window.nThis.home,
       floatMenuItems: {
         curr: [{
           name: "重命名",
@@ -12503,11 +12554,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "note-item",
-  props: ["info", "status", "index", "storage"],
+  props: ["info", "status", "index", "storage", "showSetting"],
   data: function data() {
     return {
       hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path,
-      home: this.$root.$children[0],
+      home: window.nThis.home,
+      app: window.nThis.app,
       floatMenuItems: {
         curr: [{
           name: "保存到云端",
@@ -12584,7 +12636,7 @@ __webpack_require__.r(__webpack_exports__);
       window.xknote.currClickTarget = e.target.parentElement.parentElement.parentElement;
     },
     openNote: function openNote(e) {
-      this.home.openNote(this.info, {
+      this.app.openNote(this.info, {
         index: this.index,
         storage: this.storage
       });
@@ -12625,7 +12677,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "html,\nbody {\n    width: 100%;\n    height: 100%;\n}\nbody {\n    margin: 0;\n}\np {\n    margin: 0;\n}\n/* 滚动槽 */\n::-webkit-scrollbar {\n    width: 6px;\n    height: 6px;\n}\n::-webkit-scrollbar-track {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.06);\n    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);\n}\n/* 滚动条滑块 */\n::-webkit-scrollbar-thumb {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.12);\n    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);\n}\n#app {\n    width: 100%;\n    height: 100%;\n}\n.home {\n    height: 100%;\n}\n.home .columns {\n    height: calc(100% - 60px);\n    margin: 0;\n}\n#xknote-editor {\n    height: 100%;\n    padding: 0px;\n}\n#xknote-editor .ace-toolbar .xk-button {\n    font-size: 0.85em;\n}\n.xknote-header {\n    height: 60px;\n    z-index: 100;\n    border-bottom: 1px solid #dfdfdf;\n    padding: 0 20px 0 0;\n}\n.xknote-header .btn {\n    margin-left: 5px;\n}\n.xknote-header .btn-link:focus,\n.xknote-header .btn-link:hover {\n    box-shadow: 0 0 0 0.1rem rgba(87, 85, 217, 0.2);\n\n    text-decoration: none;\n}\n.xknote-header .btn-link:focus {\n    background: #f1f1fc;\n}\n.xknote-header .navbar-section.col-2 {\n    flex: 0 0 auto !important;\n    margin-right: 0.3rem;\n}\n.xknote-header .form-input {\n    width: auto;\n}\n.navbar-center .menu-item a {\n    cursor: pointer;\n}\n/* Fix xknote-header button hover and active color */\n.dropdown .btn-group a:not(.btn-primary):hover {\n    color: #5755d9;\n}\n.dropdown .btn-group a:not(.btn-primary):active {\n    color: #5755d9;\n    background: #f1f1fc;\n    border-color: #4b48d6;\n}\n.xknote-icon {\n    width: 39px;\n    height: 39px;\n    margin-left: 20px;\n}\n.xknote-sidebar {\n    display: flex;\n    flex-direction: column;\n    padding: 0;\n}\n.xknote-tab-content {\n    margin: 0 0.8rem;\n    flex: 1;\n}\n.xknote-tab-content li {\n    list-style: none;\n}\n.xknote-tab-content .menu {\n    padding: 0;\n}\n.xknote-tab-content .menu .menu-item {\n    padding-right: 0;\n}\n/* Fix tab tile */\n.xknote-tab-content .menu-item > a.tile {\n    display: flex;\n}\n.xknote-tab-content .tile.badge:after {\n    transform: none;\n}\n.xknote-tab-content .tile-action {\n    display: none;\n}\n.xknote-tab-content .tile:hover .tile-action {\n    display: block;\n}\n.xknote-tab-content .accordion .accordion-header .icon {\n    transform: none !important;\n}\n.xknote-tab-content .tile-subtitle,\n.xknote-tab-content .tile-title {\n    line-height: 1rem;\n    font-size: 0.67rem;\n}\n.xknote-tab-content .tile-click {\n    cursor: pointer;\n}\n.xknote-tab-content .tile-content[children=\"input\"] .tile-click {\n    display: none;\n}\n.xknote-tab-content .tile-content input {\n    display: none;\n}\n.xknote-tab-content .tile-content[children=\"input\"] input {\n    display: block;\n}\n.xknote-tab-content .accordion-header {\n    margin: 0 -0.4rem;\n    padding: 0.2rem 0.4rem;\n    display: flex;\n    align-items: center;\n}\n.xknote-tab-content .accordion-header:hover {\n    background: #f1f1fc;\n    color: #5755d9;\n}\n.xknote-tab-content .accordion-header span {\n    flex: 1 1 auto;\n}\n.xknote-tab-content .accordion-header button {\n    flex: 0 0 auto;\n    display: none;\n}\n.xknote-tab-content .accordion-header:hover button {\n    display: block;\n    width: 1.8em;\n    height: 1.5em;\n    padding: 0;\n    margin-right: 0.2rem;\n}\n.xknote-tab-content .accordion-header:hover button img {\n    vertical-align: auto;\n}\n.xknote-tab-content .accordion-body .menu {\n    border-left: 3.5px solid #5755d940;\n    padding-left: 0.2rem;\n    margin-left: 0.3rem;\n    border-radius: 0;\n}\n.xknote-copyright {\n    padding: 0.8em 0;\n    text-align: center;\n}\n\n.float-menu {\n    position: fixed;\n}\n.float-menu .menu-item a {\n    cursor: pointer;\n}\n.xknote-sm-modal {\n    color: #585858;\n}\n", ""]);
+exports.push([module.i, "html,\nbody {\n    width: 100%;\n    height: 100%;\n}\nbody {\n    margin: 0;\n}\np {\n    margin: 0;\n}\n/* 滚动槽 */\n::-webkit-scrollbar {\n    width: 6px;\n    height: 6px;\n}\n::-webkit-scrollbar-track {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.06);\n    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);\n}\n/* 滚动条滑块 */\n::-webkit-scrollbar-thumb {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.12);\n    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);\n}\n#app {\n    width: 100%;\n    height: 100%;\n}\n.home {\n    height: 100%;\n}\n.home .columns {\n    height: calc(100% - 60px);\n    margin: 0;\n}\n#xknote-editor {\n    height: 100%;\n    padding: 0px;\n}\n#xknote-editor .ace-toolbar .xk-button {\n    font-size: 0.85em;\n}\n.xknote-header {\n    height: 60px;\n    z-index: 100;\n    border-bottom: 1px solid #dfdfdf;\n    padding: 0 20px 0 0;\n}\n.xknote-header .btn {\n    margin-left: 5px;\n}\n.xknote-header .btn-link:focus,\n.xknote-header .btn-link:hover {\n    box-shadow: 0 0 0 0.1rem rgba(87, 85, 217, 0.2);\n\n    text-decoration: none;\n}\n.xknote-header .btn-link:focus {\n    background: #f1f1fc;\n}\n.xknote-header .navbar-section.col-2 {\n    flex: 0 0 auto !important;\n    margin-right: 0.3rem;\n}\n.xknote-header .form-input {\n    width: auto;\n}\n.navbar-center .menu-item a {\n    cursor: pointer;\n}\n/* Fix xknote-header button hover and active color */\n.dropdown .btn-group a:not(.btn-primary):hover {\n    color: #5755d9;\n}\n.dropdown .btn-group a:not(.btn-primary):active {\n    color: #5755d9;\n    background: #f1f1fc;\n    border-color: #4b48d6;\n}\n.xknote-icon {\n    width: 39px;\n    height: 39px;\n    margin-left: 20px;\n}\n.xknote-sidebar {\n    display: flex;\n    flex-direction: column;\n    padding: 0;\n}\n.xknote-tab-content {\n    margin: 0 0.8rem;\n    flex: 1;\n}\n.xknote-tab-content li {\n    list-style: none;\n}\n.xknote-tab-content .menu {\n    padding: 0;\n}\n.xknote-tab-content .menu .menu-item {\n    padding-right: 0;\n}\n/* Fix tab tile */\n.xknote-tab-content .menu-item > a.tile {\n    display: flex;\n}\n.xknote-tab-content .tile.badge:after {\n    transform: none;\n}\n.xknote-tab-content .tile-action {\n    display: none;\n}\n.xknote-tab-content .tile:hover .tile-action {\n    display: block;\n}\n.xknote-tab-content .accordion .accordion-header .icon {\n    transform: none !important;\n}\n.xknote-tab-content .tile-subtitle,\n.xknote-tab-content .tile-title {\n    line-height: 1rem;\n    font-size: 0.67rem;\n}\n.xknote-tab-content .tile-click {\n    cursor: pointer;\n}\n.xknote-tab-content .tile-content[children=\"input\"] .tile-click {\n    display: none;\n}\n.xknote-tab-content .tile-content input {\n    display: none;\n}\n.xknote-tab-content .tile-content[children=\"input\"] input {\n    display: block;\n}\n.xknote-tab-content .accordion-header {\n    margin: 0 -0.4rem;\n    padding: 0.2rem 0.4rem;\n    display: flex;\n    align-items: center;\n}\n.xknote-tab-content .accordion-header:hover {\n    background: #f1f1fc;\n    color: #5755d9;\n}\n.xknote-tab-content .accordion-header span {\n    flex: 1 1 auto;\n}\n.xknote-tab-content .accordion-header button {\n    flex: 0 0 auto;\n    display: none;\n}\n.xknote-tab-content .accordion-header:hover button {\n    display: block;\n    width: 1.8em;\n    height: 1.5em;\n    padding: 0;\n    margin-right: 0.2rem;\n}\n.xknote-tab-content .accordion-header:hover button img {\n    vertical-align: auto;\n}\n.xknote-tab-content .accordion-body .menu {\n    border-left: 3.5px solid #5755d940;\n    padding-left: 0.2rem;\n    margin-left: 0.3rem;\n    border-radius: 0;\n}\n.xknote-copyright {\n    padding: 0.8em 0;\n    text-align: center;\n}\n\n.float-menu {\n    position: fixed;\n}\n.float-menu .menu-item a {\n    cursor: pointer;\n}\n.xknote-sm-modal {\n    color: #585858;\n}\n\n.tab .tab-item a {\n    cursor: pointer;\n}\n", ""]);
 
 // exports
 
@@ -12683,6 +12735,25 @@ exports = module.exports = __webpack_require__(/*! ../../../css-loader/lib/css-b
 
 // module
 exports.push([module.i, "\n.xkeditor {\n  height: 100%;\n  overflow-x: hidden;\n  overflow-y: hidden;\n}\n.xkeditor .row {\n  height: 100%;\n  -webkit-transform: translate(0, 0);\n          transform: translate(0, 0);\n}\n.xkeditor .row .xk-col-12 {\n  height: 100%;\n}\n#previewHtml {\n  overflow: auto;\n  max-height: 100%;\n  padding: 15px 15px;\n  word-break: break-word;\n  white-space: normal;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n}\n.xk-col-24 #previewHtml {\n  float: left;\n  width: 80%;\n}\n.toc,\n#toc {\n  word-break: break-word;\n  white-space: normal;\n  overflow-y: auto;\n  height: 100%;\n}\n.toc ul,\n#toc ul {\n  margin: 0px;\n  padding-left: 20px;\n}\n.toc li,\n#toc li {\n  list-style: none;\n  padding-left: 5px;\n}\n.toc li img,\n#toc li img {\n  display: inline-block;\n  width: 14px;\n  vertical-align: middle;\n  padding-right: 5px;\n}\n.toc a,\n#toc a {\n  color: #0366d6;\n  text-decoration: none;\n  font-size: 1.05em;\n}\n.row {\n  margin: 0px;\n}\n.row .xk-col-12 {\n  float: left;\n  border-left: 1px solid #ddd;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n}\n.xk-col-24 {\n  padding: 0px;\n  width: 100%;\n  height: 100%;\n}\n.xk-col-12 {\n  padding: 0px;\n  width: 50%;\n  height: 100%;\n}\n.close-preview-full {\n  position: fixed;\n  right: 20px;\n  top: 20px;\n  z-index: 1000;\n}\n#toc {\n  position: fixed;\n  top: 0px;\n  right: 0px;\n  width: 20%;\n  background: #f5f5f5;\n  border-left: 1px solid #ddd;\n  z-index: 999;\n  padding: 20px;\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n}\n#toc-button {\n  position: fixed;\n  right: 20px;\n  bottom: 20px;\n  width: 20px;\n  height: 20px;\n  padding: 6px;\n  z-index: 1000;\n  -webkit-box-sizing: content-box;\n          box-sizing: content-box;\n}\n.xk-button {\n  display: inline-block;\n  padding: 6px 16px;\n  outline: 0;\n  font-size: 0.85em;\n  line-height: 1.5;\n  text-align: center;\n  white-space: nowrap;\n  border: 1px solid #c5d9e8;\n  border-radius: 4px;\n  background-color: #fff;\n  -webkit-transition: background 0.2s;\n  transition: background 0.2s;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n  cursor: pointer;\n}\n@media (max-width: 991px) {\n.xk-col-24 #previewHtml {\n    float: left;\n    width: 100%;\n}\n#toc {\n    width: 80%;\n}\n}\n\n/* 可以设置不同的进入和离开动画 */\n/* 设置持续时间和动画函数 */\n.slide-fade-enter-active {\n  -webkit-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n}\n.slide-fade-leave-active {\n  -webkit-transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);\n  transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);\n}\n.slide-fade-enter, .slide-fade-leave-to\n/* .slide-fade-leave-active for below version 2.1.8 */ {\n  -webkit-transform: translateX(10px);\n          transform: translateX(10px);\n  opacity: 0;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/App.vue?vue&type=style&index=0&lang=css&":
+/*!**********************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/App.vue?vue&type=style&index=0&lang=css& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n#app-main {\n  height: 100%;\n}\n", ""]);
 
 // exports
 
@@ -15809,6 +15880,36 @@ options.transform = transform
 options.insertInto = undefined;
 
 var update = __webpack_require__(/*! ../../../style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/App.vue?vue&type=style&index=0&lang=css&":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/App.vue?vue&type=style&index=0&lang=css& ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../node_modules/css-loader??ref--6-1!../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../node_modules/postcss-loader/src??ref--6-2!../../node_modules/vue-loader/lib??vue-loader-options!./App.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/App.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
 
 if(content.locals) module.exports = content.locals;
 
@@ -21703,6 +21804,104 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/App.vue?vue&type=template&id=f348271a&":
+/*!*******************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/App.vue?vue&type=template&id=f348271a& ***!
+  \*******************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "main",
+    { attrs: { id: "app-main" } },
+    [
+      _c("router-view", {
+        ref: "children",
+        attrs: {
+          xknoteTab: _vm.xknoteTab,
+          currListSource: _vm.currListSource,
+          currList: _vm.currList,
+          cloudList: _vm.cloudList,
+          localList: _vm.localList,
+          xknoteOpened: _vm.xknoteOpened,
+          xknoteOpenedIndex: _vm.xknoteOpenedIndex,
+          noteBaseInfo: _vm.noteBaseInfo,
+          loadRememberNote: _vm.loadRememberNote,
+          listOperate: _vm.listOperate,
+          noteOperate: _vm.noteOperate,
+          setXknoteOpened: _vm.setXknoteOpened,
+          switchTab: _vm.switchTab
+        },
+        on: {
+          "update:xknoteTab": function($event) {
+            _vm.xknoteTab = $event
+          },
+          "update:xknote-tab": function($event) {
+            _vm.xknoteTab = $event
+          },
+          "update:currListSource": function($event) {
+            _vm.currListSource = $event
+          },
+          "update:curr-list-source": function($event) {
+            _vm.currListSource = $event
+          },
+          "update:currList": function($event) {
+            _vm.currList = $event
+          },
+          "update:curr-list": function($event) {
+            _vm.currList = $event
+          },
+          "update:cloudList": function($event) {
+            _vm.cloudList = $event
+          },
+          "update:cloud-list": function($event) {
+            _vm.cloudList = $event
+          },
+          "update:localList": function($event) {
+            _vm.localList = $event
+          },
+          "update:local-list": function($event) {
+            _vm.localList = $event
+          },
+          "update:xknoteOpened": function($event) {
+            _vm.xknoteOpened = $event
+          },
+          "update:xknote-opened": function($event) {
+            _vm.xknoteOpened = $event
+          },
+          "update:xknoteOpenedIndex": function($event) {
+            _vm.xknoteOpenedIndex = $event
+          },
+          "update:xknote-opened-index": function($event) {
+            _vm.xknoteOpenedIndex = $event
+          },
+          "update:noteBaseInfo": function($event) {
+            _vm.noteBaseInfo = $event
+          },
+          "update:note-base-info": function($event) {
+            _vm.noteBaseInfo = $event
+          }
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Home.vue?vue&type=template&id=f2b6376c&":
 /*!*******************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Home.vue?vue&type=template&id=f2b6376c& ***!
@@ -21718,7 +21917,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("main", { ref: "home", staticClass: "home" }, [
+  return _c("main", { staticClass: "home" }, [
     _c("header", { staticClass: "navbar xknote-header" }, [
       _vm._m(0),
       _vm._v(" "),
@@ -21900,7 +22099,28 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _vm._m(4)
+      _c(
+        "section",
+        { staticClass: "navbar-section" },
+        [
+          _vm._m(4),
+          _vm._v(" "),
+          _c(
+            "router-link",
+            { staticClass: "btn btn-link", attrs: { to: "/read" } },
+            [_vm._v("阅读模式")]
+          ),
+          _vm._v(" "),
+          _c(
+            "router-link",
+            { staticClass: "btn btn-link", attrs: { to: "/write" } },
+            [_vm._v("写作模式")]
+          ),
+          _vm._v(" "),
+          _vm._m(5)
+        ],
+        1
+      )
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "columns" }, [
@@ -21913,7 +22133,7 @@ var render = function() {
                 class:
                   (_vm.currBadgeCount !== 0 ? "badge " : "") +
                   (_vm.xknoteTab === "curr" ? "active" : ""),
-                attrs: { href: "#", "data-badge": _vm.currBadgeCount },
+                attrs: { "data-badge": _vm.currBadgeCount },
                 on: {
                   click: function($event) {
                     return _vm.switchTab("curr")
@@ -21933,7 +22153,6 @@ var render = function() {
               _c(
                 "a",
                 {
-                  attrs: { href: "#" },
                   on: {
                     click: function($event) {
                       return _vm.switchTab("cloud")
@@ -21952,7 +22171,7 @@ var render = function() {
                 class:
                   (_vm.localBadgeCount !== 0 ? "badge " : "") +
                   (_vm.xknoteTab === "local" ? "active" : ""),
-                attrs: { href: "#", "data-badge": _vm.localBadgeCount },
+                attrs: { "data-badge": _vm.localBadgeCount },
                 on: {
                   click: function($event) {
                     return _vm.switchTab("local")
@@ -21992,7 +22211,8 @@ var render = function() {
                             info: item,
                             status: item.status,
                             index: index,
-                            storage: "curr"
+                            storage: "curr",
+                            showSetting: true
                           }
                         })
                       ],
@@ -22027,7 +22247,12 @@ var render = function() {
               _vm._l(_vm.cloudList, function(item, index) {
                 return _c("folder-item", {
                   key: item.id,
-                  attrs: { info: item, index: index, storage: "cloud" }
+                  attrs: {
+                    info: item,
+                    index: index,
+                    storage: "cloud",
+                    showSetting: true
+                  }
                 })
               }),
               _vm._v(" "),
@@ -22071,7 +22296,8 @@ var render = function() {
                             info: item,
                             status: item.status,
                             index: index,
-                            storage: "local"
+                            storage: "local",
+                            showSetting: true
                           }
                         })
                       ],
@@ -22091,7 +22317,7 @@ var render = function() {
           )
         ]),
         _vm._v(" "),
-        _vm._m(5)
+        _vm._m(6)
       ]),
       _vm._v(" "),
       _c(
@@ -22356,73 +22582,67 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("section", { staticClass: "navbar-section" }, [
-      _c("div", { staticClass: "dropdown" }, [
-        _c("div", { staticClass: "btn-group" }, [
-          _c("a", { staticClass: "btn btn-primary", attrs: { href: "#" } }, [
-            _vm._v("新建MD笔记")
-          ]),
-          _vm._v(" "),
-          _c(
-            "a",
-            {
-              staticClass: "btn btn-primary dropdown-toggle",
-              attrs: { href: "#", tabindex: "0" }
-            },
-            [_c("i", { staticClass: "icon icon-caret" })]
-          ),
-          _vm._v(" "),
-          _c("ul", { staticClass: "menu" }, [
-            _c("li", { staticClass: "menu-item" }, [
-              _c("a", { attrs: { href: "#" } }, [_vm._v("新建文件夹")])
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("a", { staticClass: "btn btn-link", attrs: { href: "#" } }, [
-        _vm._v("阅读模式")
-      ]),
-      _vm._v(" "),
-      _c("a", { staticClass: "btn btn-link", attrs: { href: "#" } }, [
-        _vm._v("写作模式")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "dropdown dropdown-right" }, [
+    return _c("div", { staticClass: "dropdown" }, [
+      _c("div", { staticClass: "btn-group" }, [
+        _c("a", { staticClass: "btn btn-primary", attrs: { href: "#" } }, [
+          _vm._v("新建MD笔记")
+        ]),
+        _vm._v(" "),
         _c(
           "a",
           {
-            staticClass: "btn btn-link dropdown-toggle",
+            staticClass: "btn btn-primary dropdown-toggle",
             attrs: { href: "#", tabindex: "0" }
           },
-          [
-            _vm._v("\n          { name }\n          "),
-            _c("i", { staticClass: "icon icon-caret" })
-          ]
+          [_c("i", { staticClass: "icon icon-caret" })]
         ),
         _vm._v(" "),
         _c("ul", { staticClass: "menu" }, [
           _c("li", { staticClass: "menu-item" }, [
-            _c("a", { attrs: { href: "" } }, [_vm._v("个人中心")])
-          ]),
-          _vm._v(" "),
-          _c("li", { staticClass: "menu-item" }, [
-            _c("a", { attrs: { href: "" } }, [_vm._v("用户设置")])
-          ]),
-          _vm._v(" "),
-          _c("li", { staticClass: "menu-item" }, [
-            _c("a", { attrs: { href: "" } }, [_vm._v("Git设置")])
-          ]),
-          _vm._v(" "),
-          _c("li", { staticClass: "menu-item" }, [
-            _c("a", { attrs: { href: "" } }, [_vm._v("系统管理")])
-          ]),
-          _vm._v(" "),
-          _c("li", { staticClass: "divider" }),
-          _vm._v(" "),
-          _c("li", { staticClass: "menu-item" }, [
-            _c("a", { attrs: { href: "" } }, [_vm._v("登出")])
+            _c("a", { attrs: { href: "#" } }, [_vm._v("新建文件夹")])
           ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "dropdown dropdown-right" }, [
+      _c(
+        "a",
+        {
+          staticClass: "btn btn-link dropdown-toggle",
+          attrs: { href: "#", tabindex: "0" }
+        },
+        [
+          _vm._v("\n          { name }\n          "),
+          _c("i", { staticClass: "icon icon-caret" })
+        ]
+      ),
+      _vm._v(" "),
+      _c("ul", { staticClass: "menu" }, [
+        _c("li", { staticClass: "menu-item" }, [
+          _c("a", { attrs: { href: "" } }, [_vm._v("个人中心")])
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "menu-item" }, [
+          _c("a", { attrs: { href: "" } }, [_vm._v("用户设置")])
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "menu-item" }, [
+          _c("a", { attrs: { href: "" } }, [_vm._v("Git设置")])
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "menu-item" }, [
+          _c("a", { attrs: { href: "" } }, [_vm._v("系统管理")])
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "divider" }),
+        _vm._v(" "),
+        _c("li", { staticClass: "menu-item" }, [
+          _c("a", { attrs: { href: "" } }, [_vm._v("登出")])
         ])
       ])
     ])
@@ -22462,45 +22682,216 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("main", { staticClass: "read-home container" }, [
+    _c("div", { staticClass: "columns" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("aside", { staticClass: "col-3 p-fixed read-sidebar" }, [
+        _c("ul", { staticClass: "tab tab-block xknote-tab" }, [
+          _c("li", { staticClass: "tab-item" }, [
+            _c(
+              "a",
+              {
+                class: _vm.xknoteTab === "curr" ? "active" : "",
+                on: {
+                  click: function($event) {
+                    return _vm.switchTab("curr")
+                  }
+                }
+              },
+              [_vm._v("当前")]
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "li",
+            {
+              class: "tab-item " + (_vm.xknoteTab === "cloud" ? "active" : "")
+            },
+            [
+              _c(
+                "a",
+                {
+                  on: {
+                    click: function($event) {
+                      return _vm.switchTab("cloud")
+                    }
+                  }
+                },
+                [_vm._v("云端")]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c("li", { staticClass: "tab-item" }, [
+            _c(
+              "a",
+              {
+                class: _vm.xknoteTab === "local" ? "active" : "",
+                on: {
+                  click: function($event) {
+                    return _vm.switchTab("local")
+                  }
+                }
+              },
+              [_vm._v("本地")]
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("ul", { staticClass: "xknote-tab-content" }, [
+          _c(
+            "li",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.xknoteTab === "curr",
+                  expression: "xknoteTab==='curr'"
+                }
+              ]
+            },
+            [
+              _c(
+                "ul",
+                { staticClass: "menu menu-nav" },
+                [
+                  _vm._l(_vm.currList, function(item, index) {
+                    return _c(
+                      "li",
+                      { key: item.id, staticClass: "menu-item" },
+                      [
+                        _c("note-item", {
+                          attrs: {
+                            info: item,
+                            status: item.status,
+                            index: index,
+                            storage: "curr"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  }),
+                  _vm._v(" "),
+                  _vm.currList.length === 0
+                    ? _c("div", { staticClass: "text-gray text-center" }, [
+                        _vm._v("这里什么都没有哦（￣︶￣）↗")
+                      ])
+                    : _vm._e()
+                ],
+                2
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.xknoteTab === "cloud",
+                  expression: "xknoteTab==='cloud'"
+                }
+              ]
+            },
+            [
+              _vm._l(_vm.cloudList, function(item, index) {
+                return _c("folder-item", {
+                  key: item.id,
+                  attrs: { info: item, index: index, storage: "cloud" }
+                })
+              }),
+              _vm._v(" "),
+              _vm.cloudList.length === 0
+                ? [
+                    _c("div", { staticClass: "loading loading-lg" }),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "text-gray text-center" }, [
+                      _vm._v("正在加载，客官莫急。")
+                    ])
+                  ]
+                : _vm._e()
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.xknoteTab === "local",
+                  expression: "xknoteTab==='local'"
+                }
+              ]
+            },
+            [
+              _c(
+                "ul",
+                { staticClass: "menu menu-nav" },
+                [
+                  _vm._l(_vm.localList, function(item, index) {
+                    return _c(
+                      "li",
+                      { key: item.id, staticClass: "menu-item" },
+                      [
+                        _c("note-item", {
+                          attrs: {
+                            info: item,
+                            status: item.status,
+                            index: index,
+                            storage: "local"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  }),
+                  _vm._v(" "),
+                  _vm.localList.length === 0
+                    ? _c("div", { staticClass: "text-gray text-center" }, [
+                        _vm._v("这里什么都没有哦（￣︶￣）↗")
+                      ])
+                    : _vm._e()
+                ],
+                2
+              )
+            ]
+          )
+        ])
+      ])
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("main", { staticClass: "read-home container" }, [
-      _c("div", { staticClass: "columns" }, [
-        _c("section", { staticClass: "col-9 read-container" }, [
-          _c("header", { staticClass: "hero hero-sm bg-gray read-header" }, [
-            _c("div", { staticClass: "hero-body" }, [
-              _c("h1", [_vm._v("Hero title")]),
-              _vm._v(" "),
-              _c("p", [_vm._v("This is a hero example")])
-            ])
-          ]),
+    return _c("section", { staticClass: "col-9 read-container" }, [
+      _c("header", { staticClass: "hero hero-sm bg-gray read-header" }, [
+        _c("div", { staticClass: "hero-body" }, [
+          _c("h1", [_vm._v("Hero title")]),
           _vm._v(" "),
-          _c("article", { staticClass: "markdown-body read-content" }),
-          _vm._v(" "),
-          _c(
-            "footer",
-            { staticClass: "xknote-copyright bg-gray read-footer" },
-            [
-              _vm._v("\n        ©\n        "),
-              _c(
-                "a",
-                { attrs: { href: "https://github.com/syfxlin/xknote" } },
-                [_vm._v("XK-Note")]
-              ),
-              _vm._v(" By\n        "),
-              _c("a", { attrs: { href: "https://ixk.me" } }, [
-                _vm._v("Otstar Lin")
-              ])
-            ]
-          )
+          _c("p", [_vm._v("This is a hero example")])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("article", { staticClass: "markdown-body read-content" }),
+      _vm._v(" "),
+      _c("footer", { staticClass: "xknote-copyright bg-gray read-footer" }, [
+        _vm._v("\n        ©\n        "),
+        _c("a", { attrs: { href: "https://github.com/syfxlin/xknote" } }, [
+          _vm._v("XK-Note")
         ]),
-        _vm._v(" "),
-        _c("aside", { staticClass: "col-3 p-fixed read-sidebar" })
+        _vm._v(" By\n        "),
+        _c("a", { attrs: { href: "https://ixk.me" } }, [_vm._v("Otstar Lin")])
       ])
     ])
   }
@@ -22556,23 +22947,25 @@ var render = function() {
           _vm._v(" "),
           _c("span", [_vm._v(_vm._s(_vm.info.name))]),
           _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-link btn-action",
-              on: {
-                click: function($event) {
-                  return _vm.showFolderSetting($event)
-                }
-              }
-            },
-            [
-              _c("img", {
-                staticClass: "icon",
-                attrs: { src: "/static/svg/settings.svg" }
-              })
-            ]
-          )
+          _vm.showSetting
+            ? _c(
+                "button",
+                {
+                  staticClass: "btn btn-link btn-action",
+                  on: {
+                    click: function($event) {
+                      return _vm.showFolderSetting($event)
+                    }
+                  }
+                },
+                [
+                  _c("img", {
+                    staticClass: "icon",
+                    attrs: { src: "/static/svg/settings.svg" }
+                  })
+                ]
+              )
+            : _vm._e()
         ]
       ),
       _vm._v(" "),
@@ -22591,7 +22984,8 @@ var render = function() {
                         info: item,
                         status: "C",
                         index: _vm.index + ":" + i,
-                        storage: _vm.storage
+                        storage: _vm.storage,
+                        showSetting: _vm.showSetting
                       }
                     })
                   : _vm._e(),
@@ -22601,7 +22995,8 @@ var render = function() {
                       attrs: {
                         info: item,
                         index: _vm.index + ":" + i,
-                        storage: _vm.storage
+                        storage: _vm.storage,
+                        showSetting: _vm.showSetting
                       }
                     })
                   : _vm._e()
@@ -22684,23 +23079,25 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "tile-action" }, [
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-link btn-action",
-            on: {
-              click: function($event) {
-                return _vm.showNoteSettings($event)
-              }
-            }
-          },
-          [
-            _c("img", {
-              staticClass: "icon",
-              attrs: { src: "/static/svg/settings.svg" }
-            })
-          ]
-        )
+        _vm.showSetting
+          ? _c(
+              "button",
+              {
+                staticClass: "btn btn-link btn-action",
+                on: {
+                  click: function($event) {
+                    return _vm.showNoteSettings($event)
+                  }
+                }
+              },
+              [
+                _c("img", {
+                  staticClass: "icon",
+                  attrs: { src: "/static/svg/settings.svg" }
+                })
+              ]
+            )
+          : _vm._e()
       ])
     ]
   )
@@ -24389,6 +24786,93 @@ function toMarkdown(htmlVal, styleSwitch = true) {
 
 /***/ }),
 
+/***/ "./resources/js/App.vue":
+/*!******************************!*\
+  !*** ./resources/js/App.vue ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _App_vue_vue_type_template_id_f348271a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./App.vue?vue&type=template&id=f348271a& */ "./resources/js/App.vue?vue&type=template&id=f348271a&");
+/* harmony import */ var _App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./App.vue?vue&type=script&lang=js& */ "./resources/js/App.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./App.vue?vue&type=style&index=0&lang=css& */ "./resources/js/App.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _App_vue_vue_type_template_id_f348271a___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _App_vue_vue_type_template_id_f348271a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/App.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/App.vue?vue&type=script&lang=js&":
+/*!*******************************************************!*\
+  !*** ./resources/js/App.vue?vue&type=script&lang=js& ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../node_modules/babel-loader/lib??ref--4-0!../../node_modules/vue-loader/lib??vue-loader-options!./App.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/App.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/App.vue?vue&type=style&index=0&lang=css&":
+/*!***************************************************************!*\
+  !*** ./resources/js/App.vue?vue&type=style&index=0&lang=css& ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../node_modules/style-loader!../../node_modules/css-loader??ref--6-1!../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../node_modules/postcss-loader/src??ref--6-2!../../node_modules/vue-loader/lib??vue-loader-options!./App.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/App.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/App.vue?vue&type=template&id=f348271a&":
+/*!*************************************************************!*\
+  !*** ./resources/js/App.vue?vue&type=template&id=f348271a& ***!
+  \*************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_template_id_f348271a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../node_modules/vue-loader/lib??vue-loader-options!./App.vue?vue&type=template&id=f348271a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/App.vue?vue&type=template&id=f348271a&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_template_id_f348271a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_template_id_f348271a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/app.js":
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
@@ -24404,16 +24888,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./routes */ "./resources/js/routes.js");
+/* harmony import */ var _App_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./App.vue */ "./resources/js/App.vue");
 
 
 
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]);
 
+
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]({
   routes: _routes__WEBPACK_IMPORTED_MODULE_3__["default"]
 });
+window.nThis = {};
 window.vm = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
   el: "#app",
+  components: {
+    App: _App_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
+  },
+  template: "<App/>",
   router: router
 });
 
@@ -24811,11 +25302,13 @@ __webpack_require__.r(__webpack_exports__);
 var routes = [{
   path: "/",
   name: "Home",
-  component: _components_Home_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  component: _components_Home_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+  props: true
 }, {
   path: "/read",
   name: "Read",
-  component: _components_Read_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
+  component: _components_Read_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+  props: true
 }];
 /* harmony default export */ __webpack_exports__["default"] = (routes);
 

@@ -5,7 +5,7 @@
     <label class="accordion-header c-hand" :for="'accordion-' + idHash">
       <img class="icon mr-1" src="/static/svg/folder.svg" />
       <span>{{ info.name }}</span>
-      <button class="btn btn-link btn-action" @click="showFolderSetting($event)">
+      <button class="btn btn-link btn-action" @click="showFolderSetting($event)" v-if="showSetting">
         <img class="icon" src="/static/svg/settings.svg" />
       </button>
     </label>
@@ -18,12 +18,14 @@
             :status="'C'"
             :index="index + ':' + i"
             :storage="storage"
+            :showSetting="showSetting"
           />
           <folder-item
             v-if="item.type==='folder'"
             :info="item"
             :index="index + ':' + i"
             :storage="storage"
+            :showSetting="showSetting"
           />
         </li>
       </ul>
@@ -35,13 +37,13 @@
 import noteItem from "./noteItem.vue";
 export default {
   name: "folder-item",
-  props: ["info", "index", "storage"],
+  props: ["info", "index", "storage", "showSetting"],
   data() {
     return {
       idHash: Math.random()
         .toString(36)
         .substring(2, 8),
-      home: this.$root.$children[0],
+      home: window.nThis.home,
       floatMenuItems: {
         curr: [
           {

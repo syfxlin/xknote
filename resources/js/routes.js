@@ -5,12 +5,14 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home
+    component: Home,
+    props: true
   },
   {
     path: "/read",
     name: "Read",
-    component: Read
+    component: Read,
+    props: true
   }
 ];
 
