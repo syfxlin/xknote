@@ -11276,11 +11276,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "App",
   created: function created() {
-    window.nThis.app = this;
     window.xknoteOpenedChangeFlag = true;
   },
   data: function data() {
@@ -11385,30 +11386,41 @@ __webpack_require__.r(__webpack_exports__);
         _this2.localList = list;
       });
     },
+    loadPathNote: function loadPathNote(path) {
+      var _this3 = this;
+
+      var mode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "normal";
+      this.localList.forEach(function (item, index) {
+        if (item.path === path) {
+          _this3.openNote(item, {
+            index: index + "",
+            storage: "local"
+          }, mode);
+        }
+      }); // TODO: 从服务器读取Note信息，通过path读取
+    },
 
     /**
      * 读取之前开启的笔记
      * @param void
      * @returns void
      */
-    loadRememberNote: function loadRememberNote() {
-      var _this3 = this;
+    loadFirstNote: function loadFirstNote() {
+      var _this4 = this;
 
-      this.optionsDB("read", "rememberNote", function (e, data) {
-        if (data) {
-          _this3.localList.forEach(function (item, index) {
-            if (item.path === data.path) {
-              _this3.openNote(item, {
-                index: index + "",
-                storage: "local"
-              });
-            }
-          }); // TODO: 从服务器读取Note信息，通过path读取
+      var mode = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "normal";
 
-        }
+      if (this.$route.query.note) {
+        this.loadPathNote(this.$route.query.note, mode);
+      } else {
+        this.optionsDB("read", "rememberNote", function (e, data) {
+          if (data) {
+            _this4.loadPathNote(data.path, mode);
+          }
 
-        _this3.timedTask("saveCurrOpenedNote");
-      });
+          _this4.timedTask("saveCurrOpenedNote");
+        });
+      }
     },
 
     /**
@@ -11417,15 +11429,15 @@ __webpack_require__.r(__webpack_exports__);
      * @returns void
      */
     timedTask: function timedTask(task) {
-      var _this4 = this;
+      var _this5 = this;
 
       if (task === "saveCurrOpenedNote") {
         // 每10秒中将当前打开的笔记信息保存至本地数据库，用以下次开启做准备
         setInterval(function () {
-          if (_this4.xknoteOpened.path !== "" && _this4.$route.name === "Home") {
-            _this4.optionsDB("put", {
+          if (_this5.xknoteOpened.path !== "" && _this5.$route.name === "Home") {
+            _this5.optionsDB("put", {
               name: "rememberNote",
-              path: _this4.xknoteOpened.path
+              path: _this5.xknoteOpened.path
             });
 
             console.log("remeberNote");
@@ -11822,6 +11834,17 @@ __webpack_require__.r(__webpack_exports__);
       if (to.name === "Read") {
         this.readOpened = JSON.parse(JSON.stringify(this.xknoteOpened));
       }
+    },
+    "$route.query": function $routeQuery(query) {
+      if (query.note) {
+        var mode = "normal";
+
+        if (this.$route.name === "Read") {
+          mode = "read";
+        }
+
+        this.loadPathNote(query.note, mode);
+      }
     }
   }
 });
@@ -12106,6 +12129,51 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -12116,19 +12184,32 @@ __webpack_require__.r(__webpack_exports__);
     "note-item": _noteItem_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
     "folder-item": _folderItem_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
-  created: function created() {
-    window.nThis.home = this;
-  },
-  props: ["xknoteTab", "switchTab", "currListSource", "currList", "cloudList", "localList", "xknoteOpened", "xknoteOpenedIndex", "noteBaseInfo", "loadRememberNote", "listOperate", "noteOperate", "setXknoteOpened", "openNote"],
+  props: ["xknoteTab", "switchTab", "currListSource", "currList", "cloudList", "localList", "xknoteOpened", "xknoteOpenedIndex", "noteBaseInfo", "loadFirstNote", "listOperate", "noteOperate", "setXknoteOpened", "openNote", "writeMode"],
   data: function data() {
+    var _this = this;
+
     return {
+      showSidebar: false,
+      // 该属性只有在writeMode有用
+      loadedEditor: false,
       xknoteSetting: "/static/setting.json",
       smModal: {
         show: false,
         title: "",
         content: "",
         confirm: function confirm() {},
-        cancel: function cancel() {}
+        cancel: function cancel() {
+          _this.smModal.show = false;
+        }
+      },
+      lgModal: {
+        show: false,
+        title: "",
+        content: "",
+        confirm: function confirm() {},
+        cancel: function cancel() {
+          _this.lgModal.show = false;
+        }
       },
       floatMenu: {
         show: false,
@@ -12159,24 +12240,34 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    switchWriteMode: function switchWriteMode() {
+      window.XKEditor.switchTypewriter();
+      window.XKEditor.switchPreview();
+    },
+
     /**
      * 在XK Editor加载完成时触发的事件
      * @param {string} e event的名称
      * @returns void
      */
     editorLoaded: function editorLoaded(e) {
-      var _this = this;
+      var _this2 = this;
 
       if (e === "interfaceLoad") {
         window.XKEditor.ace.getSession().on("change", function () {
           if (window.xknoteOpenedChangeFlag) {
-            _this.xknoteOpened.note.content = window.XKEditor.getMarkdown();
+            _this2.xknoteOpened.note.content = window.XKEditor.getMarkdown();
           }
         });
       }
 
       if (e === "componentLoad") {
-        this.loadRememberNote();
+        this.loadFirstNote();
+        this.loadedEditor = true;
+
+        if (this.writeMode) {
+          this.switchWriteMode();
+        }
       }
     },
 
@@ -12189,7 +12280,7 @@ __webpack_require__.r(__webpack_exports__);
      * @returns void
      */
     memuOperate: function memuOperate(operate, storage, index) {
-      var _this2 = this;
+      var _this3 = this;
 
       var curr = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
       this.floatMenu.show = false;
@@ -12201,14 +12292,14 @@ __webpack_require__.r(__webpack_exports__);
 
         this.smModal.confirm = function () {
           var note = null;
-          note = _this2.listOperate("delete", storage, index);
-          _this2.smModal.show = false;
+          note = _this3.listOperate("delete", storage, index);
+          _this3.smModal.show = false;
 
-          _this2.noteOperate(operate, storage, note);
+          _this3.noteOperate(operate, storage, note);
         };
 
         this.smModal.cancel = function () {
-          _this2.smModal.show = false;
+          _this3.smModal.show = false;
         };
       } // 保存到本地
 
@@ -12267,10 +12358,10 @@ __webpack_require__.r(__webpack_exports__);
             var s = storage;
 
             if (storage === "curr") {
-              s = _this2.currListSource[index].storage;
+              s = _this3.currListSource[index].storage;
             }
 
-            _this2.noteOperate(operate, s, {
+            _this3.noteOperate(operate, s, {
               oldNote: oldNote,
               note: _note
             });
@@ -12283,11 +12374,11 @@ __webpack_require__.r(__webpack_exports__);
       if (operate === "closeCurr") {
         // 如果笔记在未保存状态关闭则先弹出modal提示是否下关闭
         var closeCurr = function closeCurr() {
-          if (index == _this2.xknoteOpenedIndex.curr) {
-            _this2.setXknoteOpened(JSON.parse(JSON.stringify(_this2.noteBaseInfo)));
+          if (index == _this3.xknoteOpenedIndex.curr) {
+            _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
           }
 
-          _this2.listOperate("delete", "curr", index);
+          _this3.listOperate("delete", "curr", index);
         };
 
         if (this.listOperate("get", storage, index).status === "N") {
@@ -12297,11 +12388,11 @@ __webpack_require__.r(__webpack_exports__);
 
           this.smModal.confirm = function () {
             closeCurr();
-            _this2.smModal.show = false;
+            _this3.smModal.show = false;
           };
 
           this.smModal.cancel = function () {
-            _this2.smModal.show = false;
+            _this3.smModal.show = false;
           };
         } else {
           closeCurr();
@@ -12328,14 +12419,19 @@ __webpack_require__.r(__webpack_exports__);
      * @returns void
      */
     navBarOperate: function navBarOperate(operate) {
-      var _this3 = this;
+      var _this4 = this;
+
+      if (operate.indexOf("show") === 0) {
+        this.lgModal.show = true;
+        this.lgModal.content = operate.substring(4);
+      }
 
       var saveLocal = function saveLocal(i) {
-        _this3.floatMenu.saveAndClose = false;
+        _this4.floatMenu.saveAndClose = false;
 
-        _this3.memuOperate("saveLocal", "curr", i);
+        _this4.memuOperate("saveLocal", "curr", i);
 
-        _this3.floatMenu.saveAndClose = true;
+        _this4.floatMenu.saveAndClose = true;
       };
 
       if (operate === "saveLocal") {
@@ -12364,7 +12460,12 @@ __webpack_require__.r(__webpack_exports__);
 
     }
   },
-  mounted: function mounted() {}
+  mounted: function mounted() {},
+  watch: {
+    writeMode: function writeMode() {
+      this.switchWriteMode();
+    }
+  }
 });
 
 /***/ }),
@@ -12464,7 +12565,7 @@ __webpack_require__.r(__webpack_exports__);
     "note-item": _noteItem_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
     "folder-item": _folderItem_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
-  props: ["cloudList", "localList", "readOpened", "openNote"],
+  props: ["cloudList", "localList", "readOpened", "openNote", "loadFirstNote"],
   data: function data() {
     return {
       xknoteTab: "toc",
@@ -12495,7 +12596,12 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
+    var _this2 = this;
+
     this.watchNote();
+    this.$nextTick(function () {
+      _this2.loadFirstNote("read");
+    });
 
     if (!window.toggleToc) {
       window.toggleToc = function (ele) {
@@ -12799,7 +12905,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "html,\nbody {\n    width: 100%;\n    height: 100%;\n}\nbody {\n    margin: 0;\n}\n/* 滚动槽 */\n::-webkit-scrollbar {\n    width: 6px;\n    height: 6px;\n}\n::-webkit-scrollbar-track {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.06);\n    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);\n}\n/* 滚动条滑块 */\n::-webkit-scrollbar-thumb {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.12);\n    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);\n}\n#toc li img {\n    width: 1.05em;\n}\n#app {\n    width: 100%;\n    height: 100%;\n}\n.home {\n    height: 100%;\n}\n.home .columns {\n    height: calc(100% - 60px);\n    margin: 0;\n}\n#xknote-editor {\n    height: 100%;\n    padding: 0px;\n}\n#xknote-editor .ace-toolbar .xk-button {\n    font-size: 0.85em;\n}\n.xknote-header {\n    height: 60px;\n    z-index: 100;\n    border-bottom: 1px solid #dfdfdf;\n    padding: 0 20px 0 0;\n}\n.xknote-header .btn {\n    margin-left: 5px;\n}\n.xknote-header .btn-link:focus,\n.xknote-header .btn-link:hover {\n    box-shadow: 0 0 0 0.1rem rgba(87, 85, 217, 0.2);\n\n    text-decoration: none;\n}\n.xknote-header .btn-link:focus {\n    background: #f1f1fc;\n}\n.xknote-header .navbar-section.col-2 {\n    flex: 0 0 auto !important;\n    margin-right: 0.3rem;\n}\n.xknote-header .form-input {\n    width: auto;\n}\n.navbar-center .menu-item a {\n    cursor: pointer;\n}\n/* Fix xknote-header button hover and active color */\n.dropdown .btn-group a:not(.btn-primary):hover {\n    color: #5755d9;\n}\n.dropdown .btn-group a:not(.btn-primary):active {\n    color: #5755d9;\n    background: #f1f1fc;\n    border-color: #4b48d6;\n}\n.xknote-icon {\n    width: 39px;\n    height: 39px;\n    margin-left: 20px;\n}\n.xknote-sidebar {\n    display: flex;\n    flex-direction: column;\n    padding: 0;\n    max-height: 100%;\n}\n.xknote-tab-content {\n    margin: 0 0.8rem;\n    flex: 1;\n    overflow-y: auto;\n    overflow-x: hidden;\n}\n.xknote-tab-content li {\n    list-style: none;\n}\n.xknote-tab-content .menu {\n    padding: 0;\n}\n.xknote-tab-content .menu .menu-item {\n    padding-right: 0;\n}\n/* Fix tab tile */\n.xknote-tab-content .menu-item > a.tile {\n    display: flex;\n}\n.xknote-tab-content .tile.badge:after {\n    transform: none;\n}\n.xknote-tab-content .tile-action {\n    display: none;\n}\n.xknote-tab-content .tile:hover .tile-action {\n    display: block;\n}\n.xknote-tab-content .accordion .accordion-header .icon {\n    transform: none !important;\n}\n.xknote-tab-content .tile-subtitle,\n.xknote-tab-content .tile-title {\n    line-height: 1rem;\n    font-size: 0.67rem;\n}\n.xknote-tab-content .tile-click {\n    cursor: pointer;\n}\n.xknote-tab-content .tile-content[children=\"input\"] .tile-click {\n    display: none;\n}\n.xknote-tab-content .tile-content input {\n    display: none;\n}\n.xknote-tab-content .tile-content[children=\"input\"] input {\n    display: block;\n}\n.xknote-tab-content .accordion-header {\n    margin: 0 -0.4rem;\n    padding: 0.2rem 0.4rem;\n    display: flex;\n    align-items: center;\n}\n.xknote-tab-content .accordion-header:hover {\n    background: #f1f1fc;\n    color: #5755d9;\n}\n.xknote-tab-content .accordion-header span {\n    flex: 1 1 auto;\n}\n.xknote-tab-content .accordion-header button {\n    flex: 0 0 auto;\n    display: none;\n}\n.xknote-tab-content .accordion-header:hover button {\n    display: block;\n    width: 1.8em;\n    height: 1.5em;\n    padding: 0;\n    margin-right: 0.2rem;\n}\n.xknote-tab-content .accordion-header:hover button img {\n    vertical-align: auto;\n}\n.xknote-tab-content .accordion-body .menu {\n    border-left: 3.5px solid #5755d940;\n    padding-left: 0.2rem;\n    margin-left: 0.3rem;\n    border-radius: 0;\n}\n.xknote-copyright {\n    padding: 0.8em 0;\n    text-align: center;\n}\n\n.float-menu {\n    position: fixed;\n}\n.float-menu .menu-item a {\n    cursor: pointer;\n}\n.xknote-sm-modal {\n    color: #585858;\n}\n\n.tab .tab-item a {\n    cursor: pointer;\n}\n", ""]);
+exports.push([module.i, "html,\nbody {\n    width: 100%;\n    height: 100%;\n}\nbody {\n    margin: 0;\n}\n/* 滚动槽 */\n::-webkit-scrollbar {\n    width: 6px;\n    height: 6px;\n}\n::-webkit-scrollbar-track {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.06);\n    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);\n}\n/* 滚动条滑块 */\n::-webkit-scrollbar-thumb {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.12);\n    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);\n}\n#toc li img {\n    width: 1.05em;\n}\n#app {\n    width: 100%;\n    height: 100%;\n}\n.home {\n    height: 100%;\n}\n.home .columns {\n    height: calc(100% - 60px);\n    margin: 0;\n}\n.loading.loading-lg {\n    width: 2rem;\n}\n.editor-loading {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n.editor-loading p {\n    margin: 0 0 0 1rem;\n}\n#xknote-editor {\n    height: 100%;\n    padding: 0px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    border-left: 1px solid #ddd;\n}\n#xknote-editor .ace-toolbar .xk-button {\n    font-size: 0.85em;\n}\n.xknote-header {\n    height: 60px;\n    z-index: 100;\n    border-bottom: 1px solid #dfdfdf;\n    padding: 0 20px 0 0;\n}\n.xknote-header .btn {\n    margin-left: 5px;\n}\n.xknote-header .btn-link:focus,\n.xknote-header .btn-link:hover {\n    box-shadow: 0 0 0 0.1rem rgba(87, 85, 217, 0.2);\n\n    text-decoration: none;\n}\n.xknote-header .btn-link:focus {\n    background: #f1f1fc;\n}\n.xknote-header .navbar-section.col-2 {\n    flex: 0 0 auto !important;\n    margin-right: 0.3rem;\n}\n.xknote-header .form-input {\n    width: auto;\n}\n.navbar-center .menu-item a {\n    cursor: pointer;\n}\n/* Fix xknote-header button hover and active color */\n.dropdown .btn-group a:not(.btn-primary):hover {\n    color: #5755d9;\n}\n.dropdown .btn-group a:not(.btn-primary):active {\n    color: #5755d9;\n    background: #f1f1fc;\n    border-color: #4b48d6;\n}\n.popover-container p {\n    padding: 0 0 0 0.3rem;\n}\n.xknote-icon {\n    width: 39px;\n    height: 39px;\n    margin-left: 20px;\n}\n.xknote-sidebar {\n    display: flex;\n    flex-direction: column;\n    padding: 0;\n    max-height: 100%;\n}\n.xknote-sidebar.write-mode {\n    position: fixed;\n    height: 100%;\n    z-index: 1000;\n    background: #fff;\n}\n.xknote-tab-content {\n    margin: 0 0.8rem;\n    flex: 1;\n    overflow-y: auto;\n    overflow-x: hidden;\n}\n.xknote-tab-content li {\n    list-style: none;\n}\n.xknote-tab-content .menu {\n    padding: 0;\n}\n.xknote-tab-content .cloud-tab .menu .menu-item {\n    padding-right: 0;\n}\n.xknote-tab-content .cloud-tab-loading {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n}\n/* Fix tab tile */\n.xknote-tab-content .menu-item > a.tile {\n    display: flex;\n}\n.xknote-tab-content .tile.badge:after {\n    transform: none;\n}\n.xknote-tab-content .tile-action {\n    display: none;\n}\n.xknote-tab-content .tile:hover .tile-action {\n    display: block;\n}\n.xknote-tab-content .accordion .accordion-header .icon {\n    transform: none !important;\n}\n.xknote-tab-content .tile-subtitle,\n.xknote-tab-content .tile-title {\n    line-height: 1rem;\n    font-size: 0.67rem;\n}\n.xknote-tab-content .tile-click {\n    cursor: pointer;\n}\n.xknote-tab-content .tile-content[children=\"input\"] .tile-click {\n    display: none;\n}\n.xknote-tab-content .tile-content input {\n    display: none;\n}\n.xknote-tab-content .tile-content[children=\"input\"] input {\n    display: block;\n}\n.xknote-tab-content .accordion-header {\n    margin: 0 -0.4rem;\n    padding: 0.2rem 0.4rem;\n    display: flex;\n    align-items: center;\n}\n.xknote-tab-content .accordion-header:hover {\n    background: #f1f1fc;\n    color: #5755d9;\n}\n.xknote-tab-content .accordion-header span {\n    flex: 1 1 auto;\n}\n.xknote-tab-content .accordion-header button {\n    flex: 0 0 auto;\n    display: none;\n}\n.xknote-tab-content .accordion-header:hover button {\n    display: block;\n    width: 1.8em;\n    height: 1.5em;\n    padding: 0;\n    margin-right: 0.2rem;\n}\n.xknote-tab-content .accordion-header:hover button img {\n    vertical-align: auto;\n}\n.xknote-tab-content .accordion-body .menu {\n    border-left: 3.5px solid #5755d940;\n    padding-left: 0.2rem;\n    margin-left: 0.3rem;\n    border-radius: 0;\n}\n.xknote-copyright {\n    padding: 0.8em 0;\n    text-align: center;\n}\n\n.float-menu {\n    position: fixed;\n}\n.float-menu .menu-item a {\n    cursor: pointer;\n}\n.xknote-sm-modal {\n    color: #585858;\n}\n\n.tab .tab-item a {\n    cursor: pointer;\n}\n\n.fade-enter-active,\n.fade-leave-active {\n    transition: opacity 0.5s;\n}\n.fade-enter,\n.fade-leave-to {\n    opacity: 0;\n}\n", ""]);
 
 // exports
 
@@ -21945,82 +22051,89 @@ var render = function() {
     "main",
     { attrs: { id: "app-main" } },
     [
-      _c("router-view", {
-        ref: "children",
-        attrs: {
-          xknoteTab: _vm.xknoteTab,
-          currListSource: _vm.currListSource,
-          currList: _vm.currList,
-          cloudList: _vm.cloudList,
-          localList: _vm.localList,
-          xknoteOpened: _vm.xknoteOpened,
-          xknoteOpenedIndex: _vm.xknoteOpenedIndex,
-          noteBaseInfo: _vm.noteBaseInfo,
-          loadRememberNote: _vm.loadRememberNote,
-          listOperate: _vm.listOperate,
-          noteOperate: _vm.noteOperate,
-          setXknoteOpened: _vm.setXknoteOpened,
-          switchTab: _vm.switchTab,
-          openNote: _vm.openNote,
-          readOpened: _vm.readOpened
-        },
-        on: {
-          "update:xknoteTab": function($event) {
-            _vm.xknoteTab = $event
-          },
-          "update:xknote-tab": function($event) {
-            _vm.xknoteTab = $event
-          },
-          "update:currListSource": function($event) {
-            _vm.currListSource = $event
-          },
-          "update:curr-list-source": function($event) {
-            _vm.currListSource = $event
-          },
-          "update:currList": function($event) {
-            _vm.currList = $event
-          },
-          "update:curr-list": function($event) {
-            _vm.currList = $event
-          },
-          "update:cloudList": function($event) {
-            _vm.cloudList = $event
-          },
-          "update:cloud-list": function($event) {
-            _vm.cloudList = $event
-          },
-          "update:localList": function($event) {
-            _vm.localList = $event
-          },
-          "update:local-list": function($event) {
-            _vm.localList = $event
-          },
-          "update:xknoteOpened": function($event) {
-            _vm.xknoteOpened = $event
-          },
-          "update:xknote-opened": function($event) {
-            _vm.xknoteOpened = $event
-          },
-          "update:xknoteOpenedIndex": function($event) {
-            _vm.xknoteOpenedIndex = $event
-          },
-          "update:xknote-opened-index": function($event) {
-            _vm.xknoteOpenedIndex = $event
-          },
-          "update:noteBaseInfo": function($event) {
-            _vm.noteBaseInfo = $event
-          },
-          "update:note-base-info": function($event) {
-            _vm.noteBaseInfo = $event
-          },
-          "update:readOpened": function($event) {
-            _vm.readOpened = $event
-          },
-          "update:read-opened": function($event) {
-            _vm.readOpened = $event
-          }
-        }
-      })
+      _c(
+        "transition",
+        { attrs: { name: "fade", mode: "out-in" } },
+        [
+          _c("router-view", {
+            ref: "children",
+            attrs: {
+              xknoteTab: _vm.xknoteTab,
+              currListSource: _vm.currListSource,
+              currList: _vm.currList,
+              cloudList: _vm.cloudList,
+              localList: _vm.localList,
+              xknoteOpened: _vm.xknoteOpened,
+              xknoteOpenedIndex: _vm.xknoteOpenedIndex,
+              noteBaseInfo: _vm.noteBaseInfo,
+              loadFirstNote: _vm.loadFirstNote,
+              listOperate: _vm.listOperate,
+              noteOperate: _vm.noteOperate,
+              setXknoteOpened: _vm.setXknoteOpened,
+              switchTab: _vm.switchTab,
+              openNote: _vm.openNote,
+              readOpened: _vm.readOpened
+            },
+            on: {
+              "update:xknoteTab": function($event) {
+                _vm.xknoteTab = $event
+              },
+              "update:xknote-tab": function($event) {
+                _vm.xknoteTab = $event
+              },
+              "update:currListSource": function($event) {
+                _vm.currListSource = $event
+              },
+              "update:curr-list-source": function($event) {
+                _vm.currListSource = $event
+              },
+              "update:currList": function($event) {
+                _vm.currList = $event
+              },
+              "update:curr-list": function($event) {
+                _vm.currList = $event
+              },
+              "update:cloudList": function($event) {
+                _vm.cloudList = $event
+              },
+              "update:cloud-list": function($event) {
+                _vm.cloudList = $event
+              },
+              "update:localList": function($event) {
+                _vm.localList = $event
+              },
+              "update:local-list": function($event) {
+                _vm.localList = $event
+              },
+              "update:xknoteOpened": function($event) {
+                _vm.xknoteOpened = $event
+              },
+              "update:xknote-opened": function($event) {
+                _vm.xknoteOpened = $event
+              },
+              "update:xknoteOpenedIndex": function($event) {
+                _vm.xknoteOpenedIndex = $event
+              },
+              "update:xknote-opened-index": function($event) {
+                _vm.xknoteOpenedIndex = $event
+              },
+              "update:noteBaseInfo": function($event) {
+                _vm.noteBaseInfo = $event
+              },
+              "update:note-base-info": function($event) {
+                _vm.noteBaseInfo = $event
+              },
+              "update:readOpened": function($event) {
+                _vm.readOpened = $event
+              },
+              "update:read-opened": function($event) {
+                _vm.readOpened = $event
+              }
+            }
+          })
+        ],
+        1
+      )
     ],
     1
   )
@@ -22049,7 +22162,44 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("main", { staticClass: "home" }, [
     _c("header", { staticClass: "navbar xknote-header" }, [
-      _vm._m(0),
+      _c(
+        "section",
+        { staticClass: "navbar-section col-2" },
+        [
+          _c("img", {
+            staticClass: "xknote-icon",
+            attrs: {
+              src: "https://note.ixk.me/img/logo.png",
+              alt: "XK-Note icon"
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "a",
+            { staticClass: "btn btn-link text-large", attrs: { href: "#" } },
+            [_vm._v("{ XK-Note }")]
+          ),
+          _vm._v(" "),
+          _c("transition", { attrs: { name: "fade", mode: "out-in" } }, [
+            _vm.writeMode
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-action btn-lg",
+                    attrs: { title: "开启/关闭侧边栏" },
+                    on: {
+                      click: function($event) {
+                        _vm.showSidebar = !_vm.showSidebar
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "icon icon-menu" })]
+                )
+              : _vm._e()
+          ])
+        ],
+        1
+      ),
       _vm._v(" "),
       _c("section", { staticClass: "navbar-center" }, [
         _c("input", {
@@ -22089,7 +22239,7 @@ var render = function() {
               [_vm._v("云端保存")]
             ),
             _vm._v(" "),
-            _vm._m(1),
+            _vm._m(0),
             _vm._v(" "),
             _c("ul", { staticClass: "menu" }, [
               _c("li", { staticClass: "menu-item" }, [
@@ -22139,7 +22289,7 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "dropdown" }, [
           _c("div", { staticClass: "btn-group" }, [
-            _vm._m(2),
+            _vm._m(1),
             _vm._v(" "),
             _c("ul", { staticClass: "menu" }, [
               _c("li", { staticClass: "menu-item" }, [
@@ -22201,7 +22351,7 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _vm._m(3),
+        _vm._m(2),
         _vm._v(" "),
         _c("div", { staticClass: "popover popover-bottom" }, [
           _c("button", { staticClass: "btn" }, [_vm._v("信息")]),
@@ -22233,7 +22383,40 @@ var render = function() {
         "section",
         { staticClass: "navbar-section" },
         [
-          _vm._m(4),
+          _c("div", { staticClass: "dropdown" }, [
+            _c("div", { staticClass: "btn-group" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "btn btn-primary",
+                  on: {
+                    click: function($event) {
+                      return _vm.navBarOperate("showCreateNote")
+                    }
+                  }
+                },
+                [_vm._v("新建MD笔记")]
+              ),
+              _vm._v(" "),
+              _vm._m(3),
+              _vm._v(" "),
+              _c("ul", { staticClass: "menu" }, [
+                _c("li", { staticClass: "menu-item" }, [
+                  _c(
+                    "a",
+                    {
+                      on: {
+                        click: function($event) {
+                          return _vm.navBarOperate("showCreateFolder")
+                        }
+                      }
+                    },
+                    [_vm._v("新建文件夹")]
+                  )
+                ])
+              ])
+            ])
+          ]),
           _vm._v(" "),
           _c(
             "router-link",
@@ -22241,236 +22424,382 @@ var render = function() {
             [_vm._v("阅读模式")]
           ),
           _vm._v(" "),
-          _c(
-            "router-link",
-            { staticClass: "btn btn-link", attrs: { to: "/write" } },
-            [_vm._v("写作模式")]
-          ),
+          !_vm.writeMode
+            ? _c(
+                "router-link",
+                { staticClass: "btn btn-link", attrs: { to: "/write" } },
+                [_vm._v("写作模式")]
+              )
+            : _vm._e(),
           _vm._v(" "),
-          _vm._m(5)
+          _vm.writeMode
+            ? _c(
+                "router-link",
+                { staticClass: "btn btn-link", attrs: { to: "/" } },
+                [_vm._v("普通模式")]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "dropdown dropdown-right" }, [
+            _vm._m(4),
+            _vm._v(" "),
+            _c("ul", { staticClass: "menu" }, [
+              _c("li", { staticClass: "menu-item" }, [
+                _c(
+                  "a",
+                  {
+                    on: {
+                      click: function($event) {
+                        return _vm.navBarOperate("showPersonalCenter")
+                      }
+                    }
+                  },
+                  [_vm._v("个人中心")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "menu-item" }, [
+                _c(
+                  "a",
+                  {
+                    on: {
+                      click: function($event) {
+                        return _vm.navBarOperate("showUserSetting")
+                      }
+                    }
+                  },
+                  [_vm._v("用户设置")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "menu-item" }, [
+                _c(
+                  "a",
+                  {
+                    on: {
+                      click: function($event) {
+                        return _vm.navBarOperate("showGitSetting")
+                      }
+                    }
+                  },
+                  [_vm._v("Git设置")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "menu-item" }, [
+                _c(
+                  "a",
+                  {
+                    on: {
+                      click: function($event) {
+                        return _vm.navBarOperate("showSystemSetting")
+                      }
+                    }
+                  },
+                  [_vm._v("系统管理")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "divider" }),
+              _vm._v(" "),
+              _vm._m(5)
+            ])
+          ])
         ],
         1
       )
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "columns" }, [
-      _c("section", { staticClass: "column col-2 xknote-sidebar" }, [
-        _c("ul", { staticClass: "tab tab-block xknote-tab" }, [
-          _c("li", { staticClass: "tab-item" }, [
-            _c(
-              "a",
-              {
-                class:
-                  (_vm.currBadgeCount !== 0 ? "badge " : "") +
-                  (_vm.xknoteTab === "curr" ? "active" : ""),
-                attrs: { "data-badge": _vm.currBadgeCount },
-                on: {
-                  click: function($event) {
-                    return _vm.switchTab("curr")
-                  }
-                }
-              },
-              [_vm._v("当前")]
-            )
-          ]),
-          _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "columns" },
+      [
+        _c("transition", { attrs: { name: "fade", mode: "out-in" } }, [
           _c(
-            "li",
-            {
-              class: "tab-item " + (_vm.xknoteTab === "cloud" ? "active" : "")
-            },
-            [
-              _c(
-                "a",
-                {
-                  on: {
-                    click: function($event) {
-                      return _vm.switchTab("cloud")
-                    }
-                  }
-                },
-                [_vm._v("云端")]
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c("li", { staticClass: "tab-item" }, [
-            _c(
-              "a",
-              {
-                class:
-                  (_vm.localBadgeCount !== 0 ? "badge " : "") +
-                  (_vm.xknoteTab === "local" ? "active" : ""),
-                attrs: { "data-badge": _vm.localBadgeCount },
-                on: {
-                  click: function($event) {
-                    return _vm.switchTab("local")
-                  }
-                }
-              },
-              [_vm._v("本地")]
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("ul", { staticClass: "xknote-tab-content" }, [
-          _c(
-            "li",
+            "section",
             {
               directives: [
                 {
                   name: "show",
                   rawName: "v-show",
-                  value: _vm.xknoteTab === "curr",
-                  expression: "xknoteTab==='curr'"
+                  value: !_vm.writeMode || _vm.showSidebar,
+                  expression: "!writeMode||showSidebar"
                 }
-              ]
+              ],
+              class:
+                "column col-2 xknote-sidebar" +
+                (!_vm.writeMode ? "" : " write-mode")
             },
             [
-              _c(
-                "ul",
-                { staticClass: "menu menu-nav" },
-                [
-                  _vm._l(_vm.currList, function(item, index) {
-                    return _c(
-                      "li",
-                      { key: item.id, staticClass: "menu-item" },
-                      [
-                        _c("note-item", {
-                          attrs: {
-                            info: item,
-                            status: item.status,
-                            index: index,
-                            storage: "curr",
-                            mode: "normal",
-                            openNote: _vm.openNote,
-                            floatMenu: _vm.floatMenu
+              _c("ul", { staticClass: "tab tab-block xknote-tab" }, [
+                _c("li", { staticClass: "tab-item" }, [
+                  _c(
+                    "a",
+                    {
+                      class:
+                        (_vm.currBadgeCount !== 0 ? "badge " : "") +
+                        (_vm.xknoteTab === "curr" ? "active" : ""),
+                      attrs: { "data-badge": _vm.currBadgeCount },
+                      on: {
+                        click: function($event) {
+                          return _vm.switchTab("curr")
+                        }
+                      }
+                    },
+                    [_vm._v("当前")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "li",
+                  {
+                    class:
+                      "tab-item " + (_vm.xknoteTab === "cloud" ? "active" : "")
+                  },
+                  [
+                    _c(
+                      "a",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.switchTab("cloud")
                           }
-                        })
-                      ],
-                      1
+                        }
+                      },
+                      [_vm._v("云端")]
                     )
-                  }),
-                  _vm._v(" "),
-                  _vm.currList.length === 0
-                    ? _c("div", { staticClass: "text-gray text-center" }, [
-                        _vm._v("这里什么都没有哦（￣︶￣）↗")
-                      ])
-                    : _vm._e()
-                ],
-                2
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "li",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.xknoteTab === "cloud",
-                  expression: "xknoteTab==='cloud'"
-                }
-              ]
-            },
-            [
-              _vm._l(_vm.cloudList, function(item, index) {
-                return _c("folder-item", {
-                  key: item.id,
-                  attrs: {
-                    info: item,
-                    index: index,
-                    storage: "cloud",
-                    mode: "normal",
-                    openNote: _vm.openNote,
-                    floatMenu: _vm.floatMenu
-                  }
-                })
-              }),
-              _vm._v(" "),
-              _vm.cloudList.length === 0
-                ? [
-                    _c("div", { staticClass: "loading loading-lg" }),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "text-gray text-center" }, [
-                      _vm._v("正在加载，客官莫急。")
-                    ])
                   ]
-                : _vm._e()
-            ],
-            2
-          ),
-          _vm._v(" "),
-          _c(
-            "li",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.xknoteTab === "local",
-                  expression: "xknoteTab==='local'"
-                }
-              ]
-            },
-            [
-              _c(
-                "ul",
-                { staticClass: "menu menu-nav" },
-                [
-                  _vm._l(_vm.localList, function(item, index) {
-                    return _c(
-                      "li",
-                      { key: item.id, staticClass: "menu-item" },
+                ),
+                _vm._v(" "),
+                _c("li", { staticClass: "tab-item" }, [
+                  _c(
+                    "a",
+                    {
+                      class:
+                        (_vm.localBadgeCount !== 0 ? "badge " : "") +
+                        (_vm.xknoteTab === "local" ? "active" : ""),
+                      attrs: { "data-badge": _vm.localBadgeCount },
+                      on: {
+                        click: function($event) {
+                          return _vm.switchTab("local")
+                        }
+                      }
+                    },
+                    [_vm._v("本地")]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("ul", { staticClass: "xknote-tab-content" }, [
+                _c(
+                  "li",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.xknoteTab === "curr",
+                        expression: "xknoteTab==='curr'"
+                      }
+                    ]
+                  },
+                  [
+                    _c(
+                      "ul",
+                      { staticClass: "menu menu-nav" },
                       [
-                        _c("note-item", {
-                          attrs: {
-                            info: item,
-                            status: item.status,
-                            index: index,
-                            storage: "local",
-                            mode: "normal",
-                            openNote: _vm.openNote,
-                            floatMenu: _vm.floatMenu
-                          }
-                        })
+                        _vm._l(_vm.currList, function(item, index) {
+                          return _c(
+                            "li",
+                            { key: item.id, staticClass: "menu-item" },
+                            [
+                              _c("note-item", {
+                                attrs: {
+                                  info: item,
+                                  status: item.status,
+                                  index: index,
+                                  storage: "curr",
+                                  mode: "normal",
+                                  openNote: _vm.openNote,
+                                  floatMenu: _vm.floatMenu
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        }),
+                        _vm._v(" "),
+                        _vm.currList.length === 0
+                          ? _c(
+                              "div",
+                              { staticClass: "text-gray text-center" },
+                              [_vm._v("这里什么都没有哦（￣︶￣）↗")]
+                            )
+                          : _vm._e()
                       ],
-                      1
+                      2
                     )
-                  }),
-                  _vm._v(" "),
-                  _vm.localList.length === 0
-                    ? _c("div", { staticClass: "text-gray text-center" }, [
-                        _vm._v("这里什么都没有哦（￣︶￣）↗")
-                      ])
-                    : _vm._e()
-                ],
-                2
-              )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "li",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.xknoteTab === "cloud",
+                        expression: "xknoteTab==='cloud'"
+                      }
+                    ],
+                    staticClass: "cloud-tab"
+                  },
+                  [
+                    _vm._l(_vm.cloudList, function(item, index) {
+                      return _c("folder-item", {
+                        key: item.id,
+                        attrs: {
+                          info: item,
+                          index: index,
+                          storage: "cloud",
+                          mode: "normal",
+                          openNote: _vm.openNote,
+                          floatMenu: _vm.floatMenu
+                        }
+                      })
+                    }),
+                    _vm._v(" "),
+                    _vm.cloudList.length === 0
+                      ? _c("div", { staticClass: "cloud-tab-loading" }, [
+                          _c("div", { staticClass: "loading loading-lg" }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "text-gray text-center" }, [
+                            _vm._v("正在加载，客官莫急。")
+                          ])
+                        ])
+                      : _vm._e()
+                  ],
+                  2
+                ),
+                _vm._v(" "),
+                _c(
+                  "li",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.xknoteTab === "local",
+                        expression: "xknoteTab==='local'"
+                      }
+                    ]
+                  },
+                  [
+                    _c(
+                      "ul",
+                      { staticClass: "menu menu-nav" },
+                      [
+                        _vm._l(_vm.localList, function(item, index) {
+                          return _c(
+                            "li",
+                            { key: item.id, staticClass: "menu-item" },
+                            [
+                              _c("note-item", {
+                                attrs: {
+                                  info: item,
+                                  status: item.status,
+                                  index: index,
+                                  storage: "local",
+                                  mode: "normal",
+                                  openNote: _vm.openNote,
+                                  floatMenu: _vm.floatMenu
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        }),
+                        _vm._v(" "),
+                        _vm.localList.length === 0
+                          ? _c(
+                              "div",
+                              { staticClass: "text-gray text-center" },
+                              [_vm._v("这里什么都没有哦（￣︶￣）↗")]
+                            )
+                          : _vm._e()
+                      ],
+                      2
+                    )
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "xknote-copyright bg-gray" }, [
+                _vm._v("\n          ©\n          "),
+                _c(
+                  "a",
+                  { attrs: { href: "https://github.com/syfxlin/xknote" } },
+                  [_vm._v("XK-Note")]
+                ),
+                _vm._v(" By\n          "),
+                _c("a", { attrs: { href: "https://ixk.me" } }, [
+                  _vm._v("Otstar Lin")
+                ])
+              ])
             ]
           )
         ]),
         _vm._v(" "),
-        _vm._m(6)
-      ]),
-      _vm._v(" "),
-      _c(
-        "section",
-        { staticClass: "column col-10", attrs: { id: "xknote-editor" } },
-        [
-          _c("xk-editor", {
-            attrs: {
-              settingApi: _vm.xknoteSetting,
-              contentProps: _vm.xknoteOpened.note.content
-            },
-            on: { loadHook: _vm.editorLoaded }
-          })
-        ],
-        1
-      )
-    ]),
+        _c(
+          "section",
+          {
+            class: "column " + (!_vm.writeMode ? "col-10" : "col-12"),
+            attrs: { id: "xknote-editor" }
+          },
+          [
+            _c("xk-editor", {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.loadedEditor,
+                  expression: "loadedEditor"
+                }
+              ],
+              class: !_vm.writeMode ? "" : "col-8",
+              attrs: {
+                settingApi: _vm.xknoteSetting,
+                contentProps: _vm.xknoteOpened.note.content
+              },
+              on: { loadHook: _vm.editorLoaded }
+            }),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !_vm.loadedEditor,
+                    expression: "!loadedEditor"
+                  }
+                ],
+                staticClass: "editor-loading"
+              },
+              [
+                _c("div", { staticClass: "loading loading-lg" }),
+                _vm._v(" "),
+                _c("p", [_vm._v("Editor加载中，请稍后。")])
+              ]
+            )
+          ],
+          1
+        )
+      ],
+      1
+    ),
     _vm._v(" "),
     _c("div", { staticClass: "components" }, [
       _c(
@@ -22569,10 +22898,7 @@ var render = function() {
             (_vm.smModal.show ? " active" : "")
         },
         [
-          _c("a", {
-            staticClass: "modal-overlay",
-            attrs: { href: "#close", "aria-label": "Close" }
-          }),
+          _c("a", { staticClass: "modal-overlay" }),
           _vm._v(" "),
           _c("div", { staticClass: "modal-container" }, [
             _c("div", { staticClass: "modal-header" }, [
@@ -22616,28 +22942,105 @@ var render = function() {
             ])
           ])
         ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          class:
+            "modal modal-lg xknote-lg-modal" +
+            (_vm.lgModal.show ? " active" : "")
+        },
+        [
+          _c("a", { staticClass: "modal-overlay" }),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "modal-container", attrs: { role: "document" } },
+            [
+              _c("div", { staticClass: "modal-header" }, [
+                _c("a", {
+                  staticClass: "btn btn-clear float-right",
+                  on: {
+                    click: function($event) {
+                      return _vm.lgModal.cancel()
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "modal-title h5" }, [
+                  _vm._v(_vm._s(_vm.lgModal.title))
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c(
+                  "div",
+                  { staticClass: "content" },
+                  [
+                    _vm.lgModal.content === "CreateNote"
+                      ? [_vm._v("createNote")]
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.lgModal.content === "CreateFolder"
+                      ? [_vm._v("createFolder")]
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.lgModal.content === "PersonalCenter"
+                      ? [_vm._v("personalCenter")]
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.lgModal.content === "UserSetting"
+                      ? [_vm._v("userSetting")]
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.lgModal.content === "GitSetting"
+                      ? [_vm._v("gitSetting")]
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.lgModal.content === "SystemSetting"
+                      ? [_vm._v("systemSetting")]
+                      : _vm._e()
+                  ],
+                  2
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    on: {
+                      click: function($event) {
+                        return _vm.lgModal.confirm()
+                      }
+                    }
+                  },
+                  [_vm._v("确定")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-link",
+                    on: {
+                      click: function($event) {
+                        return _vm.lgModal.cancel()
+                      }
+                    }
+                  },
+                  [_vm._v("取消")]
+                )
+              ])
+            ]
+          )
+        ]
       )
     ])
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("section", { staticClass: "navbar-section col-2" }, [
-      _c("img", {
-        staticClass: "xknote-icon",
-        attrs: { src: "https://note.ixk.me/img/logo.png", alt: "XK-Note icon" }
-      }),
-      _vm._v(" "),
-      _c(
-        "a",
-        { staticClass: "btn btn-link text-large", attrs: { href: "#" } },
-        [_vm._v("{ XK-Note }")]
-      )
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -22718,82 +23121,37 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "dropdown" }, [
-      _c("div", { staticClass: "btn-group" }, [
-        _c("a", { staticClass: "btn btn-primary", attrs: { href: "#" } }, [
-          _vm._v("新建MD笔记")
-        ]),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "btn btn-primary dropdown-toggle",
-            attrs: { href: "#", tabindex: "0" }
-          },
-          [_c("i", { staticClass: "icon icon-caret" })]
-        ),
-        _vm._v(" "),
-        _c("ul", { staticClass: "menu" }, [
-          _c("li", { staticClass: "menu-item" }, [
-            _c("a", { attrs: { href: "#" } }, [_vm._v("新建文件夹")])
-          ])
-        ])
-      ])
-    ])
+    return _c(
+      "a",
+      {
+        staticClass: "btn btn-primary dropdown-toggle",
+        attrs: { tabindex: "0" }
+      },
+      [_c("i", { staticClass: "icon icon-caret" })]
+    )
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "dropdown dropdown-right" }, [
-      _c(
-        "a",
-        {
-          staticClass: "btn btn-link dropdown-toggle",
-          attrs: { href: "#", tabindex: "0" }
-        },
-        [
-          _vm._v("\n          { name }\n          "),
-          _c("i", { staticClass: "icon icon-caret" })
-        ]
-      ),
-      _vm._v(" "),
-      _c("ul", { staticClass: "menu" }, [
-        _c("li", { staticClass: "menu-item" }, [
-          _c("a", { attrs: { href: "" } }, [_vm._v("个人中心")])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "menu-item" }, [
-          _c("a", { attrs: { href: "" } }, [_vm._v("用户设置")])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "menu-item" }, [
-          _c("a", { attrs: { href: "" } }, [_vm._v("Git设置")])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "menu-item" }, [
-          _c("a", { attrs: { href: "" } }, [_vm._v("系统管理")])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "divider" }),
-        _vm._v(" "),
-        _c("li", { staticClass: "menu-item" }, [
-          _c("a", { attrs: { href: "" } }, [_vm._v("登出")])
-        ])
-      ])
-    ])
+    return _c(
+      "a",
+      {
+        staticClass: "btn btn-link dropdown-toggle",
+        attrs: { href: "#", tabindex: "0" }
+      },
+      [
+        _vm._v("\n          { name }\n          "),
+        _c("i", { staticClass: "icon icon-caret" })
+      ]
+    )
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "xknote-copyright bg-gray" }, [
-      _vm._v("\n        ©\n        "),
-      _c("a", { attrs: { href: "https://github.com/syfxlin/xknote" } }, [
-        _vm._v("XK-Note")
-      ]),
-      _vm._v(" By\n        "),
-      _c("a", { attrs: { href: "https://ixk.me" } }, [_vm._v("Otstar Lin")])
+    return _c("li", { staticClass: "menu-item" }, [
+      _c("a", { attrs: { href: "" } }, [_vm._v("登出")])
     ])
   }
 ]
@@ -22926,7 +23284,8 @@ var render = function() {
                   value: _vm.xknoteTab === "cloud",
                   expression: "xknoteTab==='cloud'"
                 }
-              ]
+              ],
+              staticClass: "cloud-tab"
             },
             [
               _vm._l(_vm.cloudList, function(item, index) {
@@ -25452,12 +25811,22 @@ var routes = [{
   path: "/",
   name: "Home",
   component: _components_Home_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
-  props: true
+  props: {
+    writeMode: false
+  },
+  alias: "/normal"
 }, {
   path: "/read",
   name: "Read",
   component: _components_Read_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
   props: true
+}, {
+  path: "/write",
+  name: "Write",
+  component: _components_Home_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+  props: {
+    writeMode: true
+  }
 }];
 /* harmony default export */ __webpack_exports__["default"] = (routes);
 

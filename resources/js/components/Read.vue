@@ -33,7 +33,7 @@
         </ul>
         <ul class="xknote-tab-content">
           <li v-show="xknoteTab==='toc'" v-html="tocHtml" class="read-toc"></li>
-          <li v-show="xknoteTab==='cloud'">
+          <li v-show="xknoteTab==='cloud'" class="cloud-tab">
             <folder-item
               v-for="(item, index) in cloudList"
               :key="item.id"
@@ -85,7 +85,7 @@ export default {
     "note-item": noteItem,
     "folder-item": folderItem
   },
-  props: ["cloudList", "localList", "readOpened", "openNote"],
+  props: ["cloudList", "localList", "readOpened", "openNote", "loadFirstNote"],
   data() {
     return {
       xknoteTab: "toc",
@@ -122,6 +122,9 @@ export default {
   },
   mounted() {
     this.watchNote();
+    this.$nextTick(() => {
+      this.loadFirstNote("read");
+    });
     if (!window.toggleToc) {
       window.toggleToc = ele => {
         var display = ele.nextElementSibling.nextElementSibling.style.display;

@@ -4,6 +4,16 @@
       <section class="navbar-section col-2">
         <img class="xknote-icon" src="https://note.ixk.me/img/logo.png" alt="XK-Note icon" />
         <a href="#" class="btn btn-link text-large">{ XK-Note }</a>
+        <transition name="fade" mode="out-in">
+          <button
+            class="btn btn-action btn-lg"
+            title="开启/关闭侧边栏"
+            v-if="writeMode"
+            @click="showSidebar=!showSidebar"
+          >
+            <i class="icon icon-menu"></i>
+          </button>
+        </transition>
       </section>
       <section class="navbar-center">
         <input
@@ -105,19 +115,20 @@
       <section class="navbar-section">
         <div class="dropdown">
           <div class="btn-group">
-            <a href="#" class="btn btn-primary">新建MD笔记</a>
-            <a href="#" class="btn btn-primary dropdown-toggle" tabindex="0">
+            <a class="btn btn-primary" @click="navBarOperate('showCreateNote')">新建MD笔记</a>
+            <a class="btn btn-primary dropdown-toggle" tabindex="0">
               <i class="icon icon-caret"></i>
             </a>
             <ul class="menu">
               <li class="menu-item">
-                <a href="#">新建文件夹</a>
+                <a @click="navBarOperate('showCreateFolder')">新建文件夹</a>
               </li>
             </ul>
           </div>
         </div>
         <router-link to="/read" class="btn btn-link">阅读模式</router-link>
-        <router-link to="/write" class="btn btn-link">写作模式</router-link>
+        <router-link v-if="!writeMode" to="/write" class="btn btn-link">写作模式</router-link>
+        <router-link v-if="writeMode" to="/" class="btn btn-link">普通模式</router-link>
         <div class="dropdown dropdown-right">
           <a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
             { name }
@@ -125,16 +136,16 @@
           </a>
           <ul class="menu">
             <li class="menu-item">
-              <a href>个人中心</a>
+              <a @click="navBarOperate('showPersonalCenter')">个人中心</a>
             </li>
             <li class="menu-item">
-              <a href>用户设置</a>
+              <a @click="navBarOperate('showUserSetting')">用户设置</a>
             </li>
             <li class="menu-item">
-              <a href>Git设置</a>
+              <a @click="navBarOperate('showGitSetting')">Git设置</a>
             </li>
             <li class="menu-item">
-              <a href>系统管理</a>
+              <a @click="navBarOperate('showSystemSetting')">系统管理</a>
             </li>
             <li class="divider"></li>
             <li class="menu-item">
@@ -145,92 +156,103 @@
       </section>
     </header>
     <div class="columns">
-      <section class="column col-2 xknote-sidebar">
-        <ul class="tab tab-block xknote-tab">
-          <li class="tab-item">
-            <!-- mark data-badge: 当前未保存的文章数量 -->
-            <a
-              :class="(currBadgeCount!==0 ? 'badge ' : '') + (xknoteTab==='curr' ? 'active' : '')"
-              :data-badge="currBadgeCount"
-              @click="switchTab('curr')"
-            >当前</a>
-          </li>
-          <li :class="'tab-item ' + (xknoteTab==='cloud' ? 'active' : '')">
-            <a @click="switchTab('cloud')">云端</a>
-          </li>
-          <li class="tab-item">
-            <!-- mark data-badge: 未保存到云端的数量 -->
-            <a
-              :class="(localBadgeCount!==0 ? 'badge ' : '') + (xknoteTab==='local' ? 'active' : '')"
-              :data-badge="localBadgeCount"
-              @click="switchTab('local')"
-            >本地</a>
-          </li>
-        </ul>
-        <ul class="xknote-tab-content">
-          <li v-show="xknoteTab==='curr'">
-            <ul class="menu menu-nav">
-              <li class="menu-item" v-for="(item, index) in currList" :key="item.id">
-                <!-- mark data-badge: N为未保存，L为已经保存到本地，若已经保存到云端则不显示badge -->
-                <note-item
-                  :info="item"
-                  :status="item.status"
-                  :index="index"
-                  :storage="'curr'"
-                  :mode="'normal'"
-                  :openNote="openNote"
-                  :floatMenu="floatMenu"
-                />
-              </li>
-              <div class="text-gray text-center" v-if="currList.length===0">这里什么都没有哦（￣︶￣）↗</div>
-            </ul>
-          </li>
-          <li v-show="xknoteTab==='cloud'">
-            <folder-item
-              v-for="(item, index) in cloudList"
-              :key="item.id"
-              :info="item"
-              :index="index"
-              :storage="'cloud'"
-              :mode="'normal'"
-              :openNote="openNote"
-              :floatMenu="floatMenu"
-            />
-            <template v-if="cloudList.length===0">
-              <div class="loading loading-lg"></div>
-              <div class="text-gray text-center">正在加载，客官莫急。</div>
-            </template>
-          </li>
-          <li v-show="xknoteTab==='local'">
-            <ul class="menu menu-nav">
-              <li class="menu-item" v-for="(item, index) in localList" :key="item.id">
-                <!-- mark data-badge: N为未保存，L为已经保存到本地，若已经保存到云端则不显示(C)badge -->
-                <note-item
-                  :info="item"
-                  :status="item.status"
-                  :index="index"
-                  :storage="'local'"
-                  :mode="'normal'"
-                  :openNote="openNote"
-                  :floatMenu="floatMenu"
-                />
-              </li>
-              <div class="text-gray text-center" v-if="localList.length===0">这里什么都没有哦（￣︶￣）↗</div>
-            </ul>
-          </li>
-        </ul>
-        <div class="xknote-copyright bg-gray">
-          ©
-          <a href="https://github.com/syfxlin/xknote">XK-Note</a> By
-          <a href="https://ixk.me">Otstar Lin</a>
-        </div>
-      </section>
-      <section class="column col-10" id="xknote-editor">
+      <transition name="fade" mode="out-in">
+        <section
+          :class="'column col-2 xknote-sidebar' + (!writeMode ? '' : ' write-mode')"
+          v-show="!writeMode||showSidebar"
+        >
+          <ul class="tab tab-block xknote-tab">
+            <li class="tab-item">
+              <!-- mark data-badge: 当前未保存的文章数量 -->
+              <a
+                :class="(currBadgeCount!==0 ? 'badge ' : '') + (xknoteTab==='curr' ? 'active' : '')"
+                :data-badge="currBadgeCount"
+                @click="switchTab('curr')"
+              >当前</a>
+            </li>
+            <li :class="'tab-item ' + (xknoteTab==='cloud' ? 'active' : '')">
+              <a @click="switchTab('cloud')">云端</a>
+            </li>
+            <li class="tab-item">
+              <!-- mark data-badge: 未保存到云端的数量 -->
+              <a
+                :class="(localBadgeCount!==0 ? 'badge ' : '') + (xknoteTab==='local' ? 'active' : '')"
+                :data-badge="localBadgeCount"
+                @click="switchTab('local')"
+              >本地</a>
+            </li>
+          </ul>
+          <ul class="xknote-tab-content">
+            <li v-show="xknoteTab==='curr'">
+              <ul class="menu menu-nav">
+                <li class="menu-item" v-for="(item, index) in currList" :key="item.id">
+                  <!-- mark data-badge: N为未保存，L为已经保存到本地，若已经保存到云端则不显示badge -->
+                  <note-item
+                    :info="item"
+                    :status="item.status"
+                    :index="index"
+                    :storage="'curr'"
+                    :mode="'normal'"
+                    :openNote="openNote"
+                    :floatMenu="floatMenu"
+                  />
+                </li>
+                <div class="text-gray text-center" v-if="currList.length===0">这里什么都没有哦（￣︶￣）↗</div>
+              </ul>
+            </li>
+            <li v-show="xknoteTab==='cloud'" class="cloud-tab">
+              <folder-item
+                v-for="(item, index) in cloudList"
+                :key="item.id"
+                :info="item"
+                :index="index"
+                :storage="'cloud'"
+                :mode="'normal'"
+                :openNote="openNote"
+                :floatMenu="floatMenu"
+              />
+              <div class="cloud-tab-loading" v-if="cloudList.length===0">
+                <div class="loading loading-lg"></div>
+                <div class="text-gray text-center">正在加载，客官莫急。</div>
+              </div>
+            </li>
+            <li v-show="xknoteTab==='local'">
+              <ul class="menu menu-nav">
+                <li class="menu-item" v-for="(item, index) in localList" :key="item.id">
+                  <!-- mark data-badge: N为未保存，L为已经保存到本地，若已经保存到云端则不显示(C)badge -->
+                  <note-item
+                    :info="item"
+                    :status="item.status"
+                    :index="index"
+                    :storage="'local'"
+                    :mode="'normal'"
+                    :openNote="openNote"
+                    :floatMenu="floatMenu"
+                  />
+                </li>
+                <div class="text-gray text-center" v-if="localList.length===0">这里什么都没有哦（￣︶￣）↗</div>
+              </ul>
+            </li>
+          </ul>
+          <div class="xknote-copyright bg-gray">
+            ©
+            <a href="https://github.com/syfxlin/xknote">XK-Note</a> By
+            <a href="https://ixk.me">Otstar Lin</a>
+          </div>
+        </section>
+      </transition>
+      <section :class="'column ' + (!writeMode ? 'col-10' : 'col-12')" id="xknote-editor">
         <xk-editor
           :settingApi="xknoteSetting"
           :contentProps="xknoteOpened.note.content"
           v-on:loadHook="editorLoaded"
+          v-show="loadedEditor"
+          :class="!writeMode ? '' : 'col-8'"
         />
+        <div v-show="!loadedEditor" class="editor-loading">
+          <div class="loading loading-lg"></div>
+          <p>Editor加载中，请稍后。</p>
+        </div>
       </section>
     </div>
     <div class="components">
@@ -246,7 +268,7 @@
         </li>
       </ul>
       <div :class="'modal modal-sm xknote-sm-modal' + (smModal.show ? ' active' : '')">
-        <a href="#close" class="modal-overlay" aria-label="Close"></a>
+        <a class="modal-overlay"></a>
         <div class="modal-container">
           <div class="modal-header">
             <div class="modal-title h5">{{ smModal.title }}</div>
@@ -257,6 +279,29 @@
           <div class="modal-footer">
             <button class="btn btn-primary" @click="smModal.confirm()">确认</button>
             <button class="btn btn-link" @click="smModal.cancel()">取消</button>
+          </div>
+        </div>
+      </div>
+      <div :class="'modal modal-lg xknote-lg-modal' + (lgModal.show ? ' active' : '')">
+        <a class="modal-overlay"></a>
+        <div class="modal-container" role="document">
+          <div class="modal-header">
+            <a class="btn btn-clear float-right" @click="lgModal.cancel()"></a>
+            <div class="modal-title h5">{{ lgModal.title }}</div>
+          </div>
+          <div class="modal-body">
+            <div class="content">
+              <template v-if="lgModal.content==='CreateNote'">createNote</template>
+              <template v-if="lgModal.content==='CreateFolder'">createFolder</template>
+              <template v-if="lgModal.content==='PersonalCenter'">personalCenter</template>
+              <template v-if="lgModal.content==='UserSetting'">userSetting</template>
+              <template v-if="lgModal.content==='GitSetting'">gitSetting</template>
+              <template v-if="lgModal.content==='SystemSetting'">systemSetting</template>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" @click="lgModal.confirm()">确定</button>
+            <button class="btn btn-link" @click="lgModal.cancel()">取消</button>
           </div>
         </div>
       </div>
@@ -275,9 +320,6 @@ export default {
     "note-item": noteItem,
     "folder-item": folderItem
   },
-  created() {
-    window.nThis.home = this;
-  },
   props: [
     "xknoteTab",
     "switchTab",
@@ -288,21 +330,35 @@ export default {
     "xknoteOpened",
     "xknoteOpenedIndex",
     "noteBaseInfo",
-    "loadRememberNote",
+    "loadFirstNote",
     "listOperate",
     "noteOperate",
     "setXknoteOpened",
-    "openNote"
+    "openNote",
+    "writeMode"
   ],
   data() {
     return {
+      showSidebar: false, // 该属性只有在writeMode有用
+      loadedEditor: false,
       xknoteSetting: "/static/setting.json",
       smModal: {
         show: false,
         title: "",
         content: "",
         confirm: () => {},
-        cancel: () => {}
+        cancel: () => {
+          this.smModal.show = false;
+        }
+      },
+      lgModal: {
+        show: false,
+        title: "",
+        content: "",
+        confirm: () => {},
+        cancel: () => {
+          this.lgModal.show = false;
+        }
       },
       floatMenu: {
         show: false,
@@ -333,6 +389,10 @@ export default {
     }
   },
   methods: {
+    switchWriteMode() {
+      window.XKEditor.switchTypewriter();
+      window.XKEditor.switchPreview();
+    },
     /**
      * 在XK Editor加载完成时触发的事件
      * @param {string} e event的名称
@@ -347,7 +407,11 @@ export default {
         });
       }
       if (e === "componentLoad") {
-        this.loadRememberNote();
+        this.loadFirstNote();
+        this.loadedEditor = true;
+        if (this.writeMode) {
+          this.switchWriteMode();
+        }
       }
     },
     /**
@@ -479,6 +543,10 @@ export default {
      * @returns void
      */
     navBarOperate(operate) {
+      if (operate.indexOf("show") === 0) {
+        this.lgModal.show = true;
+        this.lgModal.content = operate.substring(4);
+      }
       let saveLocal = i => {
         this.floatMenu.saveAndClose = false;
         this.memuOperate("saveLocal", "curr", i);
@@ -515,7 +583,12 @@ export default {
       // TODO: 导出阅读模式的HTML
     }
   },
-  mounted() {}
+  mounted() {},
+  watch: {
+    writeMode() {
+      this.switchWriteMode();
+    }
+  }
 };
 </script>
 

@@ -6,13 +6,20 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
-    props: true
+    props: { writeMode: false },
+    alias: "/normal"
   },
   {
     path: "/read",
     name: "Read",
     component: Read,
     props: true
+  },
+  {
+    path: "/write",
+    name: "Write",
+    component: Home,
+    props: { writeMode: true }
   }
 ];
 

@@ -36,9 +36,24 @@ body {
     height: calc(100% - 60px);
     margin: 0;
 }
+.loading.loading-lg {
+    width: 2rem;
+}
+.editor-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.editor-loading p {
+    margin: 0 0 0 1rem;
+}
 #xknote-editor {
     height: 100%;
     padding: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-left: 1px solid #ddd;
 }
 #xknote-editor .ace-toolbar .xk-button {
     font-size: 0.85em;
@@ -80,6 +95,9 @@ body {
     background: #f1f1fc;
     border-color: #4b48d6;
 }
+.popover-container p {
+    padding: 0 0 0 0.3rem;
+}
 .xknote-icon {
     width: 39px;
     height: 39px;
@@ -90,6 +108,12 @@ body {
     flex-direction: column;
     padding: 0;
     max-height: 100%;
+}
+.xknote-sidebar.write-mode {
+    position: fixed;
+    height: 100%;
+    z-index: 1000;
+    background: #fff;
 }
 .xknote-tab-content {
     margin: 0 0.8rem;
@@ -103,8 +127,13 @@ body {
 .xknote-tab-content .menu {
     padding: 0;
 }
-.xknote-tab-content .menu .menu-item {
+.xknote-tab-content .cloud-tab .menu .menu-item {
     padding-right: 0;
+}
+.xknote-tab-content .cloud-tab-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 /* Fix tab tile */
 .xknote-tab-content .menu-item > a.tile {
@@ -189,4 +218,13 @@ body {
 
 .tab .tab-item a {
     cursor: pointer;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
 }

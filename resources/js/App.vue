@@ -1,23 +1,25 @@
 <template>
   <main id="app-main">
-    <router-view
-      :xknoteTab.sync="xknoteTab"
-      :currListSource.sync="currListSource"
-      :currList.sync="currList"
-      :cloudList.sync="cloudList"
-      :localList.sync="localList"
-      :xknoteOpened.sync="xknoteOpened"
-      :xknoteOpenedIndex.sync="xknoteOpenedIndex"
-      :noteBaseInfo.sync="noteBaseInfo"
-      :loadRememberNote="loadRememberNote"
-      :listOperate="listOperate"
-      :noteOperate="noteOperate"
-      :setXknoteOpened="setXknoteOpened"
-      :switchTab="switchTab"
-      :openNote="openNote"
-      :readOpened.sync="readOpened"
-      ref="children"
-    ></router-view>
+    <transition name="fade" mode="out-in">
+      <router-view
+        :xknoteTab.sync="xknoteTab"
+        :currListSource.sync="currListSource"
+        :currList.sync="currList"
+        :cloudList.sync="cloudList"
+        :localList.sync="localList"
+        :xknoteOpened.sync="xknoteOpened"
+        :xknoteOpenedIndex.sync="xknoteOpenedIndex"
+        :noteBaseInfo.sync="noteBaseInfo"
+        :loadFirstNote="loadFirstNote"
+        :listOperate="listOperate"
+        :noteOperate="noteOperate"
+        :setXknoteOpened="setXknoteOpened"
+        :switchTab="switchTab"
+        :openNote="openNote"
+        :readOpened.sync="readOpened"
+        ref="children"
+      ></router-view>
+    </transition>
   </main>
 </template>
 
@@ -26,7 +28,6 @@ import "./assets/style.css";
 export default {
   name: "App",
   created() {
-    window.nThis.app = this;
     window.xknoteOpenedChangeFlag = true;
   },
   data() {
@@ -128,26 +129,37 @@ export default {
         this.localList = list;
       });
     },
+    loadPathNote(path, mode = "normal") {
+      this.localList.forEach((item, index) => {
+        if (item.path === path) {
+          this.openNote(
+            item,
+            {
+              index: index + "",
+              storage: "local"
+            },
+            mode
+          );
+        }
+      });
+      // TODO: 从服务器读取Note信息，通过path读取
+    },
     /**
      * 读取之前开启的笔记
      * @param void
      * @returns void
      */
-    loadRememberNote() {
-      this.optionsDB("read", "rememberNote", (e, data) => {
-        if (data) {
-          this.localList.forEach((item, index) => {
-            if (item.path === data.path) {
-              this.openNote(item, {
-                index: index + "",
-                storage: "local"
-              });
-            }
-          });
-          // TODO: 从服务器读取Note信息，通过path读取
-        }
-        this.timedTask("saveCurrOpenedNote");
-      });
+    loadFirstNote(mode = "normal") {
+      if (this.$route.query.note) {
+        this.loadPathNote(this.$route.query.note, mode);
+      } else {
+        this.optionsDB("read", "rememberNote", (e, data) => {
+          if (data) {
+            this.loadPathNote(data.path, mode);
+          }
+          this.timedTask("saveCurrOpenedNote");
+        });
+      }
     },
     /**
      * 定时执行任务，包括循环任务
@@ -509,6 +521,15 @@ export default {
     $route(to) {
       if (to.name === "Read") {
         this.readOpened = JSON.parse(JSON.stringify(this.xknoteOpened));
+      }
+    },
+    "$route.query": function(query) {
+      if (query.note) {
+        let mode = "normal";
+        if (this.$route.name === "Read") {
+          mode = "read";
+        }
+        this.loadPathNote(query.note, mode);
       }
     }
   }
