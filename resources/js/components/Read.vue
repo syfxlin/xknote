@@ -4,11 +4,15 @@
       <section class="col-9 read-container">
         <header class="hero hero-sm bg-gray read-header">
           <div class="hero-body">
-            <h1>Hero title</h1>
-            <p>This is a hero example</p>
+            <h1>{{ xknoteOpened.note.title }}</h1>
+            <div class="columns">
+              <p class="column col-4">作者：{{ xknoteOpened.note.author }}</p>
+              <p class="column col-4">创建时间：{{ xknoteOpened.note.created_at }}</p>
+              <p class="column col-4">修改时间：{{ xknoteOpened.note.updated_at }}</p>
+            </div>
           </div>
         </header>
-        <article class="markdown-body read-content"></article>
+        <article class="markdown-body read-content" v-html="previewHtml"></article>
         <footer class="xknote-copyright bg-gray read-footer">
           ©
           <a href="https://github.com/syfxlin/xknote">XK-Note</a> By
@@ -31,7 +35,13 @@
           <li v-show="xknoteTab==='curr'">
             <ul class="menu menu-nav">
               <li class="menu-item" v-for="(item, index) in currList" :key="item.id">
-                <note-item :info="item" :status="item.status" :index="index" :storage="'curr'" />
+                <note-item
+                  :info="item"
+                  :status="item.status"
+                  :index="index"
+                  :storage="'curr'"
+                  :mode="'read'"
+                />
               </li>
               <div class="text-gray text-center" v-if="currList.length===0">这里什么都没有哦（￣︶￣）↗</div>
             </ul>
@@ -43,6 +53,7 @@
               :info="item"
               :index="index"
               :storage="'cloud'"
+              :mode="'read'"
             />
             <template v-if="cloudList.length===0">
               <div class="loading loading-lg"></div>
@@ -52,7 +63,13 @@
           <li v-show="xknoteTab==='local'">
             <ul class="menu menu-nav">
               <li class="menu-item" v-for="(item, index) in localList" :key="item.id">
-                <note-item :info="item" :status="item.status" :index="index" :storage="'local'" />
+                <note-item
+                  :info="item"
+                  :status="item.status"
+                  :index="index"
+                  :storage="'local'"
+                  :mode="'read'"
+                />
               </li>
               <div class="text-gray text-center" v-if="localList.length===0">这里什么都没有哦（￣︶￣）↗</div>
             </ul>
@@ -66,6 +83,10 @@
 <script>
 import noteItem from "./noteItem.vue";
 import folderItem from "./folderItem.vue";
+import {
+  toHtml,
+  getTocHtml
+} from "../../../node_modules/xkeditor/src/utils/switchContent.js";
 export default {
   name: "read-mode",
   components: {
@@ -87,11 +108,19 @@ export default {
   ],
   data() {
     return {};
+  },
+  computed: {
+    previewHtml() {
+      return toHtml(this.xknoteOpened.note.content, true);
+    }
   }
 };
 </script>
 
 <style>
+.hero-body p {
+  margin: 0;
+}
 .read-sidebar {
   top: 0;
   right: 0;
@@ -108,8 +137,9 @@ export default {
 }
 .read-content {
   flex: 1;
+  padding: 2rem 3rem;
 }
 .read-footer {
-  padding: 1.5em 0;
+  padding: 1.5em 0 !important;
 }
 </style>

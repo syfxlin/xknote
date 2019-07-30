@@ -177,7 +177,7 @@
                   :status="item.status"
                   :index="index"
                   :storage="'curr'"
-                  :showSetting="true"
+                  :mode="'normal'"
                 />
               </li>
               <div class="text-gray text-center" v-if="currList.length===0">这里什么都没有哦（￣︶￣）↗</div>
@@ -190,7 +190,7 @@
               :info="item"
               :index="index"
               :storage="'cloud'"
-              :showSetting="true"
+              :mode="'normal'"
             />
             <template v-if="cloudList.length===0">
               <div class="loading loading-lg"></div>
@@ -206,7 +206,7 @@
                   :status="item.status"
                   :index="index"
                   :storage="'local'"
-                  :showSetting="true"
+                  :mode="'normal'"
                 />
               </li>
               <div class="text-gray text-center" v-if="localList.length===0">这里什么都没有哦（￣︶￣）↗</div>

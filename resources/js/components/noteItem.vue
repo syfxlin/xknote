@@ -1,6 +1,6 @@
 <template>
   <a
-    :class="'tile tile-centered' + (status!=='C' ? ' badge' : '')"
+    :class="'tile tile-centered' + (status!=='C'&&mode!=='read' ? ' badge' : '')"
     :data-badge="status"
     :title="hoverTitle"
     :data-index="index"
@@ -15,7 +15,11 @@
       <input class="form-input" type="text" placeholder="Name" :value="info.name" />
     </div>
     <div class="tile-action">
-      <button class="btn btn-link btn-action" @click="showNoteSettings($event)" v-if="showSetting">
+      <button
+        class="btn btn-link btn-action"
+        @click="showNoteSettings($event)"
+        v-if="mode!=='read'"
+      >
         <img class="icon" src="/static/svg/settings.svg" />
       </button>
     </div>
@@ -25,7 +29,7 @@
 <script>
 export default {
   name: "note-item",
-  props: ["info", "status", "index", "storage", "showSetting"],
+  props: ["info", "status", "index", "storage", "mode"],
   data() {
     return {
       hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path,

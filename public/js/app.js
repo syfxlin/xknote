@@ -11421,11 +11421,13 @@ __webpack_require__.r(__webpack_exports__);
       window.xknoteOpenedChangeFlag = false;
       this.xknoteOpened = noteInfo;
 
-      if (window.eThis.e.editorMode === "ace") {
-        window.XKEditor.setMarkdown(this.xknoteOpened.note.content);
-      } else {
-        window.XKEditor.switchEditor();
-        window.XKEditor.setMarkdown(this.xknoteOpened.note.content);
+      if (window.eThis && window.XKEditor) {
+        if (window.eThis.e.editorMode === "ace") {
+          window.XKEditor.setMarkdown(this.xknoteOpened.note.content);
+        } else {
+          window.XKEditor.switchEditor();
+          window.XKEditor.setMarkdown(this.xknoteOpened.note.content);
+        }
       }
 
       window.xknoteOpenedChangeFlag = true;
@@ -11439,10 +11441,11 @@ __webpack_require__.r(__webpack_exports__);
      *   @param {string} source.storage 笔记来源的存储位置（local，cloud）
      * @returns void
      */
+    // TODO: currList中二次开启同一个文件会导致重复，修复
     openNote: function openNote(note, source) {
-      window.xknoteOpenedChangeFlag = false; // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
-
-      this.setXknoteOpened(note); // 添加到currList，同时将源数据添加到currListSource
+      // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
+      this.setXknoteOpened(note);
+      window.xknoteOpenedChangeFlag = false; // 添加到currList，同时将源数据添加到currListSource
 
       var currIndex;
 
@@ -11761,7 +11764,7 @@ __webpack_require__.r(__webpack_exports__);
      * @returns void
      */
     watchNote: function watchNote() {
-      if (!this.xknoteOpenedChangeFlag) return;
+      if (!window.xknoteOpenedChangeFlag) return;
       this.xknoteOpened.status = "N";
       var d = new Date();
       this.xknoteOpened.note.updated_at = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
@@ -12321,6 +12324,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _noteItem_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./noteItem.vue */ "./resources/js/components/noteItem.vue");
 /* harmony import */ var _folderItem_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./folderItem.vue */ "./resources/js/components/folderItem.vue");
+/* harmony import */ var _node_modules_xkeditor_src_utils_switchContent_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/xkeditor/src/utils/switchContent.js */ "./node_modules/xkeditor/src/utils/switchContent.js");
 //
 //
 //
@@ -12386,6 +12390,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -12400,6 +12422,11 @@ __webpack_require__.r(__webpack_exports__);
   props: ["xknoteTab", "switchTab", "currListSource", "currList", "cloudList", "localList", "xknoteOpened", "xknoteOpenedIndex"],
   data: function data() {
     return {};
+  },
+  computed: {
+    previewHtml: function previewHtml() {
+      return Object(_node_modules_xkeditor_src_utils_switchContent_js__WEBPACK_IMPORTED_MODULE_2__["toHtml"])(this.xknoteOpened.note.content, true);
+    }
   }
 });
 
@@ -12450,10 +12477,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "folder-item",
-  props: ["info", "index", "storage", "showSetting"],
+  props: ["info", "index", "storage", "mode"],
   data: function data() {
     return {
       idHash: Math.random().toString(36).substring(2, 8),
@@ -12552,9 +12583,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "note-item",
-  props: ["info", "status", "index", "storage", "showSetting"],
+  props: ["info", "status", "index", "storage", "mode"],
   data: function data() {
     return {
       hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path,
@@ -12677,7 +12712,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "html,\nbody {\n    width: 100%;\n    height: 100%;\n}\nbody {\n    margin: 0;\n}\np {\n    margin: 0;\n}\n/* 滚动槽 */\n::-webkit-scrollbar {\n    width: 6px;\n    height: 6px;\n}\n::-webkit-scrollbar-track {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.06);\n    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);\n}\n/* 滚动条滑块 */\n::-webkit-scrollbar-thumb {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.12);\n    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);\n}\n#app {\n    width: 100%;\n    height: 100%;\n}\n.home {\n    height: 100%;\n}\n.home .columns {\n    height: calc(100% - 60px);\n    margin: 0;\n}\n#xknote-editor {\n    height: 100%;\n    padding: 0px;\n}\n#xknote-editor .ace-toolbar .xk-button {\n    font-size: 0.85em;\n}\n.xknote-header {\n    height: 60px;\n    z-index: 100;\n    border-bottom: 1px solid #dfdfdf;\n    padding: 0 20px 0 0;\n}\n.xknote-header .btn {\n    margin-left: 5px;\n}\n.xknote-header .btn-link:focus,\n.xknote-header .btn-link:hover {\n    box-shadow: 0 0 0 0.1rem rgba(87, 85, 217, 0.2);\n\n    text-decoration: none;\n}\n.xknote-header .btn-link:focus {\n    background: #f1f1fc;\n}\n.xknote-header .navbar-section.col-2 {\n    flex: 0 0 auto !important;\n    margin-right: 0.3rem;\n}\n.xknote-header .form-input {\n    width: auto;\n}\n.navbar-center .menu-item a {\n    cursor: pointer;\n}\n/* Fix xknote-header button hover and active color */\n.dropdown .btn-group a:not(.btn-primary):hover {\n    color: #5755d9;\n}\n.dropdown .btn-group a:not(.btn-primary):active {\n    color: #5755d9;\n    background: #f1f1fc;\n    border-color: #4b48d6;\n}\n.xknote-icon {\n    width: 39px;\n    height: 39px;\n    margin-left: 20px;\n}\n.xknote-sidebar {\n    display: flex;\n    flex-direction: column;\n    padding: 0;\n}\n.xknote-tab-content {\n    margin: 0 0.8rem;\n    flex: 1;\n}\n.xknote-tab-content li {\n    list-style: none;\n}\n.xknote-tab-content .menu {\n    padding: 0;\n}\n.xknote-tab-content .menu .menu-item {\n    padding-right: 0;\n}\n/* Fix tab tile */\n.xknote-tab-content .menu-item > a.tile {\n    display: flex;\n}\n.xknote-tab-content .tile.badge:after {\n    transform: none;\n}\n.xknote-tab-content .tile-action {\n    display: none;\n}\n.xknote-tab-content .tile:hover .tile-action {\n    display: block;\n}\n.xknote-tab-content .accordion .accordion-header .icon {\n    transform: none !important;\n}\n.xknote-tab-content .tile-subtitle,\n.xknote-tab-content .tile-title {\n    line-height: 1rem;\n    font-size: 0.67rem;\n}\n.xknote-tab-content .tile-click {\n    cursor: pointer;\n}\n.xknote-tab-content .tile-content[children=\"input\"] .tile-click {\n    display: none;\n}\n.xknote-tab-content .tile-content input {\n    display: none;\n}\n.xknote-tab-content .tile-content[children=\"input\"] input {\n    display: block;\n}\n.xknote-tab-content .accordion-header {\n    margin: 0 -0.4rem;\n    padding: 0.2rem 0.4rem;\n    display: flex;\n    align-items: center;\n}\n.xknote-tab-content .accordion-header:hover {\n    background: #f1f1fc;\n    color: #5755d9;\n}\n.xknote-tab-content .accordion-header span {\n    flex: 1 1 auto;\n}\n.xknote-tab-content .accordion-header button {\n    flex: 0 0 auto;\n    display: none;\n}\n.xknote-tab-content .accordion-header:hover button {\n    display: block;\n    width: 1.8em;\n    height: 1.5em;\n    padding: 0;\n    margin-right: 0.2rem;\n}\n.xknote-tab-content .accordion-header:hover button img {\n    vertical-align: auto;\n}\n.xknote-tab-content .accordion-body .menu {\n    border-left: 3.5px solid #5755d940;\n    padding-left: 0.2rem;\n    margin-left: 0.3rem;\n    border-radius: 0;\n}\n.xknote-copyright {\n    padding: 0.8em 0;\n    text-align: center;\n}\n\n.float-menu {\n    position: fixed;\n}\n.float-menu .menu-item a {\n    cursor: pointer;\n}\n.xknote-sm-modal {\n    color: #585858;\n}\n\n.tab .tab-item a {\n    cursor: pointer;\n}\n", ""]);
+exports.push([module.i, "html,\nbody {\n    width: 100%;\n    height: 100%;\n}\nbody {\n    margin: 0;\n}\n/* 滚动槽 */\n::-webkit-scrollbar {\n    width: 6px;\n    height: 6px;\n}\n::-webkit-scrollbar-track {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.06);\n    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);\n}\n/* 滚动条滑块 */\n::-webkit-scrollbar-thumb {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.12);\n    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);\n}\n#app {\n    width: 100%;\n    height: 100%;\n}\n.home {\n    height: 100%;\n}\n.home .columns {\n    height: calc(100% - 60px);\n    margin: 0;\n}\n#xknote-editor {\n    height: 100%;\n    padding: 0px;\n}\n#xknote-editor .ace-toolbar .xk-button {\n    font-size: 0.85em;\n}\n.xknote-header {\n    height: 60px;\n    z-index: 100;\n    border-bottom: 1px solid #dfdfdf;\n    padding: 0 20px 0 0;\n}\n.xknote-header .btn {\n    margin-left: 5px;\n}\n.xknote-header .btn-link:focus,\n.xknote-header .btn-link:hover {\n    box-shadow: 0 0 0 0.1rem rgba(87, 85, 217, 0.2);\n\n    text-decoration: none;\n}\n.xknote-header .btn-link:focus {\n    background: #f1f1fc;\n}\n.xknote-header .navbar-section.col-2 {\n    flex: 0 0 auto !important;\n    margin-right: 0.3rem;\n}\n.xknote-header .form-input {\n    width: auto;\n}\n.navbar-center .menu-item a {\n    cursor: pointer;\n}\n/* Fix xknote-header button hover and active color */\n.dropdown .btn-group a:not(.btn-primary):hover {\n    color: #5755d9;\n}\n.dropdown .btn-group a:not(.btn-primary):active {\n    color: #5755d9;\n    background: #f1f1fc;\n    border-color: #4b48d6;\n}\n.xknote-icon {\n    width: 39px;\n    height: 39px;\n    margin-left: 20px;\n}\n.xknote-sidebar {\n    display: flex;\n    flex-direction: column;\n    padding: 0;\n}\n.xknote-tab-content {\n    margin: 0 0.8rem;\n    flex: 1;\n}\n.xknote-tab-content li {\n    list-style: none;\n}\n.xknote-tab-content .menu {\n    padding: 0;\n}\n.xknote-tab-content .menu .menu-item {\n    padding-right: 0;\n}\n/* Fix tab tile */\n.xknote-tab-content .menu-item > a.tile {\n    display: flex;\n}\n.xknote-tab-content .tile.badge:after {\n    transform: none;\n}\n.xknote-tab-content .tile-action {\n    display: none;\n}\n.xknote-tab-content .tile:hover .tile-action {\n    display: block;\n}\n.xknote-tab-content .accordion .accordion-header .icon {\n    transform: none !important;\n}\n.xknote-tab-content .tile-subtitle,\n.xknote-tab-content .tile-title {\n    line-height: 1rem;\n    font-size: 0.67rem;\n}\n.xknote-tab-content .tile-click {\n    cursor: pointer;\n}\n.xknote-tab-content .tile-content[children=\"input\"] .tile-click {\n    display: none;\n}\n.xknote-tab-content .tile-content input {\n    display: none;\n}\n.xknote-tab-content .tile-content[children=\"input\"] input {\n    display: block;\n}\n.xknote-tab-content .accordion-header {\n    margin: 0 -0.4rem;\n    padding: 0.2rem 0.4rem;\n    display: flex;\n    align-items: center;\n}\n.xknote-tab-content .accordion-header:hover {\n    background: #f1f1fc;\n    color: #5755d9;\n}\n.xknote-tab-content .accordion-header span {\n    flex: 1 1 auto;\n}\n.xknote-tab-content .accordion-header button {\n    flex: 0 0 auto;\n    display: none;\n}\n.xknote-tab-content .accordion-header:hover button {\n    display: block;\n    width: 1.8em;\n    height: 1.5em;\n    padding: 0;\n    margin-right: 0.2rem;\n}\n.xknote-tab-content .accordion-header:hover button img {\n    vertical-align: auto;\n}\n.xknote-tab-content .accordion-body .menu {\n    border-left: 3.5px solid #5755d940;\n    padding-left: 0.2rem;\n    margin-left: 0.3rem;\n    border-radius: 0;\n}\n.xknote-copyright {\n    padding: 0.8em 0;\n    text-align: center;\n}\n\n.float-menu {\n    position: fixed;\n}\n.float-menu .menu-item a {\n    cursor: pointer;\n}\n.xknote-sm-modal {\n    color: #585858;\n}\n\n.tab .tab-item a {\n    cursor: pointer;\n}\n", ""]);
 
 // exports
 
@@ -12772,7 +12807,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.read-sidebar {\n  top: 0;\n  right: 0;\n  height: 100%;\n}\n.read-container {\n  display: flex;\n  flex-direction: column;\n  min-height: 100vh;\n  border-right: 1px solid #ddd;\n}\n.read-header .hero-body {\n  padding: 0.4rem 3rem;\n}\n.read-content {\n  flex: 1;\n}\n.read-footer {\n  padding: 1.5em 0;\n}\n", ""]);
+exports.push([module.i, "\n.hero-body p {\n  margin: 0;\n}\n.read-sidebar {\n  top: 0;\n  right: 0;\n  height: 100%;\n}\n.read-container {\n  display: flex;\n  flex-direction: column;\n  min-height: 100vh;\n  border-right: 1px solid #ddd;\n}\n.read-header .hero-body {\n  padding: 0.4rem 3rem;\n}\n.read-content {\n  flex: 1;\n  padding: 2rem 3rem;\n}\n.read-footer {\n  padding: 1.5em 0 !important;\n}\n", ""]);
 
 // exports
 
@@ -22212,7 +22247,7 @@ var render = function() {
                             status: item.status,
                             index: index,
                             storage: "curr",
-                            showSetting: true
+                            mode: "normal"
                           }
                         })
                       ],
@@ -22251,7 +22286,7 @@ var render = function() {
                     info: item,
                     index: index,
                     storage: "cloud",
-                    showSetting: true
+                    mode: "normal"
                   }
                 })
               }),
@@ -22297,7 +22332,7 @@ var render = function() {
                             status: item.status,
                             index: index,
                             storage: "local",
-                            showSetting: true
+                            mode: "normal"
                           }
                         })
                       ],
@@ -22684,7 +22719,34 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("main", { staticClass: "read-home container" }, [
     _c("div", { staticClass: "columns" }, [
-      _vm._m(0),
+      _c("section", { staticClass: "col-9 read-container" }, [
+        _c("header", { staticClass: "hero hero-sm bg-gray read-header" }, [
+          _c("div", { staticClass: "hero-body" }, [
+            _c("h1", [_vm._v(_vm._s(_vm.xknoteOpened.note.title))]),
+            _vm._v(" "),
+            _c("div", { staticClass: "columns" }, [
+              _c("p", { staticClass: "column col-4" }, [
+                _vm._v("作者：" + _vm._s(_vm.xknoteOpened.note.author))
+              ]),
+              _vm._v(" "),
+              _c("p", { staticClass: "column col-4" }, [
+                _vm._v("创建时间：" + _vm._s(_vm.xknoteOpened.note.created_at))
+              ]),
+              _vm._v(" "),
+              _c("p", { staticClass: "column col-4" }, [
+                _vm._v("修改时间：" + _vm._s(_vm.xknoteOpened.note.updated_at))
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("article", {
+          staticClass: "markdown-body read-content",
+          domProps: { innerHTML: _vm._s(_vm.previewHtml) }
+        }),
+        _vm._v(" "),
+        _vm._m(0)
+      ]),
       _vm._v(" "),
       _c("aside", { staticClass: "col-3 p-fixed read-sidebar" }, [
         _c("ul", { staticClass: "tab tab-block xknote-tab" }, [
@@ -22767,7 +22829,8 @@ var render = function() {
                             info: item,
                             status: item.status,
                             index: index,
-                            storage: "curr"
+                            storage: "curr",
+                            mode: "read"
                           }
                         })
                       ],
@@ -22802,7 +22865,12 @@ var render = function() {
               _vm._l(_vm.cloudList, function(item, index) {
                 return _c("folder-item", {
                   key: item.id,
-                  attrs: { info: item, index: index, storage: "cloud" }
+                  attrs: {
+                    info: item,
+                    index: index,
+                    storage: "cloud",
+                    mode: "read"
+                  }
                 })
               }),
               _vm._v(" "),
@@ -22846,7 +22914,8 @@ var render = function() {
                             info: item,
                             status: item.status,
                             index: index,
-                            storage: "local"
+                            storage: "local",
+                            mode: "read"
                           }
                         })
                       ],
@@ -22874,26 +22943,18 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("section", { staticClass: "col-9 read-container" }, [
-      _c("header", { staticClass: "hero hero-sm bg-gray read-header" }, [
-        _c("div", { staticClass: "hero-body" }, [
-          _c("h1", [_vm._v("Hero title")]),
-          _vm._v(" "),
-          _c("p", [_vm._v("This is a hero example")])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("article", { staticClass: "markdown-body read-content" }),
-      _vm._v(" "),
-      _c("footer", { staticClass: "xknote-copyright bg-gray read-footer" }, [
+    return _c(
+      "footer",
+      { staticClass: "xknote-copyright bg-gray read-footer" },
+      [
         _vm._v("\n        ©\n        "),
         _c("a", { attrs: { href: "https://github.com/syfxlin/xknote" } }, [
           _vm._v("XK-Note")
         ]),
         _vm._v(" By\n        "),
         _c("a", { attrs: { href: "https://ixk.me" } }, [_vm._v("Otstar Lin")])
-      ])
-    ])
+      ]
+    )
   }
 ]
 render._withStripped = true
@@ -22947,7 +23008,7 @@ var render = function() {
           _vm._v(" "),
           _c("span", [_vm._v(_vm._s(_vm.info.name))]),
           _vm._v(" "),
-          _vm.showSetting
+          _vm.mode !== "read"
             ? _c(
                 "button",
                 {
@@ -22985,7 +23046,7 @@ var render = function() {
                         status: "C",
                         index: _vm.index + ":" + i,
                         storage: _vm.storage,
-                        showSetting: _vm.showSetting
+                        mode: _vm.mode
                       }
                     })
                   : _vm._e(),
@@ -22996,7 +23057,7 @@ var render = function() {
                         info: item,
                         index: _vm.index + ":" + i,
                         storage: _vm.storage,
-                        showSetting: _vm.showSetting
+                        mode: _vm.mode
                       }
                     })
                   : _vm._e()
@@ -23035,7 +23096,9 @@ var render = function() {
   return _c(
     "a",
     {
-      class: "tile tile-centered" + (_vm.status !== "C" ? " badge" : ""),
+      class:
+        "tile tile-centered" +
+        (_vm.status !== "C" && _vm.mode !== "read" ? " badge" : ""),
       attrs: {
         "data-badge": _vm.status,
         title: _vm.hoverTitle,
@@ -23079,7 +23142,7 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "tile-action" }, [
-        _vm.showSetting
+        _vm.mode !== "read"
           ? _c(
               "button",
               {

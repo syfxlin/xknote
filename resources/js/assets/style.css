@@ -6,9 +6,6 @@ body {
 body {
     margin: 0;
 }
-p {
-    margin: 0;
-}
 /* 滚动槽 */
 ::-webkit-scrollbar {
     width: 6px;

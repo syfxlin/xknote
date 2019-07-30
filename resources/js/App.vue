@@ -154,11 +154,13 @@ export default {
     setXknoteOpened(noteInfo) {
       window.xknoteOpenedChangeFlag = false;
       this.xknoteOpened = noteInfo;
-      if (window.eThis.e.editorMode === "ace") {
-        window.XKEditor.setMarkdown(this.xknoteOpened.note.content);
-      } else {
-        window.XKEditor.switchEditor();
-        window.XKEditor.setMarkdown(this.xknoteOpened.note.content);
+      if (window.eThis && window.XKEditor) {
+        if (window.eThis.e.editorMode === "ace") {
+          window.XKEditor.setMarkdown(this.xknoteOpened.note.content);
+        } else {
+          window.XKEditor.switchEditor();
+          window.XKEditor.setMarkdown(this.xknoteOpened.note.content);
+        }
       }
       window.xknoteOpenedChangeFlag = true;
     },
@@ -170,10 +172,11 @@ export default {
      *   @param {string} source.storage 笔记来源的存储位置（local，cloud）
      * @returns void
      */
+    // TODO: currList中二次开启同一个文件会导致重复，修复
     openNote(note, source) {
-      window.xknoteOpenedChangeFlag = false;
       // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
       this.setXknoteOpened(note);
+      window.xknoteOpenedChangeFlag = false;
       // 添加到currList，同时将源数据添加到currListSource
       let currIndex;
       if (source.storage !== "curr") {
@@ -443,7 +446,7 @@ export default {
      * @returns void
      */
     watchNote() {
-      if (!this.xknoteOpenedChangeFlag) return;
+      if (!window.xknoteOpenedChangeFlag) return;
       this.xknoteOpened.status = "N";
       var d = new Date();
       this.xknoteOpened.note.updated_at =
