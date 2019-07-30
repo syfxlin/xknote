@@ -14,6 +14,8 @@
       :noteOperate="noteOperate"
       :setXknoteOpened="setXknoteOpened"
       :switchTab="switchTab"
+      :openNote="openNote"
+      :readOpened.sync="readOpened"
       ref="children"
     ></router-view>
   </main>
@@ -71,7 +73,20 @@ export default {
       currList: [],
       cloudList: [],
       localList: [],
-      xknoteTab: "cloud"
+      xknoteTab: "cloud",
+      readOpened: {
+        type: "note",
+        path: "",
+        name: "",
+        status: "N",
+        note: {
+          title: "",
+          author: "",
+          content: "暂未打开任何文件，请选择文件。",
+          created_at: "",
+          updated_at: ""
+        }
+      }
     };
   },
   mounted() {
@@ -121,7 +136,15 @@ export default {
     loadRememberNote() {
       this.optionsDB("read", "rememberNote", (e, data) => {
         if (data) {
-          this.openNote(data.note, data.index.source);
+          this.localList.forEach((item, index) => {
+            if (item.path === data.path) {
+              this.openNote(item, {
+                index: index + "",
+                storage: "local"
+              });
+            }
+          });
+          // TODO: 从服务器读取Note信息，通过path读取
         }
         this.timedTask("saveCurrOpenedNote");
       });
@@ -135,11 +158,10 @@ export default {
       if (task === "saveCurrOpenedNote") {
         // 每10秒中将当前打开的笔记信息保存至本地数据库，用以下次开启做准备
         setInterval(() => {
-          if (this.xknoteOpened.name !== "") {
+          if (this.xknoteOpened.path !== "" && this.$route.name === "Home") {
             this.optionsDB("put", {
               name: "rememberNote",
-              index: this.xknoteOpenedIndex,
-              note: this.xknoteOpened
+              path: this.xknoteOpened.path
             });
             console.log("remeberNote");
           }
@@ -170,41 +192,52 @@ export default {
      * @param {object} source 笔记的来源
      *   @param {string} source.index 笔记来源的索引
      *   @param {string} source.storage 笔记来源的存储位置（local，cloud）
+     * @param {string} mode 当前处于的模式
      * @returns void
      */
-    // TODO: currList中二次开启同一个文件会导致重复，修复
-    openNote(note, source) {
-      // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
-      this.setXknoteOpened(note);
-      window.xknoteOpenedChangeFlag = false;
-      // 添加到currList，同时将源数据添加到currListSource
-      let currIndex;
-      if (source.storage !== "curr") {
-        currIndex = this.listOperate("add", "curr", "", {
-          note: note,
-          source: source
+    openNote(note, source, mode = "normal") {
+      if (mode === "normal") {
+        this.currList.forEach((item, index) => {
+          if (item.path === note.path) {
+            source.index = index;
+            source.storage = "curr";
+          }
         });
-        this.xknoteOpenedIndex.curr = currIndex;
-      } else {
-        this.xknoteOpenedIndex.curr = parseInt(source.index);
-        currIndex = source.index;
-      }
-      this.xknoteOpenedIndex.source = source;
-      this.xknoteTab = "curr";
-      this.$nextTick(() => {
-        // 添加当前打开的文件的active效果
-        let ele;
-        ele = document.querySelector(".active[data-storage='curr']");
-        if (ele) {
-          ele.classList.remove("active");
+        // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
+        this.setXknoteOpened(note);
+        window.xknoteOpenedChangeFlag = false;
+        // 添加到currList，同时将源数据添加到currListSource
+        let currIndex;
+        if (source.storage !== "curr") {
+          currIndex = this.listOperate("add", "curr", "", {
+            note: note,
+            source: source
+          });
+          this.xknoteOpenedIndex.curr = currIndex;
+        } else {
+          this.xknoteOpenedIndex.curr = parseInt(source.index);
+          currIndex = source.index;
         }
-        document
-          .querySelector(
-            "[data-storage='curr'][data-index='" + currIndex + "']"
-          )
-          .classList.add("active");
-        window.xknoteOpenedChangeFlag = true;
-      });
+        this.xknoteOpenedIndex.source = source;
+        this.xknoteTab = "curr";
+        this.$nextTick(() => {
+          // 添加当前打开的文件的active效果
+          let ele;
+          ele = document.querySelector(".active[data-storage='curr']");
+          if (ele) {
+            ele.classList.remove("active");
+          }
+          document
+            .querySelector(
+              "[data-storage='curr'][data-index='" + currIndex + "']"
+            )
+            .classList.add("active");
+          window.xknoteOpenedChangeFlag = true;
+        });
+      }
+      if (mode === "read") {
+        this.readOpened = JSON.parse(JSON.stringify(note));
+      }
     },
     /**
      * 操作本地数据库
@@ -234,7 +267,7 @@ export default {
         if (!db.objectStoreNames.contains("localList")) {
           console.log("indexedDB中不存在localList表");
           os = db.createObjectStore("localList", {
-            keyPath: "name"
+            keyPath: "path"
           });
         }
         if (!db.objectStoreNames.contains("options")) {
@@ -413,16 +446,23 @@ export default {
      *   @param {object=} noteInfo.note (rename) 新的笔记信息
      * @returns void
      */
-    noteOperate(operate, storage, noteInfo = null) {
+    noteOperate(operate, storage, noteInfo = null, callback = () => {}) {
+      if (operate === "read") {
+        if (storage === "local") {
+          this.noteLocalDB("read", noteInfo.path, (e, data) => {
+            callback(data);
+          });
+        }
+      }
       if (operate === "delete") {
         if (storage === "local") {
-          this.noteLocalDB("delete", noteInfo.name);
+          this.noteLocalDB("delete", noteInfo.path);
         }
         // TODO: 云端删除
       }
       if (operate === "save") {
         if (storage === "local") {
-          this.noteLocalDB("delete", noteInfo.name);
+          this.noteLocalDB("delete", noteInfo.path);
           this.noteLocalDB("add", noteInfo);
         }
         if (storage === "cloud") {
@@ -431,7 +471,7 @@ export default {
       }
       if (operate === "rename") {
         if (storage === "local") {
-          this.noteLocalDB("delete", noteInfo.oldNote.name);
+          this.noteLocalDB("delete", noteInfo.oldNote.path);
           this.noteLocalDB("add", noteInfo.note);
         }
         if (storage === "cloud") {
@@ -465,7 +505,12 @@ export default {
   },
   watch: {
     "xknoteOpened.note.content": "watchNote",
-    "xknoteOpened.note.title": "watchNote"
+    "xknoteOpened.note.title": "watchNote",
+    $route(to) {
+      if (to.name === "Read") {
+        this.readOpened = JSON.parse(JSON.stringify(this.xknoteOpened));
+      }
+    }
   }
 };
 </script>

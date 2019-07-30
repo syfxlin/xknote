@@ -22,6 +22,9 @@ body {
     background: rgba(0, 0, 0, 0.12);
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
 }
+#toc li img {
+    width: 1.05em;
+}
 #app {
     width: 100%;
     height: 100%;
@@ -86,10 +89,13 @@ body {
     display: flex;
     flex-direction: column;
     padding: 0;
+    max-height: 100%;
 }
 .xknote-tab-content {
     margin: 0 0.8rem;
     flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 .xknote-tab-content li {
     list-style: none;

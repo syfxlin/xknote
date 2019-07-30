@@ -23,6 +23,8 @@
             :index="index + ':' + i"
             :storage="storage"
             :mode="mode"
+            :openNote="openNote"
+            :floatMenu="floatMenu"
           />
           <folder-item
             v-if="item.type==='folder'"
@@ -30,6 +32,8 @@
             :index="index + ':' + i"
             :storage="storage"
             :mode="mode"
+            :openNote="openNote"
+            :floatMenu="floatMenu"
           />
         </li>
       </ul>
@@ -41,13 +45,12 @@
 import noteItem from "./noteItem.vue";
 export default {
   name: "folder-item",
-  props: ["info", "index", "storage", "mode"],
+  props: ["info", "index", "storage", "mode", "openNote", "floatMenu"],
   data() {
     return {
       idHash: Math.random()
         .toString(36)
         .substring(2, 8),
-      home: window.nThis.home,
       floatMenuItems: {
         curr: [
           {
@@ -90,8 +93,8 @@ export default {
       var f = document.getElementsByClassName("float-menu")[0];
       f.style.top = e.clientY + "px";
       f.style.left = e.clientX + "px";
-      this.home.floatMenu.show = true;
-      this.home.floatMenu.items = this.floatMenuItems[this.storage];
+      this.floatMenu.show = true;
+      this.floatMenu.items = this.floatMenuItems[this.storage];
       var offset = {
         xS: e.clientX,
         yS: e.clientY,
@@ -106,7 +109,7 @@ export default {
           ev.clientY < offset.yS ||
           ev.clientY > offset.yE
         ) {
-          this.home.floatMenu.show = false;
+          this.floatMenu.show = false;
         }
         document.removeEventListener("click", closeF);
       };

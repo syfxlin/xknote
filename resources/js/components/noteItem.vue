@@ -8,7 +8,7 @@
   >
     <img class="icon" src="/static/svg/file-text.svg" />
     <div class="tile-content">
-      <div class="tile-click" @click="openNote()">
+      <div class="tile-click" @click="thisOpenNote()">
         <div class="tile-title text-bold">{{ info.name }}</div>
         <div class="tile-subtitle">{{ info.path }}</div>
       </div>
@@ -29,12 +29,18 @@
 <script>
 export default {
   name: "note-item",
-  props: ["info", "status", "index", "storage", "mode"],
+  props: [
+    "info",
+    "status",
+    "index",
+    "storage",
+    "mode",
+    "openNote",
+    "floatMenu"
+  ],
   data() {
     return {
       hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path,
-      home: window.nThis.home,
-      app: window.nThis.app,
       floatMenuItems: {
         curr: [
           {
@@ -100,8 +106,8 @@ export default {
       var n = document.getElementsByClassName("float-menu")[0];
       n.style.top = e.clientY + "px";
       n.style.left = e.clientX + "px";
-      this.home.floatMenu.show = true;
-      this.home.floatMenu.items = this.floatMenuItems[this.storage];
+      this.floatMenu.show = true;
+      this.floatMenu.items = this.floatMenuItems[this.storage];
       this.$nextTick(() => {
         var offset = {
           xS: e.clientX,
@@ -117,7 +123,7 @@ export default {
             ev.clientY < offset.yS ||
             ev.clientY > offset.yE
           ) {
-            this.home.floatMenu.show = false;
+            this.floatMenu.show = false;
           }
           document.removeEventListener("click", closeN);
         };
@@ -126,11 +132,15 @@ export default {
       window.xknote.currClickTarget =
         e.target.parentElement.parentElement.parentElement;
     },
-    openNote(e) {
-      this.app.openNote(this.info, {
-        index: this.index,
-        storage: this.storage
-      });
+    thisOpenNote(e) {
+      this.openNote(
+        this.info,
+        {
+          index: this.index,
+          storage: this.storage
+        },
+        this.mode
+      );
     }
   }
 };

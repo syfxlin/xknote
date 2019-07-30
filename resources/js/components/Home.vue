@@ -178,6 +178,8 @@
                   :index="index"
                   :storage="'curr'"
                   :mode="'normal'"
+                  :openNote="openNote"
+                  :floatMenu="floatMenu"
                 />
               </li>
               <div class="text-gray text-center" v-if="currList.length===0">这里什么都没有哦（￣︶￣）↗</div>
@@ -191,6 +193,8 @@
               :index="index"
               :storage="'cloud'"
               :mode="'normal'"
+              :openNote="openNote"
+              :floatMenu="floatMenu"
             />
             <template v-if="cloudList.length===0">
               <div class="loading loading-lg"></div>
@@ -207,6 +211,8 @@
                   :index="index"
                   :storage="'local'"
                   :mode="'normal'"
+                  :openNote="openNote"
+                  :floatMenu="floatMenu"
                 />
               </li>
               <div class="text-gray text-center" v-if="localList.length===0">这里什么都没有哦（￣︶￣）↗</div>
@@ -285,7 +291,8 @@ export default {
     "loadRememberNote",
     "listOperate",
     "noteOperate",
-    "setXknoteOpened"
+    "setXknoteOpened",
+    "openNote"
   ],
   data() {
     return {
