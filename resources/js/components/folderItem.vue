@@ -5,6 +5,7 @@
     <label class="accordion-header c-hand" :for="'accordion-' + idHash">
       <img class="icon mr-1" src="/static/svg/folder.svg" />
       <span>{{ info.name }}</span>
+      <span class="text-gray" v-if="info.git">-Git</span>
       <button
         class="btn btn-link btn-action"
         @click="showFolderSetting($event)"

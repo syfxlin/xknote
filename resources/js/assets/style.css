@@ -178,8 +178,12 @@ body {
     background: #f1f1fc;
     color: #5755d9;
 }
-.xknote-tab-content .accordion-header span {
+.xknote-tab-content .accordion-header span:nth-last-of-type(1) {
     flex: 1 1 auto;
+}
+.xknote-tab-content .accordion-header .text-gray {
+    margin-left: 0.2em;
+    font-size: 0.9em;
 }
 .xknote-tab-content .accordion-header button {
     flex: 0 0 auto;

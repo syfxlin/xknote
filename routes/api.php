@@ -15,6 +15,15 @@
 //     return $request->user();
 // });
 
-Route::middleware('auth:api')->get('/user', 'API\APIController@user');
+Route::get('/user', 'API\APIController@user')->middleware('auth:api');
 Route::post('/admin/users', 'API\APIController@createUser');
-Route::middleware('auth:api')->get('/folders', 'API\APIController@folders');
+Route::get('/folders', 'API\FolderController@get')->middleware('auth:api');
+Route::post('/folders', 'API\FolderController@create')->middleware('auth:api');
+Route::delete('/folders', 'API\FolderController@delete')->middleware(
+    'auth:api'
+);
+Route::put('/folders', 'API\FolderController@move')->middleware('auth:api');
+
+Route::get('/notes', 'API\NoteController@get')->middleware('auth:api');
+Route::post('/notes', 'API\NoteController@create')->middleware('auth:api');
+Route::delete('/notes', 'API\NoteController@delete')->middleware('auth:api');

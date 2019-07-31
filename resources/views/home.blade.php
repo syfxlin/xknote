@@ -1,23 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css"/>
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/zui/1.9.1/css/zui.min.css">
         <link rel="icon" type="image/x-icon" href="/favicon.ico">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre-exp.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre-icons.min.css">
         <title>XK-Note</title>
     </head>
     <body>
-        <div id="app">
-            <router-view></router-view>
-        </div>
+        <div id="app"></div>
         <!-- Vue -->
         {{-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue-router@3.0.6/dist/vue-router.min.js"></script> --}}
-        <!-- ZUI -->
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/zui@1.9.1/dist/js/zui.min.js"></script>
         <!-- ACE Editor -->
         <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.4.4/src-noconflict/ace.min.js"></script>
         <!-- Prism.js -->
@@ -41,6 +38,5 @@
         <script src="/js/manifest.js"></script>
         <script src="/js/vendor.js"></script>
         <script src="/js/app.js"></script>
-        <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/zui/1.9.1/js/zui.min.js"></script> -->
     </body>
 </html>

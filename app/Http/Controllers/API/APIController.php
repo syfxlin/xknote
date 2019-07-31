@@ -152,9 +152,4 @@ class APIController extends Controller
     {
         return json_encode($request->all());
     }
-
-    public function folders()
-    {
-        return '[{"type":"folder","path":"uid_1","name":"uid_1","sub":[{"type":"note","path":"uid_1/C语言学习笔记2.md","name":"C语言学习笔记2.md"},{"type":"folder","path":"uid_1/public","name":"public","sub":[{"type":"note","path":"uid_1/public/PHP学习笔记2.md","name":"PHP学习笔记2.md"}]}]},{"type":"folder","path":"test","name":"test","sub":[{"type":"note","path":"test/Java学习笔记2.md","name":"Java学习笔记2.md"}]}]';
-    }
 }

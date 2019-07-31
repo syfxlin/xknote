@@ -113,7 +113,7 @@ export default {
       window.axios
         .get("/api/folders")
         .then(res => {
-          this.cloudList = res.data;
+          this.cloudList = res.data.folders;
         })
         .catch(err => {
           console.error(err);
