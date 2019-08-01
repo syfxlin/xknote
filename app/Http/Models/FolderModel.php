@@ -42,7 +42,7 @@ class FolderModel
         return $re;
     }
 
-    public function getFlat($dir)
+    private function getFlat($dir)
     {
         $dirs = Storage::allDirectories($dir);
         $index = 0;
@@ -78,5 +78,10 @@ class FolderModel
         }
         Storage::move($oldPath, $newPath);
         return 200;
+    }
+
+    public function exist($path)
+    {
+        return Storage::exists($path);
     }
 }

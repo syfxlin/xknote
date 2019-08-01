@@ -31,13 +31,33 @@ class NoteModel
         ];
     }
 
+    public function getAll($path)
+    {
+        $notes = Storage::allFiles($path);
+        $index = 0;
+        foreach ($notes as $dirName) {
+            if (preg_match("/.git/i", $dirName)) {
+                array_splice($notes, $index, 1);
+            } else {
+                $index++;
+            }
+        }
+        return $notes;
+    }
+
+    private function set($path, $info, $content)
+    {
+        $contents = json_encode($info) . "===NoteInfo===\n\n" . $content;
+        Storage::put($path, $contents);
+        return 200;
+    }
+
     public function create($path, $info, $content)
     {
         if (Storage::exists($path)) {
             return 409;
         }
-        $contents = json_encode($info) . "===NoteInfo===\n\n" . $content;
-        Storage::put($path, $contents);
+        $this->set($path, $info, $content);
         return 200;
     }
 
@@ -45,5 +65,28 @@ class NoteModel
     {
         Storage::delete($path);
         return 200;
+    }
+
+    public function edit($path, $info, $content)
+    {
+        if (!Storage::exists($path)) {
+            return 404;
+        }
+        $this->set($path, $info, $content);
+        return 200;
+    }
+
+    public function move($newPath, $oldPath)
+    {
+        if (!Storage::exists($oldPath)) {
+            return 404;
+        }
+        Storage::move($oldPath, $newPath);
+        return 200;
+    }
+
+    public function exist($path)
+    {
+        return Storage::exists($path);
     }
 }

@@ -14,18 +14,24 @@ class FolderController extends Controller
         $this->model = new FolderModel();
     }
 
-    public function get(Request $request)
+    public function get(Request $request, $mode = "all")
     {
         $id = $request->user()->id;
-        $mode = "all";
-        if ($request->has("mode")) {
-            $mode = $request->mode;
-        }
         $re = $this->model->get("uid_" . $id, true, $mode);
         return [
             "error" => false,
             "folders" => $re
         ];
+    }
+
+    public function getOnly(Request $request)
+    {
+        return $this->get($request, "only");
+    }
+
+    public function getFlat(Request $request)
+    {
+        return $this->get($request, "flat");
     }
 
     public function create(Request $request)
@@ -37,7 +43,12 @@ class FolderController extends Controller
         $path = "uid_" . $id . $request->path;
         $code = $this->model->create($path);
         if ($code === 409) {
-            return response(["error" => "The folder already exists."], 409);
+            return response(
+                [
+                    "error" => "The folder already exists."
+                ],
+                409
+            );
         }
         return ["error" => false];
     }
@@ -82,5 +93,10 @@ class FolderController extends Controller
             );
         }
         return ["error" => false];
+    }
+
+    public function rename(Request $request)
+    {
+        return $this->move($request);
     }
 }

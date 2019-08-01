@@ -30,7 +30,26 @@ class NoteController extends Controller
                 404
             );
         }
-        return $res;
+        return ["error" => false, "note" => $res];
+    }
+
+    public function getAll(Request $request)
+    {
+        $id = $request->user()->id;
+        if (!$request->has("path")) {
+            return response(["error" => "Parameter not found. (path)"], 400);
+        }
+        $path = "uid_" . $id . $request->path;
+        $res = $this->model->getAll($path);
+        if ($res === 404) {
+            return response(
+                [
+                    "error" => "Folder not found."
+                ],
+                404
+            );
+        }
+        return ["error" => false, "note" => $res];
     }
 
     public function create(Request $request)
@@ -49,7 +68,12 @@ class NoteController extends Controller
         $content = $request->content;
         $code = $this->model->create($path, $info, $content);
         if ($code === 409) {
-            return response(["error" => "The note already exists."], 409);
+            return response(
+                [
+                    "error" => "The note already exists."
+                ],
+                409
+            );
         }
         return ["error" => false];
     }
@@ -63,5 +87,67 @@ class NoteController extends Controller
         $path = "uid_" . $id . $request->path;
         $code = $this->model->delete($path);
         return ["error" => false];
+    }
+
+    public function edit(Request $request)
+    {
+        $id = $request->user()->id;
+        if (!$request->has("path")) {
+            return response(["error" => "Parameter not found. (path)"], 400);
+        }
+        $path = "uid_" . $id . $request->path;
+        $info = [
+            "title" => $request->title,
+            "author" => $request->author,
+            "created_at" => $request->created_at,
+            "updated_at" => $request->updated_at
+        ];
+        $content = $request->content;
+        $code = $this->model->edit($path, $info, $content);
+        if ($code === 404) {
+            return response(
+                [
+                    "error" => "Folder not found."
+                ],
+                404
+            );
+        }
+        return ["error" => false];
+    }
+
+    public function move(Request $request)
+    {
+        $id = $request->user()->id;
+        if (!$request->has("newPath") || !$request->has("oldPath")) {
+            return response(
+                ["error" => "Parameter not found. (newPath or oldPath)"],
+                400
+            );
+        }
+        $newPath = "uid_" . $id . $request->newPath;
+        $oldPath = "uid_" . $id . $request->oldPath;
+        if (preg_match("/\.\.\//i", $newPath . $oldPath)) {
+            return response(
+                [
+                    "error" => "You submitted a restricted character. (../)"
+                ],
+                400
+            );
+        }
+        $code = $this->model->move($newPath, $oldPath);
+        if ($code === 404) {
+            return response(
+                [
+                    "error" => "Folder not found."
+                ],
+                404
+            );
+        }
+        return ["error" => false];
+    }
+
+    public function rename(Request $request)
+    {
+        return $this->move($request);
     }
 }
