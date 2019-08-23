@@ -25475,8 +25475,31 @@ window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
  * a simple convenience so we don't have to attach every token manually.
  */
 
+window.$getCookie = function (name) {
+  var arr,
+      reg = new RegExp('(^| )' + name + '=([^;]*)(;|$)');
+  if (arr = document.cookie.match(reg)) return unescape(arr[2]);else return null;
+};
+
+window.$clearCookie = function (name) {
+  window.$setCookie(name, '', -1);
+};
+
+window.$setCookie = function (name, value, seconds) {
+  seconds = seconds || 0;
+  var expires = '';
+
+  if (seconds != 0) {
+    var date = new Date();
+    date.setTime(date.getTime() + seconds * 1000);
+    expires = '; expires=' + date.toGMTString();
+  }
+
+  document.cookie = name + '=' + escape(value) + expires + '; path=/';
+};
+
 var token = document.head.querySelector('meta[name="csrf-token"]');
-var apiToken = window.localStorage.getItem("api_token");
+var apiToken = window.$getCookie("api_token");
 
 if (token) {
   window.axios.defaults.headers.common["X-CSRF-TOKEN"] = token.content;
