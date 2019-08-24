@@ -10,38 +10,17 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
-        "axios": "^0.18",
-        "babel-eslint": "^10.0.2",
+        "axios": "^0.19",
         "cross-env": "^5.1",
-        "eslint": "^6.0.1",
-        "eslint-friendly-formatter": "^4.0.1",
-        "eslint-loader": "^2.2.1",
-        "eslint-plugin-html": "^6.0.0",
-        "eslint-plugin-vue": "^5.2.3",
         "laravel-mix": "^4.0.7",
-        "lodash": "^4.17.5",
+        "lodash": "^4.17.13",
         "resolve-url-loader": "^2.3.1",
         "sass": "^1.15.2",
         "sass-loader": "^7.1.0",
-        "vue": "^2.5.17",
-        "vue-template-compiler": "^2.6.10",
-        "webpack-bundle-analyzer": "^3.3.2"
+        "vue": "^2.5.17"
     },
     "dependencies": {
-        "@fortawesome/fontawesome-svg-core": "^1.2.18",
-        "@fortawesome/free-solid-svg-icons": "^5.8.2",
-        "@fortawesome/vue-fontawesome": "^0.1.6",
-        "@tinymce/tinymce-vue": "^2.0.0",
-        "ace-builds": "^1.4.4",
-        "emoji-js": "^3.4.1",
-        "katex": "^0.10.2",
-        "marked": "^0.6.2",
-        "mermaid": "^8.0.0",
-        "prismjs": "^1.16.0",
-        "tinymce": "^5.0.5",
-        "turndown": "^5.0.3",
-        "turndown-plugin-gfm": "^1.0.2",
-        "vue-router": "^3.0.6",
-        "xkeditor": "^1.1.0"
+        "vue-router": "^3.1.2",
+        "xkeditor": "^1.2.1"
     }
 }

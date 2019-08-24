@@ -40,44 +40,23 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    /**
-     * Attempt to log the user into the application.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return bool
-     */
     protected function attemptLogin(Request $request)
     {
-        return collect(['name', 'email'])->contains(function ($value) use (
-            $request
-        ) {
+        return collect(['username', 'email'])->contains(function ($value) use ($request) {
             $account = $request->get($this->username());
             $password = $request->get('password');
-            return $this->guard()->attempt(
-                [$value => $account, 'password' => $password],
-                $request->filled('remember')
-            );
+            return $this->guard()->attempt([$value => $account, 'password' => $password], $request->filled('remember'));
         });
     }
 
-    /**
-     * 登录验证.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return void
-     */
     protected function validateLogin(Request $request)
     {
-        $this->validate(
-            $request,
-            [
-                $this->username() => 'required|string',
-                'password' => 'required|string'
-            ],
-            [
-                $this->username() => '账号'
-            ]
-        );
+        $this->validate($request, [
+            $this->username() => 'required|string',
+            'password' => 'required|string',
+        ],[
+            $this->username() => '账号'
+        ]);
     }
 
     public function username()

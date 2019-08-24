@@ -17,6 +17,10 @@
         <script src="https://cdn.jsdelivr.net/npm/vue-router@3.0.6/dist/vue-router.min.js"></script> --}}
         <!-- ACE Editor -->
         <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.4.4/src-noconflict/ace.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.4.4/src-noconflict/ext-language_tools.js"></script>
+        <!-- Preitter -->
+        <script src="https://cdn.jsdelivr.net/npm/prettier@1.18.2/standalone.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prettier@1.18.2/parser-markdown.js"></script>
         <!-- Prism.js -->
         <script src="/static/prism.js"></script>
         <link rel="stylesheet" href="/static/prism-okaidia.css">
