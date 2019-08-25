@@ -36,6 +36,9 @@ Route::put('/api/folders/move', 'API\FolderController@move')->middleware(
 Route::get('/api/folders/only', 'API\FolderController@getOnly')->middleware(
     'auth'
 );
+Route::get('/api/folders/flat', 'API\FolderController@getFlat')->middleware(
+    'auth'
+);
 
 Route::get('/api/notes', 'API\NoteController@get')->middleware('auth');
 Route::post('/api/notes', 'API\NoteController@create')->middleware('auth');

@@ -1,0 +1,20 @@
+{
+    // 有关 tasks.json 格式的文档，请参见
+    // https://go.microsoft.com/fwlink/?LinkId=733558
+    "version": "2.0.0",
+    "tasks": [{
+            "label": "npm run watch",
+            "type": "shell",
+            "command": "npm run watch"
+        },
+        {
+            "label": "php artisan serve",
+            "type": "shell",
+            "command": "php artisan serve"
+        },
+        {
+            "label": "laravel start",
+            "dependsOn": ["npm run watch", "php artisan serve"]
+        }
+    ]
+}

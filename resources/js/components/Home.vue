@@ -183,7 +183,7 @@
             </li>
           </ul>
           <ul class="xknote-tab-content">
-            <li v-show="xknoteTab==='curr'">
+            <li v-show="xknoteTab==='curr'" class="curr-tab">
               <ul class="menu menu-nav">
                 <li class="menu-item" v-for="(item, index) in currList" :key="item.id">
                   <!-- mark data-badge: N为未保存，L为已经保存到本地，若已经保存到云端则不显示badge -->
@@ -216,7 +216,7 @@
                 <div class="text-gray text-center">正在加载，客官莫急。</div>
               </div>
             </li>
-            <li v-show="xknoteTab==='local'">
+            <li v-show="xknoteTab==='local'" class="local-tab">
               <ul class="menu menu-nav">
                 <li class="menu-item" v-for="(item, index) in localList" :key="item.id">
                   <!-- mark data-badge: N为未保存，L为已经保存到本地，若已经保存到云端则不显示(C)badge -->
@@ -443,7 +443,7 @@ export default {
         if (storage === "curr") {
           let note = null;
           // 若是从localList中打开的笔记，为了保存不重复，需要先清空
-          if (this.currListSource[index]) {
+          if (this.currListSource[index].storage === "local") {
             this.listOperate(
               "delete",
               "local",
@@ -506,6 +506,19 @@ export default {
         let closeCurr = () => {
           if (index == this.xknoteOpenedIndex.curr) {
             this.setXknoteOpened(JSON.parse(JSON.stringify(this.noteBaseInfo)));
+          }
+          if (index <= this.xknoteOpenedIndex.curr) {
+            this.xknoteOpenedIndex.curr--;
+            this.$nextTick(() => {
+              let ele = document.querySelector(
+                "[data-storage='curr'][data-index='" +
+                  this.xknoteOpenedIndex.curr +
+                  "']"
+              );
+              if (ele) {
+                ele.classList.add("active");
+              }
+            });
           }
           this.listOperate("delete", "curr", index);
         };

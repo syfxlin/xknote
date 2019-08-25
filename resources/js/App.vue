@@ -130,19 +130,23 @@ export default {
       });
     },
     loadPathNote(path, mode = "normal") {
-      this.localList.forEach((item, index) => {
-        if (item.path === path) {
-          this.openNote(
-            item,
-            {
-              index: index + "",
-              storage: "local"
-            },
-            mode
-          );
-        }
-      });
-      // TODO: 从服务器读取Note信息，通过path读取
+      let info = document.querySelector(
+        '.local-tab [data-path="' + path + '"]'
+      );
+      if (!info) {
+        info = document.querySelector('.cloud-tab [data-path="' + path + '"]');
+      }
+      let index = info.getAttribute("data-index") + "";
+      let storage = info.getAttribute("data-storage");
+      let item = this.listOperate("get", storage, index);
+      this.openNote(
+        item,
+        {
+          index: index,
+          storage: storage
+        },
+        mode
+      );
     },
     /**
      * 读取之前开启的笔记
@@ -208,47 +212,78 @@ export default {
      * @returns void
      */
     openNote(note, source, mode = "normal") {
-      if (mode === "normal") {
-        this.currList.forEach((item, index) => {
-          if (item.path === note.path) {
-            source.index = index;
-            source.storage = "curr";
-          }
-        });
-        // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
-        this.setXknoteOpened(note);
-        window.xknoteOpenedChangeFlag = false;
-        // 添加到currList，同时将源数据添加到currListSource
-        let currIndex;
-        if (source.storage !== "curr") {
-          currIndex = this.listOperate("add", "curr", "", {
-            note: note,
-            source: source
+      let open = () => {
+        if (mode === "normal") {
+          this.currList.forEach((item, index) => {
+            if (item.path === note.path) {
+              source.index = index;
+              source.storage = "curr";
+            }
           });
-          this.xknoteOpenedIndex.curr = currIndex;
-        } else {
-          this.xknoteOpenedIndex.curr = parseInt(source.index);
-          currIndex = source.index;
-        }
-        this.xknoteOpenedIndex.source = source;
-        this.xknoteTab = "curr";
-        this.$nextTick(() => {
-          // 添加当前打开的文件的active效果
-          let ele;
-          ele = document.querySelector(".active[data-storage='curr']");
-          if (ele) {
-            ele.classList.remove("active");
+          // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
+          this.setXknoteOpened(note);
+          window.xknoteOpenedChangeFlag = false;
+          // 添加到currList，同时将源数据添加到currListSource
+          let currIndex;
+          if (source.storage !== "curr") {
+            currIndex = this.listOperate("add", "curr", "", {
+              note: note,
+              source: source
+            });
+            this.xknoteOpenedIndex.curr = currIndex;
+          } else {
+            this.xknoteOpenedIndex.curr = parseInt(source.index);
+            currIndex = source.index;
           }
-          document
-            .querySelector(
-              "[data-storage='curr'][data-index='" + currIndex + "']"
-            )
-            .classList.add("active");
-          window.xknoteOpenedChangeFlag = true;
-        });
-      }
-      if (mode === "read") {
-        this.readOpened = JSON.parse(JSON.stringify(note));
+          this.xknoteOpenedIndex.source = source;
+          this.xknoteTab = "curr";
+          this.$nextTick(() => {
+            // 添加当前打开的文件的active效果
+            let ele;
+            ele = document.querySelector(".active[data-storage='curr']");
+            if (ele) {
+              ele.classList.remove("active");
+            }
+            document
+              .querySelector(
+                "[data-storage='curr'][data-index='" + currIndex + "']"
+              )
+              .classList.add("active");
+            window.xknoteOpenedChangeFlag = true;
+          });
+        }
+        if (mode === "read") {
+          this.readOpened = JSON.parse(JSON.stringify(note));
+        }
+      };
+      if (source.storage === "cloud") {
+        let noteEle = document.querySelector(
+          '[data-index="' + source.index + '"][data-storage="cloud"]'
+        );
+        let icon = noteEle.querySelector(".tile-action");
+        icon.style.display = "unset";
+        let btn = icon.querySelector(".btn");
+        btn.querySelector(".icon").style.display = "none";
+        btn.querySelector(".loading").style.display = "block";
+        window.axios
+          .get("/api/notes", {
+            params: {
+              path: note.path
+            }
+          })
+          .then(res => {
+            note.note = res.data.note;
+            note.status = "C";
+            icon.style.display = "";
+            btn.querySelector(".icon").style.display = "unset";
+            btn.querySelector(".loading").style.display = "none";
+            open();
+          })
+          .catch(err => {
+            console.error(err);
+          });
+      } else {
+        open();
       }
     },
     /**

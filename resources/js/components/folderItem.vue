@@ -1,5 +1,5 @@
 <template>
-  <div class="accordion" :data-index="index" :data-storage="storage">
+  <div class="accordion" :data-index="index" :data-storage="storage" :data-path="info.path">
     <!-- mark checked代表已经开启 -->
     <input :id="'accordion-' + idHash" type="checkbox" name="accordion-checkbox" hidden />
     <label class="accordion-header c-hand" :for="'accordion-' + idHash">

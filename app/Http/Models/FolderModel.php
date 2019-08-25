@@ -19,7 +19,7 @@ class FolderModel
             }
             $re[$index] = [
                 "type" => "folder",
-                "path" => $dirName,
+                "path" => preg_replace("/uid_\d+/i", "", $dirName),
                 "name" => str_replace($dir . "/", "", $dirName),
                 "sub" => $this->get($dirName, false, $mode)
             ];
@@ -33,7 +33,7 @@ class FolderModel
                 if (preg_match("/(.md$|.txt)/i", $fileName)) {
                     $re[] = [
                         "type" => "note",
-                        "path" => $fileName,
+                        "path" => preg_replace("/uid_\d+/i", "", $fileName),
                         "name" => str_replace($dir . "/", "", $fileName)
                     ];
                 }

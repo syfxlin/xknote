@@ -5,6 +5,7 @@
     :title="hoverTitle"
     :data-index="index"
     :data-storage="storage"
+    :data-path="info.path"
   >
     <img class="icon" src="/static/svg/file-text.svg" />
     <div class="tile-content">
@@ -21,6 +22,7 @@
         v-if="mode!=='read'"
       >
         <img class="icon" src="/static/svg/settings.svg" />
+        <div class="loading"></div>
       </button>
     </div>
   </a>
