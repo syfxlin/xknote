@@ -95,6 +95,9 @@ body {
     background: #f1f1fc;
     border-color: #4b48d6;
 }
+.dropdown a {
+    cursor: pointer;
+}
 .popover-container p {
     padding: 0 0 0 0.3rem;
 }

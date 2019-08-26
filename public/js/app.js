@@ -11727,7 +11727,11 @@ __webpack_require__.r(__webpack_exports__);
         var icon = noteEle.querySelector(".tile-action");
         icon.style.display = "unset";
         var btn = icon.querySelector(".btn");
-        btn.querySelector(".icon").style.display = "none";
+
+        if (mode === "normal") {
+          btn.querySelector(".icon").style.display = "none";
+        }
+
         btn.querySelector(".loading").style.display = "block";
         window.axios.get("/api/notes", {
           params: {
@@ -11737,7 +11741,11 @@ __webpack_require__.r(__webpack_exports__);
           note.note = res.data.note;
           note.status = "C";
           icon.style.display = "";
-          btn.querySelector(".icon").style.display = "unset";
+
+          if (mode === "normal") {
+            btn.querySelector(".icon").style.display = "unset";
+          }
+
           btn.querySelector(".loading").style.display = "none";
           open();
         })["catch"](function (err) {
@@ -12464,6 +12472,11 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    logout: function logout() {
+      window.axios.post("/logout").then(function () {
+        window.location.href = "/";
+      });
+    },
     switchWriteMode: function switchWriteMode() {
       window.XKEditor.switchTypewriter();
       window.XKEditor.switchPreview();
@@ -13017,10 +13030,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "note-item",
   props: ["info", "status", "index", "storage", "mode", "openNote", "floatMenu"],
@@ -13144,7 +13153,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "html,\nbody {\n    width: 100%;\n    height: 100%;\n}\nbody {\n    margin: 0;\n}\n/* 滚动槽 */\n::-webkit-scrollbar {\n    width: 6px;\n    height: 6px;\n}\n::-webkit-scrollbar-track {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.06);\n    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);\n}\n/* 滚动条滑块 */\n::-webkit-scrollbar-thumb {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.12);\n    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);\n}\n#toc li img {\n    width: 1.05em;\n}\n#app {\n    width: 100%;\n    height: 100%;\n}\n.home {\n    height: 100%;\n}\n.home .columns {\n    height: calc(100% - 60px);\n    margin: 0;\n}\n.loading.loading-lg {\n    width: 2rem;\n}\n.editor-loading {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n.editor-loading p {\n    margin: 0 0 0 1rem;\n}\n#xknote-editor {\n    height: 100%;\n    padding: 0px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    border-left: 1px solid #ddd;\n}\n#xknote-editor .ace-toolbar .xk-button {\n    font-size: 0.85em;\n}\n.xknote-header {\n    height: 60px;\n    z-index: 100;\n    border-bottom: 1px solid #dfdfdf;\n    padding: 0 20px 0 0;\n}\n.xknote-header .btn {\n    margin-left: 5px;\n}\n.xknote-header .btn-link:focus,\n.xknote-header .btn-link:hover {\n    box-shadow: 0 0 0 0.1rem rgba(87, 85, 217, 0.2);\n\n    text-decoration: none;\n}\n.xknote-header .btn-link:focus {\n    background: #f1f1fc;\n}\n.xknote-header .navbar-section.col-2 {\n    flex: 0 0 auto !important;\n    margin-right: 0.3rem;\n}\n.xknote-header .form-input {\n    width: auto;\n}\n.navbar-center .menu-item a {\n    cursor: pointer;\n}\n/* Fix xknote-header button hover and active color */\n.dropdown .btn-group a:not(.btn-primary):hover {\n    color: #5755d9;\n}\n.dropdown .btn-group a:not(.btn-primary):active {\n    color: #5755d9;\n    background: #f1f1fc;\n    border-color: #4b48d6;\n}\n.popover-container p {\n    padding: 0 0 0 0.3rem;\n}\n.xknote-icon {\n    width: 39px;\n    height: 39px;\n    margin-left: 20px;\n}\n.xknote-sidebar {\n    display: flex;\n    flex-direction: column;\n    padding: 0;\n    max-height: 100%;\n}\n.xknote-sidebar.write-mode {\n    position: fixed;\n    height: 100%;\n    z-index: 1000;\n    background: #fff;\n}\n.xknote-tab-content {\n    margin: 0 0.8rem;\n    flex: 1;\n    overflow-y: auto;\n    overflow-x: hidden;\n}\n.xknote-tab-content li {\n    list-style: none;\n}\n.xknote-tab-content .menu {\n    padding: 0;\n}\n.xknote-tab-content .cloud-tab .menu .menu-item {\n    padding-right: 0;\n}\n.xknote-tab-content .cloud-tab-loading {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n}\n/* Fix tab tile */\n.xknote-tab-content .menu-item > a.tile {\n    display: flex;\n}\n.xknote-tab-content .tile.badge:after {\n    transform: none;\n}\n.xknote-tab-content .tile-action {\n    display: none;\n}\n.xknote-tab-content .tile:hover .tile-action {\n    display: block;\n}\n.xknote-tab-content .accordion .accordion-header .icon {\n    transform: none !important;\n}\n.xknote-tab-content .tile-subtitle,\n.xknote-tab-content .tile-title {\n    line-height: 1rem;\n    font-size: 0.67rem;\n}\n.xknote-tab-content .tile-click {\n    cursor: pointer;\n}\n.xknote-tab-content .tile-content[children='input'] .tile-click {\n    display: none;\n}\n.xknote-tab-content .tile-content input {\n    display: none;\n}\n.xknote-tab-content .tile-content[children='input'] input {\n    display: block;\n}\n.xknote-tab-content .tile-action .loading {\n    display: none;\n}\n.xknote-tab-content .accordion-header {\n    margin: 0 -0.4rem;\n    padding: 0.2rem 0.4rem;\n    display: flex;\n    align-items: center;\n}\n.xknote-tab-content .accordion-header:hover {\n    background: #f1f1fc;\n    color: #5755d9;\n}\n.xknote-tab-content .accordion-header span:nth-last-of-type(1) {\n    flex: 1 1 auto;\n}\n.xknote-tab-content .accordion-header .text-gray {\n    margin-left: 0.2em;\n    font-size: 0.9em;\n}\n.xknote-tab-content .accordion-header button {\n    flex: 0 0 auto;\n    display: none;\n}\n.xknote-tab-content .accordion-header:hover button {\n    display: block;\n    width: 1.8em;\n    height: 1.5em;\n    padding: 0;\n    margin-right: 0.2rem;\n}\n.xknote-tab-content .accordion-header:hover button img {\n    vertical-align: auto;\n}\n.xknote-tab-content .accordion-body .menu {\n    border-left: 3.5px solid #5755d940;\n    padding-left: 0.2rem;\n    margin-left: 0.3rem;\n    border-radius: 0;\n}\n.xknote-copyright {\n    padding: 0.8em 0;\n    text-align: center;\n}\n\n.float-menu {\n    position: fixed;\n}\n.float-menu .menu-item a {\n    cursor: pointer;\n}\n.xknote-sm-modal {\n    color: #585858;\n}\n\n.tab .tab-item a {\n    cursor: pointer;\n}\n\n.fade-enter-active,\n.fade-leave-active {\n    transition: opacity 0.5s;\n}\n.fade-enter,\n.fade-leave-to {\n    opacity: 0;\n}\n", ""]);
+exports.push([module.i, "html,\nbody {\n    width: 100%;\n    height: 100%;\n}\nbody {\n    margin: 0;\n}\n/* 滚动槽 */\n::-webkit-scrollbar {\n    width: 6px;\n    height: 6px;\n}\n::-webkit-scrollbar-track {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.06);\n    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);\n}\n/* 滚动条滑块 */\n::-webkit-scrollbar-thumb {\n    border-radius: 3px;\n    background: rgba(0, 0, 0, 0.12);\n    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);\n}\n#toc li img {\n    width: 1.05em;\n}\n#app {\n    width: 100%;\n    height: 100%;\n}\n.home {\n    height: 100%;\n}\n.home .columns {\n    height: calc(100% - 60px);\n    margin: 0;\n}\n.loading.loading-lg {\n    width: 2rem;\n}\n.editor-loading {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n.editor-loading p {\n    margin: 0 0 0 1rem;\n}\n#xknote-editor {\n    height: 100%;\n    padding: 0px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    border-left: 1px solid #ddd;\n}\n#xknote-editor .ace-toolbar .xk-button {\n    font-size: 0.85em;\n}\n.xknote-header {\n    height: 60px;\n    z-index: 100;\n    border-bottom: 1px solid #dfdfdf;\n    padding: 0 20px 0 0;\n}\n.xknote-header .btn {\n    margin-left: 5px;\n}\n.xknote-header .btn-link:focus,\n.xknote-header .btn-link:hover {\n    box-shadow: 0 0 0 0.1rem rgba(87, 85, 217, 0.2);\n\n    text-decoration: none;\n}\n.xknote-header .btn-link:focus {\n    background: #f1f1fc;\n}\n.xknote-header .navbar-section.col-2 {\n    flex: 0 0 auto !important;\n    margin-right: 0.3rem;\n}\n.xknote-header .form-input {\n    width: auto;\n}\n.navbar-center .menu-item a {\n    cursor: pointer;\n}\n/* Fix xknote-header button hover and active color */\n.dropdown .btn-group a:not(.btn-primary):hover {\n    color: #5755d9;\n}\n.dropdown .btn-group a:not(.btn-primary):active {\n    color: #5755d9;\n    background: #f1f1fc;\n    border-color: #4b48d6;\n}\n.dropdown a {\n    cursor: pointer;\n}\n.popover-container p {\n    padding: 0 0 0 0.3rem;\n}\n.xknote-icon {\n    width: 39px;\n    height: 39px;\n    margin-left: 20px;\n}\n.xknote-sidebar {\n    display: flex;\n    flex-direction: column;\n    padding: 0;\n    max-height: 100%;\n}\n.xknote-sidebar.write-mode {\n    position: fixed;\n    height: 100%;\n    z-index: 1000;\n    background: #fff;\n}\n.xknote-tab-content {\n    margin: 0 0.8rem;\n    flex: 1;\n    overflow-y: auto;\n    overflow-x: hidden;\n}\n.xknote-tab-content li {\n    list-style: none;\n}\n.xknote-tab-content .menu {\n    padding: 0;\n}\n.xknote-tab-content .cloud-tab .menu .menu-item {\n    padding-right: 0;\n}\n.xknote-tab-content .cloud-tab-loading {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n}\n/* Fix tab tile */\n.xknote-tab-content .menu-item > a.tile {\n    display: flex;\n}\n.xknote-tab-content .tile.badge:after {\n    transform: none;\n}\n.xknote-tab-content .tile-action {\n    display: none;\n}\n.xknote-tab-content .tile:hover .tile-action {\n    display: block;\n}\n.xknote-tab-content .accordion .accordion-header .icon {\n    transform: none !important;\n}\n.xknote-tab-content .tile-subtitle,\n.xknote-tab-content .tile-title {\n    line-height: 1rem;\n    font-size: 0.67rem;\n}\n.xknote-tab-content .tile-click {\n    cursor: pointer;\n}\n.xknote-tab-content .tile-content[children='input'] .tile-click {\n    display: none;\n}\n.xknote-tab-content .tile-content input {\n    display: none;\n}\n.xknote-tab-content .tile-content[children='input'] input {\n    display: block;\n}\n.xknote-tab-content .tile-action .loading {\n    display: none;\n}\n.xknote-tab-content .accordion-header {\n    margin: 0 -0.4rem;\n    padding: 0.2rem 0.4rem;\n    display: flex;\n    align-items: center;\n}\n.xknote-tab-content .accordion-header:hover {\n    background: #f1f1fc;\n    color: #5755d9;\n}\n.xknote-tab-content .accordion-header span:nth-last-of-type(1) {\n    flex: 1 1 auto;\n}\n.xknote-tab-content .accordion-header .text-gray {\n    margin-left: 0.2em;\n    font-size: 0.9em;\n}\n.xknote-tab-content .accordion-header button {\n    flex: 0 0 auto;\n    display: none;\n}\n.xknote-tab-content .accordion-header:hover button {\n    display: block;\n    width: 1.8em;\n    height: 1.5em;\n    padding: 0;\n    margin-right: 0.2rem;\n}\n.xknote-tab-content .accordion-header:hover button img {\n    vertical-align: auto;\n}\n.xknote-tab-content .accordion-body .menu {\n    border-left: 3.5px solid #5755d940;\n    padding-left: 0.2rem;\n    margin-left: 0.3rem;\n    border-radius: 0;\n}\n.xknote-copyright {\n    padding: 0.8em 0;\n    text-align: center;\n}\n\n.float-menu {\n    position: fixed;\n}\n.float-menu .menu-item a {\n    cursor: pointer;\n}\n.xknote-sm-modal {\n    color: #585858;\n}\n\n.tab .tab-item a {\n    cursor: pointer;\n}\n\n.fade-enter-active,\n.fade-leave-active {\n    transition: opacity 0.5s;\n}\n.fade-enter,\n.fade-leave-to {\n    opacity: 0;\n}\n", ""]);
 
 // exports
 
@@ -22807,7 +22816,9 @@ var render = function() {
               _vm._v(" "),
               _c("li", { staticClass: "divider" }),
               _vm._v(" "),
-              _vm._m(5)
+              _c("li", { staticClass: "menu-item" }, [
+                _c("a", { on: { click: _vm.logout } }, [_vm._v("登出")])
+              ])
             ])
           ])
         ],
@@ -23452,14 +23463,6 @@ var staticRenderFns = [
         _c("i", { staticClass: "icon icon-caret" })
       ]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "menu-item" }, [
-      _c("a", { attrs: { href: "" } }, [_vm._v("登出")])
-    ])
   }
 ]
 render._withStripped = true
@@ -23903,27 +23906,27 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "tile-action" }, [
-        _vm.mode !== "read"
-          ? _c(
-              "button",
-              {
-                staticClass: "btn btn-link btn-action",
-                on: {
-                  click: function($event) {
-                    return _vm.showNoteSettings($event)
-                  }
-                }
-              },
-              [
-                _c("img", {
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-link btn-action",
+            on: {
+              click: function($event) {
+                return _vm.showNoteSettings($event)
+              }
+            }
+          },
+          [
+            _vm.mode !== "read"
+              ? _c("img", {
                   staticClass: "icon",
                   attrs: { src: "/static/svg/settings.svg" }
-                }),
-                _vm._v(" "),
-                _c("div", { staticClass: "loading" })
-              ]
-            )
-          : _vm._e()
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _c("div", { staticClass: "loading" })
+          ]
+        )
       ])
     ]
   )

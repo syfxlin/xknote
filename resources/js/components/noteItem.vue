@@ -16,12 +16,8 @@
       <input class="form-input" type="text" placeholder="Name" :value="info.name" />
     </div>
     <div class="tile-action">
-      <button
-        class="btn btn-link btn-action"
-        @click="showNoteSettings($event)"
-        v-if="mode!=='read'"
-      >
-        <img class="icon" src="/static/svg/settings.svg" />
+      <button class="btn btn-link btn-action" @click="showNoteSettings($event)">
+        <img class="icon" src="/static/svg/settings.svg" v-if="mode!=='read'" />
         <div class="loading"></div>
       </button>
     </div>

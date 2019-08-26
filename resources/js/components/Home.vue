@@ -149,7 +149,7 @@
             </li>
             <li class="divider"></li>
             <li class="menu-item">
-              <a href>登出</a>
+              <a @click="logout">登出</a>
             </li>
           </ul>
         </div>
@@ -389,6 +389,11 @@ export default {
     }
   },
   methods: {
+    logout() {
+      window.axios.post("/logout").then(function() {
+        window.location.href = "/";
+      });
+    },
     switchWriteMode() {
       window.XKEditor.switchTypewriter();
       window.XKEditor.switchPreview();

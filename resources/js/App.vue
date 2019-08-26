@@ -263,7 +263,9 @@ export default {
         let icon = noteEle.querySelector(".tile-action");
         icon.style.display = "unset";
         let btn = icon.querySelector(".btn");
-        btn.querySelector(".icon").style.display = "none";
+        if (mode === "normal") {
+          btn.querySelector(".icon").style.display = "none";
+        }
         btn.querySelector(".loading").style.display = "block";
         window.axios
           .get("/api/notes", {
@@ -275,7 +277,9 @@ export default {
             note.note = res.data.note;
             note.status = "C";
             icon.style.display = "";
-            btn.querySelector(".icon").style.display = "unset";
+            if (mode === "normal") {
+              btn.querySelector(".icon").style.display = "unset";
+            }
             btn.querySelector(".loading").style.display = "none";
             open();
           })
