@@ -19,8 +19,12 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/api/user', 'API\APIController@user')->middleware('auth');
-Route::post('/api/admin/users', 'API\APIController@createUser');
+Route::get('/api/user', 'API\UserController@user')->middleware('auth');
+
+Route::get('/api/admin/users', 'API\AdminController@getUser')->middleware('admin');
+Route::delete('/api/admin/users/{id}', 'API\AdminController@deleteUser')->middleware('admin');
+Route::post('/api/admin/users', 'API\AdminController@createUser')->middleware('admin');
+
 Route::get('/api/folders', 'API\FolderController@get')->middleware('auth');
 Route::post('/api/folders', 'API\FolderController@create')->middleware('auth');
 Route::delete('/api/folders', 'API\FolderController@delete')->middleware(
