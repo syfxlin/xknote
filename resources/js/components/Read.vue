@@ -48,7 +48,7 @@
               <div class="text-gray text-center">正在加载，客官莫急。</div>
             </template>
           </li>
-          <li v-show="xknoteTab==='local'">
+          <li v-show="xknoteTab==='local'" class="local-tab">
             <ul class="menu menu-nav">
               <li class="menu-item" v-for="(item, index) in localList" :key="item.id">
                 <note-item
@@ -134,6 +134,16 @@ export default {
         } else {
           ele.nextElementSibling.nextElementSibling.style.display = "block";
           ele.setAttribute("src", "/static/svg/minus-square.svg");
+        }
+      };
+    }
+    if (!window.sta) {
+      window.sta = anchorName => {
+        if (anchorName) {
+          let anchorElement = document.getElementById(anchorName);
+          if (anchorElement) {
+            anchorElement.scrollIntoView(true);
+          }
         }
       };
     }

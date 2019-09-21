@@ -87,7 +87,8 @@ export default {
           created_at: "",
           updated_at: ""
         }
-      }
+      },
+      prevRouter: null
     };
   },
   mounted() {
@@ -252,7 +253,10 @@ export default {
             window.xknoteOpenedChangeFlag = true;
           });
         }
-        if (mode === "read") {
+        if (
+          mode === "read" &&
+          (!this.prevRouter || this.prevRouter == "Read")
+        ) {
           this.readOpened = JSON.parse(JSON.stringify(note));
         }
       };
@@ -557,7 +561,8 @@ export default {
   watch: {
     "xknoteOpened.note.content": "watchNote",
     "xknoteOpened.note.title": "watchNote",
-    $route(to) {
+    $route(to, from) {
+      this.prevRouter = from.name;
       if (to.name === "Read") {
         this.readOpened = JSON.parse(JSON.stringify(this.xknoteOpened));
       }

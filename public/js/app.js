@@ -11530,7 +11530,8 @@ __webpack_require__.r(__webpack_exports__);
           created_at: "",
           updated_at: ""
         }
-      }
+      },
+      prevRouter: null
     };
   },
   mounted: function mounted() {
@@ -11717,7 +11718,7 @@ __webpack_require__.r(__webpack_exports__);
           });
         }
 
-        if (mode === "read") {
+        if (mode === "read" && (!_this5.prevRouter || _this5.prevRouter == "Read")) {
           _this5.readOpened = JSON.parse(JSON.stringify(note));
         }
       };
@@ -12062,7 +12063,9 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     "xknoteOpened.note.content": "watchNote",
     "xknoteOpened.note.title": "watchNote",
-    $route: function $route(to) {
+    $route: function $route(to, from) {
+      this.prevRouter = from.name;
+
       if (to.name === "Read") {
         this.readOpened = JSON.parse(JSON.stringify(this.xknoteOpened));
       }
@@ -12862,6 +12865,18 @@ __webpack_require__.r(__webpack_exports__);
         } else {
           ele.nextElementSibling.nextElementSibling.style.display = "block";
           ele.setAttribute("src", "/static/svg/minus-square.svg");
+        }
+      };
+    }
+
+    if (!window.sta) {
+      window.sta = function (anchorName) {
+        if (anchorName) {
+          var anchorElement = document.getElementById(anchorName);
+
+          if (anchorElement) {
+            anchorElement.scrollIntoView(true);
+          }
         }
       };
     }
@@ -23634,7 +23649,8 @@ var render = function() {
                   value: _vm.xknoteTab === "local",
                   expression: "xknoteTab==='local'"
                 }
-              ]
+              ],
+              staticClass: "local-tab"
             },
             [
               _c(
