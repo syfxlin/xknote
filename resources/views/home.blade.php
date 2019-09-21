@@ -3,25 +3,18 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css"/>
         <link rel="icon" type="image/x-icon" href="/favicon.ico">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre-exp.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre-icons.min.css">
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
         <title>XK-Note</title>
-        <style>
-            #app {
-                width: 100vw;
-                height: 100vh;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-        </style>
     </head>
     <body>
         <div id="app">
             <div>
+                <h1>XK-Note</h1>
                 <div class="loading loading-lg"></div>
                 <p>加载中，请稍后...</p>
             </div>
