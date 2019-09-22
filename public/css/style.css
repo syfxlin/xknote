@@ -270,6 +270,16 @@ body {
     color: #585858;
 }
 
+.toast {
+    position: fixed;
+    right: 1rem;
+    top: 1rem;
+    z-index: 10000;
+    max-width: 30%;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
 .tab .tab-item a {
     cursor: pointer;
 }

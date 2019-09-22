@@ -20,6 +20,13 @@
         ref="children"
       ></router-view>
     </transition>
+    <div
+      :class="'toast toast-' + toast.status"
+      :style="toast.show ? 'visibility: visible;' : 'visibility: hidden;'"
+    >
+      <button class="btn btn-clear float-right"></button>
+      <p>{{ toast.message }}</p>
+    </div>
   </main>
 </template>
 
@@ -88,7 +95,13 @@ export default {
           updated_at: ""
         }
       },
-      prevRouter: null
+      prevRouter: null,
+      toast: {
+        show: false,
+        message: "",
+        status: "",
+        toastList: []
+      }
     };
   },
   mounted() {
@@ -97,6 +110,43 @@ export default {
     window.xknote = {};
   },
   methods: {
+    showToast(message, status) {
+      this.toast.message = message;
+      this.toast.status = status;
+      this.toast.show = true;
+      let toast = document.querySelector(".toast");
+      toast.style.opacity = "1";
+    },
+    hideToast(callback = () => {}) {
+      let toast = document.querySelector(".toast");
+      toast.style.opacity = "0";
+      setTimeout(() => {
+        this.toast.show = false;
+        callback();
+      }, 500);
+    },
+    popToast() {
+      let toast = this.toast.toastList[0];
+      this.showToast(toast.message, toast.status);
+      setTimeout(() => {
+        this.hideToast(() => {
+          this.toast.toastList.shift();
+          if (this.toast.toastList.length !== 0) {
+            this.popToast();
+          }
+        });
+      }, toast.delay);
+    },
+    timeToast(message, status, delay) {
+      this.toast.toastList.push({
+        message: message,
+        status: status,
+        delay: delay
+      });
+      if (this.toast.toastList.length === 1) {
+        this.popToast();
+      }
+    },
     /**
      * 切换Tab
      * @param {string} tabName 要切换到的Tab名称
@@ -465,11 +515,11 @@ export default {
       arr = index.split(":");
       list = this[storage + "List"];
       for (let i = 0; i < arr.length - 1; i++) {
-        if (i === 0) {
-          list = list[arr[i]].sub;
-        } else {
-          list = list.sub[arr[i]];
-        }
+        // if (i === 0) {
+        list = list[arr[i]].sub;
+        // } else {
+        //   list = list.sub[arr[i]];
+        // }
       }
       if (operate === "delete") {
         let noteList = list.splice(arr[arr.length - 1], 1);
@@ -514,6 +564,21 @@ export default {
           this.noteLocalDB("delete", noteInfo.path);
         }
         // TODO: 云端删除
+        if (storage === "cloud") {
+          window.axios
+            .delete("/api/notes", {
+              params: {
+                path: noteInfo.path
+              }
+            })
+            .then(res => {
+              console.log(res);
+              this.timeToast("删除成功！", "success", 1000);
+            })
+            .catch(err => {
+              console.error(err);
+            });
+        }
       }
       if (operate === "save") {
         if (storage === "local") {

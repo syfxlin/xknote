@@ -12,11 +12,11 @@ class FolderModel
             return $this->getFlat($dir);
         }
         $re = [];
-        $dirs = Storage::directories($dir);
+        $dirs = array_filter(Storage::directories($dir), function($dirName) {
+            return !preg_match("/.git$/i", $dirName);
+        });
+        $dirs = array_values($dirs);
         foreach ($dirs as $index => $dirName) {
-            if (preg_match("/.git$/i", $dirName)) {
-                continue;
-            }
             $re[$index] = [
                 "type" => "folder",
                 "path" => preg_replace("/uid_\d+/i", "", $dirName),

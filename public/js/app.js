@@ -11467,6 +11467,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "App",
@@ -11531,7 +11538,13 @@ __webpack_require__.r(__webpack_exports__);
           updated_at: ""
         }
       },
-      prevRouter: null
+      prevRouter: null,
+      toast: {
+        show: false,
+        message: "",
+        status: "",
+        toastList: []
+      }
     };
   },
   mounted: function mounted() {
@@ -11540,6 +11553,51 @@ __webpack_require__.r(__webpack_exports__);
     window.xknote = {};
   },
   methods: {
+    showToast: function showToast(message, status) {
+      this.toast.message = message;
+      this.toast.status = status;
+      this.toast.show = true;
+      var toast = document.querySelector(".toast");
+      toast.style.opacity = "1";
+    },
+    hideToast: function hideToast() {
+      var _this = this;
+
+      var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
+      var toast = document.querySelector(".toast");
+      toast.style.opacity = "0";
+      setTimeout(function () {
+        _this.toast.show = false;
+        callback();
+      }, 500);
+    },
+    popToast: function popToast() {
+      var _this2 = this;
+
+      var toast = this.toast.toastList[0];
+      this.showToast(toast.message, toast.status);
+      setTimeout(function () {
+        _this2.hideToast(function () {
+          _this2.toast.toastList.shift();
+
+          if (_this2.toast.toastList.length !== 0) {
+            _this2.popToast();
+          }
+        });
+      }, toast.delay);
+    },
+    timeToast: function timeToast(message, status, delay) {
+      this.toast.toastList.push({
+        message: message,
+        status: status,
+        delay: delay
+      });
+
+      if (this.toast.toastList.length === 1) {
+        this.popToast();
+      }
+    },
+
     /**
      * 切换Tab
      * @param {string} tabName 要切换到的Tab名称
@@ -11555,10 +11613,10 @@ __webpack_require__.r(__webpack_exports__);
      * @returns void
      */
     loadCloudFolders: function loadCloudFolders() {
-      var _this = this;
+      var _this3 = this;
 
       window.axios.get("/api/folders").then(function (res) {
-        _this.cloudList = res.data.folders;
+        _this3.cloudList = res.data.folders;
       })["catch"](function (err) {
         console.error(err);
       });
@@ -11570,10 +11628,10 @@ __webpack_require__.r(__webpack_exports__);
      * @returns void
      */
     loadLocalNotes: function loadLocalNotes() {
-      var _this2 = this;
+      var _this4 = this;
 
       this.noteLocalDB("readAll", "", function (e, list) {
-        _this2.localList = list;
+        _this4.localList = list;
       });
     },
     loadPathNote: function loadPathNote(path) {
@@ -11599,7 +11657,7 @@ __webpack_require__.r(__webpack_exports__);
      * @returns void
      */
     loadFirstNote: function loadFirstNote() {
-      var _this3 = this;
+      var _this5 = this;
 
       var mode = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "normal";
 
@@ -11608,10 +11666,10 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         this.optionsDB("read", "rememberNote", function (e, data) {
           if (data) {
-            _this3.loadPathNote(data.path, mode);
+            _this5.loadPathNote(data.path, mode);
           }
 
-          _this3.timedTask("saveCurrOpenedNote");
+          _this5.timedTask("saveCurrOpenedNote");
         });
       }
     },
@@ -11622,15 +11680,15 @@ __webpack_require__.r(__webpack_exports__);
      * @returns void
      */
     timedTask: function timedTask(task) {
-      var _this4 = this;
+      var _this6 = this;
 
       if (task === "saveCurrOpenedNote") {
         // 每10秒中将当前打开的笔记信息保存至本地数据库，用以下次开启做准备
         setInterval(function () {
-          if (_this4.xknoteOpened.path !== "" && _this4.$route.name === "Home") {
-            _this4.optionsDB("put", {
+          if (_this6.xknoteOpened.path !== "" && _this6.$route.name === "Home") {
+            _this6.optionsDB("put", {
               name: "rememberNote",
-              path: _this4.xknoteOpened.path
+              path: _this6.xknoteOpened.path
             });
 
             console.log("remeberNote");
@@ -11670,13 +11728,13 @@ __webpack_require__.r(__webpack_exports__);
      * @returns void
      */
     openNote: function openNote(note, source) {
-      var _this5 = this;
+      var _this7 = this;
 
       var mode = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "normal";
 
       var open = function open() {
         if (mode === "normal") {
-          _this5.currList.forEach(function (item, index) {
+          _this7.currList.forEach(function (item, index) {
             if (item.path === note.path) {
               source.index = index;
               source.storage = "curr";
@@ -11684,27 +11742,27 @@ __webpack_require__.r(__webpack_exports__);
           }); // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
 
 
-          _this5.setXknoteOpened(note);
+          _this7.setXknoteOpened(note);
 
           window.xknoteOpenedChangeFlag = false; // 添加到currList，同时将源数据添加到currListSource
 
           var currIndex;
 
           if (source.storage !== "curr") {
-            currIndex = _this5.listOperate("add", "curr", "", {
+            currIndex = _this7.listOperate("add", "curr", "", {
               note: note,
               source: source
             });
-            _this5.xknoteOpenedIndex.curr = currIndex;
+            _this7.xknoteOpenedIndex.curr = currIndex;
           } else {
-            _this5.xknoteOpenedIndex.curr = parseInt(source.index);
+            _this7.xknoteOpenedIndex.curr = parseInt(source.index);
             currIndex = source.index;
           }
 
-          _this5.xknoteOpenedIndex.source = source;
-          _this5.xknoteTab = "curr";
+          _this7.xknoteOpenedIndex.source = source;
+          _this7.xknoteTab = "curr";
 
-          _this5.$nextTick(function () {
+          _this7.$nextTick(function () {
             // 添加当前打开的文件的active效果
             var ele;
             ele = document.querySelector(".active[data-storage='curr']");
@@ -11718,8 +11776,8 @@ __webpack_require__.r(__webpack_exports__);
           });
         }
 
-        if (mode === "read" && (!_this5.prevRouter || _this5.prevRouter == "Read")) {
-          _this5.readOpened = JSON.parse(JSON.stringify(note));
+        if (mode === "read" && (!_this7.prevRouter || _this7.prevRouter == "Read")) {
+          _this7.readOpened = JSON.parse(JSON.stringify(note));
         }
       };
 
@@ -11964,11 +12022,10 @@ __webpack_require__.r(__webpack_exports__);
       list = this[storage + "List"];
 
       for (var i = 0; i < arr.length - 1; i++) {
-        if (i === 0) {
-          list = list[arr[i]].sub;
-        } else {
-          list = list.sub[arr[i]];
-        }
+        // if (i === 0) {
+        list = list[arr[i]].sub; // } else {
+        //   list = list.sub[arr[i]];
+        // }
       }
 
       if (operate === "delete") {
@@ -12008,6 +12065,8 @@ __webpack_require__.r(__webpack_exports__);
      * @returns void
      */
     noteOperate: function noteOperate(operate, storage) {
+      var _this8 = this;
+
       var noteInfo = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
       var callback = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : function () {};
 
@@ -12024,6 +12083,20 @@ __webpack_require__.r(__webpack_exports__);
           this.noteLocalDB("delete", noteInfo.path);
         } // TODO: 云端删除
 
+
+        if (storage === "cloud") {
+          window.axios["delete"]("/api/notes", {
+            params: {
+              path: noteInfo.path
+            }
+          }).then(function (res) {
+            console.log(res);
+
+            _this8.timeToast("删除成功！", "success", 1000);
+          })["catch"](function (err) {
+            console.error(err);
+          });
+        }
       }
 
       if (operate === "save") {
@@ -22462,6 +22535,19 @@ var render = function() {
           })
         ],
         1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          class: "toast toast-" + _vm.toast.status,
+          style: _vm.toast.show ? "visibility: visible;" : "visibility: hidden;"
+        },
+        [
+          _c("button", { staticClass: "btn btn-clear float-right" }),
+          _vm._v(" "),
+          _c("p", [_vm._v(_vm._s(_vm.toast.message))])
+        ]
       )
     ],
     1
