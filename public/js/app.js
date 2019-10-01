@@ -12081,8 +12081,8 @@ __webpack_require__.r(__webpack_exports__);
       if (operate === "delete") {
         if (storage === "local") {
           this.noteLocalDB("delete", noteInfo.path);
-        } // TODO: 云端删除
-
+          callback(true);
+        }
 
         if (storage === "cloud") {
           window.axios["delete"]("/api/notes", {
@@ -12091,10 +12091,13 @@ __webpack_require__.r(__webpack_exports__);
             }
           }).then(function (res) {
             console.log(res);
+            callback(res.data.error == false);
 
             _this8.timeToast("删除成功！", "success", 1000);
           })["catch"](function (err) {
             console.error(err);
+
+            _this8.timeToast("删除失败！请重试。", "error", 1000);
           });
         }
       }
@@ -12113,10 +12116,26 @@ __webpack_require__.r(__webpack_exports__);
         if (storage === "local") {
           this.noteLocalDB("delete", noteInfo.oldNote.path);
           this.noteLocalDB("add", noteInfo.note);
+          callback(true);
         }
 
-        if (storage === "cloud") {} // TODO: 云端重命名
-        // TODO: 重命名成功后提示
+        if (storage === "cloud") {
+          window.axios.put("/api/notes/rename", {
+            oldPath: noteInfo.oldNote.path,
+            newPath: noteInfo.note.path
+          }).then(function (res) {
+            console.log(res);
+            callback(res.data.error == false);
+
+            _this8.timeToast("重命名成功！", "success", 1000);
+          })["catch"](function (err) {
+            console.error(err);
+
+            _this8.timeToast("重命名失败！请重试。", "error", 1000);
+
+            callback(false);
+          });
+        } // TODO: 重命名成功后提示
 
       }
     },
@@ -12604,11 +12623,15 @@ __webpack_require__.r(__webpack_exports__);
         this.smModal.show = true;
 
         this.smModal.confirm = function () {
-          var note = null;
-          note = _this3.listOperate("delete", storage, index);
+          var note = _this3.listOperate("get", storage, index);
+
           _this3.smModal.show = false;
 
-          _this3.noteOperate(operate, storage, note);
+          _this3.noteOperate(operate, storage, note, function (res) {
+            if (res) {
+              _this3.listOperate("delete", storage, index);
+            }
+          });
         };
 
         this.smModal.cancel = function () {
@@ -12666,17 +12689,26 @@ __webpack_require__.r(__webpack_exports__);
             var value = e.target.value;
             _note.path = _note.path.replace(_note.name, value);
             _note.name = value;
-            curr.querySelector(".tile-content").removeAttribute("children");
-            input.removeEventListener("keydown", keyEv);
             var s = storage;
 
             if (storage === "curr") {
               s = _this3.currListSource[index].storage;
             }
 
+            input.setAttribute("disabled", "disabled");
+
             _this3.noteOperate(operate, s, {
               oldNote: oldNote,
               note: _note
+            }, function (res) {
+              if (res) {
+                curr.querySelector(".tile-content").removeAttribute("children");
+                input.removeEventListener("keydown", keyEv);
+              } else {
+                _note.path = oldNote.path;
+                _note.name = oldNote.name;
+                input.removeAttribute("disabled");
+              }
             });
           }
         };

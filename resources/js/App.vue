@@ -562,8 +562,8 @@ export default {
       if (operate === "delete") {
         if (storage === "local") {
           this.noteLocalDB("delete", noteInfo.path);
+          callback(true);
         }
-        // TODO: 云端删除
         if (storage === "cloud") {
           window.axios
             .delete("/api/notes", {
@@ -573,10 +573,12 @@ export default {
             })
             .then(res => {
               console.log(res);
+              callback(res.data.error == false);
               this.timeToast("删除成功！", "success", 1000);
             })
             .catch(err => {
               console.error(err);
+              this.timeToast("删除失败！请重试。", "error", 1000);
             });
         }
       }
@@ -593,9 +595,24 @@ export default {
         if (storage === "local") {
           this.noteLocalDB("delete", noteInfo.oldNote.path);
           this.noteLocalDB("add", noteInfo.note);
+          callback(true);
         }
         if (storage === "cloud") {
-          // TODO: 云端重命名
+          window.axios
+            .put("/api/notes/rename", {
+              oldPath: noteInfo.oldNote.path,
+              newPath: noteInfo.note.path
+            })
+            .then(res => {
+              console.log(res);
+              callback(res.data.error == false);
+              this.timeToast("重命名成功！", "success", 1000);
+            })
+            .catch(err => {
+              console.error(err);
+              this.timeToast("重命名失败！请重试。", "error", 1000);
+              callback(false);
+            });
         }
         // TODO: 重命名成功后提示
       }

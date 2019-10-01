@@ -434,10 +434,13 @@ export default {
         this.smModal.content = "是否删除该文件(文件夹)？(此操作不可逆)";
         this.smModal.show = true;
         this.smModal.confirm = () => {
-          let note = null;
-          note = this.listOperate("delete", storage, index);
+          let note = this.listOperate("get", storage, index);
           this.smModal.show = false;
-          this.noteOperate(operate, storage, note);
+          this.noteOperate(operate, storage, note, res => {
+            if (res) {
+              this.listOperate("delete", storage, index);
+            }
+          });
         };
         this.smModal.cancel = () => {
           this.smModal.show = false;
@@ -492,16 +495,31 @@ export default {
             let value = e.target.value;
             note.path = note.path.replace(note.name, value);
             note.name = value;
-            curr.querySelector(".tile-content").removeAttribute("children");
-            input.removeEventListener("keydown", keyEv);
             let s = storage;
             if (storage === "curr") {
               s = this.currListSource[index].storage;
             }
-            this.noteOperate(operate, s, {
-              oldNote: oldNote,
-              note: note
-            });
+            input.setAttribute("disabled", "disabled");
+            this.noteOperate(
+              operate,
+              s,
+              {
+                oldNote: oldNote,
+                note: note
+              },
+              res => {
+                if (res) {
+                  curr
+                    .querySelector(".tile-content")
+                    .removeAttribute("children");
+                  input.removeEventListener("keydown", keyEv);
+                } else {
+                  note.path = oldNote.path;
+                  note.name = oldNote.name;
+                  input.removeAttribute("disabled");
+                }
+              }
+            );
           }
         };
         input.addEventListener("keydown", keyEv);
