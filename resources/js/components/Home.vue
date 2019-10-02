@@ -447,18 +447,13 @@ export default {
       // 保存到本地
       if (operate === "saveLocal") {
         if (storage === "curr") {
-          let note = null;
-          // 若是从localList中打开的笔记，为了保存不重复，需要先清空
-          // TODO: Bug: Path相同的时候视为同一文档，但保存时并未删除，所以需要调整判断
-          if (this.currListSource[index].storage === "local") {
-            this.listOperate(
-              "delete",
-              "local",
-              this.currListSource[index].index
-            );
-          }
-          // 判断保存时是否需要关闭currList的副本
-          note = this.listOperate("get", "curr", index);
+          let note = this.listOperate("get", "curr", index);
+          // Path相同的时候视为同一文档，但保存时并未删除，所以需要调整判断
+          this.localList.forEach((item, index) => {
+            if (item.path === note.path) {
+              this.listOperate("delete", "local", index);
+            }
+          });
           // 保存到本地（实际操作）
           this.noteOperate("save", "local", note, () => {
             note.status = "L";
@@ -485,8 +480,7 @@ export default {
         }
       }
       if (operate === "saveCloud") {
-        let note = null;
-        note = this.listOperate("get", "curr", index);
+        let note = this.listOperate("get", "curr", index);
         this.noteOperate("save", "cloud", note, () => {
           note.status = "C";
           if (this.floatMenu.saveAndClose) {

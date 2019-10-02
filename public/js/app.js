@@ -11714,6 +11714,22 @@ __webpack_require__.r(__webpack_exports__);
      */
     setXknoteOpened: function setXknoteOpened(noteInfo) {
       window.xknoteOpenedChangeFlag = false;
+      var titleEle = document.getElementById("xknote-title");
+
+      if (noteInfo.path === "") {
+        window.XKEditor.ace.setReadOnly(true);
+
+        if (titleEle) {
+          titleEle.setAttribute("disabled", "disabled");
+        }
+      } else {
+        window.XKEditor.ace.setReadOnly(false);
+
+        if (titleEle) {
+          titleEle.removeAttribute("disabled");
+        }
+      }
+
       this.xknoteOpened = noteInfo;
 
       if (window.eThis && window.XKEditor) {
@@ -12701,15 +12717,13 @@ __webpack_require__.r(__webpack_exports__);
 
       if (operate === "saveLocal") {
         if (storage === "curr") {
-          var note = null; // 若是从localList中打开的笔记，为了保存不重复，需要先清空
-          // TODO: Bug: Path相同的时候视为同一文档，但保存时并未删除，所以需要调整判断
+          var note = this.listOperate("get", "curr", index); // Path相同的时候视为同一文档，但保存时并未删除，所以需要调整判断
 
-          if (this.currListSource[index].storage === "local") {
-            this.listOperate("delete", "local", this.currListSource[index].index);
-          } // 判断保存时是否需要关闭currList的副本
-
-
-          note = this.listOperate("get", "curr", index); // 保存到本地（实际操作）
+          this.localList.forEach(function (item, index) {
+            if (item.path === note.path) {
+              _this3.listOperate("delete", "local", index);
+            }
+          }); // 保存到本地（实际操作）
 
           this.noteOperate("save", "local", note, function () {
             note.status = "L";
@@ -12738,8 +12752,8 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       if (operate === "saveCloud") {
-        var _note = null;
-        _note = this.listOperate("get", "curr", index);
+        var _note = this.listOperate("get", "curr", index);
+
         this.noteOperate("save", "cloud", _note, function () {
           _note.status = "C";
 

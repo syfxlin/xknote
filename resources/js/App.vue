@@ -250,6 +250,18 @@ export default {
      */
     setXknoteOpened(noteInfo) {
       window.xknoteOpenedChangeFlag = false;
+      let titleEle = document.getElementById("xknote-title");
+      if (noteInfo.path === "") {
+        window.XKEditor.ace.setReadOnly(true);
+        if (titleEle) {
+          titleEle.setAttribute("disabled", "disabled");
+        }
+      } else {
+        window.XKEditor.ace.setReadOnly(false);
+        if (titleEle) {
+          titleEle.removeAttribute("disabled");
+        }
+      }
       this.xknoteOpened = noteInfo;
       if (window.eThis && window.XKEditor) {
         if (window.eThis.e.editorMode === "ace") {
