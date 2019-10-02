@@ -449,6 +449,7 @@ export default {
         if (storage === "curr") {
           let note = null;
           // 若是从localList中打开的笔记，为了保存不重复，需要先清空
+          // TODO: Bug: Path相同的时候视为同一文档，但保存时并未删除，所以需要调整判断
           if (this.currListSource[index].storage === "local") {
             this.listOperate(
               "delete",
@@ -457,29 +458,42 @@ export default {
             );
           }
           // 判断保存时是否需要关闭currList的副本
-          if (this.floatMenu.saveAndClose) {
-            note = this.listOperate("delete", "curr", index);
-            this.setXknoteOpened(JSON.parse(JSON.stringify(this.noteBaseInfo)));
-          } else {
-            note = this.listOperate("get", "curr", index);
-          }
-          note.status = "L";
-          let localIndex = this.listOperate("add", "local", "", note);
-          // 若不是从localList中打开的文件就不会有currListSource的信息，如果用户选择不关闭保存，则需要添加source信息，防止后续操作出现问题
-          if (!this.floatMenu.saveAndClose) {
-            this.currListSource[index] = {
-              index: localIndex,
-              storage: "local"
-            };
-            // this.$emit("update:currListSource", this.currListSource);
-          }
+          note = this.listOperate("get", "curr", index);
           // 保存到本地（实际操作）
-          this.noteOperate("save", "local", note);
+          this.noteOperate("save", "local", note, () => {
+            note.status = "L";
+            if (this.floatMenu.saveAndClose) {
+              note = this.listOperate("delete", "curr", index);
+              this.setXknoteOpened(
+                JSON.parse(JSON.stringify(this.noteBaseInfo))
+              );
+            }
+            let localIndex = this.listOperate("add", "local", "", note);
+            // 若不是从localList中打开的文件就不会有currListSource的信息，如果用户选择不关闭保存，则需要添加source信息，防止后续操作出现问题
+            if (!this.floatMenu.saveAndClose) {
+              this.currListSource[index] = {
+                index: localIndex,
+                storage: "local"
+              };
+              // this.$emit("update:currListSource", this.currListSource);
+            }
+          });
         }
         if (storage === "cloud") {
           // TODO: 将云端的笔记拷贝至本地，即保存
           // 先读取云端笔记，然后添加至本地
         }
+      }
+      if (operate === "saveCloud") {
+        let note = null;
+        note = this.listOperate("get", "curr", index);
+        this.noteOperate("save", "cloud", note, () => {
+          note.status = "C";
+          if (this.floatMenu.saveAndClose) {
+            note = this.listOperate("delete", "curr", index);
+            this.setXknoteOpened(JSON.parse(JSON.stringify(this.noteBaseInfo)));
+          }
+        });
       }
       if (operate === "rename") {
         // 先获取到旧的Note信息，为了防止对象的变动所以需要克隆对象，利用json转换即可方便克隆对象

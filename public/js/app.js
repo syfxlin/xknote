@@ -12135,11 +12135,37 @@ __webpack_require__.r(__webpack_exports__);
 
       if (operate === "save") {
         if (storage === "local") {
-          this.noteLocalDB("delete", noteInfo.path);
-          this.noteLocalDB("add", noteInfo);
+          this.noteLocalDB("delete", noteInfo.path, function () {
+            _this8.noteLocalDB("add", noteInfo, callS, callE);
+          }, callE);
         }
 
-        if (storage === "cloud") {// TODO: 云端保存
+        if (storage === "cloud") {
+          // TODO: 云端保存
+          window.axios.put("/api/notes", {
+            path: noteInfo.path,
+            title: noteInfo.note.title,
+            author: noteInfo.note.author,
+            created_at: noteInfo.note.created_at,
+            updated_at: noteInfo.note.updated_at,
+            content: noteInfo.note.content
+          }).then(function (res) {
+            console.log(res);
+
+            _this8.timeToast("保存成功！", "success", 1000);
+
+            if (res.data.error == false) {
+              callS(res);
+            } else {
+              callE(res);
+            }
+          })["catch"](function (err) {
+            console.error(err);
+
+            _this8.timeToast("保存失败！请重试。", "error", 1000);
+
+            callE(err);
+          });
         }
       }
 
@@ -12676,31 +12702,34 @@ __webpack_require__.r(__webpack_exports__);
       if (operate === "saveLocal") {
         if (storage === "curr") {
           var note = null; // 若是从localList中打开的笔记，为了保存不重复，需要先清空
+          // TODO: Bug: Path相同的时候视为同一文档，但保存时并未删除，所以需要调整判断
 
           if (this.currListSource[index].storage === "local") {
             this.listOperate("delete", "local", this.currListSource[index].index);
           } // 判断保存时是否需要关闭currList的副本
 
 
-          if (this.floatMenu.saveAndClose) {
-            note = this.listOperate("delete", "curr", index);
-            this.setXknoteOpened(JSON.parse(JSON.stringify(this.noteBaseInfo)));
-          } else {
-            note = this.listOperate("get", "curr", index);
-          }
+          note = this.listOperate("get", "curr", index); // 保存到本地（实际操作）
 
-          note.status = "L";
-          var localIndex = this.listOperate("add", "local", "", note); // 若不是从localList中打开的文件就不会有currListSource的信息，如果用户选择不关闭保存，则需要添加source信息，防止后续操作出现问题
+          this.noteOperate("save", "local", note, function () {
+            note.status = "L";
 
-          if (!this.floatMenu.saveAndClose) {
-            this.currListSource[index] = {
-              index: localIndex,
-              storage: "local"
-            }; // this.$emit("update:currListSource", this.currListSource);
-          } // 保存到本地（实际操作）
+            if (_this3.floatMenu.saveAndClose) {
+              note = _this3.listOperate("delete", "curr", index);
+
+              _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
+            }
+
+            var localIndex = _this3.listOperate("add", "local", "", note); // 若不是从localList中打开的文件就不会有currListSource的信息，如果用户选择不关闭保存，则需要添加source信息，防止后续操作出现问题
 
 
-          this.noteOperate("save", "local", note);
+            if (!_this3.floatMenu.saveAndClose) {
+              _this3.currListSource[index] = {
+                index: localIndex,
+                storage: "local"
+              }; // this.$emit("update:currListSource", this.currListSource);
+            }
+          });
         }
 
         if (storage === "cloud") {// TODO: 将云端的笔记拷贝至本地，即保存
@@ -12708,11 +12737,25 @@ __webpack_require__.r(__webpack_exports__);
         }
       }
 
+      if (operate === "saveCloud") {
+        var _note = null;
+        _note = this.listOperate("get", "curr", index);
+        this.noteOperate("save", "cloud", _note, function () {
+          _note.status = "C";
+
+          if (_this3.floatMenu.saveAndClose) {
+            _note = _this3.listOperate("delete", "curr", index);
+
+            _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
+          }
+        });
+      }
+
       if (operate === "rename") {
         // 先获取到旧的Note信息，为了防止对象的变动所以需要克隆对象，利用json转换即可方便克隆对象
-        var _note = this.listOperate("get", storage, index);
+        var _note2 = this.listOperate("get", storage, index);
 
-        var oldNote = JSON.parse(JSON.stringify(_note)); // 更改item为输入框
+        var oldNote = JSON.parse(JSON.stringify(_note2)); // 更改item为输入框
 
         curr.querySelector(".tile-content").setAttribute("children", "input");
         var input = curr.querySelector(".tile-content > input");
@@ -12720,8 +12763,8 @@ __webpack_require__.r(__webpack_exports__);
         var keyEv = function keyEv(e) {
           if (e.key === "Enter") {
             var value = e.target.value;
-            _note.path = _note.path.replace(_note.name, value);
-            _note.name = value;
+            _note2.path = _note2.path.replace(_note2.name, value);
+            _note2.name = value;
             var s = storage;
 
             if (storage === "curr") {
@@ -12732,13 +12775,13 @@ __webpack_require__.r(__webpack_exports__);
 
             _this3.noteOperate(operate, s, {
               oldNote: oldNote,
-              note: _note
+              note: _note2
             }, function (res) {
               curr.querySelector(".tile-content").removeAttribute("children");
               input.removeEventListener("keydown", keyEv);
             }, function (err) {
-              _note.path = oldNote.path;
-              _note.name = oldNote.name;
+              _note2.path = oldNote.path;
+              _note2.name = oldNote.name;
               input.removeAttribute("disabled");
             });
           }

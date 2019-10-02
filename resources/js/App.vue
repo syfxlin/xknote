@@ -614,11 +614,40 @@ export default {
       }
       if (operate === "save") {
         if (storage === "local") {
-          this.noteLocalDB("delete", noteInfo.path);
-          this.noteLocalDB("add", noteInfo);
+          this.noteLocalDB(
+            "delete",
+            noteInfo.path,
+            () => {
+              this.noteLocalDB("add", noteInfo, callS, callE);
+            },
+            callE
+          );
         }
         if (storage === "cloud") {
           // TODO: 云端保存
+          window.axios
+            .put("/api/notes", {
+              path: noteInfo.path,
+              title: noteInfo.note.title,
+              author: noteInfo.note.author,
+              created_at: noteInfo.note.created_at,
+              updated_at: noteInfo.note.updated_at,
+              content: noteInfo.note.content
+            })
+            .then(res => {
+              console.log(res);
+              this.timeToast("保存成功！", "success", 1000);
+              if (res.data.error == false) {
+                callS(res);
+              } else {
+                callE(res);
+              }
+            })
+            .catch(err => {
+              console.error(err);
+              this.timeToast("保存失败！请重试。", "error", 1000);
+              callE(err);
+            });
         }
       }
       if (operate === "rename") {
