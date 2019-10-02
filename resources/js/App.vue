@@ -205,6 +205,14 @@ export default {
      * @returns void
      */
     loadFirstNote(mode = "normal") {
+      // 防止意外加载
+      // TODO: 寻求更好的方案
+      if (mode === "read" && this.prevRouter) {
+        return;
+      }
+      if (mode !== "read" && this.xknoteOpened.path) {
+        return;
+      }
       if (this.$route.query.note) {
         this.loadPathNote(this.$route.query.note, mode);
       } else {
@@ -303,10 +311,7 @@ export default {
             window.xknoteOpenedChangeFlag = true;
           });
         }
-        if (
-          mode === "read" &&
-          (!this.prevRouter || this.prevRouter == "Read")
-        ) {
+        if (mode === "read") {
           this.readOpened = JSON.parse(JSON.stringify(note));
         }
       };
@@ -322,7 +327,8 @@ export default {
         }
         btn.querySelector(".loading").style.display = "block";
         this.noteOperate("read", "cloud", note, data => {
-          note.note = data.note;
+          // note.note = data.note;
+          this.$set(note, "note", data.note);
           note.status = "C";
           icon.style.display = "";
           if (mode === "normal") {

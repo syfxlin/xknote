@@ -11661,6 +11661,16 @@ __webpack_require__.r(__webpack_exports__);
 
       var mode = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "normal";
 
+      // 防止意外加载
+      // TODO: 寻求更好的方案
+      if (mode === "read" && this.prevRouter) {
+        return;
+      }
+
+      if (mode !== "read" && this.xknoteOpened.path) {
+        return;
+      }
+
       if (this.$route.query.note) {
         this.loadPathNote(this.$route.query.note, mode);
       } else {
@@ -11776,7 +11786,7 @@ __webpack_require__.r(__webpack_exports__);
           });
         }
 
-        if (mode === "read" && (!_this7.prevRouter || _this7.prevRouter == "Read")) {
+        if (mode === "read") {
           _this7.readOpened = JSON.parse(JSON.stringify(note));
         }
       };
@@ -11793,7 +11803,9 @@ __webpack_require__.r(__webpack_exports__);
 
         btn.querySelector(".loading").style.display = "block";
         this.noteOperate("read", "cloud", note, function (data) {
-          note.note = data.note;
+          // note.note = data.note;
+          _this7.$set(note, "note", data.note);
+
           note.status = "C";
           icon.style.display = "";
 
