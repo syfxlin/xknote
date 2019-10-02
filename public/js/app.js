@@ -11714,19 +11714,19 @@ __webpack_require__.r(__webpack_exports__);
      */
     setXknoteOpened: function setXknoteOpened(noteInfo) {
       window.xknoteOpenedChangeFlag = false;
-      var titleEle = document.getElementById("xknote-title");
+      var noteConEle = document.querySelector(".xknote-header > .navbar-center");
 
       if (noteInfo.path === "") {
         window.XKEditor.ace.setReadOnly(true);
 
-        if (titleEle) {
-          titleEle.setAttribute("disabled", "disabled");
+        if (noteConEle) {
+          noteConEle.classList.add("disabled");
         }
       } else {
         window.XKEditor.ace.setReadOnly(false);
 
-        if (titleEle) {
-          titleEle.removeAttribute("disabled");
+        if (noteConEle) {
+          noteConEle.classList.remove("disabled");
         }
       }
 

@@ -142,6 +142,13 @@ body {
 .dropdown a {
     cursor: pointer;
 }
+.xknote-header > *.disabled,
+.xknote-header > *:disabled,
+.xknote-header > *[disabled] {
+    cursor: default;
+    opacity: 0.5;
+    pointer-events: none;
+}
 .popover-container p {
     padding: 0 0 0 0.3rem;
 }
