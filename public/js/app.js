@@ -11792,12 +11792,8 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         btn.querySelector(".loading").style.display = "block";
-        window.axios.get("/api/notes", {
-          params: {
-            path: note.path
-          }
-        }).then(function (res) {
-          note.note = res.data.note;
+        this.noteOperate("read", "cloud", note, function (data) {
+          note.note = data.note;
           note.status = "C";
           icon.style.display = "";
 
@@ -11807,8 +11803,6 @@ __webpack_require__.r(__webpack_exports__);
 
           btn.querySelector(".loading").style.display = "none";
           open();
-        })["catch"](function (err) {
-          console.error(err);
         });
       } else {
         open();
@@ -12068,20 +12062,38 @@ __webpack_require__.r(__webpack_exports__);
       var _this8 = this;
 
       var noteInfo = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-      var callback = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : function () {};
+      var callS = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : function () {};
+      var callE = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : function () {};
 
       if (operate === "read") {
         if (storage === "local") {
           this.noteLocalDB("read", noteInfo.path, function (e, data) {
-            callback(data);
+            callS(data);
+          });
+        }
+
+        if (storage === "cloud") {
+          window.axios.get("/api/notes", {
+            params: {
+              path: noteInfo.path
+            }
+          }).then(function (res) {
+            callS(res.data);
+          })["catch"](function (err) {
+            console.error(err);
+
+            _this8.timeToast("加载失败！请重试。", "error", 1000);
+
+            callE(err);
           });
         }
       }
 
       if (operate === "delete") {
         if (storage === "local") {
-          this.noteLocalDB("delete", noteInfo.path);
-          callback(true);
+          this.noteLocalDB("delete", noteInfo.path, function (e, data) {
+            callS(data);
+          }, callE);
         }
 
         if (storage === "cloud") {
@@ -12091,13 +12103,20 @@ __webpack_require__.r(__webpack_exports__);
             }
           }).then(function (res) {
             console.log(res);
-            callback(res.data.error == false);
 
             _this8.timeToast("删除成功！", "success", 1000);
+
+            if (res.data.error == false) {
+              callS(res);
+            } else {
+              callE(res);
+            }
           })["catch"](function (err) {
             console.error(err);
 
             _this8.timeToast("删除失败！请重试。", "error", 1000);
+
+            callE(err);
           });
         }
       }
@@ -12116,7 +12135,7 @@ __webpack_require__.r(__webpack_exports__);
         if (storage === "local") {
           this.noteLocalDB("delete", noteInfo.oldNote.path);
           this.noteLocalDB("add", noteInfo.note);
-          callback(true);
+          callS();
         }
 
         if (storage === "cloud") {
@@ -12125,18 +12144,22 @@ __webpack_require__.r(__webpack_exports__);
             newPath: noteInfo.note.path
           }).then(function (res) {
             console.log(res);
-            callback(res.data.error == false);
 
             _this8.timeToast("重命名成功！", "success", 1000);
+
+            if (res.data.error == false) {
+              callS(res);
+            } else {
+              callE(res);
+            }
           })["catch"](function (err) {
             console.error(err);
 
             _this8.timeToast("重命名失败！请重试。", "error", 1000);
 
-            callback(false);
+            callE(err);
           });
-        } // TODO: 重命名成功后提示
-
+        }
       }
     },
 
@@ -12628,9 +12651,7 @@ __webpack_require__.r(__webpack_exports__);
           _this3.smModal.show = false;
 
           _this3.noteOperate(operate, storage, note, function (res) {
-            if (res) {
-              _this3.listOperate("delete", storage, index);
-            }
+            _this3.listOperate("delete", storage, index);
           });
         };
 
@@ -12701,14 +12722,12 @@ __webpack_require__.r(__webpack_exports__);
               oldNote: oldNote,
               note: _note
             }, function (res) {
-              if (res) {
-                curr.querySelector(".tile-content").removeAttribute("children");
-                input.removeEventListener("keydown", keyEv);
-              } else {
-                _note.path = oldNote.path;
-                _note.name = oldNote.name;
-                input.removeAttribute("disabled");
-              }
+              curr.querySelector(".tile-content").removeAttribute("children");
+              input.removeEventListener("keydown", keyEv);
+            }, function (err) {
+              _note.path = oldNote.path;
+              _note.name = oldNote.name;
+              input.removeAttribute("disabled");
             });
           }
         };

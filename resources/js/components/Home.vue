@@ -437,9 +437,7 @@ export default {
           let note = this.listOperate("get", storage, index);
           this.smModal.show = false;
           this.noteOperate(operate, storage, note, res => {
-            if (res) {
-              this.listOperate("delete", storage, index);
-            }
+            this.listOperate("delete", storage, index);
           });
         };
         this.smModal.cancel = () => {
@@ -508,16 +506,13 @@ export default {
                 note: note
               },
               res => {
-                if (res) {
-                  curr
-                    .querySelector(".tile-content")
-                    .removeAttribute("children");
-                  input.removeEventListener("keydown", keyEv);
-                } else {
-                  note.path = oldNote.path;
-                  note.name = oldNote.name;
-                  input.removeAttribute("disabled");
-                }
+                curr.querySelector(".tile-content").removeAttribute("children");
+                input.removeEventListener("keydown", keyEv);
+              },
+              err => {
+                note.path = oldNote.path;
+                note.name = oldNote.name;
+                input.removeAttribute("disabled");
               }
             );
           }

@@ -321,25 +321,16 @@ export default {
           btn.querySelector(".icon").style.display = "none";
         }
         btn.querySelector(".loading").style.display = "block";
-        window.axios
-          .get("/api/notes", {
-            params: {
-              path: note.path
-            }
-          })
-          .then(res => {
-            note.note = res.data.note;
-            note.status = "C";
-            icon.style.display = "";
-            if (mode === "normal") {
-              btn.querySelector(".icon").style.display = "unset";
-            }
-            btn.querySelector(".loading").style.display = "none";
-            open();
-          })
-          .catch(err => {
-            console.error(err);
-          });
+        this.noteOperate("read", "cloud", note, data => {
+          note.note = data.note;
+          note.status = "C";
+          icon.style.display = "";
+          if (mode === "normal") {
+            btn.querySelector(".icon").style.display = "unset";
+          }
+          btn.querySelector(".loading").style.display = "none";
+          open();
+        });
       } else {
         open();
       }
@@ -551,18 +542,46 @@ export default {
      *   @param {object=} noteInfo.note (rename) 新的笔记信息
      * @returns void
      */
-    noteOperate(operate, storage, noteInfo = null, callback = () => {}) {
+    noteOperate(
+      operate,
+      storage,
+      noteInfo = null,
+      callS = () => {},
+      callE = () => {}
+    ) {
       if (operate === "read") {
         if (storage === "local") {
           this.noteLocalDB("read", noteInfo.path, (e, data) => {
-            callback(data);
+            callS(data);
           });
+        }
+        if (storage === "cloud") {
+          window.axios
+            .get("/api/notes", {
+              params: {
+                path: noteInfo.path
+              }
+            })
+            .then(res => {
+              callS(res.data);
+            })
+            .catch(err => {
+              console.error(err);
+              this.timeToast("加载失败！请重试。", "error", 1000);
+              callE(err);
+            });
         }
       }
       if (operate === "delete") {
         if (storage === "local") {
-          this.noteLocalDB("delete", noteInfo.path);
-          callback(true);
+          this.noteLocalDB(
+            "delete",
+            noteInfo.path,
+            (e, data) => {
+              callS(data);
+            },
+            callE
+          );
         }
         if (storage === "cloud") {
           window.axios
@@ -573,12 +592,17 @@ export default {
             })
             .then(res => {
               console.log(res);
-              callback(res.data.error == false);
               this.timeToast("删除成功！", "success", 1000);
+              if (res.data.error == false) {
+                callS(res);
+              } else {
+                callE(res);
+              }
             })
             .catch(err => {
               console.error(err);
               this.timeToast("删除失败！请重试。", "error", 1000);
+              callE(err);
             });
         }
       }
@@ -595,7 +619,7 @@ export default {
         if (storage === "local") {
           this.noteLocalDB("delete", noteInfo.oldNote.path);
           this.noteLocalDB("add", noteInfo.note);
-          callback(true);
+          callS();
         }
         if (storage === "cloud") {
           window.axios
@@ -605,16 +629,19 @@ export default {
             })
             .then(res => {
               console.log(res);
-              callback(res.data.error == false);
               this.timeToast("重命名成功！", "success", 1000);
+              if (res.data.error == false) {
+                callS(res);
+              } else {
+                callE(res);
+              }
             })
             .catch(err => {
               console.error(err);
               this.timeToast("重命名失败！请重试。", "error", 1000);
-              callback(false);
+              callE(err);
             });
         }
-        // TODO: 重命名成功后提示
       }
     },
     /**
