@@ -12168,9 +12168,7 @@ __webpack_require__.r(__webpack_exports__);
             updated_at: noteInfo.note.updated_at,
             content: noteInfo.note.content
           }).then(function (res) {
-            console.log(res);
-
-            _this8.timeToast("保存成功！", "success", 1000);
+            _this8.timeToast("保存到云端成功！", "success", 1000);
 
             if (res.data.error == false) {
               callS(res);
@@ -12180,7 +12178,7 @@ __webpack_require__.r(__webpack_exports__);
           })["catch"](function (err) {
             console.error(err);
 
-            _this8.timeToast("保存失败！请重试。", "error", 1000);
+            _this8.timeToast("保存到云端失败！请重试。", "error", 1000);
 
             callE(err);
           });
@@ -12738,7 +12736,7 @@ __webpack_require__.r(__webpack_exports__);
           } // 保存到本地（实际操作）
 
 
-          this.noteOperate("save", "local", JSON.parse(JSON.stringify(note)), function () {
+          this.noteOperate("save", "local", note, function () {
             if (_this3.floatMenu.saveAndClose) {
               note = _this3.listOperate("delete", "curr", index);
 
@@ -12779,15 +12777,21 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       if (operate === "saveCloud") {
-        var _note = this.listOperate("get", "curr", index);
+        var _note = this.listOperate("get", storage, index);
 
-        this.noteOperate("save", "cloud", JSON.parse(JSON.stringify(_note)), function () {
+        this.noteOperate("save", "cloud", _note, function () {
           _note.status = "C";
 
-          if (_this3.floatMenu.saveAndClose) {
-            _note = _this3.listOperate("delete", "curr", index);
+          if (storage === "curr") {
+            if (_this3.currListSource[index].storage === "local") {
+              _this3.noteOperate("save", "local", _note);
+            }
 
-            _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
+            if (_this3.floatMenu.saveAndClose) {
+              _note = _this3.listOperate("delete", "curr", index);
+
+              _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
+            }
           }
         });
       }

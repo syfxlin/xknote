@@ -650,8 +650,7 @@ export default {
               content: noteInfo.note.content
             })
             .then(res => {
-              console.log(res);
-              this.timeToast("保存成功！", "success", 1000);
+              this.timeToast("保存到云端成功！", "success", 1000);
               if (res.data.error == false) {
                 callS(res);
               } else {
@@ -660,7 +659,7 @@ export default {
             })
             .catch(err => {
               console.error(err);
-              this.timeToast("保存失败！请重试。", "error", 1000);
+              this.timeToast("保存到云端失败！请重试。", "error", 1000);
               callE(err);
             });
         }
