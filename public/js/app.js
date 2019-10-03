@@ -12152,6 +12152,8 @@ __webpack_require__.r(__webpack_exports__);
       if (operate === "save") {
         if (storage === "local") {
           this.noteLocalDB("delete", noteInfo.path, function () {
+            _this8.timeToast("保存到本地成功！", "success", 1000);
+
             _this8.noteLocalDB("add", noteInfo, callS, callE);
           }, callE);
         }
@@ -12267,6 +12269,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var xkeditor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! xkeditor */ "./node_modules/xkeditor/src/index.js");
 /* harmony import */ var _noteItem_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./noteItem.vue */ "./resources/js/components/noteItem.vue");
 /* harmony import */ var _folderItem_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./folderItem.vue */ "./resources/js/components/folderItem.vue");
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -12716,18 +12724,21 @@ __webpack_require__.r(__webpack_exports__);
 
 
       if (operate === "saveLocal") {
+        var note = this.listOperate("get", storage, index); // Path相同的时候视为同一文档，但保存时并未删除，所以需要调整判断
+
+        this.localList.forEach(function (item, index) {
+          if (item.path === note.path) {
+            _this3.listOperate("delete", "local", index);
+          }
+        });
+
         if (storage === "curr") {
-          var note = this.listOperate("get", "curr", index); // Path相同的时候视为同一文档，但保存时并未删除，所以需要调整判断
-
-          this.localList.forEach(function (item, index) {
-            if (item.path === note.path) {
-              _this3.listOperate("delete", "local", index);
-            }
-          }); // 保存到本地（实际操作）
-
-          this.noteOperate("save", "local", note, function () {
+          if (note.status != "C") {
             note.status = "L";
+          } // 保存到本地（实际操作）
 
+
+          this.noteOperate("save", "local", JSON.parse(JSON.stringify(note)), function () {
             if (_this3.floatMenu.saveAndClose) {
               note = _this3.listOperate("delete", "curr", index);
 
@@ -12746,15 +12757,31 @@ __webpack_require__.r(__webpack_exports__);
           });
         }
 
-        if (storage === "cloud") {// TODO: 将云端的笔记拷贝至本地，即保存
+        if (storage === "cloud") {
+          // TODO: 将云端的笔记拷贝至本地，即保存
           // 先读取云端笔记，然后添加至本地
+          var noteEle = document.querySelector('[data-index="' + index + '"][data-storage="cloud"]');
+          var icon = noteEle.querySelector(".tile-action");
+          icon.style.display = "unset";
+          var btn = icon.querySelector(".btn");
+          this.noteOperate("read", "cloud", note, function (data) {
+            _this3.$set(note, "note", data.note);
+
+            note.status = "C";
+            btn.querySelector(".loading").style.display = "none";
+            icon.style.display = "";
+
+            _this3.noteOperate("save", "local", note, function () {
+              _this3.listOperate("add", "local", "", note);
+            });
+          });
         }
       }
 
       if (operate === "saveCloud") {
         var _note = this.listOperate("get", "curr", index);
 
-        this.noteOperate("save", "cloud", _note, function () {
+        this.noteOperate("save", "cloud", JSON.parse(JSON.stringify(_note)), function () {
           _note.status = "C";
 
           if (_this3.floatMenu.saveAndClose) {
@@ -12903,6 +12930,23 @@ __webpack_require__.r(__webpack_exports__);
         window.XKEditor.download(this.xknoteOpened.name.replace(".md", ""), "fullhtml");
       } // TODO: 导出阅读模式的HTML
 
+    },
+    checkLocalStatus: function checkLocalStatus() {
+      var _this5 = this;
+
+      var checkList = [];
+
+      for (var i = 0; i < this.localList.length; i++) {
+        checkList.push(this.localList[i].path);
+      }
+
+      window.axios.post("/api/notes/check", {
+        checkList: checkList
+      }).then(function (res) {
+        console.log(res); // TODO: 比较Modal，同时执行一些操作，是否替换（本地to云端，云端to本地，还是不变）
+
+        _this5.navBarOperate("showCheckLocalStatus");
+      });
     }
   },
   mounted: function mounted() {},
@@ -13268,6 +13312,9 @@ __webpack_require__.r(__webpack_exports__);
           name: "saveAndClose"
         }],
         cloud: [{
+          name: "保存到本地",
+          operate: "saveLocal"
+        }, {
           name: "重命名",
           operate: "rename"
         }, {
@@ -23268,6 +23315,18 @@ var render = function() {
                           )
                         }),
                         _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-primary xknote-check-local",
+                            attrs: {
+                              title: "对比本地笔记和云端笔记的时间差别"
+                            },
+                            on: { click: _vm.checkLocalStatus }
+                          },
+                          [_vm._v("检查状态")]
+                        ),
+                        _vm._v(" "),
                         _vm.localList.length === 0
                           ? _c(
                               "div",
@@ -23547,6 +23606,10 @@ var render = function() {
                     _vm._v(" "),
                     _vm.lgModal.content === "SystemSetting"
                       ? [_vm._v("systemSetting")]
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.lgModal.content === "CheckLocalStatus"
+                      ? [_vm._v("checkLocalStatus")]
                       : _vm._e()
                   ],
                   2

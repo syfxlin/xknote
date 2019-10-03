@@ -67,6 +67,10 @@ export default {
         ],
         cloud: [
           {
+            name: "保存到本地",
+            operate: "saveLocal"
+          },
+          {
             name: "重命名",
             operate: "rename"
           },

@@ -632,6 +632,7 @@ export default {
             "delete",
             noteInfo.path,
             () => {
+              this.timeToast("保存到本地成功！", "success", 1000);
               this.noteLocalDB("add", noteInfo, callS, callE);
             },
             callE

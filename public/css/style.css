@@ -266,6 +266,11 @@ body {
     padding: 0.8em 0;
     text-align: center;
 }
+.xknote-check-local {
+    margin-left: 50%;
+    margin-top: 1rem;
+    transform: translateX(-50%);
+}
 
 .float-menu {
     position: fixed;

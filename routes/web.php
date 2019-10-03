@@ -48,4 +48,5 @@ Route::prefix('api')
         Route::put('/notes/rename', 'NoteController@rename');
         Route::put('/notes/move', 'NoteController@move');
         Route::get('/notes/all', 'NoteController@getAll');
+        Route::post('/notes/check', 'NoteController@checkStatus');
     });

@@ -23,11 +23,11 @@ class NoteModel
             );
         }
         return [
-            "title" => $note[0]->title,
-            "author" => $note[0]->author,
-            "content" => $note[1],
-            "created_at" => $note[0]->created_at,
-            "updated_at" => $note[0]->updated_at
+            'title' => $note[0]->title,
+            'author' => $note[0]->author,
+            'content' => $note[1],
+            'created_at' => $note[0]->created_at,
+            'updated_at' => $note[0]->updated_at
         ];
     }
 
@@ -36,7 +36,7 @@ class NoteModel
         $notes = Storage::allFiles($path);
         $index = 0;
         foreach ($notes as $dirName) {
-            if (preg_match("/.git/i", $dirName)) {
+            if (preg_match('/.git/i', $dirName)) {
                 array_splice($notes, $index, 1);
             } else {
                 $index++;
@@ -88,5 +88,27 @@ class NoteModel
     public function exist($path)
     {
         return Storage::exists($path);
+    }
+
+    public function checkStatus($checkList, $pathList)
+    {
+        $reList = [];
+        foreach ($checkList as $index => $path) {
+            if (!Storage::exists($path)) {
+                $reList[] = [
+                    'path' => $pathList[$index],
+                    'created_at' => 'No exists',
+                    'updated_at' => 'No exists'
+                ];
+            } else {
+                $note = $this->get($path);
+                $reList[] = [
+                    'path' => $pathList[$index],
+                    'created_at' => $note['created_at'],
+                    'updated_at' => $note['updated_at']
+                ];
+            }
+        }
+        return $reList;
     }
 }

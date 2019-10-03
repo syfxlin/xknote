@@ -230,6 +230,11 @@
                     :floatMenu="floatMenu"
                   />
                 </li>
+                <button
+                  @click="checkLocalStatus"
+                  class="btn btn-primary xknote-check-local"
+                  title="对比本地笔记和云端笔记的时间差别"
+                >检查状态</button>
                 <div class="text-gray text-center" v-if="localList.length===0">这里什么都没有哦（￣︶￣）↗</div>
               </ul>
             </li>
@@ -297,6 +302,7 @@
               <template v-if="lgModal.content==='UserSetting'">userSetting</template>
               <template v-if="lgModal.content==='GitSetting'">gitSetting</template>
               <template v-if="lgModal.content==='SystemSetting'">systemSetting</template>
+              <template v-if="lgModal.content==='CheckLocalStatus'">checkLocalStatus</template>
             </div>
           </div>
           <div class="modal-footer">
@@ -446,48 +452,77 @@ export default {
       }
       // 保存到本地
       if (operate === "saveLocal") {
+        let note = this.listOperate("get", storage, index);
+        // Path相同的时候视为同一文档，但保存时并未删除，所以需要调整判断
+        this.localList.forEach((item, index) => {
+          if (item.path === note.path) {
+            this.listOperate("delete", "local", index);
+          }
+        });
         if (storage === "curr") {
-          let note = this.listOperate("get", "curr", index);
-          // Path相同的时候视为同一文档，但保存时并未删除，所以需要调整判断
-          this.localList.forEach((item, index) => {
-            if (item.path === note.path) {
-              this.listOperate("delete", "local", index);
-            }
-          });
-          // 保存到本地（实际操作）
-          this.noteOperate("save", "local", note, () => {
+          if (note.status != "C") {
             note.status = "L";
+          }
+          // 保存到本地（实际操作）
+          this.noteOperate(
+            "save",
+            "local",
+            JSON.parse(JSON.stringify(note)),
+            () => {
+              if (this.floatMenu.saveAndClose) {
+                note = this.listOperate("delete", "curr", index);
+                this.setXknoteOpened(
+                  JSON.parse(JSON.stringify(this.noteBaseInfo))
+                );
+              }
+              let localIndex = this.listOperate("add", "local", "", note);
+              // 若不是从localList中打开的文件就不会有currListSource的信息，如果用户选择不关闭保存，则需要添加source信息，防止后续操作出现问题
+              if (!this.floatMenu.saveAndClose) {
+                this.currListSource[index] = {
+                  index: localIndex,
+                  storage: "local"
+                };
+                // this.$emit("update:currListSource", this.currListSource);
+              }
+            }
+          );
+        }
+        if (storage === "cloud") {
+          // TODO: 将云端的笔记拷贝至本地，即保存
+          // 先读取云端笔记，然后添加至本地
+          let noteEle = document.querySelector(
+            '[data-index="' + index + '"][data-storage="cloud"]'
+          );
+          let icon = noteEle.querySelector(".tile-action");
+          icon.style.display = "unset";
+          let btn = icon.querySelector(".btn");
+          this.noteOperate("read", "cloud", note, data => {
+            this.$set(note, "note", data.note);
+            note.status = "C";
+            btn.querySelector(".loading").style.display = "none";
+            icon.style.display = "";
+            this.noteOperate("save", "local", note, () => {
+              this.listOperate("add", "local", "", note);
+            });
+          });
+        }
+      }
+      if (operate === "saveCloud") {
+        let note = this.listOperate("get", "curr", index);
+        this.noteOperate(
+          "save",
+          "cloud",
+          JSON.parse(JSON.stringify(note)),
+          () => {
+            note.status = "C";
             if (this.floatMenu.saveAndClose) {
               note = this.listOperate("delete", "curr", index);
               this.setXknoteOpened(
                 JSON.parse(JSON.stringify(this.noteBaseInfo))
               );
             }
-            let localIndex = this.listOperate("add", "local", "", note);
-            // 若不是从localList中打开的文件就不会有currListSource的信息，如果用户选择不关闭保存，则需要添加source信息，防止后续操作出现问题
-            if (!this.floatMenu.saveAndClose) {
-              this.currListSource[index] = {
-                index: localIndex,
-                storage: "local"
-              };
-              // this.$emit("update:currListSource", this.currListSource);
-            }
-          });
-        }
-        if (storage === "cloud") {
-          // TODO: 将云端的笔记拷贝至本地，即保存
-          // 先读取云端笔记，然后添加至本地
-        }
-      }
-      if (operate === "saveCloud") {
-        let note = this.listOperate("get", "curr", index);
-        this.noteOperate("save", "cloud", note, () => {
-          note.status = "C";
-          if (this.floatMenu.saveAndClose) {
-            note = this.listOperate("delete", "curr", index);
-            this.setXknoteOpened(JSON.parse(JSON.stringify(this.noteBaseInfo)));
           }
-        });
+        );
       }
       if (operate === "rename") {
         // 先获取到旧的Note信息，为了防止对象的变动所以需要克隆对象，利用json转换即可方便克隆对象
@@ -620,6 +655,21 @@ export default {
         );
       }
       // TODO: 导出阅读模式的HTML
+    },
+    checkLocalStatus() {
+      var checkList = [];
+      for (let i = 0; i < this.localList.length; i++) {
+        checkList.push(this.localList[i].path);
+      }
+      window.axios
+        .post("/api/notes/check", {
+          checkList: checkList
+        })
+        .then(res => {
+          console.log(res);
+          // TODO: 比较Modal，同时执行一些操作，是否替换（本地to云端，云端to本地，还是不变）
+          this.navBarOperate("showCheckLocalStatus");
+        });
     }
   },
   mounted() {},
