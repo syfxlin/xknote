@@ -13196,7 +13196,11 @@ __webpack_require__.r(__webpack_exports__);
       };
 
       document.addEventListener("click", closeF);
-      window.xknote.currClickTarget = e.target.parentElement.parentElement.parentElement;
+      window.xknote.currClickTarget = e.target.parentElement.parentElement;
+
+      if (e.target.nodeName === "IMG") {
+        window.xknote.currClickTarget = window.xknote.currClickTarget.parentElement;
+      }
     }
   }
 });
@@ -13317,7 +13321,11 @@ __webpack_require__.r(__webpack_exports__);
 
         document.addEventListener("click", closeN);
       });
-      window.xknote.currClickTarget = e.target.parentElement.parentElement.parentElement;
+      window.xknote.currClickTarget = e.target.parentElement.parentElement;
+
+      if (e.target.nodeName === "IMG") {
+        window.xknote.currClickTarget = window.xknote.currClickTarget.parentElement;
+      }
     },
     thisOpenNote: function thisOpenNote(e) {
       this.openNote(this.info, {

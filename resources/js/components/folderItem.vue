@@ -115,8 +115,11 @@ export default {
         document.removeEventListener("click", closeF);
       };
       document.addEventListener("click", closeF);
-      window.xknote.currClickTarget =
-        e.target.parentElement.parentElement.parentElement;
+      window.xknote.currClickTarget = e.target.parentElement.parentElement;
+      if (e.target.nodeName === "IMG") {
+        window.xknote.currClickTarget =
+          window.xknote.currClickTarget.parentElement;
+      }
     }
   }
 };
