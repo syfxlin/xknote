@@ -104,14 +104,6 @@ class NoteController extends Controller
         ];
         $content = $request->content;
         $code = $this->model->edit($path, $info, $content);
-        if ($code === 404) {
-            return response(
-                [
-                    'error' => 'Folder not found.'
-                ],
-                404
-            );
-        }
         return ['error' => false];
     }
 

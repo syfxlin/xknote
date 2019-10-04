@@ -282,6 +282,10 @@ body {
     color: #585858;
 }
 
+.modal.modal-lg .modal-container.CheckLocalStatus {
+    max-width: 90%;
+}
+
 .toast {
     position: fixed;
     right: 1rem;

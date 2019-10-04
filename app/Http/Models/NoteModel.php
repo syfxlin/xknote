@@ -69,9 +69,6 @@ class NoteModel
 
     public function edit($path, $info, $content)
     {
-        if (!Storage::exists($path)) {
-            return 404;
-        }
         $this->set($path, $info, $content);
         return 200;
     }

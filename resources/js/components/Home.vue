@@ -232,7 +232,7 @@
                 </li>
                 <button
                   @click="checkLocalStatus"
-                  class="btn btn-primary xknote-check-local"
+                  class="btn xknote-check-local"
                   title="对比本地笔记和云端笔记的时间差别"
                 >检查状态</button>
                 <div class="text-gray text-center" v-if="localList.length===0">这里什么都没有哦（￣︶￣）↗</div>
@@ -289,7 +289,7 @@
       </div>
       <div :class="'modal modal-lg xknote-lg-modal' + (lgModal.show ? ' active' : '')">
         <a class="modal-overlay"></a>
-        <div class="modal-container" role="document">
+        <div :class="'modal-container ' + lgModal.content" role="document">
           <div class="modal-header">
             <a class="btn btn-clear float-right" @click="lgModal.cancel()"></a>
             <div class="modal-title h5">{{ lgModal.title }}</div>
@@ -302,7 +302,38 @@
               <template v-if="lgModal.content==='UserSetting'">userSetting</template>
               <template v-if="lgModal.content==='GitSetting'">gitSetting</template>
               <template v-if="lgModal.content==='SystemSetting'">systemSetting</template>
-              <template v-if="lgModal.content==='CheckLocalStatus'">checkLocalStatus</template>
+              <template v-if="lgModal.content==='CheckLocalStatus'">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>文件名</th>
+                      <th>路径</th>
+                      <th>创建时间(本地)</th>
+                      <th>更新时间(本地))</th>
+                      <th>创建时间(云端)</th>
+                      <th>更新时间(云端)</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item, index) in lgModal.data" :key="index">
+                      <td>{{ item.name }}</td>
+                      <td>{{ item.path }}</td>
+                      <td>{{ item.created_at_l }}</td>
+                      <td>{{ item.updated_at_l }}</td>
+                      <td>{{ item.created_at_c }}</td>
+                      <td>{{ item.updated_at_c }}</td>
+                      <td>
+                        <div class="btn-group btn-group-block">
+                          <button class="btn">保留本地</button>
+                          <button class="btn">保留云端</button>
+                          <button class="btn">不操作</button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </template>
             </div>
           </div>
           <div class="modal-footer">
@@ -352,6 +383,7 @@ export default {
         show: false,
         title: "",
         content: "",
+        data: {},
         confirm: () => {},
         cancel: () => {
           this.smModal.show = false;
@@ -483,8 +515,6 @@ export default {
           });
         }
         if (storage === "cloud") {
-          // TODO: 将云端的笔记拷贝至本地，即保存
-          // 先读取云端笔记，然后添加至本地
           let noteEle = document.querySelector(
             '[data-index="' + index + '"][data-storage="cloud"]'
           );
@@ -517,6 +547,10 @@ export default {
               );
             }
           }
+          if (storage === "local") {
+            this.noteOperate("save", "local", note);
+          }
+          // TODO: 更新云端列表 cloudList信息
         });
       }
       if (operate === "rename") {
@@ -652,6 +686,7 @@ export default {
       // TODO: 导出阅读模式的HTML
     },
     checkLocalStatus() {
+      document.querySelector(".xknote-check-local").classList.add("loading");
       var checkList = [];
       for (let i = 0; i < this.localList.length; i++) {
         checkList.push(this.localList[i].path);
@@ -663,7 +698,21 @@ export default {
         .then(res => {
           console.log(res);
           // TODO: 比较Modal，同时执行一些操作，是否替换（本地to云端，云端to本地，还是不变）
+          this.lgModal.data = [];
+          for (let i = 0; i < this.localList.length; i++) {
+            this.lgModal.data.push({
+              name: this.localList[i].name,
+              path: this.localList[i].path,
+              created_at_l: this.localList[i].note.created_at,
+              updated_at_l: this.localList[i].note.updated_at,
+              created_at_c: res.data.checkList[i].created_at,
+              updated_at_c: res.data.checkList[i].updated_at
+            });
+          }
           this.navBarOperate("showCheckLocalStatus");
+          document
+            .querySelector(".xknote-check-local")
+            .classList.remove("loading");
         });
     }
   },
@@ -677,4 +726,7 @@ export default {
 </script>
 
 <style>
+.active {
+  color: #585858;
+}
 </style>
