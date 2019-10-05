@@ -513,7 +513,7 @@ export default {
           if (e.key === "Enter") {
             let value = e.target.value;
             // TODO: 重名导致bug出现
-            info.path = info.path.replace(info.name, value);
+            info.path = info.path.replace(new RegExp(info.name + "$"), value);
             info.name = value;
             input.setAttribute("disabled", "disabled");
             if (type === "note") {
