@@ -54,15 +54,16 @@ export default {
             operate: "rename"
           },
           {
-            name: "导出",
-            operate: "download"
+            name: "导出", // TODO: 未完成
+            operate: "downloadCurr"
           },
           {
             name: "关闭",
             operate: "closeCurr"
           },
           {
-            name: "saveAndClose"
+            name: "saveAndClose",
+            content: "保存后关闭"
           }
         ],
         cloud: [
@@ -75,18 +76,22 @@ export default {
             operate: "rename"
           },
           {
+            name: "移动", // TODO: 未完成
+            operate: "move"
+          },
+          {
             name: "删除",
             operate: "delete"
+          },
+          {
+            name: "导出", // TODO: 未完成
+            operate: "downloadCloud"
           }
         ],
         local: [
           {
             name: "保存至云端",
             operate: "saveCloud"
-          },
-          {
-            name: "导出",
-            operate: "download"
           },
           {
             name: "重命名",
@@ -97,7 +102,12 @@ export default {
             operate: "delete"
           },
           {
-            name: "saveAndClose" // TODO: 是否在保存到云端的同时删除本地中的存储
+            name: "导出", // TODO: 未完成
+            operate: "downloadLocal"
+          },
+          {
+            name: "saveAndClose", // TODO: 是否在保存到云端的同时删除本地中的存储
+            content: "保存后删除"
           }
         ]
       }

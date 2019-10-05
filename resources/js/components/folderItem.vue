@@ -53,38 +53,73 @@ export default {
         .toString(36)
         .substring(2, 8),
       floatMenuItems: {
-        curr: [
+        parent: [
           {
-            name: "重命名",
+            name: "重命名", // TODO: 未完成
             operate: "rename"
           },
           {
-            name: "删除",
+            name: "移动", // TODO: 未完成
+            operate: "move"
+          },
+          {
+            name: "删除", // TODO: 未完成
             operate: "delete"
+          },
+          {
+            name: "打包导出", // TODO: 未完成
+            operate: "downloadFolder"
+          },
+          {
+            name: "divider",
+            content: "Git"
+          },
+          {
+            name: "Push", // TODO: 未完成
+            operate: "gitPush"
+          },
+          {
+            name: "Pull", // TODO: 未完成
+            operate: "gitPull"
+          },
+          {
+            name: "Clone", // TODO: 未完成
+            operate: "gitClone"
+          },
+          {
+            name: "Init", // TODO: 未完成
+            operate: "gitInit"
+          },
+          {
+            name: "Push force", // TODO: 未完成
+            operate: "gitPushForce"
           }
         ],
-        cloud: [
+        children: [
           {
-            name: "重命名",
+            name: "重命名", // TODO: 未完成
             operate: "rename"
           },
           {
-            name: "删除",
+            name: "删除", // TODO: 未完成
             operate: "delete"
-          }
-        ],
-        local: [
-          {
-            name: "重命名",
-            operate: "rename"
           },
           {
-            name: "删除",
-            operate: "delete"
+            name: "打包导出", // TODO: 未完成
+            operate: "downloadFolder"
           }
         ]
       }
     };
+  },
+  computed: {
+    selectMenuItem() {
+      if ((this.index + "").indexOf(":") == -1) {
+        return "parent";
+      } else {
+        return "children";
+      }
+    }
   },
   components: {
     "note-item": noteItem
@@ -95,7 +130,7 @@ export default {
       f.style.top = e.clientY + "px";
       f.style.left = e.clientX + "px";
       this.floatMenu.show = true;
-      this.floatMenu.items = this.floatMenuItems[this.storage];
+      this.floatMenu.items = this.floatMenuItems[this.selectMenuItem];
       var offset = {
         xS: e.clientX,
         yS: e.clientY,

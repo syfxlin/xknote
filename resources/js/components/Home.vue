@@ -266,8 +266,12 @@
           <template v-if="item.name==='saveAndClose'">
             <label class="form-switch">
               <input type="checkbox" v-model="floatMenu.saveAndClose" />
-              <i class="form-icon"></i> 保存后关闭
+              <i class="form-icon"></i>
+              {{ item.content }}
             </label>
+          </template>
+          <template v-else-if="item.name==='divider'">
+            <li :data-content="item.content" class="divider"></li>
           </template>
           <a @click="floatMenuOperate(item.operate)" v-else>{{ item.name }}</a>
         </li>
@@ -548,7 +552,12 @@ export default {
             }
           }
           if (storage === "local") {
-            this.noteOperate("save", "local", note);
+            if (this.floatMenu.saveAndClose) {
+              this.noteOperate("delete", "local", note);
+              this.listOperate("delete", storage, index);
+            } else {
+              this.noteOperate("save", "local", note);
+            }
           }
           // TODO: 更新云端列表 cloudList信息
         });

@@ -12615,6 +12615,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -12825,7 +12829,13 @@ __webpack_require__.r(__webpack_exports__);
           }
 
           if (storage === "local") {
-            _this3.noteOperate("save", "local", _note);
+            if (_this3.floatMenu.saveAndClose) {
+              _this3.noteOperate("delete", "local", _note);
+
+              _this3.listOperate("delete", storage, index);
+            } else {
+              _this3.noteOperate("save", "local", _note);
+            }
           } // TODO: 更新云端列表 cloudList信息
 
         });
@@ -13242,29 +13252,70 @@ __webpack_require__.r(__webpack_exports__);
     return {
       idHash: Math.random().toString(36).substring(2, 8),
       floatMenuItems: {
-        curr: [{
+        parent: [{
           name: "重命名",
+          // TODO: 未完成
           operate: "rename"
         }, {
+          name: "移动",
+          // TODO: 未完成
+          operate: "move"
+        }, {
           name: "删除",
+          // TODO: 未完成
           operate: "delete"
+        }, {
+          name: "打包导出",
+          // TODO: 未完成
+          operate: "downloadFolder"
+        }, {
+          name: "divider",
+          content: "Git"
+        }, {
+          name: "Push",
+          // TODO: 未完成
+          operate: "gitPush"
+        }, {
+          name: "Pull",
+          // TODO: 未完成
+          operate: "gitPull"
+        }, {
+          name: "Clone",
+          // TODO: 未完成
+          operate: "gitClone"
+        }, {
+          name: "Init",
+          // TODO: 未完成
+          operate: "gitInit"
+        }, {
+          name: "Push force",
+          // TODO: 未完成
+          operate: "gitPushForce"
         }],
-        cloud: [{
+        children: [{
           name: "重命名",
+          // TODO: 未完成
           operate: "rename"
         }, {
           name: "删除",
+          // TODO: 未完成
           operate: "delete"
-        }],
-        local: [{
-          name: "重命名",
-          operate: "rename"
         }, {
-          name: "删除",
-          operate: "delete"
+          name: "打包导出",
+          // TODO: 未完成
+          operate: "downloadFolder"
         }]
       }
     };
+  },
+  computed: {
+    selectMenuItem: function selectMenuItem() {
+      if ((this.index + "").indexOf(":") == -1) {
+        return "parent";
+      } else {
+        return "children";
+      }
+    }
   },
   components: {
     "note-item": _noteItem_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
@@ -13277,7 +13328,7 @@ __webpack_require__.r(__webpack_exports__);
       f.style.top = e.clientY + "px";
       f.style.left = e.clientX + "px";
       this.floatMenu.show = true;
-      this.floatMenu.items = this.floatMenuItems[this.storage];
+      this.floatMenu.items = this.floatMenuItems[this.selectMenuItem];
       var offset = {
         xS: e.clientX,
         yS: e.clientY,
@@ -13359,12 +13410,14 @@ __webpack_require__.r(__webpack_exports__);
           operate: "rename"
         }, {
           name: "导出",
-          operate: "download"
+          // TODO: 未完成
+          operate: "downloadCurr"
         }, {
           name: "关闭",
           operate: "closeCurr"
         }, {
-          name: "saveAndClose"
+          name: "saveAndClose",
+          content: "保存后关闭"
         }],
         cloud: [{
           name: "保存到本地",
@@ -13373,15 +13426,20 @@ __webpack_require__.r(__webpack_exports__);
           name: "重命名",
           operate: "rename"
         }, {
+          name: "移动",
+          // TODO: 未完成
+          operate: "move"
+        }, {
           name: "删除",
           operate: "delete"
+        }, {
+          name: "导出",
+          // TODO: 未完成
+          operate: "downloadCloud"
         }],
         local: [{
           name: "保存至云端",
           operate: "saveCloud"
-        }, {
-          name: "导出",
-          operate: "download"
         }, {
           name: "重命名",
           operate: "rename"
@@ -13389,8 +13447,13 @@ __webpack_require__.r(__webpack_exports__);
           name: "删除",
           operate: "delete"
         }, {
-          name: "saveAndClose" // TODO: 是否在保存到云端的同时删除本地中的存储
-
+          name: "导出",
+          // TODO: 未完成
+          operate: "downloadLocal"
+        }, {
+          name: "saveAndClose",
+          // TODO: 是否在保存到云端的同时删除本地中的存储
+          content: "保存后删除"
         }]
       }
     };
@@ -23579,8 +23642,17 @@ var render = function() {
                       }),
                       _vm._v(" "),
                       _c("i", { staticClass: "form-icon" }),
-                      _vm._v(" 保存后关闭\n          ")
+                      _vm._v(
+                        "\n            " + _vm._s(item.content) + "\n          "
+                      )
                     ])
+                  ]
+                : item.name === "divider"
+                ? [
+                    _c("li", {
+                      staticClass: "divider",
+                      attrs: { "data-content": item.content }
+                    })
                   ]
                 : _c(
                     "a",
