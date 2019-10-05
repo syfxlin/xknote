@@ -6,6 +6,7 @@
       <img class="icon mr-1" src="/static/svg/folder.svg" />
       <span>{{ info.name }}</span>
       <span class="text-gray" v-if="info.git">-Git</span>
+      <input class="form-input" type="text" placeholder="Name" :value="info.name" />
       <button
         class="btn btn-link btn-action"
         @click="showFolderSetting($event)"
@@ -126,11 +127,21 @@ export default {
   },
   methods: {
     showFolderSetting(e) {
+      var currEle = e.target.parentElement.parentElement;
+      if (e.target.nodeName === "IMG") {
+        currEle = currEle.parentElement;
+      }
       var f = document.getElementsByClassName("float-menu")[0];
       f.style.top = e.clientY + "px";
       f.style.left = e.clientX + "px";
       this.floatMenu.show = true;
       this.floatMenu.items = this.floatMenuItems[this.selectMenuItem];
+      this.floatMenu.currData = {
+        storage: this.storage,
+        index: this.index,
+        type: "folder",
+        currEle: currEle
+      };
       var offset = {
         xS: e.clientX,
         yS: e.clientY,
@@ -150,11 +161,6 @@ export default {
         document.removeEventListener("click", closeF);
       };
       document.addEventListener("click", closeF);
-      window.xknote.currClickTarget = e.target.parentElement.parentElement;
-      if (e.target.nodeName === "IMG") {
-        window.xknote.currClickTarget =
-          window.xknote.currClickTarget.parentElement;
-      }
     }
   }
 };

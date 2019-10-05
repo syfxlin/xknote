@@ -11474,6 +11474,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "App",
@@ -11615,10 +11616,8 @@ __webpack_require__.r(__webpack_exports__);
     loadCloudFolders: function loadCloudFolders() {
       var _this3 = this;
 
-      window.axios.get("/api/folders").then(function (res) {
-        _this3.cloudList = res.data.folders;
-      })["catch"](function (err) {
-        console.error(err);
+      this.folderOperate("readAll", null, function (data) {
+        _this3.cloudList = data.folders;
       });
     },
 
@@ -12159,7 +12158,6 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         if (storage === "cloud") {
-          // TODO: 云端保存
           window.axios.put("/api/notes", {
             path: noteInfo.path,
             title: noteInfo.note.title,
@@ -12214,6 +12212,87 @@ __webpack_require__.r(__webpack_exports__);
             callE(err);
           });
         }
+      }
+    },
+    folderOperate: function folderOperate(operate) {
+      var _this9 = this;
+
+      var folderInfo = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var callS = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function () {};
+      var callE = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : function () {};
+
+      if (operate === "readAll") {
+        window.axios.get("/api/folders").then(function (res) {
+          callS(res.data);
+        })["catch"](function (err) {
+          console.error(err);
+          callE(err);
+        });
+      }
+
+      if (operate === "readFlat") {
+        window.axios.get("/api/folders/flat").then(function (res) {
+          callS(res.data);
+        })["catch"](function (err) {
+          console.error(err);
+          callE(err);
+        });
+      }
+
+      if (operate === "readOnly") {
+        window.axios.get("/api/folders/only").then(function (res) {
+          callS(res.data);
+        })["catch"](function (err) {
+          console.error(err);
+          callE(err);
+        });
+      }
+
+      if (operate === "rename") {
+        window.axios.put("/api/folders", {
+          oldPath: folderInfo.oldFolder.path,
+          newPath: folderInfo.folder.path
+        }).then(function (res) {
+          console.log(res);
+
+          _this9.timeToast("重命名成功！", "success", 1000);
+
+          if (res.data.error == false) {
+            callS(res);
+          } else {
+            callE(res);
+          }
+        })["catch"](function (err) {
+          console.error(err);
+
+          _this9.timeToast("重命名失败！请重试。", "error", 1000);
+
+          callE(err);
+        });
+      }
+
+      if (operate === "delete") {
+        window.axios["delete"]("/api/folders", {
+          params: {
+            path: folderInfo.path
+          }
+        }).then(function (res) {
+          console.log(res);
+
+          _this9.timeToast("删除成功！", "success", 1000);
+
+          if (res.data.error == false) {
+            callS(res);
+          } else {
+            callE(res);
+          }
+        })["catch"](function (err) {
+          console.error(err);
+
+          _this9.timeToast("删除失败！请重试。", "error", 1000);
+
+          callE(err);
+        });
       }
     },
 
@@ -12629,7 +12708,7 @@ __webpack_require__.r(__webpack_exports__);
     "note-item": _noteItem_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
     "folder-item": _folderItem_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
-  props: ["xknoteTab", "switchTab", "currListSource", "currList", "cloudList", "localList", "xknoteOpened", "xknoteOpenedIndex", "noteBaseInfo", "loadFirstNote", "listOperate", "noteOperate", "setXknoteOpened", "openNote", "writeMode"],
+  props: ["xknoteTab", "switchTab", "currListSource", "currList", "cloudList", "localList", "xknoteOpened", "xknoteOpenedIndex", "noteBaseInfo", "loadFirstNote", "listOperate", "noteOperate", "folderOperate", "setXknoteOpened", "openNote", "writeMode"],
   data: function data() {
     var _this = this;
 
@@ -12660,6 +12739,7 @@ __webpack_require__.r(__webpack_exports__);
       floatMenu: {
         show: false,
         items: [],
+        currData: {},
         saveAndClose: true
       }
     };
@@ -12730,10 +12810,10 @@ __webpack_require__.r(__webpack_exports__);
      * @param {object=} curr 当前操作的item的dom对象
      * @returns void
      */
-    memuOperate: function memuOperate(operate, storage, index) {
+    menuOperate: function menuOperate(operate, type, storage, index) {
       var _this3 = this;
 
-      var curr = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+      var curr = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
       this.floatMenu.show = false;
 
       if (operate === "delete") {
@@ -12742,183 +12822,215 @@ __webpack_require__.r(__webpack_exports__);
         this.smModal.show = true;
 
         this.smModal.confirm = function () {
-          var note = _this3.listOperate("get", storage, index);
-
           _this3.smModal.show = false;
 
-          _this3.noteOperate(operate, storage, note, function (res) {
-            _this3.listOperate("delete", storage, index);
-          });
+          var info = _this3.listOperate("get", storage, index);
+
+          if (type === "note") {
+            _this3.noteOperate(operate, storage, info, function (res) {
+              _this3.listOperate("delete", storage, index);
+            });
+          } else {
+            _this3.folderOperate(operate, info, function (res) {
+              _this3.listOperate("delete", storage, index);
+            });
+          }
         };
 
         this.smModal.cancel = function () {
           _this3.smModal.show = false;
         };
-      } // 保存到本地
-
-
-      if (operate === "saveLocal") {
-        var note = this.listOperate("get", storage, index); // Path相同的时候视为同一文档，但保存时并未删除，所以需要调整判断
-
-        this.localList.forEach(function (item, index) {
-          if (item.path === note.path) {
-            _this3.listOperate("delete", "local", index);
-          }
-        });
-
-        if (storage === "curr") {
-          if (note.status != "C") {
-            note.status = "L";
-          } // 保存到本地（实际操作）
-
-
-          this.noteOperate("save", "local", note, function () {
-            if (_this3.floatMenu.saveAndClose) {
-              note = _this3.listOperate("delete", "curr", index);
-
-              _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
-            }
-
-            var localIndex = _this3.listOperate("add", "local", "", note); // 若不是从localList中打开的文件就不会有currListSource的信息，如果用户选择不关闭保存，则需要添加source信息，防止后续操作出现问题
-
-
-            if (!_this3.floatMenu.saveAndClose) {
-              _this3.currListSource[index] = {
-                index: localIndex,
-                storage: "local"
-              }; // this.$emit("update:currListSource", this.currListSource);
-            }
-          });
-        }
-
-        if (storage === "cloud") {
-          var noteEle = document.querySelector('[data-index="' + index + '"][data-storage="cloud"]');
-          var icon = noteEle.querySelector(".tile-action");
-          icon.style.display = "unset";
-          var btn = icon.querySelector(".btn");
-          this.noteOperate("read", "cloud", note, function (data) {
-            _this3.$set(note, "note", data.note);
-
-            note.status = "C";
-            btn.querySelector(".loading").style.display = "none";
-            icon.style.display = "";
-
-            _this3.noteOperate("save", "local", note, function () {
-              _this3.listOperate("add", "local", "", note);
-            });
-          });
-        }
-      }
-
-      if (operate === "saveCloud") {
-        var _note = this.listOperate("get", storage, index);
-
-        this.noteOperate("save", "cloud", _note, function () {
-          _note.status = "C";
-
-          if (storage === "curr") {
-            if (_this3.currListSource[index].storage === "local") {
-              _this3.noteOperate("save", "local", _note);
-            }
-
-            if (_this3.floatMenu.saveAndClose) {
-              _note = _this3.listOperate("delete", "curr", index);
-
-              _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
-            }
-          }
-
-          if (storage === "local") {
-            if (_this3.floatMenu.saveAndClose) {
-              _this3.noteOperate("delete", "local", _note);
-
-              _this3.listOperate("delete", storage, index);
-            } else {
-              _this3.noteOperate("save", "local", _note);
-            }
-          } // TODO: 更新云端列表 cloudList信息
-
-        });
       }
 
       if (operate === "rename") {
         // 先获取到旧的Note信息，为了防止对象的变动所以需要克隆对象，利用json转换即可方便克隆对象
-        var _note2 = this.listOperate("get", storage, index);
+        var info = this.listOperate("get", storage, index);
+        var oldInfo = JSON.parse(JSON.stringify(info)); // 更改item为输入框
 
-        var oldNote = JSON.parse(JSON.stringify(_note2)); // 更改item为输入框
+        var input = null;
 
-        curr.querySelector(".tile-content").setAttribute("children", "input");
-        var input = curr.querySelector(".tile-content > input");
+        if (type === "note") {
+          curr.querySelector(".tile-content").setAttribute("children", "input");
+          input = curr.querySelector(".tile-content > input");
+        } else {
+          curr.querySelector(".accordion-header").setAttribute("children", "input");
+          input = curr.querySelector(".accordion-header > input");
+        }
 
         var keyEv = function keyEv(e) {
           if (e.key === "Enter") {
-            var value = e.target.value;
-            _note2.path = _note2.path.replace(_note2.name, value);
-            _note2.name = value;
-            var s = storage;
+            var value = e.target.value; // TODO: 重名导致bug出现
 
-            if (storage === "curr") {
-              s = _this3.currListSource[index].storage;
-            }
-
+            info.path = info.path.replace(info.name, value);
+            info.name = value;
             input.setAttribute("disabled", "disabled");
 
-            _this3.noteOperate(operate, s, {
-              oldNote: oldNote,
-              note: _note2
-            }, function (res) {
-              curr.querySelector(".tile-content").removeAttribute("children");
-              input.removeEventListener("keydown", keyEv);
-            }, function (err) {
-              _note2.path = oldNote.path;
-              _note2.name = oldNote.name;
-              input.removeAttribute("disabled");
-            });
+            if (type === "note") {
+              var s = storage;
+
+              if (storage === "curr") {
+                s = _this3.currListSource[index].storage;
+              }
+
+              _this3.noteOperate(operate, s, {
+                oldNote: oldInfo,
+                note: info
+              }, function (res) {
+                curr.querySelector(".tile-content").removeAttribute("children");
+                input.removeEventListener("keydown", keyEv);
+                input.removeAttribute("disabled");
+              }, function (err) {
+                info.path = oldInfo.path;
+                info.name = oldInfo.name;
+                input.removeAttribute("disabled");
+              });
+            } else {
+              _this3.folderOperate(operate, {
+                oldFolder: oldInfo,
+                folder: info
+              }, function (res) {
+                curr.querySelector(".accordion-header").removeAttribute("children");
+                input.removeEventListener("keydown", keyEv);
+                input.removeAttribute("disabled");
+              }, function (err) {
+                info.path = oldInfo.path;
+                info.name = oldInfo.name;
+                input.removeAttribute("disabled");
+              });
+            }
           }
         };
 
         input.addEventListener("keydown", keyEv);
-      }
+      } // noteItem专有操作
 
-      if (operate === "closeCurr") {
-        // 如果笔记在未保存状态关闭则先弹出modal提示是否下关闭
-        var closeCurr = function closeCurr() {
-          if (index == _this3.xknoteOpenedIndex.curr) {
-            _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
-          }
 
-          if (index <= _this3.xknoteOpenedIndex.curr) {
-            _this3.xknoteOpenedIndex.curr--;
+      if (type === "note") {
+        if (operate === "saveLocal") {
+          var note = this.listOperate("get", storage, index); // Path相同的时候视为同一文档，但保存时并未删除，所以需要调整判断
 
-            _this3.$nextTick(function () {
-              var ele = document.querySelector("[data-storage='curr'][data-index='" + _this3.xknoteOpenedIndex.curr + "']");
+          this.localList.forEach(function (item, index) {
+            if (item.path === note.path) {
+              _this3.listOperate("delete", "local", index);
+            }
+          });
 
-              if (ele) {
-                ele.classList.add("active");
+          if (storage === "curr") {
+            if (note.status != "C") {
+              note.status = "L";
+            } // 保存到本地（实际操作）
+
+
+            this.noteOperate("save", "local", note, function () {
+              if (_this3.floatMenu.saveAndClose) {
+                note = _this3.listOperate("delete", "curr", index);
+
+                _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
+              }
+
+              var localIndex = _this3.listOperate("add", "local", "", note); // 若不是从localList中打开的文件就不会有currListSource的信息，如果用户选择不关闭保存，则需要添加source信息，防止后续操作出现问题
+
+
+              if (!_this3.floatMenu.saveAndClose) {
+                _this3.currListSource[index] = {
+                  index: localIndex,
+                  storage: "local"
+                }; // this.$emit("update:currListSource", this.currListSource);
               }
             });
           }
 
-          _this3.listOperate("delete", "curr", index);
-        };
+          if (storage === "cloud") {
+            var noteEle = document.querySelector('[data-index="' + index + '"][data-storage="cloud"]');
+            var icon = noteEle.querySelector(".tile-action");
+            icon.style.display = "unset";
+            var btn = icon.querySelector(".btn");
+            this.noteOperate("read", "cloud", note, function (data) {
+              _this3.$set(note, "note", data.note);
 
-        if (this.listOperate("get", storage, index).status === "N") {
-          this.smModal.title = "关闭";
-          this.smModal.content = "该文件未保存，是否关闭该文件？(此操作不可逆)";
-          this.smModal.show = true;
+              note.status = "C";
+              btn.querySelector(".loading").style.display = "none";
+              icon.style.display = "";
 
-          this.smModal.confirm = function () {
-            closeCurr();
-            _this3.smModal.show = false;
-          };
-
-          this.smModal.cancel = function () {
-            _this3.smModal.show = false;
-          };
-        } else {
-          closeCurr();
+              _this3.noteOperate("save", "local", note, function () {
+                _this3.listOperate("add", "local", "", note);
+              });
+            });
+          }
         }
-      }
+
+        if (operate === "saveCloud") {
+          var _note = this.listOperate("get", storage, index);
+
+          this.noteOperate("save", "cloud", _note, function () {
+            _note.status = "C";
+
+            if (storage === "curr") {
+              if (_this3.currListSource[index].storage === "local") {
+                _this3.noteOperate("save", "local", _note);
+              }
+
+              if (_this3.floatMenu.saveAndClose) {
+                _note = _this3.listOperate("delete", "curr", index);
+
+                _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
+              }
+            }
+
+            if (storage === "local") {
+              if (_this3.floatMenu.saveAndClose) {
+                _this3.noteOperate("delete", "local", _note);
+
+                _this3.listOperate("delete", storage, index);
+              } else {
+                _this3.noteOperate("save", "local", _note);
+              }
+            } // TODO: 更新云端列表 cloudList信息
+
+          });
+        }
+
+        if (operate === "closeCurr") {
+          // 如果笔记在未保存状态关闭则先弹出modal提示是否下关闭
+          var closeCurr = function closeCurr() {
+            if (index == _this3.xknoteOpenedIndex.curr) {
+              _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
+            }
+
+            if (index <= _this3.xknoteOpenedIndex.curr) {
+              _this3.xknoteOpenedIndex.curr--;
+
+              _this3.$nextTick(function () {
+                var ele = document.querySelector("[data-storage='curr'][data-index='" + _this3.xknoteOpenedIndex.curr + "']");
+
+                if (ele) {
+                  ele.classList.add("active");
+                }
+              });
+            }
+
+            _this3.listOperate("delete", "curr", index);
+          };
+
+          if (this.listOperate("get", storage, index).status === "N") {
+            this.smModal.title = "关闭";
+            this.smModal.content = "该文件未保存，是否关闭该文件？(此操作不可逆)";
+            this.smModal.show = true;
+
+            this.smModal.confirm = function () {
+              closeCurr();
+              _this3.smModal.show = false;
+            };
+
+            this.smModal.cancel = function () {
+              _this3.smModal.show = false;
+            };
+          } else {
+            closeCurr();
+          }
+        }
+      } // folderItem专有操作
+
     },
 
     /**
@@ -12927,11 +13039,7 @@ __webpack_require__.r(__webpack_exports__);
      * @returns void
      */
     floatMenuOperate: function floatMenuOperate(operate) {
-      // 以下的curr storage index对应点击的笔记
-      var curr = window.xknote.currClickTarget;
-      var storage = curr.getAttribute("data-storage");
-      var index = curr.getAttribute("data-index");
-      this.memuOperate(operate, storage, index, curr);
+      this.menuOperate(operate, this.floatMenu.currData.type, this.floatMenu.currData.storage, this.floatMenu.currData.index, this.floatMenu.currData.currEle);
     },
 
     /**
@@ -12950,7 +13058,7 @@ __webpack_require__.r(__webpack_exports__);
       var saveLocal = function saveLocal(i) {
         _this4.floatMenu.saveAndClose = false;
 
-        _this4.memuOperate("saveLocal", "curr", i);
+        _this4.menuOperate("saveLocal", "note", "curr", i);
 
         _this4.floatMenu.saveAndClose = true;
       };
@@ -13244,6 +13352,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "folder-item",
@@ -13324,11 +13433,23 @@ __webpack_require__.r(__webpack_exports__);
     showFolderSetting: function showFolderSetting(e) {
       var _this = this;
 
+      var currEle = e.target.parentElement.parentElement;
+
+      if (e.target.nodeName === "IMG") {
+        currEle = currEle.parentElement;
+      }
+
       var f = document.getElementsByClassName("float-menu")[0];
       f.style.top = e.clientY + "px";
       f.style.left = e.clientX + "px";
       this.floatMenu.show = true;
       this.floatMenu.items = this.floatMenuItems[this.selectMenuItem];
+      this.floatMenu.currData = {
+        storage: this.storage,
+        index: this.index,
+        type: "folder",
+        currEle: currEle
+      };
       var offset = {
         xS: e.clientX,
         yS: e.clientY,
@@ -13346,11 +13467,6 @@ __webpack_require__.r(__webpack_exports__);
       };
 
       document.addEventListener("click", closeF);
-      window.xknote.currClickTarget = e.target.parentElement.parentElement;
-
-      if (e.target.nodeName === "IMG") {
-        window.xknote.currClickTarget = window.xknote.currClickTarget.parentElement;
-      }
     }
   }
 });
@@ -13462,11 +13578,23 @@ __webpack_require__.r(__webpack_exports__);
     showNoteSettings: function showNoteSettings(e) {
       var _this = this;
 
+      var currEle = e.target.parentElement.parentElement;
+
+      if (e.target.nodeName === "IMG") {
+        currEle = currEle.parentElement;
+      }
+
       var n = document.getElementsByClassName("float-menu")[0];
       n.style.top = e.clientY + "px";
       n.style.left = e.clientX + "px";
       this.floatMenu.show = true;
       this.floatMenu.items = this.floatMenuItems[this.storage];
+      this.floatMenu.currData = {
+        storage: this.storage,
+        index: this.index,
+        type: "note",
+        currEle: currEle
+      };
       this.$nextTick(function () {
         var offset = {
           xS: e.clientX,
@@ -13486,11 +13614,6 @@ __webpack_require__.r(__webpack_exports__);
 
         document.addEventListener("click", closeN);
       });
-      window.xknote.currClickTarget = e.target.parentElement.parentElement;
-
-      if (e.target.nodeName === "IMG") {
-        window.xknote.currClickTarget = window.xknote.currClickTarget.parentElement;
-      }
     },
     thisOpenNote: function thisOpenNote(e) {
       this.openNote(this.info, {
@@ -22813,6 +22936,7 @@ var render = function() {
               loadFirstNote: _vm.loadFirstNote,
               listOperate: _vm.listOperate,
               noteOperate: _vm.noteOperate,
+              folderOperate: _vm.folderOperate,
               setXknoteOpened: _vm.setXknoteOpened,
               switchTab: _vm.switchTab,
               openNote: _vm.openNote,
@@ -24300,6 +24424,12 @@ var render = function() {
           _vm.info.git
             ? _c("span", { staticClass: "text-gray" }, [_vm._v("-Git")])
             : _vm._e(),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "form-input",
+            attrs: { type: "text", placeholder: "Name" },
+            domProps: { value: _vm.info.name }
+          }),
           _vm._v(" "),
           _vm.mode !== "read"
             ? _c(

@@ -115,11 +115,21 @@ export default {
   },
   methods: {
     showNoteSettings(e) {
+      var currEle = e.target.parentElement.parentElement;
+      if (e.target.nodeName === "IMG") {
+        currEle = currEle.parentElement;
+      }
       var n = document.getElementsByClassName("float-menu")[0];
       n.style.top = e.clientY + "px";
       n.style.left = e.clientX + "px";
       this.floatMenu.show = true;
       this.floatMenu.items = this.floatMenuItems[this.storage];
+      this.floatMenu.currData = {
+        storage: this.storage,
+        index: this.index,
+        type: "note",
+        currEle: currEle
+      };
       this.$nextTick(() => {
         var offset = {
           xS: e.clientX,
@@ -141,11 +151,6 @@ export default {
         };
         document.addEventListener("click", closeN);
       });
-      window.xknote.currClickTarget = e.target.parentElement.parentElement;
-      if (e.target.nodeName === "IMG") {
-        window.xknote.currClickTarget =
-          window.xknote.currClickTarget.parentElement;
-      }
     },
     thisOpenNote(e) {
       this.openNote(

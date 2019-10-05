@@ -13,6 +13,7 @@
         :loadFirstNote="loadFirstNote"
         :listOperate="listOperate"
         :noteOperate="noteOperate"
+        :folderOperate="folderOperate"
         :setXknoteOpened="setXknoteOpened"
         :switchTab="switchTab"
         :openNote="openNote"
@@ -161,14 +162,9 @@ export default {
      * @returns void
      */
     loadCloudFolders() {
-      window.axios
-        .get("/api/folders")
-        .then(res => {
-          this.cloudList = res.data.folders;
-        })
-        .catch(err => {
-          console.error(err);
-        });
+      this.folderOperate("readAll", null, data => {
+        this.cloudList = data.folders;
+      });
     },
     /**
      * 读取本地的笔记
@@ -639,7 +635,6 @@ export default {
           );
         }
         if (storage === "cloud") {
-          // TODO: 云端保存
           window.axios
             .put("/api/notes", {
               path: noteInfo.path,
@@ -691,6 +686,89 @@ export default {
               callE(err);
             });
         }
+      }
+    },
+    folderOperate(
+      operate,
+      folderInfo = null,
+      callS = () => {},
+      callE = () => {}
+    ) {
+      if (operate === "readAll") {
+        window.axios
+          .get("/api/folders")
+          .then(res => {
+            callS(res.data);
+          })
+          .catch(err => {
+            console.error(err);
+            callE(err);
+          });
+      }
+      if (operate === "readFlat") {
+        window.axios
+          .get("/api/folders/flat")
+          .then(res => {
+            callS(res.data);
+          })
+          .catch(err => {
+            console.error(err);
+            callE(err);
+          });
+      }
+      if (operate === "readOnly") {
+        window.axios
+          .get("/api/folders/only")
+          .then(res => {
+            callS(res.data);
+          })
+          .catch(err => {
+            console.error(err);
+            callE(err);
+          });
+      }
+      if (operate === "rename") {
+        window.axios
+          .put("/api/folders", {
+            oldPath: folderInfo.oldFolder.path,
+            newPath: folderInfo.folder.path
+          })
+          .then(res => {
+            console.log(res);
+            this.timeToast("重命名成功！", "success", 1000);
+            if (res.data.error == false) {
+              callS(res);
+            } else {
+              callE(res);
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            this.timeToast("重命名失败！请重试。", "error", 1000);
+            callE(err);
+          });
+      }
+      if (operate === "delete") {
+        window.axios
+          .delete("/api/folders", {
+            params: {
+              path: folderInfo.path
+            }
+          })
+          .then(res => {
+            console.log(res);
+            this.timeToast("删除成功！", "success", 1000);
+            if (res.data.error == false) {
+              callS(res);
+            } else {
+              callE(res);
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            this.timeToast("删除失败！请重试。", "error", 1000);
+            callE(err);
+          });
       }
     },
     /**
