@@ -2,7 +2,7 @@
   <div class="accordion" :data-index="index" :data-storage="storage" :data-path="info.path">
     <!-- mark checked代表已经开启 -->
     <input :id="'accordion-' + idHash" type="checkbox" name="accordion-checkbox" hidden />
-    <label class="accordion-header c-hand" :for="'accordion-' + idHash">
+    <label class="accordion-header c-hand" :for="'accordion-' + idHash" :title="info.path">
       <img class="icon mr-1" src="/static/svg/folder.svg" />
       <span>{{ info.name }}</span>
       <span class="text-gray" v-if="info.git">-Git</span>
@@ -136,7 +136,7 @@ export default {
       f.style.left = e.clientX + "px";
       this.floatMenu.show = true;
       this.floatMenu.items = this.floatMenuItems[this.selectMenuItem];
-      this.floatMenu.currData = {
+      this.floatMenu.data = {
         storage: this.storage,
         index: this.index,
         type: "folder",

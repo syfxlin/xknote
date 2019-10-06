@@ -291,7 +291,7 @@
           </div>
         </div>
       </div>
-      <div :class="'modal modal-lg xknote-lg-modal' + (lgModal.show ? ' active' : '')">
+      <div :class="'modal xknote-lg-modal' + (lgModal.show ? ' active' : '')">
         <a class="modal-overlay"></a>
         <div :class="'modal-container ' + lgModal.content" role="document">
           <div class="modal-header">
@@ -300,8 +300,90 @@
           </div>
           <div class="modal-body">
             <div class="content">
-              <template v-if="lgModal.content==='CreateNote'">createNote</template>
-              <template v-if="lgModal.content==='CreateFolder'">createFolder</template>
+              <template v-if="lgModal.content==='CreateNote'">
+                <div class="form-horizontal">
+                  <div class="form-group">
+                    <div class="col-3 col-sm-12">
+                      <label class="form-label">文档名</label>
+                    </div>
+                    <div class="col-9 col-sm-12">
+                      <input class="form-input" type="text" placeholder="文档名" />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-3 col-sm-12">
+                      <label class="form-label">标题</label>
+                    </div>
+                    <div class="col-9 col-sm-12">
+                      <input class="form-input" type="text" placeholder="标题" />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-3 col-sm-12">
+                      <label class="form-label">存放的文件夹</label>
+                    </div>
+                    <div class="col-9 col-sm-12">
+                      <div v-if="!lgModal.data.folders">
+                        <div class="loading"></div>
+                        <div class="text-gray text-center">正在加载，客官莫急。</div>
+                      </div>
+                      <template v-else>
+                        <input
+                          class="form-input"
+                          type="text"
+                          v-model="lgModal.data.select"
+                          placeholder="存放路径"
+                        />
+                        <hr />
+                        <only-folder-item
+                          v-for="item in lgModal.data.folders"
+                          :key="item.id"
+                          :info="item"
+                          :lgModal="lgModal"
+                        />
+                      </template>
+                    </div>
+                  </div>
+                </div>
+              </template>
+              <template v-if="lgModal.content==='CreateFolder'">
+                <div class="form-horizontal">
+                  <div class="form-group">
+                    <div class="col-3 col-sm-12">
+                      <label class="form-label">文件夹名</label>
+                    </div>
+                    <div class="col-9 col-sm-12">
+                      <input class="form-input" type="text" placeholder="文件夹名" />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-3 col-sm-12">
+                      <label class="form-label">存放的文件夹</label>
+                    </div>
+                    <div class="col-9 col-sm-12">
+                      <input
+                        class="form-input"
+                        type="text"
+                        v-model="lgModal.data.select"
+                        placeholder="存放路径"
+                      />
+                      <div v-if="!lgModal.data.folders">
+                        <div class="loading"></div>
+                        <div class="text-gray text-center">正在加载，客官莫急。</div>
+                      </div>
+                      <template v-else>
+                        <hr />
+                        <only-folder-item
+                          v-for="item in lgModal.data.folders"
+                          :key="item.id"
+                          :info="item"
+                          :lgModal="lgModal"
+                        />
+                      </template>
+                    </div>
+                  </div>
+                </div>
+              </template>
               <template v-if="lgModal.content==='PersonalCenter'">personalCenter</template>
               <template v-if="lgModal.content==='UserSetting'">userSetting</template>
               <template v-if="lgModal.content==='GitSetting'">gitSetting</template>
@@ -354,12 +436,14 @@
 import XK_Editor from "xkeditor";
 import noteItem from "./noteItem.vue";
 import folderItem from "./folderItem.vue";
+import onlyFolderItem from "./onlyFolderItem";
 export default {
   name: "home",
   components: {
     "xk-editor": XK_Editor,
     "note-item": noteItem,
-    "folder-item": folderItem
+    "folder-item": folderItem,
+    "only-folder-item": onlyFolderItem
   },
   props: [
     "xknoteTab",
@@ -398,6 +482,7 @@ export default {
         show: false,
         title: "",
         content: "",
+        data: {},
         confirm: () => {},
         cancel: () => {
           this.lgModal.show = false;
@@ -406,7 +491,7 @@ export default {
       floatMenu: {
         show: false,
         items: [],
-        currData: {},
+        data: {},
         saveAndClose: true
       }
     };
@@ -692,10 +777,10 @@ export default {
     floatMenuOperate(operate) {
       this.menuOperate(
         operate,
-        this.floatMenu.currData.type,
-        this.floatMenu.currData.storage,
-        this.floatMenu.currData.index,
-        this.floatMenu.currData.currEle
+        this.floatMenu.data.type,
+        this.floatMenu.data.storage,
+        this.floatMenu.data.index,
+        this.floatMenu.data.currEle
       );
     },
     /**
@@ -707,6 +792,20 @@ export default {
       if (operate.indexOf("show") === 0) {
         this.lgModal.show = true;
         this.lgModal.content = operate.substring(4);
+        if (this.lgModal.content === "CreateNote") {
+          this.lgModal.title = "新建MD笔记";
+          this.folderOperate("readOnly", null, data => {
+            this.$set(this.lgModal.data, "folders", data.folders);
+          });
+          // TODO: 新建MD笔记其他操作
+        }
+        if (this.lgModal.content === "CreateFolder") {
+          this.lgModal.title = "新建文件夹";
+          this.folderOperate("readOnly", null, data => {
+            this.$set(this.lgModal.data, "folders", data.folders);
+          });
+          // TODO: 新建文件夹其他操作
+        }
       }
       if (operate === "saveLocal" || operate === "saveCloud") {
         this.floatMenu.saveAndClose = false;
@@ -781,5 +880,8 @@ export default {
 <style>
 .active {
   color: #585858;
+}
+#toc li img {
+  width: 1.05em;
 }
 </style>

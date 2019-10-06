@@ -112,7 +112,7 @@ export default {
       n.style.left = e.clientX + "px";
       this.floatMenu.show = true;
       this.floatMenu.items = this.floatMenuItems[this.storage];
-      this.floatMenu.currData = {
+      this.floatMenu.data = {
         storage: this.storage,
         index: this.index,
         type: "note",

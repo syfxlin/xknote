@@ -285,8 +285,25 @@ body {
     color: #585858;
 }
 
-.modal.modal-lg .modal-container.CheckLocalStatus {
+.modal .modal-container.CheckLocalStatus {
     max-width: 90%;
+}
+
+.only-folder-item .accordion-header.active {
+    background: #f1f1fc;
+    color: #5755d9;
+}
+
+.only-folder-item .menu {
+    padding: 0;
+}
+
+.only-folder-item .menu-item {
+    padding-right: 0;
+}
+
+.only-folder-item .accordion-body {
+    margin-bottom: 0.2rem;
 }
 
 .toast {
