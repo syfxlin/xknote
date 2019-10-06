@@ -56,7 +56,7 @@ export default {
       floatMenuItems: {
         parent: [
           {
-            name: "重命名", // TODO: 未完成
+            name: "重命名",
             operate: "rename"
           },
           {
@@ -64,7 +64,7 @@ export default {
             operate: "move"
           },
           {
-            name: "删除", // TODO: 未完成
+            name: "删除",
             operate: "delete"
           },
           {

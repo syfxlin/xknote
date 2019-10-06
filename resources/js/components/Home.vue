@@ -512,7 +512,6 @@ export default {
         let keyEv = e => {
           if (e.key === "Enter") {
             let value = e.target.value;
-            // TODO: 重名导致bug出现
             info.path = info.path.replace(new RegExp(info.name + "$"), value);
             info.name = value;
             input.setAttribute("disabled", "disabled");
@@ -709,19 +708,14 @@ export default {
         this.lgModal.show = true;
         this.lgModal.content = operate.substring(4);
       }
-      let saveLocal = i => {
+      if (operate === "saveLocal" || operate === "saveCloud") {
         this.floatMenu.saveAndClose = false;
-        this.menuOperate("saveLocal", "note", "curr", i);
-        this.floatMenu.saveAndClose = true;
-      };
-      if (operate === "saveLocal") {
-        saveLocal(this.xknoteOpenedIndex.curr);
+        this.menuOperate(operate, "note", "curr", this.xknoteOpenedIndex.curr);
       }
-      if (operate === "saveAllLocal") {
+      if (operate === "saveAllLocal" || operate === "saveAllCloud") {
+        this.floatMenu.saveAndClose = false;
         this.currList.forEach((item, index) => {
-          if (item.status !== "L") {
-            saveLocal(index);
-          }
+          this.menuOperate(operate.replace("All", ""), "note", "curr", index);
         });
       }
       if (operate === "downloadMarkdown") {

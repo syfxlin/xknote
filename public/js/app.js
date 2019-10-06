@@ -12859,8 +12859,7 @@ __webpack_require__.r(__webpack_exports__);
 
         var keyEv = function keyEv(e) {
           if (e.key === "Enter") {
-            var value = e.target.value; // TODO: 重名导致bug出现
-
+            var value = e.target.value;
             info.path = info.path.replace(new RegExp(info.name + "$"), value);
             info.name = value;
             input.setAttribute("disabled", "disabled");
@@ -13055,23 +13054,15 @@ __webpack_require__.r(__webpack_exports__);
         this.lgModal.content = operate.substring(4);
       }
 
-      var saveLocal = function saveLocal(i) {
-        _this4.floatMenu.saveAndClose = false;
-
-        _this4.menuOperate("saveLocal", "note", "curr", i);
-
-        _this4.floatMenu.saveAndClose = true;
-      };
-
-      if (operate === "saveLocal") {
-        saveLocal(this.xknoteOpenedIndex.curr);
+      if (operate === "saveLocal" || operate === "saveCloud") {
+        this.floatMenu.saveAndClose = false;
+        this.menuOperate(operate, "note", "curr", this.xknoteOpenedIndex.curr);
       }
 
-      if (operate === "saveAllLocal") {
+      if (operate === "saveAllLocal" || operate === "saveAllCloud") {
+        this.floatMenu.saveAndClose = false;
         this.currList.forEach(function (item, index) {
-          if (item.status !== "L") {
-            saveLocal(index);
-          }
+          _this4.menuOperate(operate.replace("All", ""), "note", "curr", index);
         });
       }
 
@@ -13363,7 +13354,6 @@ __webpack_require__.r(__webpack_exports__);
       floatMenuItems: {
         parent: [{
           name: "重命名",
-          // TODO: 未完成
           operate: "rename"
         }, {
           name: "移动",
@@ -13371,7 +13361,6 @@ __webpack_require__.r(__webpack_exports__);
           operate: "move"
         }, {
           name: "删除",
-          // TODO: 未完成
           operate: "delete"
         }, {
           name: "打包导出",
@@ -13525,10 +13514,6 @@ __webpack_require__.r(__webpack_exports__);
           name: "重命名",
           operate: "rename"
         }, {
-          name: "导出",
-          // TODO: 未完成
-          operate: "downloadCurr"
-        }, {
           name: "关闭",
           operate: "closeCurr"
         }, {
@@ -13548,10 +13533,6 @@ __webpack_require__.r(__webpack_exports__);
         }, {
           name: "删除",
           operate: "delete"
-        }, {
-          name: "导出",
-          // TODO: 未完成
-          operate: "downloadCloud"
         }],
         local: [{
           name: "保存至云端",
@@ -13563,12 +13544,7 @@ __webpack_require__.r(__webpack_exports__);
           name: "删除",
           operate: "delete"
         }, {
-          name: "导出",
-          // TODO: 未完成
-          operate: "downloadLocal"
-        }, {
           name: "saveAndClose",
-          // TODO: 是否在保存到云端的同时删除本地中的存储
           content: "保存后删除"
         }]
       }
