@@ -35,10 +35,11 @@ class NoteModel
     {
         $notes = Storage::allFiles($path);
         $index = 0;
-        foreach ($notes as $dirName) {
-            if (preg_match('/.git/i', $dirName)) {
+        foreach ($notes as $noteName) {
+            if (preg_match('/.git/i', $noteName)) {
                 array_splice($notes, $index, 1);
             } else {
+                $notes[$index] = preg_replace('/uid_\d+/i', '', $noteName);
                 $index++;
             }
         }

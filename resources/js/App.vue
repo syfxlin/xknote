@@ -687,6 +687,21 @@ export default {
             });
         }
       }
+      if (operate === "exist") {
+        if (storage === "cloud") {
+          window.axios
+            .get("/api/notes/exist", {
+              params: { path: noteInfo.path }
+            })
+            .then(res => {
+              callS(res.data);
+            })
+            .catch(err => {
+              console.error(err);
+              callE(err);
+            });
+        }
+      }
     },
     folderOperate(
       operate,
@@ -767,6 +782,19 @@ export default {
           .catch(err => {
             console.error(err);
             this.timeToast("删除失败！请重试。", "error", 1000);
+            callE(err);
+          });
+      }
+      if (operate === "exist") {
+        window.axios
+          .get("/api/folders/exist", {
+            params: { path: folderInfo.path }
+          })
+          .then(res => {
+            callS(res.data);
+          })
+          .catch(err => {
+            console.error(err);
             callE(err);
           });
       }

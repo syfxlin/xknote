@@ -306,8 +306,16 @@
                     <div class="col-3 col-sm-12">
                       <label class="form-label">文档名</label>
                     </div>
-                    <div class="col-9 col-sm-12">
-                      <input class="form-input" type="text" placeholder="文档名" />
+                    <div class="col-9 col-sm-12 has-icon-right">
+                      <input
+                        :class="'form-input' + (lgModal.data.status === 'error' ? ' is-error' : '')"
+                        type="text"
+                        v-model="lgModal.data.filename"
+                        required
+                      />
+                      <i
+                        :class="'form-icon icon' + (lgModal.data.status === 'loading' ? ' loading' : '')"
+                      ></i>
                     </div>
                   </div>
                   <div class="form-group">
@@ -315,7 +323,7 @@
                       <label class="form-label">标题</label>
                     </div>
                     <div class="col-9 col-sm-12">
-                      <input class="form-input" type="text" placeholder="标题" />
+                      <input class="form-input" type="text" v-model="lgModal.data.title" required />
                     </div>
                   </div>
                   <div class="form-group">
@@ -332,7 +340,7 @@
                           class="form-input"
                           type="text"
                           v-model="lgModal.data.select"
-                          placeholder="存放路径"
+                          required
                         />
                         <hr />
                         <only-folder-item
@@ -352,8 +360,16 @@
                     <div class="col-3 col-sm-12">
                       <label class="form-label">文件夹名</label>
                     </div>
-                    <div class="col-9 col-sm-12">
-                      <input class="form-input" type="text" placeholder="文件夹名" />
+                    <div class="col-9 col-sm-12 has-icon-right">
+                      <input
+                        :class="'form-input' + (lgModal.data.status === 'error' ? ' is-error' : '')"
+                        type="text"
+                        v-model="lgModal.data.foldername"
+                        required
+                      />
+                      <i
+                        :class="'form-icon icon' + (lgModal.data.status === 'loading' ? ' loading' : '')"
+                      ></i>
                     </div>
                   </div>
                   <div class="form-group">
@@ -361,12 +377,7 @@
                       <label class="form-label">存放的文件夹</label>
                     </div>
                     <div class="col-9 col-sm-12">
-                      <input
-                        class="form-input"
-                        type="text"
-                        v-model="lgModal.data.select"
-                        placeholder="存放路径"
-                      />
+                      <input class="form-input" type="text" v-model="lgModal.data.select" required />
                       <div v-if="!lgModal.data.folders">
                         <div class="loading"></div>
                         <div class="text-gray text-center">正在加载，客官莫急。</div>
@@ -797,14 +808,104 @@ export default {
           this.folderOperate("readOnly", null, data => {
             this.$set(this.lgModal.data, "folders", data.folders);
           });
-          // TODO: 新建MD笔记其他操作
+          let wTimeout = null;
+          let watch = () => {
+            if (wTimeout) {
+              clearTimeout(wTimeout);
+            }
+            wTimeout = setTimeout(() => {
+              this.$set(this.lgModal.data, "status", "loading");
+              if (!/\.md/gi.test(this.lgModal.data.filename)) {
+                this.$set(this.lgModal.data, "status", "error");
+                return;
+              }
+              this.noteOperate(
+                "exist",
+                "cloud",
+                {
+                  path:
+                    this.lgModal.data.select + "/" + this.lgModal.data.filename
+                },
+                data => {
+                  if (data.exist) {
+                    this.$set(this.lgModal.data, "status", "error");
+                  } else {
+                    this.$set(this.lgModal.data, "status", "");
+                  }
+                }
+              );
+            }, 500);
+          };
+          let uwFileName = this.$watch("lgModal.data.filename", watch);
+          let uwTitle = this.$watch("lgModal.data.select", watch);
+          this.lgModal.confirm = () => {
+            if (
+              !this.lgModal.data.filename ||
+              !this.lgModal.data.title ||
+              this.lgModal.data.status !== ""
+            ) {
+              return;
+            }
+            uwFileName();
+            uwTitle();
+            // TODO: 新建MD笔记其他操作
+            console.log(this.lgModal.data);
+          };
+          this.lgModal.cancel = () => {
+            uwFileName();
+            uwTitle();
+            this.$set(this.lgModal.data, "status", "");
+          };
         }
         if (this.lgModal.content === "CreateFolder") {
           this.lgModal.title = "新建文件夹";
           this.folderOperate("readOnly", null, data => {
             this.$set(this.lgModal.data, "folders", data.folders);
           });
-          // TODO: 新建文件夹其他操作
+          let wTimeout = null;
+          let watch = () => {
+            if (wTimeout) {
+              clearTimeout(wTimeout);
+            }
+            wTimeout = setTimeout(() => {
+              this.$set(this.lgModal.data, "status", "loading");
+              this.folderOperate(
+                "exist",
+                {
+                  path:
+                    this.lgModal.data.select +
+                    "/" +
+                    this.lgModal.data.foldername
+                },
+                data => {
+                  if (data.exist) {
+                    this.$set(this.lgModal.data, "status", "error");
+                  } else {
+                    this.$set(this.lgModal.data, "status", "");
+                  }
+                }
+              );
+            }, 500);
+          };
+          let uwFolderName = this.$watch("lgModal.data.foldername", watch);
+          let uwTitle = this.$watch("lgModal.data.select", watch);
+          this.lgModal.confirm = () => {
+            if (
+              !this.lgModal.data.foldername ||
+              this.lgModal.data.status !== ""
+            ) {
+              return;
+            }
+            uwFolderName();
+            uwTitle();
+            // TODO: 新建文件夹其他操作
+            console.log(this.lgModal.data);
+          };
+          this.lgModal.cancel = () => {
+            uwFolderName();
+            uwTitle();
+            this.$set(this.lgModal.data, "status", "");
+          };
         }
       }
       if (operate === "saveLocal" || operate === "saveCloud") {

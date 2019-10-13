@@ -6,35 +6,35 @@ use Illuminate\Support\Facades\Storage;
 
 class FolderModel
 {
-    public function get($dir = "", $checkGit = false, $mode = "all")
+    public function get($dir = '', $checkGit = false, $mode = 'all')
     {
-        if ($mode === "flat") {
+        if ($mode === 'flat') {
             return $this->getFlat($dir);
         }
         $re = [];
-        $dirs = array_filter(Storage::directories($dir), function($dirName) {
+        $dirs = array_filter(Storage::directories($dir), function ($dirName) {
             return !preg_match("/.git$/i", $dirName);
         });
         $dirs = array_values($dirs);
         foreach ($dirs as $index => $dirName) {
             $re[$index] = [
-                "type" => "folder",
-                "path" => preg_replace("/uid_\d+/i", "", $dirName),
-                "name" => str_replace($dir . "/", "", $dirName),
-                "sub" => $this->get($dirName, false, $mode)
+                'type' => 'folder',
+                'path' => preg_replace('/uid_\d+/i', '', $dirName),
+                'name' => str_replace($dir . '/', '', $dirName),
+                'sub' => $this->get($dirName, false, $mode)
             ];
-            if ($checkGit && Storage::exists($dirName . "/.git")) {
-                $re[$index]["git"] = true;
+            if ($checkGit && Storage::exists($dirName . '/.git')) {
+                $re[$index]['git'] = true;
             }
         }
-        if ($mode === "all") {
+        if ($mode === 'all') {
             $files = Storage::files($dir);
             foreach ($files as $fileName) {
                 if (preg_match("/(.md$|.txt)/i", $fileName)) {
                     $re[] = [
-                        "type" => "note",
-                        "path" => preg_replace("/uid_\d+/i", "", $fileName),
-                        "name" => str_replace($dir . "/", "", $fileName)
+                        'type' => 'note',
+                        'path' => preg_replace('/uid_\d+/i', '', $fileName),
+                        'name' => str_replace($dir . '/', '', $fileName)
                     ];
                 }
             }
@@ -47,9 +47,10 @@ class FolderModel
         $dirs = Storage::allDirectories($dir);
         $index = 0;
         foreach ($dirs as $dirName) {
-            if (preg_match("/.git/i", $dirName)) {
+            if (preg_match('/.git/i', $dirName)) {
                 array_splice($dirs, $index, 1);
             } else {
+                $dirs[$index] = preg_replace('/uid_\d+/i', '', $dirName);
                 $index++;
             }
         }

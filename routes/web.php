@@ -40,6 +40,7 @@ Route::prefix('api')
         Route::put('/folders/move', 'FolderController@move');
         Route::get('/folders/only', 'FolderController@getOnly');
         Route::get('/folders/flat', 'FolderController@getFlat');
+        Route::get('/folders/exist', 'FolderController@exist');
 
         Route::get('/notes', 'NoteController@get');
         Route::post('/notes', 'NoteController@create');
@@ -49,4 +50,5 @@ Route::prefix('api')
         Route::put('/notes/move', 'NoteController@move');
         Route::get('/notes/all', 'NoteController@getAll');
         Route::post('/notes/check', 'NoteController@checkStatus');
+        Route::get('/notes/exist', 'NoteController@exist');
     });

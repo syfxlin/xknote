@@ -12213,6 +12213,21 @@ __webpack_require__.r(__webpack_exports__);
           });
         }
       }
+
+      if (operate === "exist") {
+        if (storage === "cloud") {
+          window.axios.get("/api/notes/exist", {
+            params: {
+              path: noteInfo.path
+            }
+          }).then(function (res) {
+            callS(res.data);
+          })["catch"](function (err) {
+            console.error(err);
+            callE(err);
+          });
+        }
+      }
     },
     folderOperate: function folderOperate(operate) {
       var _this9 = this;
@@ -12294,6 +12309,19 @@ __webpack_require__.r(__webpack_exports__);
           callE(err);
         });
       }
+
+      if (operate === "exist") {
+        window.axios.get("/api/folders/exist", {
+          params: {
+            path: folderInfo.path
+          }
+        }).then(function (res) {
+          callS(res.data);
+        })["catch"](function (err) {
+          console.error(err);
+          callE(err);
+        });
+      }
     },
 
     /**
@@ -12347,6 +12375,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _noteItem_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./noteItem.vue */ "./resources/js/components/noteItem.vue");
 /* harmony import */ var _folderItem_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./folderItem.vue */ "./resources/js/components/folderItem.vue");
 /* harmony import */ var _onlyFolderItem__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./onlyFolderItem */ "./resources/js/components/onlyFolderItem.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -13143,14 +13182,108 @@ __webpack_require__.r(__webpack_exports__);
           this.lgModal.title = "新建MD笔记";
           this.folderOperate("readOnly", null, function (data) {
             _this4.$set(_this4.lgModal.data, "folders", data.folders);
-          }); // TODO: 新建MD笔记其他操作
+          });
+          var wTimeout = null;
+
+          var watch = function watch() {
+            if (wTimeout) {
+              clearTimeout(wTimeout);
+            }
+
+            wTimeout = setTimeout(function () {
+              _this4.$set(_this4.lgModal.data, "status", "loading");
+
+              if (!/\.md/gi.test(_this4.lgModal.data.filename)) {
+                _this4.$set(_this4.lgModal.data, "status", "error");
+
+                return;
+              }
+
+              _this4.noteOperate("exist", "cloud", {
+                path: _this4.lgModal.data.select + "/" + _this4.lgModal.data.filename
+              }, function (data) {
+                if (data.exist) {
+                  _this4.$set(_this4.lgModal.data, "status", "error");
+                } else {
+                  _this4.$set(_this4.lgModal.data, "status", "");
+                }
+              });
+            }, 500);
+          };
+
+          var uwFileName = this.$watch("lgModal.data.filename", watch);
+          var uwTitle = this.$watch("lgModal.data.select", watch);
+
+          this.lgModal.confirm = function () {
+            if (!_this4.lgModal.data.filename || !_this4.lgModal.data.title || _this4.lgModal.data.status !== "") {
+              return;
+            }
+
+            uwFileName();
+            uwTitle(); // TODO: 新建MD笔记其他操作
+
+            console.log(_this4.lgModal.data);
+          };
+
+          this.lgModal.cancel = function () {
+            uwFileName();
+            uwTitle();
+
+            _this4.$set(_this4.lgModal.data, "status", "");
+          };
         }
 
         if (this.lgModal.content === "CreateFolder") {
           this.lgModal.title = "新建文件夹";
           this.folderOperate("readOnly", null, function (data) {
             _this4.$set(_this4.lgModal.data, "folders", data.folders);
-          }); // TODO: 新建文件夹其他操作
+          });
+          var _wTimeout = null;
+
+          var _watch = function _watch() {
+            if (_wTimeout) {
+              clearTimeout(_wTimeout);
+            }
+
+            _wTimeout = setTimeout(function () {
+              _this4.$set(_this4.lgModal.data, "status", "loading");
+
+              _this4.folderOperate("exist", {
+                path: _this4.lgModal.data.select + "/" + _this4.lgModal.data.foldername
+              }, function (data) {
+                if (data.exist) {
+                  _this4.$set(_this4.lgModal.data, "status", "error");
+                } else {
+                  _this4.$set(_this4.lgModal.data, "status", "");
+                }
+              });
+            }, 500);
+          };
+
+          var uwFolderName = this.$watch("lgModal.data.foldername", _watch);
+
+          var _uwTitle = this.$watch("lgModal.data.select", _watch);
+
+          this.lgModal.confirm = function () {
+            if (!_this4.lgModal.data.foldername || _this4.lgModal.data.status !== "") {
+              return;
+            }
+
+            uwFolderName();
+
+            _uwTitle(); // TODO: 新建文件夹其他操作
+
+
+            console.log(_this4.lgModal.data);
+          };
+
+          this.lgModal.cancel = function () {
+            uwFolderName();
+
+            _uwTitle();
+
+            _this4.$set(_this4.lgModal.data, "status", "");
+          };
         }
       }
 
@@ -24020,9 +24153,89 @@ var render = function() {
                     _vm.lgModal.content === "CreateNote"
                       ? [
                           _c("div", { staticClass: "form-horizontal" }, [
-                            _vm._m(5),
+                            _c("div", { staticClass: "form-group" }, [
+                              _vm._m(5),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass: "col-9 col-sm-12 has-icon-right"
+                                },
+                                [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.lgModal.data.filename,
+                                        expression: "lgModal.data.filename"
+                                      }
+                                    ],
+                                    class:
+                                      "form-input" +
+                                      (_vm.lgModal.data.status === "error"
+                                        ? " is-error"
+                                        : ""),
+                                    attrs: { type: "text", required: "" },
+                                    domProps: {
+                                      value: _vm.lgModal.data.filename
+                                    },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.lgModal.data,
+                                          "filename",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("i", {
+                                    class:
+                                      "form-icon icon" +
+                                      (_vm.lgModal.data.status === "loading"
+                                        ? " loading"
+                                        : "")
+                                  })
+                                ]
+                              )
+                            ]),
                             _vm._v(" "),
-                            _vm._m(6),
+                            _c("div", { staticClass: "form-group" }, [
+                              _vm._m(6),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "col-9 col-sm-12" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.lgModal.data.title,
+                                      expression: "lgModal.data.title"
+                                    }
+                                  ],
+                                  staticClass: "form-input",
+                                  attrs: { type: "text", required: "" },
+                                  domProps: { value: _vm.lgModal.data.title },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.lgModal.data,
+                                        "title",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ])
+                            ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
                               _vm._m(7),
@@ -24054,10 +24267,7 @@ var render = function() {
                                             }
                                           ],
                                           staticClass: "form-input",
-                                          attrs: {
-                                            type: "text",
-                                            placeholder: "存放路径"
-                                          },
+                                          attrs: { type: "text", required: "" },
                                           domProps: {
                                             value: _vm.lgModal.data.select
                                           },
@@ -24101,7 +24311,57 @@ var render = function() {
                     _vm.lgModal.content === "CreateFolder"
                       ? [
                           _c("div", { staticClass: "form-horizontal" }, [
-                            _vm._m(8),
+                            _c("div", { staticClass: "form-group" }, [
+                              _vm._m(8),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass: "col-9 col-sm-12 has-icon-right"
+                                },
+                                [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.lgModal.data.foldername,
+                                        expression: "lgModal.data.foldername"
+                                      }
+                                    ],
+                                    class:
+                                      "form-input" +
+                                      (_vm.lgModal.data.status === "error"
+                                        ? " is-error"
+                                        : ""),
+                                    attrs: { type: "text", required: "" },
+                                    domProps: {
+                                      value: _vm.lgModal.data.foldername
+                                    },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.lgModal.data,
+                                          "foldername",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("i", {
+                                    class:
+                                      "form-icon icon" +
+                                      (_vm.lgModal.data.status === "loading"
+                                        ? " loading"
+                                        : "")
+                                  })
+                                ]
+                              )
+                            ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
                               _vm._m(9),
@@ -24120,10 +24380,7 @@ var render = function() {
                                       }
                                     ],
                                     staticClass: "form-input",
-                                    attrs: {
-                                      type: "text",
-                                      placeholder: "存放路径"
-                                    },
+                                    attrs: { type: "text", required: "" },
                                     domProps: {
                                       value: _vm.lgModal.data.select
                                     },
@@ -24371,34 +24628,16 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("div", { staticClass: "col-3 col-sm-12" }, [
-        _c("label", { staticClass: "form-label" }, [_vm._v("文档名")])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-9 col-sm-12" }, [
-        _c("input", {
-          staticClass: "form-input",
-          attrs: { type: "text", placeholder: "文档名" }
-        })
-      ])
+    return _c("div", { staticClass: "col-3 col-sm-12" }, [
+      _c("label", { staticClass: "form-label" }, [_vm._v("文档名")])
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("div", { staticClass: "col-3 col-sm-12" }, [
-        _c("label", { staticClass: "form-label" }, [_vm._v("标题")])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-9 col-sm-12" }, [
-        _c("input", {
-          staticClass: "form-input",
-          attrs: { type: "text", placeholder: "标题" }
-        })
-      ])
+    return _c("div", { staticClass: "col-3 col-sm-12" }, [
+      _c("label", { staticClass: "form-label" }, [_vm._v("标题")])
     ])
   },
   function() {
@@ -24413,17 +24652,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("div", { staticClass: "col-3 col-sm-12" }, [
-        _c("label", { staticClass: "form-label" }, [_vm._v("文件夹名")])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-9 col-sm-12" }, [
-        _c("input", {
-          staticClass: "form-input",
-          attrs: { type: "text", placeholder: "文件夹名" }
-        })
-      ])
+    return _c("div", { staticClass: "col-3 col-sm-12" }, [
+      _c("label", { staticClass: "form-label" }, [_vm._v("文件夹名")])
     ])
   },
   function() {

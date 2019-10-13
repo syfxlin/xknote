@@ -160,4 +160,16 @@ class NoteController extends Controller
         $res = $this->model->checkStatus($checkList, $pathList);
         return ['error' => false, 'checkList' => $res];
     }
+
+    public function exist(Request $request)
+    {
+        $id = $request->user()->id;
+        if (!$request->has('path')) {
+            return response(['error' => 'Parameter not found. (path)'], 400);
+        }
+        return [
+            'error' => false,
+            'exist' => $this->model->exist('uid_' . $id . $request->path)
+        ];
+    }
 }
