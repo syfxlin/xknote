@@ -328,20 +328,26 @@
                   </div>
                   <div class="form-group">
                     <div class="col-3 col-sm-12">
+                      <label class="form-label">云端/本地</label>
+                    </div>
+                    <div class="col-9 col-sm-12">
+                      <select class="form-select" v-model="lgModal.data.storage" required>
+                        <option value="cloud">云端</option>
+                        <option value="local">本地</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-3 col-sm-12">
                       <label class="form-label">存放的文件夹</label>
                     </div>
                     <div class="col-9 col-sm-12">
+                      <input class="form-input" type="text" v-model="lgModal.data.select" required />
                       <div v-if="!lgModal.data.folders">
                         <div class="loading"></div>
                         <div class="text-gray text-center">正在加载，客官莫急。</div>
                       </div>
                       <template v-else>
-                        <input
-                          class="form-input"
-                          type="text"
-                          v-model="lgModal.data.select"
-                          required
-                        />
                         <hr />
                         <only-folder-item
                           v-for="item in lgModal.data.folders"
@@ -472,7 +478,8 @@ export default {
     "folderOperate",
     "setXknoteOpened",
     "openNote",
-    "writeMode"
+    "writeMode",
+    "loadCloudFolders"
   ],
   data() {
     return {
@@ -815,13 +822,14 @@ export default {
             }
             wTimeout = setTimeout(() => {
               this.$set(this.lgModal.data, "status", "loading");
+              // TODO: 设置格式
               if (!/\.md/gi.test(this.lgModal.data.filename)) {
                 this.$set(this.lgModal.data, "status", "error");
                 return;
               }
               this.noteOperate(
                 "exist",
-                "cloud",
+                this.lgModal.data.storage,
                 {
                   path:
                     this.lgModal.data.select + "/" + this.lgModal.data.filename
@@ -838,23 +846,63 @@ export default {
           };
           let uwFileName = this.$watch("lgModal.data.filename", watch);
           let uwTitle = this.$watch("lgModal.data.select", watch);
+          let uwStorage = this.$watch("lgModal.data.storage", watch);
           this.lgModal.confirm = () => {
             if (
               !this.lgModal.data.filename ||
               !this.lgModal.data.title ||
+              !this.lgModal.data.storage ||
               this.lgModal.data.status !== ""
             ) {
               return;
             }
-            uwFileName();
-            uwTitle();
             // TODO: 新建MD笔记其他操作
-            console.log(this.lgModal.data);
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.add("loading");
+            let d = new Date();
+            let date =
+              d.getFullYear() +
+              "/" +
+              (d.getMonth() + 1) +
+              "/" +
+              d.getDate() +
+              " " +
+              d.getHours() +
+              ":" +
+              d.getMinutes() +
+              ":" +
+              d.getSeconds();
+            // TODO: 将文档保存到currList
+            this.noteOperate(
+              "create",
+              this.lgModal.data.storage,
+              {
+                path:
+                  this.lgModal.data.select + "/" + this.lgModal.data.filename,
+                note: {
+                  title: this.lgModal.data.title,
+                  created_at: date,
+                  updated_at: date,
+                  author: "",
+                  content: ""
+                }
+              },
+              () => {
+                document
+                  .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+                  .classList.remove("loading");
+                this.lgModal.cancel();
+                this.loadCloudFolders();
+              }
+            );
           };
           this.lgModal.cancel = () => {
             uwFileName();
             uwTitle();
-            this.$set(this.lgModal.data, "status", "");
+            uwStorage();
+            this.$set(this.lgModal, "data", {});
+            this.lgModal.show = false;
           };
         }
         if (this.lgModal.content === "CreateFolder") {
@@ -896,15 +944,29 @@ export default {
             ) {
               return;
             }
-            uwFolderName();
-            uwTitle();
-            // TODO: 新建文件夹其他操作
-            console.log(this.lgModal.data);
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.add("loading");
+            this.folderOperate(
+              "create",
+              {
+                path:
+                  this.lgModal.data.select + "/" + this.lgModal.data.foldername
+              },
+              () => {
+                document
+                  .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+                  .classList.remove("loading");
+                this.lgModal.cancel();
+                this.loadCloudFolders();
+              }
+            );
           };
           this.lgModal.cancel = () => {
             uwFolderName();
             uwTitle();
-            this.$set(this.lgModal.data, "status", "");
+            this.$set(this.lgModal, "data", {});
+            this.lgModal.show = false;
           };
         }
       }

@@ -18,6 +18,7 @@
         :switchTab="switchTab"
         :openNote="openNote"
         :readOpened.sync="readOpened"
+        :loadCloudFolders="loadCloudFolders"
         ref="children"
       ></router-view>
     </transition>
@@ -588,6 +589,32 @@ export default {
             });
         }
       }
+      if (operate === "create") {
+        if (storage === "cloud") {
+          window.axios
+            .post("/api/notes", {
+              path: noteInfo.path,
+              title: noteInfo.note.title,
+              author: noteInfo.note.author,
+              created_at: noteInfo.note.created_at,
+              updated_at: noteInfo.note.updated_at,
+              content: noteInfo.note.content
+            })
+            .then(res => {
+              this.timeToast("新建笔记成功！", "success", 1000);
+              if (res.data.error == false) {
+                callS(res);
+              } else {
+                callE(res);
+              }
+            })
+            .catch(err => {
+              console.error(err);
+              this.timeToast("新建笔记失败！请重试。", "error", 1000);
+              callE(err);
+            });
+        }
+      }
       if (operate === "delete") {
         if (storage === "local") {
           this.noteLocalDB(
@@ -701,6 +728,15 @@ export default {
               callE(err);
             });
         }
+        if (storage === "local") {
+          let flag = false;
+          for (let i = 0; i < this.localList.length; i++) {
+            if (this.localList[i].path === noteInfo.path) {
+              flag = true;
+            }
+          }
+          callS({ exist: flag });
+        }
       }
     },
     folderOperate(
@@ -760,6 +796,25 @@ export default {
           .catch(err => {
             console.error(err);
             this.timeToast("重命名失败！请重试。", "error", 1000);
+            callE(err);
+          });
+      }
+      if (operate === "create") {
+        window.axios
+          .post("/api/folders", {
+            path: folderInfo.path
+          })
+          .then(res => {
+            this.timeToast("创建文件夹成功！", "success", 1000);
+            if (res.data.error == false) {
+              callS(res);
+            } else {
+              callE(res);
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            this.timeToast("创建文件夹失败！请重试。", "error", 1000);
             callE(err);
           });
       }
