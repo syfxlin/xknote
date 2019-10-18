@@ -29,8 +29,9 @@ Route::prefix('api')
         Route::get('/user', 'UserController@user');
 
         Route::get('/admin/users', 'AdminController@getUser');
-        Route::delete('/admin/users/{id}', 'AdminController@deleteUser');
         Route::post('/admin/users', 'AdminController@createUser');
+        Route::delete('/admin/users/{id}', 'AdminController@deleteUser');
+        Route::put('/admin/users/{id}', 'AdminController@editUser');
 
         Route::get('/folders', 'FolderController@get');
         Route::post('/folders', 'FolderController@create');

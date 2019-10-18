@@ -13774,7 +13774,6 @@ __webpack_require__.r(__webpack_exports__);
         }],
         children: [{
           name: "重命名",
-          // TODO: 未完成
           operate: "rename"
         }, {
           name: "删除",

@@ -96,7 +96,7 @@ export default {
         ],
         children: [
           {
-            name: "重命名", // TODO: 未完成
+            name: "重命名",
             operate: "rename"
           },
           {
