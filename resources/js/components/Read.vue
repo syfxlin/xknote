@@ -35,10 +35,9 @@
           <li v-show="xknoteTab==='toc'" v-html="tocHtml" class="read-toc"></li>
           <li v-show="xknoteTab==='cloud'" class="cloud-tab">
             <folder-item
-              v-for="(item, index) in cloudList"
+              v-for="item in cloudList"
               :key="item.id"
               :info="item"
-              :index="index"
               :storage="'cloud'"
               :mode="'read'"
               :openNote="openNote"
@@ -50,11 +49,10 @@
           </li>
           <li v-show="xknoteTab==='local'" class="local-tab">
             <ul class="menu menu-nav">
-              <li class="menu-item" v-for="(item, index) in localList" :key="item.id">
+              <li class="menu-item" v-for="item in localList" :key="item.id">
                 <note-item
                   :info="item"
                   :status="item.status"
-                  :index="index"
                   :storage="'local'"
                   :mode="'read'"
                   :openNote="openNote"

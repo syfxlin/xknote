@@ -612,7 +612,14 @@ export default {
         let keyEv = e => {
           if (e.key === "Enter") {
             let value = e.target.value;
-            info.path = info.path.replace(new RegExp(info.name + "$"), value);
+            let newPath = info.path.replace(new RegExp(info.name + "$"), value);
+            this.listOperate(
+              "add",
+              storage,
+              newPath,
+              this.listOperate("delete", storage, info.path)
+            );
+            info.path = newPath;
             info.name = value;
             input.setAttribute("disabled", "disabled");
             if (type === "note") {
@@ -683,7 +690,7 @@ export default {
                   JSON.parse(JSON.stringify(this.noteBaseInfo))
                 );
               }
-              let localIndex = this.listOperate("add", "local", "", note);
+              let localIndex = this.listOperate("add", "local", path, note);
               // 若不是从localList中打开的文件就不会有currListSource的信息，如果用户选择不关闭保存，则需要添加source信息，防止后续操作出现问题
               if (!this.floatMenu.saveAndClose) {
                 this.currListSource[path] = {
@@ -707,7 +714,7 @@ export default {
               btn.querySelector(".loading").style.display = "none";
               icon.style.display = "";
               this.noteOperate("save", "local", note, () => {
-                this.listOperate("add", "local", "", note);
+                this.listOperate("add", "local", path, note);
               });
             });
           }
@@ -803,7 +810,7 @@ export default {
             wTimeout = setTimeout(() => {
               this.$set(this.lgModal.data, "status", "loading");
               // TODO: 设置格式
-              if (!/\.md/gi.test(this.lgModal.data.filename)) {
+              if (!/\.(md|txt)/gi.test(this.lgModal.data.filename)) {
                 this.$set(this.lgModal.data, "status", "error");
                 return;
               }
@@ -994,7 +1001,6 @@ export default {
           checkList: Object.keys(this.localList)
         })
         .then(res => {
-          // TODO: 比较Modal，同时执行一些操作，是否替换（本地to云端，云端to本地，还是不变）
           this.lgModal.data = [];
           for (let key in this.localList) {
             this.lgModal.data.push({

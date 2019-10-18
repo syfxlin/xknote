@@ -100,7 +100,7 @@ export default {
             operate: "rename"
           },
           {
-            name: "删除", // TODO: 未完成
+            name: "删除",
             operate: "delete"
           },
           {

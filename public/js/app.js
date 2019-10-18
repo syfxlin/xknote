@@ -13081,7 +13081,11 @@ __webpack_require__.r(__webpack_exports__);
         var keyEv = function keyEv(e) {
           if (e.key === "Enter") {
             var value = e.target.value;
-            info.path = info.path.replace(new RegExp(info.name + "$"), value);
+            var newPath = info.path.replace(new RegExp(info.name + "$"), value);
+
+            _this3.listOperate("add", storage, newPath, _this3.listOperate("delete", storage, info.path));
+
+            info.path = newPath;
             info.name = value;
             input.setAttribute("disabled", "disabled");
 
@@ -13144,7 +13148,7 @@ __webpack_require__.r(__webpack_exports__);
                 _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
               }
 
-              var localIndex = _this3.listOperate("add", "local", "", note); // 若不是从localList中打开的文件就不会有currListSource的信息，如果用户选择不关闭保存，则需要添加source信息，防止后续操作出现问题
+              var localIndex = _this3.listOperate("add", "local", path, note); // 若不是从localList中打开的文件就不会有currListSource的信息，如果用户选择不关闭保存，则需要添加source信息，防止后续操作出现问题
 
 
               if (!_this3.floatMenu.saveAndClose) {
@@ -13169,7 +13173,7 @@ __webpack_require__.r(__webpack_exports__);
               icon.style.display = "";
 
               _this3.noteOperate("save", "local", note, function () {
-                _this3.listOperate("add", "local", "", note);
+                _this3.listOperate("add", "local", path, note);
               });
             });
           }
@@ -13275,7 +13279,7 @@ __webpack_require__.r(__webpack_exports__);
               _this4.$set(_this4.lgModal.data, "status", "loading"); // TODO: 设置格式
 
 
-              if (!/\.md/gi.test(_this4.lgModal.data.filename)) {
+              if (!/\.(md|txt)/gi.test(_this4.lgModal.data.filename)) {
                 _this4.$set(_this4.lgModal.data, "status", "error");
 
                 return;
@@ -13440,7 +13444,6 @@ __webpack_require__.r(__webpack_exports__);
       window.axios.post("/api/notes/check", {
         checkList: Object.keys(this.localList)
       }).then(function (res) {
-        // TODO: 比较Modal，同时执行一些操作，是否替换（本地to云端，云端to本地，还是不变）
         _this5.lgModal.data = [];
 
         for (var key in _this5.localList) {
@@ -13518,8 +13521,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _noteItem_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./noteItem.vue */ "./resources/js/components/noteItem.vue");
 /* harmony import */ var _folderItem_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./folderItem.vue */ "./resources/js/components/folderItem.vue");
 /* harmony import */ var _node_modules_xkeditor_src_utils_switchContent_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/xkeditor/src/utils/switchContent.js */ "./node_modules/xkeditor/src/utils/switchContent.js");
-//
-//
 //
 //
 //
@@ -13777,7 +13778,6 @@ __webpack_require__.r(__webpack_exports__);
           operate: "rename"
         }, {
           name: "删除",
-          // TODO: 未完成
           operate: "delete"
         }, {
           name: "打包导出",
@@ -25086,12 +25086,11 @@ var render = function() {
               staticClass: "cloud-tab"
             },
             [
-              _vm._l(_vm.cloudList, function(item, index) {
+              _vm._l(_vm.cloudList, function(item) {
                 return _c("folder-item", {
                   key: item.id,
                   attrs: {
                     info: item,
-                    index: index,
                     storage: "cloud",
                     mode: "read",
                     openNote: _vm.openNote
@@ -25130,7 +25129,7 @@ var render = function() {
                 "ul",
                 { staticClass: "menu menu-nav" },
                 [
-                  _vm._l(_vm.localList, function(item, index) {
+                  _vm._l(_vm.localList, function(item) {
                     return _c(
                       "li",
                       { key: item.id, staticClass: "menu-item" },
@@ -25139,7 +25138,6 @@ var render = function() {
                           attrs: {
                             info: item,
                             status: item.status,
-                            index: index,
                             storage: "local",
                             mode: "read",
                             openNote: _vm.openNote
