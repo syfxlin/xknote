@@ -115,7 +115,7 @@ export default {
   },
   computed: {
     selectMenuItem() {
-      if ((this.index + "").indexOf(":") == -1) {
+      if (this.info.path.lastIndexOf("/") === 0) {
         return "parent";
       } else {
         return "children";

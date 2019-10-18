@@ -328,7 +328,7 @@ export default {
       };
       if (source.storage === "cloud") {
         let noteEle = document.querySelector(
-          '[data-index="' + source.index + '"][data-storage="cloud"]'
+          '[data-path="' + note.path + '"][data-storage="cloud"]'
         );
         let icon = noteEle.querySelector(".tile-action");
         icon.style.display = "unset";

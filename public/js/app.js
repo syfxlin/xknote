@@ -11808,7 +11808,7 @@ __webpack_require__.r(__webpack_exports__);
       };
 
       if (source.storage === "cloud") {
-        var noteEle = document.querySelector('[data-index="' + source.index + '"][data-storage="cloud"]');
+        var noteEle = document.querySelector('[data-path="' + note.path + '"][data-storage="cloud"]');
         var icon = noteEle.querySelector(".tile-action");
         icon.style.display = "unset";
         var btn = icon.querySelector(".btn");
@@ -13309,7 +13309,21 @@ __webpack_require__.r(__webpack_exports__);
               _this4.lgModal.cancel();
 
               _this4.loadCloudFolders();
-            });
+            }); // this.openNote({
+            //   type: "note",
+            //   path: this.lgModal.data.select + "/" + this.lgModal.data.filename,
+            //   name: this.lgModal.data.filename,
+            //   status: "N",
+            //   note: {
+            //     title: this.lgModal.data.title,
+            //     created_at: date,
+            //     updated_at: date,
+            //     author: "",
+            //     content: ""
+            //   }
+            // }, {
+            // });
+
           };
 
           this.lgModal.cancel = function () {
@@ -13738,7 +13752,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     selectMenuItem: function selectMenuItem() {
-      if ((this.index + "").indexOf(":") == -1) {
+      if (this.info.path.lastIndexOf("/") === 0) {
         return "parent";
       } else {
         return "children";

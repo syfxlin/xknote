@@ -896,6 +896,21 @@ export default {
                 this.loadCloudFolders();
               }
             );
+            // this.openNote({
+            //   type: "note",
+            //   path: this.lgModal.data.select + "/" + this.lgModal.data.filename,
+            //   name: this.lgModal.data.filename,
+            //   status: "N",
+            //   note: {
+            //     title: this.lgModal.data.title,
+            //     created_at: date,
+            //     updated_at: date,
+            //     author: "",
+            //     content: ""
+            //   }
+            // }, {
+
+            // });
           };
           this.lgModal.cancel = () => {
             uwFileName();
