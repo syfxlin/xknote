@@ -74,15 +74,15 @@ export default {
       xknoteOpenedIndex: {
         curr: "",
         source: {
-          index: "",
+          path: "",
           storage: ""
         }
       },
       // currList的扩展信息
-      currListSource: [],
-      currList: [],
-      cloudList: [],
-      localList: [],
+      currListSource: {},
+      currList: {},
+      cloudList: {},
+      localList: {},
       xknoteTab: "cloud",
       readOpened: {
         type: "note",
@@ -110,6 +110,7 @@ export default {
     this.loadLocalNotes();
     this.loadCloudFolders();
     window.xknote = {};
+    window.listOperateP = this.listOperateP;
   },
   methods: {
     showToast(message, status) {
@@ -174,7 +175,10 @@ export default {
      */
     loadLocalNotes() {
       this.noteLocalDB("readAll", "", (e, list) => {
-        this.localList = list;
+        // this.localList = list;
+        list.forEach(item => {
+          this.$set(this.localList, item.path, item);
+        });
       });
     },
     loadPathNote(path, mode = "normal") {
@@ -184,13 +188,12 @@ export default {
       if (!info) {
         info = document.querySelector('.cloud-tab [data-path="' + path + '"]');
       }
-      let index = info.getAttribute("data-index") + "";
       let storage = info.getAttribute("data-storage");
-      let item = this.listOperate("get", storage, index);
+      let item = this.listOperate("get", storage, path);
       this.openNote(
         item,
         {
-          index: index,
+          path: path,
           storage: storage
         },
         mode
@@ -276,7 +279,7 @@ export default {
      * 打开笔记
      * @param {object} note 笔记信息，结构同this.noteBaseInfo
      * @param {object} source 笔记的来源
-     *   @param {string} source.index 笔记来源的索引
+     *   @param {string} source.path 笔记来源的索引
      *   @param {string} source.storage 笔记来源的存储位置（local，cloud）
      * @param {string} mode 当前处于的模式
      * @returns void
@@ -284,26 +287,26 @@ export default {
     openNote(note, source, mode = "normal") {
       let open = () => {
         if (mode === "normal") {
-          this.currList.forEach((item, index) => {
-            if (item.path === note.path) {
-              source.index = index;
+          for (let key in this.currList) {
+            if (this.currList[key].path === note.path) {
+              source.path = note.path; //TODO: 修改
               source.storage = "curr";
             }
-          });
+          }
           // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
           this.setXknoteOpened(note);
           window.xknoteOpenedChangeFlag = false;
           // 添加到currList，同时将源数据添加到currListSource
-          let currIndex;
+          let currPath;
           if (source.storage !== "curr") {
-            currIndex = this.listOperate("add", "curr", "", {
+            currPath = this.listOperate("add", "curr", note.path, {
               note: note,
               source: source
             });
-            this.xknoteOpenedIndex.curr = currIndex;
+            this.xknoteOpenedIndex.curr = note.path;
           } else {
-            this.xknoteOpenedIndex.curr = parseInt(source.index);
-            currIndex = source.index;
+            this.xknoteOpenedIndex.curr = source.path;
+            currPath = source.path;
           }
           this.xknoteOpenedIndex.source = source;
           this.xknoteTab = "curr";
@@ -316,7 +319,7 @@ export default {
             }
             document
               .querySelector(
-                "[data-storage='curr'][data-index='" + currIndex + "']"
+                "[data-storage='curr'][data-path='" + note.path + "']"
               )
               .classList.add("active");
             window.xknoteOpenedChangeFlag = true;
@@ -508,46 +511,41 @@ export default {
      * 操作列表
      * @param {string} operate 操作名称
      * @param {string} storage 要操作对象存储的位置
-     * @param {string=} index 要操作对象的索引
+     * @param {string=} path 要操作对象的索引
      * @param {object=} noteInfo 笔记信息，正常情况下结构同this.noteBaseInfo
      *   @param {object=} noteInfo.note （add curr）笔记信息，结构同this.noteBaseInfo
      *   @param {object=} noteInfo.source （add curr）笔记来源
      * @returns {object | number} 笔记信息（get,delete）或者当前笔记的索引（add）
      */
-    listOperate(operate, storage, index = "", noteInfo = null) {
-      let arr = [];
-      let list;
-      if (typeof index !== "string") {
-        index = index + "";
-      }
-      arr = index.split(":");
-      list = this[storage + "List"];
-      for (let i = 0; i < arr.length - 1; i++) {
-        // if (i === 0) {
-        list = list[arr[i]].sub;
-        // } else {
-        //   list = list.sub[arr[i]];
-        // }
-      }
-      if (operate === "delete") {
-        let noteList = list.splice(arr[arr.length - 1], 1);
-        if (storage === "curr") {
-          this.currListSource.splice(arr[arr.length - 1], 1);
-        }
-        return noteList[0];
-      }
-      if (operate === "add") {
-        if (storage === "curr") {
-          let currIndex = this.currList.push(noteInfo.note) - 1;
-          this.currListSource.push(noteInfo.source);
-          return currIndex;
-        }
-        if (storage === "local") {
-          return this[storage + "List"].push(noteInfo) - 1;
+    listOperate(operate, storage, path, noteInfo = null) {
+      let arr = [path];
+      let list = this[storage + "List"];
+      if (storage === "cloud") {
+        arr = path.substring(1).split("/");
+        for (let i = 0; i < arr.length - 1; i++) {
+          list = list[arr[i]].sub;
         }
       }
       if (operate === "get") {
         return list[arr[arr.length - 1]];
+      }
+      if (operate === "add") {
+        if (storage === "curr") {
+          let currIndex = this.$set(this.currList, path, noteInfo.note);
+          this.$set(this.currListSource, path, noteInfo.source);
+          return currIndex;
+        }
+        if (storage === "local") {
+          return this.$set(this.localList, path, noteInfo);
+        }
+      }
+      if (operate === "delete") {
+        let noteList = list[arr[arr.length - 1]];
+        this.$delete(list, arr[arr.length - 1]);
+        if (storage === "curr") {
+          this.$delete(this.currListSource, arr[arr.length - 1]);
+        }
+        return noteList;
       }
     },
     /**

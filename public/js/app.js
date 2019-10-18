@@ -11517,15 +11517,15 @@ __webpack_require__.r(__webpack_exports__);
       xknoteOpenedIndex: {
         curr: "",
         source: {
-          index: "",
+          path: "",
           storage: ""
         }
       },
       // currList的扩展信息
-      currListSource: [],
-      currList: [],
-      cloudList: [],
-      localList: [],
+      currListSource: {},
+      currList: {},
+      cloudList: {},
+      localList: {},
       xknoteTab: "cloud",
       readOpened: {
         type: "note",
@@ -11553,6 +11553,7 @@ __webpack_require__.r(__webpack_exports__);
     this.loadLocalNotes();
     this.loadCloudFolders();
     window.xknote = {};
+    window.listOperateP = this.listOperateP;
   },
   methods: {
     showToast: function showToast(message, status) {
@@ -11631,7 +11632,10 @@ __webpack_require__.r(__webpack_exports__);
       var _this4 = this;
 
       this.noteLocalDB("readAll", "", function (e, list) {
-        _this4.localList = list;
+        // this.localList = list;
+        list.forEach(function (item) {
+          _this4.$set(_this4.localList, item.path, item);
+        });
       });
     },
     loadPathNote: function loadPathNote(path) {
@@ -11642,11 +11646,10 @@ __webpack_require__.r(__webpack_exports__);
         info = document.querySelector('.cloud-tab [data-path="' + path + '"]');
       }
 
-      var index = info.getAttribute("data-index") + "";
       var storage = info.getAttribute("data-storage");
-      var item = this.listOperate("get", storage, index);
+      var item = this.listOperate("get", storage, path);
       this.openNote(item, {
-        index: index,
+        path: path,
         storage: storage
       }, mode);
     },
@@ -11748,7 +11751,7 @@ __webpack_require__.r(__webpack_exports__);
      * 打开笔记
      * @param {object} note 笔记信息，结构同this.noteBaseInfo
      * @param {object} source 笔记的来源
-     *   @param {string} source.index 笔记来源的索引
+     *   @param {string} source.path 笔记来源的索引
      *   @param {string} source.storage 笔记来源的存储位置（local，cloud）
      * @param {string} mode 当前处于的模式
      * @returns void
@@ -11760,29 +11763,30 @@ __webpack_require__.r(__webpack_exports__);
 
       var open = function open() {
         if (mode === "normal") {
-          _this7.currList.forEach(function (item, index) {
-            if (item.path === note.path) {
-              source.index = index;
+          for (var key in _this7.currList) {
+            if (_this7.currList[key].path === note.path) {
+              source.path = note.path; //TODO: 修改
+
               source.storage = "curr";
             }
-          }); // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
+          } // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
 
 
           _this7.setXknoteOpened(note);
 
           window.xknoteOpenedChangeFlag = false; // 添加到currList，同时将源数据添加到currListSource
 
-          var currIndex;
+          var currPath;
 
           if (source.storage !== "curr") {
-            currIndex = _this7.listOperate("add", "curr", "", {
+            currPath = _this7.listOperate("add", "curr", note.path, {
               note: note,
               source: source
             });
-            _this7.xknoteOpenedIndex.curr = currIndex;
+            _this7.xknoteOpenedIndex.curr = note.path;
           } else {
-            _this7.xknoteOpenedIndex.curr = parseInt(source.index);
-            currIndex = source.index;
+            _this7.xknoteOpenedIndex.curr = source.path;
+            currPath = source.path;
           }
 
           _this7.xknoteOpenedIndex.source = source;
@@ -11797,7 +11801,7 @@ __webpack_require__.r(__webpack_exports__);
               ele.classList.remove("active");
             }
 
-            document.querySelector("[data-storage='curr'][data-index='" + currIndex + "']").classList.add("active");
+            document.querySelector("[data-storage='curr'][data-path='" + note.path + "']").classList.add("active");
             window.xknoteOpenedChangeFlag = true;
           });
         }
@@ -12024,56 +12028,50 @@ __webpack_require__.r(__webpack_exports__);
      * 操作列表
      * @param {string} operate 操作名称
      * @param {string} storage 要操作对象存储的位置
-     * @param {string=} index 要操作对象的索引
+     * @param {string=} path 要操作对象的索引
      * @param {object=} noteInfo 笔记信息，正常情况下结构同this.noteBaseInfo
      *   @param {object=} noteInfo.note （add curr）笔记信息，结构同this.noteBaseInfo
      *   @param {object=} noteInfo.source （add curr）笔记来源
      * @returns {object | number} 笔记信息（get,delete）或者当前笔记的索引（add）
      */
-    listOperate: function listOperate(operate, storage) {
-      var index = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
+    listOperate: function listOperate(operate, storage, path) {
       var noteInfo = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
-      var arr = [];
-      var list;
+      var arr = [path];
+      var list = this[storage + "List"];
 
-      if (typeof index !== "string") {
-        index = index + "";
-      }
+      if (storage === "cloud") {
+        arr = path.substring(1).split("/");
 
-      arr = index.split(":");
-      list = this[storage + "List"];
-
-      for (var i = 0; i < arr.length - 1; i++) {
-        // if (i === 0) {
-        list = list[arr[i]].sub; // } else {
-        //   list = list.sub[arr[i]];
-        // }
-      }
-
-      if (operate === "delete") {
-        var noteList = list.splice(arr[arr.length - 1], 1);
-
-        if (storage === "curr") {
-          this.currListSource.splice(arr[arr.length - 1], 1);
-        }
-
-        return noteList[0];
-      }
-
-      if (operate === "add") {
-        if (storage === "curr") {
-          var currIndex = this.currList.push(noteInfo.note) - 1;
-          this.currListSource.push(noteInfo.source);
-          return currIndex;
-        }
-
-        if (storage === "local") {
-          return this[storage + "List"].push(noteInfo) - 1;
+        for (var i = 0; i < arr.length - 1; i++) {
+          list = list[arr[i]].sub;
         }
       }
 
       if (operate === "get") {
         return list[arr[arr.length - 1]];
+      }
+
+      if (operate === "add") {
+        if (storage === "curr") {
+          var currIndex = this.$set(this.currList, path, noteInfo.note);
+          this.$set(this.currListSource, path, noteInfo.source);
+          return currIndex;
+        }
+
+        if (storage === "local") {
+          return this.$set(this.localList, path, noteInfo);
+        }
+      }
+
+      if (operate === "delete") {
+        var noteList = list[arr[arr.length - 1]];
+        this.$delete(list, arr[arr.length - 1]);
+
+        if (storage === "curr") {
+          this.$delete(this.currListSource, arr[arr.length - 1]);
+        }
+
+        return noteList;
       }
     },
 
@@ -12885,9 +12883,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 
 
 
@@ -12941,20 +12936,24 @@ __webpack_require__.r(__webpack_exports__);
     // 计算在Tab bar上的计数
     currBadgeCount: function currBadgeCount() {
       var count = 0;
-      this.currList.forEach(function (item) {
-        if (item.status === "N") {
+
+      for (var key in this.currList) {
+        if (this.currList[key].status === "N") {
           count++;
         }
-      });
+      }
+
       return count;
     },
     localBadgeCount: function localBadgeCount() {
       var count = 0;
-      this.localList.forEach(function (item) {
-        if (item.status === "L") {
+
+      for (var key in this.localList) {
+        if (this.localList[key].status === "N") {
           count++;
         }
-      });
+      }
+
       return count;
     }
   },
@@ -12999,11 +12998,11 @@ __webpack_require__.r(__webpack_exports__);
      * 操作列表
      * @param {string} operate 操作名称
      * @param {string} storage 要操作对象存储的位置
-     * @param {string} index 要操作对象的索引
+     * @param {string} path 要操作对象的索引
      * @param {object=} curr 当前操作的item的dom对象
      * @returns void
      */
-    menuOperate: function menuOperate(operate, type, storage, index) {
+    menuOperate: function menuOperate(operate, type, storage, path) {
       var _this3 = this;
 
       var curr = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
@@ -13017,15 +13016,15 @@ __webpack_require__.r(__webpack_exports__);
         this.smModal.confirm = function () {
           _this3.smModal.show = false;
 
-          var info = _this3.listOperate("get", storage, index);
+          var info = _this3.listOperate("get", storage, path);
 
           if (type === "note") {
             _this3.noteOperate(operate, storage, info, function (res) {
-              _this3.listOperate("delete", storage, index);
+              _this3.listOperate("delete", storage, path);
             });
           } else {
             _this3.folderOperate(operate, info, function (res) {
-              _this3.listOperate("delete", storage, index);
+              _this3.listOperate("delete", storage, path);
             });
           }
         };
@@ -13037,7 +13036,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (operate === "rename") {
         // 先获取到旧的Note信息，为了防止对象的变动所以需要克隆对象，利用json转换即可方便克隆对象
-        var info = this.listOperate("get", storage, index);
+        var info = this.listOperate("get", storage, path);
         var oldInfo = JSON.parse(JSON.stringify(info)); // 更改item为输入框
 
         var input = null;
@@ -13061,7 +13060,7 @@ __webpack_require__.r(__webpack_exports__);
               var s = storage;
 
               if (storage === "curr") {
-                s = _this3.currListSource[index].storage;
+                s = _this3.currListSource[path].storage;
               }
 
               _this3.noteOperate(operate, s, {
@@ -13099,13 +13098,9 @@ __webpack_require__.r(__webpack_exports__);
 
       if (type === "note") {
         if (operate === "saveLocal") {
-          var note = this.listOperate("get", storage, index); // Path相同的时候视为同一文档，但保存时并未删除，所以需要调整判断
+          var note = this.listOperate("get", storage, path); // Path相同的时候视为同一文档，但保存时并未删除，所以需要调整判断
 
-          this.localList.forEach(function (item, index) {
-            if (item.path === note.path) {
-              _this3.listOperate("delete", "local", index);
-            }
-          });
+          this.listOperate("delete", "local", path);
 
           if (storage === "curr") {
             if (note.status != "C") {
@@ -13115,7 +13110,7 @@ __webpack_require__.r(__webpack_exports__);
 
             this.noteOperate("save", "local", note, function () {
               if (_this3.floatMenu.saveAndClose) {
-                note = _this3.listOperate("delete", "curr", index);
+                note = _this3.listOperate("delete", "curr", path);
 
                 _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
               }
@@ -13124,8 +13119,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
               if (!_this3.floatMenu.saveAndClose) {
-                _this3.currListSource[index] = {
-                  index: localIndex,
+                _this3.currListSource[path] = {
+                  path: localIndex,
                   storage: "local"
                 }; // this.$emit("update:currListSource", this.currListSource);
               }
@@ -13133,7 +13128,7 @@ __webpack_require__.r(__webpack_exports__);
           }
 
           if (storage === "cloud") {
-            var noteEle = document.querySelector('[data-index="' + index + '"][data-storage="cloud"]');
+            var noteEle = document.querySelector('[data-path="' + path + '"][data-storage="cloud"]');
             var icon = noteEle.querySelector(".tile-action");
             icon.style.display = "unset";
             var btn = icon.querySelector(".btn");
@@ -13152,18 +13147,18 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         if (operate === "saveCloud") {
-          var _note = this.listOperate("get", storage, index);
+          var _note = this.listOperate("get", storage, path);
 
           this.noteOperate("save", "cloud", _note, function () {
             _note.status = "C";
 
             if (storage === "curr") {
-              if (_this3.currListSource[index].storage === "local") {
+              if (_this3.currListSource[path].storage === "local") {
                 _this3.noteOperate("save", "local", _note);
               }
 
               if (_this3.floatMenu.saveAndClose) {
-                _note = _this3.listOperate("delete", "curr", index);
+                _note = _this3.listOperate("delete", "curr", path);
 
                 _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
               }
@@ -13173,7 +13168,7 @@ __webpack_require__.r(__webpack_exports__);
               if (_this3.floatMenu.saveAndClose) {
                 _this3.noteOperate("delete", "local", _note);
 
-                _this3.listOperate("delete", storage, index);
+                _this3.listOperate("delete", storage, path);
               } else {
                 _this3.noteOperate("save", "local", _note);
               }
@@ -13185,26 +13180,14 @@ __webpack_require__.r(__webpack_exports__);
         if (operate === "closeCurr") {
           // 如果笔记在未保存状态关闭则先弹出modal提示是否下关闭
           var closeCurr = function closeCurr() {
-            if (index == _this3.xknoteOpenedIndex.curr) {
+            if (path == _this3.xknoteOpenedIndex.curr) {
               _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
             }
 
-            if (index <= _this3.xknoteOpenedIndex.curr) {
-              _this3.xknoteOpenedIndex.curr--;
-
-              _this3.$nextTick(function () {
-                var ele = document.querySelector("[data-storage='curr'][data-index='" + _this3.xknoteOpenedIndex.curr + "']");
-
-                if (ele) {
-                  ele.classList.add("active");
-                }
-              });
-            }
-
-            _this3.listOperate("delete", "curr", index);
+            _this3.listOperate("delete", "curr", path);
           };
 
-          if (this.listOperate("get", storage, index).status === "N") {
+          if (this.listOperate("get", storage, path).status === "N") {
             this.smModal.title = "关闭";
             this.smModal.content = "该文件未保存，是否关闭该文件？(此操作不可逆)";
             this.smModal.show = true;
@@ -13231,7 +13214,7 @@ __webpack_require__.r(__webpack_exports__);
      * @returns void
      */
     floatMenuOperate: function floatMenuOperate(operate) {
-      this.menuOperate(operate, this.floatMenu.data.type, this.floatMenu.data.storage, this.floatMenu.data.index, this.floatMenu.data.currEle);
+      this.menuOperate(operate, this.floatMenu.data.type, this.floatMenu.data.storage, this.floatMenu.data.path, this.floatMenu.data.currEle);
     },
 
     /**
@@ -13405,9 +13388,10 @@ __webpack_require__.r(__webpack_exports__);
 
       if (operate === "saveAllLocal" || operate === "saveAllCloud") {
         this.floatMenu.saveAndClose = false;
-        this.currList.forEach(function (item, index) {
-          _this4.menuOperate(operate.replace("All", ""), "note", "curr", index);
-        });
+
+        for (var key in this.currList) {
+          this.menuOperate(operate.replace("All", ""), "note", "curr", key);
+        }
       }
 
       if (operate === "downloadMarkdown") {
@@ -13779,7 +13763,7 @@ __webpack_require__.r(__webpack_exports__);
       this.floatMenu.items = this.floatMenuItems[this.selectMenuItem];
       this.floatMenu.data = {
         storage: this.storage,
-        index: this.index,
+        path: this.info.path,
         type: "folder",
         currEle: currEle
       };
@@ -13911,7 +13895,7 @@ __webpack_require__.r(__webpack_exports__);
       this.floatMenu.items = this.floatMenuItems[this.storage];
       this.floatMenu.data = {
         storage: this.storage,
-        index: this.index,
+        path: this.info.path,
         type: "note",
         currEle: currEle
       };
@@ -13937,7 +13921,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     thisOpenNote: function thisOpenNote(e) {
       this.openNote(this.info, {
-        index: this.index,
+        path: this.info.path,
         storage: this.storage
       }, this.mode);
     }
@@ -23869,7 +23853,7 @@ var render = function() {
                       "ul",
                       { staticClass: "menu menu-nav" },
                       [
-                        _vm._l(_vm.currList, function(item, index) {
+                        _vm._l(_vm.currList, function(item) {
                           return _c(
                             "li",
                             { key: item.id, staticClass: "menu-item" },
@@ -23878,7 +23862,6 @@ var render = function() {
                                 attrs: {
                                   info: item,
                                   status: item.status,
-                                  index: index,
                                   storage: "curr",
                                   mode: "normal",
                                   openNote: _vm.openNote,
@@ -23917,12 +23900,11 @@ var render = function() {
                     staticClass: "cloud-tab"
                   },
                   [
-                    _vm._l(_vm.cloudList, function(item, index) {
+                    _vm._l(_vm.cloudList, function(item) {
                       return _c("folder-item", {
                         key: item.id,
                         attrs: {
                           info: item,
-                          index: index,
                           storage: "cloud",
                           mode: "normal",
                           openNote: _vm.openNote,
@@ -23962,7 +23944,7 @@ var render = function() {
                       "ul",
                       { staticClass: "menu menu-nav" },
                       [
-                        _vm._l(_vm.localList, function(item, index) {
+                        _vm._l(_vm.localList, function(item) {
                           return _c(
                             "li",
                             { key: item.id, staticClass: "menu-item" },
@@ -23971,7 +23953,6 @@ var render = function() {
                                 attrs: {
                                   info: item,
                                   status: item.status,
-                                  index: index,
                                   storage: "local",
                                   mode: "normal",
                                   openNote: _vm.openNote,
@@ -25223,7 +25204,7 @@ var render = function() {
                       attrs: {
                         info: item,
                         status: "C",
-                        index: _vm.index + ":" + i,
+                        index: _vm.index + "/" + i,
                         storage: _vm.storage,
                         mode: _vm.mode,
                         openNote: _vm.openNote,
@@ -25236,7 +25217,7 @@ var render = function() {
                   ? _c("folder-item", {
                       attrs: {
                         info: item,
-                        index: _vm.index + ":" + i,
+                        index: _vm.index + "/" + i,
                         storage: _vm.storage,
                         mode: _vm.mode,
                         openNote: _vm.openNote,

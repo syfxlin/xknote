@@ -185,12 +185,11 @@
           <ul class="xknote-tab-content">
             <li v-show="xknoteTab==='curr'" class="curr-tab">
               <ul class="menu menu-nav">
-                <li class="menu-item" v-for="(item, index) in currList" :key="item.id">
+                <li class="menu-item" v-for="item in currList" :key="item.id">
                   <!-- mark data-badge: N为未保存，L为已经保存到本地，若已经保存到云端则不显示badge -->
                   <note-item
                     :info="item"
                     :status="item.status"
-                    :index="index"
                     :storage="'curr'"
                     :mode="'normal'"
                     :openNote="openNote"
@@ -202,10 +201,9 @@
             </li>
             <li v-show="xknoteTab==='cloud'" class="cloud-tab">
               <folder-item
-                v-for="(item, index) in cloudList"
+                v-for="item in cloudList"
                 :key="item.id"
                 :info="item"
-                :index="index"
                 :storage="'cloud'"
                 :mode="'normal'"
                 :openNote="openNote"
@@ -218,12 +216,11 @@
             </li>
             <li v-show="xknoteTab==='local'" class="local-tab">
               <ul class="menu menu-nav">
-                <li class="menu-item" v-for="(item, index) in localList" :key="item.id">
+                <li class="menu-item" v-for="item in localList" :key="item.id">
                   <!-- mark data-badge: N为未保存，L为已经保存到本地，若已经保存到云端则不显示(C)badge -->
                   <note-item
                     :info="item"
                     :status="item.status"
-                    :index="index"
                     :storage="'local'"
                     :mode="'normal'"
                     :openNote="openNote"
@@ -518,20 +515,20 @@ export default {
     // 计算在Tab bar上的计数
     currBadgeCount() {
       let count = 0;
-      this.currList.forEach(item => {
-        if (item.status === "N") {
+      for (let key in this.currList) {
+        if (this.currList[key].status === "N") {
           count++;
         }
-      });
+      }
       return count;
     },
     localBadgeCount() {
       let count = 0;
-      this.localList.forEach(item => {
-        if (item.status === "L") {
+      for (let key in this.localList) {
+        if (this.localList[key].status === "N") {
           count++;
         }
-      });
+      }
       return count;
     }
   },
@@ -570,11 +567,11 @@ export default {
      * 操作列表
      * @param {string} operate 操作名称
      * @param {string} storage 要操作对象存储的位置
-     * @param {string} index 要操作对象的索引
+     * @param {string} path 要操作对象的索引
      * @param {object=} curr 当前操作的item的dom对象
      * @returns void
      */
-    menuOperate(operate, type, storage, index, curr = null) {
+    menuOperate(operate, type, storage, path, curr = null) {
       this.floatMenu.show = false;
       if (operate === "delete") {
         this.smModal.title = "删除";
@@ -582,14 +579,14 @@ export default {
         this.smModal.show = true;
         this.smModal.confirm = () => {
           this.smModal.show = false;
-          let info = this.listOperate("get", storage, index);
+          let info = this.listOperate("get", storage, path);
           if (type === "note") {
             this.noteOperate(operate, storage, info, res => {
-              this.listOperate("delete", storage, index);
+              this.listOperate("delete", storage, path);
             });
           } else {
             this.folderOperate(operate, info, res => {
-              this.listOperate("delete", storage, index);
+              this.listOperate("delete", storage, path);
             });
           }
         };
@@ -599,7 +596,7 @@ export default {
       }
       if (operate === "rename") {
         // 先获取到旧的Note信息，为了防止对象的变动所以需要克隆对象，利用json转换即可方便克隆对象
-        let info = this.listOperate("get", storage, index);
+        let info = this.listOperate("get", storage, path);
         let oldInfo = JSON.parse(JSON.stringify(info));
         // 更改item为输入框
         let input = null;
@@ -621,7 +618,7 @@ export default {
             if (type === "note") {
               let s = storage;
               if (storage === "curr") {
-                s = this.currListSource[index].storage;
+                s = this.currListSource[path].storage;
               }
               this.noteOperate(
                 operate,
@@ -671,13 +668,9 @@ export default {
       // noteItem专有操作
       if (type === "note") {
         if (operate === "saveLocal") {
-          let note = this.listOperate("get", storage, index);
+          let note = this.listOperate("get", storage, path);
           // Path相同的时候视为同一文档，但保存时并未删除，所以需要调整判断
-          this.localList.forEach((item, index) => {
-            if (item.path === note.path) {
-              this.listOperate("delete", "local", index);
-            }
-          });
+          this.listOperate("delete", "local", path);
           if (storage === "curr") {
             if (note.status != "C") {
               note.status = "L";
@@ -685,7 +678,7 @@ export default {
             // 保存到本地（实际操作）
             this.noteOperate("save", "local", note, () => {
               if (this.floatMenu.saveAndClose) {
-                note = this.listOperate("delete", "curr", index);
+                note = this.listOperate("delete", "curr", path);
                 this.setXknoteOpened(
                   JSON.parse(JSON.stringify(this.noteBaseInfo))
                 );
@@ -693,8 +686,8 @@ export default {
               let localIndex = this.listOperate("add", "local", "", note);
               // 若不是从localList中打开的文件就不会有currListSource的信息，如果用户选择不关闭保存，则需要添加source信息，防止后续操作出现问题
               if (!this.floatMenu.saveAndClose) {
-                this.currListSource[index] = {
-                  index: localIndex,
+                this.currListSource[path] = {
+                  path: localIndex,
                   storage: "local"
                 };
                 // this.$emit("update:currListSource", this.currListSource);
@@ -703,7 +696,7 @@ export default {
           }
           if (storage === "cloud") {
             let noteEle = document.querySelector(
-              '[data-index="' + index + '"][data-storage="cloud"]'
+              '[data-path="' + path + '"][data-storage="cloud"]'
             );
             let icon = noteEle.querySelector(".tile-action");
             icon.style.display = "unset";
@@ -720,15 +713,15 @@ export default {
           }
         }
         if (operate === "saveCloud") {
-          let note = this.listOperate("get", storage, index);
+          let note = this.listOperate("get", storage, path);
           this.noteOperate("save", "cloud", note, () => {
             note.status = "C";
             if (storage === "curr") {
-              if (this.currListSource[index].storage === "local") {
+              if (this.currListSource[path].storage === "local") {
                 this.noteOperate("save", "local", note);
               }
               if (this.floatMenu.saveAndClose) {
-                note = this.listOperate("delete", "curr", index);
+                note = this.listOperate("delete", "curr", path);
                 this.setXknoteOpened(
                   JSON.parse(JSON.stringify(this.noteBaseInfo))
                 );
@@ -737,7 +730,7 @@ export default {
             if (storage === "local") {
               if (this.floatMenu.saveAndClose) {
                 this.noteOperate("delete", "local", note);
-                this.listOperate("delete", storage, index);
+                this.listOperate("delete", storage, path);
               } else {
                 this.noteOperate("save", "local", note);
               }
@@ -748,27 +741,14 @@ export default {
         if (operate === "closeCurr") {
           // 如果笔记在未保存状态关闭则先弹出modal提示是否下关闭
           let closeCurr = () => {
-            if (index == this.xknoteOpenedIndex.curr) {
+            if (path == this.xknoteOpenedIndex.curr) {
               this.setXknoteOpened(
                 JSON.parse(JSON.stringify(this.noteBaseInfo))
               );
             }
-            if (index <= this.xknoteOpenedIndex.curr) {
-              this.xknoteOpenedIndex.curr--;
-              this.$nextTick(() => {
-                let ele = document.querySelector(
-                  "[data-storage='curr'][data-index='" +
-                    this.xknoteOpenedIndex.curr +
-                    "']"
-                );
-                if (ele) {
-                  ele.classList.add("active");
-                }
-              });
-            }
-            this.listOperate("delete", "curr", index);
+            this.listOperate("delete", "curr", path);
           };
-          if (this.listOperate("get", storage, index).status === "N") {
+          if (this.listOperate("get", storage, path).status === "N") {
             this.smModal.title = "关闭";
             this.smModal.content =
               "该文件未保存，是否关闭该文件？(此操作不可逆)";
@@ -797,7 +777,7 @@ export default {
         operate,
         this.floatMenu.data.type,
         this.floatMenu.data.storage,
-        this.floatMenu.data.index,
+        this.floatMenu.data.path,
         this.floatMenu.data.currEle
       );
     },
@@ -991,9 +971,9 @@ export default {
       }
       if (operate === "saveAllLocal" || operate === "saveAllCloud") {
         this.floatMenu.saveAndClose = false;
-        this.currList.forEach((item, index) => {
-          this.menuOperate(operate.replace("All", ""), "note", "curr", index);
-        });
+        for (let key in this.currList) {
+          this.menuOperate(operate.replace("All", ""), "note", "curr", key);
+        }
       }
       if (operate === "downloadMarkdown") {
         window.XKEditor.download(

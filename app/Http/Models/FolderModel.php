@@ -16,25 +16,27 @@ class FolderModel
             return !preg_match("/.git$/i", $dirName);
         });
         $dirs = array_values($dirs);
-        foreach ($dirs as $index => $dirName) {
-            $re[$index] = [
+        foreach ($dirs as $dirName) {
+            $name = str_replace($dir . '/', '', $dirName);
+            $re[$name] = [
                 'type' => 'folder',
                 'path' => preg_replace('/uid_\d+/i', '', $dirName),
-                'name' => str_replace($dir . '/', '', $dirName),
+                'name' => $name,
                 'sub' => $this->get($dirName, false, $mode)
             ];
             if ($checkGit && Storage::exists($dirName . '/.git')) {
-                $re[$index]['git'] = true;
+                $re[$name]['git'] = true;
             }
         }
         if ($mode === 'all') {
             $files = Storage::files($dir);
             foreach ($files as $fileName) {
                 if (preg_match("/(.md$|.txt)/i", $fileName)) {
-                    $re[] = [
+                    $name = str_replace($dir . '/', '', $fileName);
+                    $re[$name] = [
                         'type' => 'note',
                         'path' => preg_replace('/uid_\d+/i', '', $fileName),
-                        'name' => str_replace($dir . '/', '', $fileName)
+                        'name' => $name
                     ];
                 }
             }

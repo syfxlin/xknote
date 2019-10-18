@@ -22,7 +22,7 @@
             v-if="item.type==='note'"
             :info="item"
             :status="'C'"
-            :index="index + ':' + i"
+            :index="index + '/' + i"
             :storage="storage"
             :mode="mode"
             :openNote="openNote"
@@ -31,7 +31,7 @@
           <folder-item
             v-if="item.type==='folder'"
             :info="item"
-            :index="index + ':' + i"
+            :index="index + '/' + i"
             :storage="storage"
             :mode="mode"
             :openNote="openNote"
@@ -138,7 +138,7 @@ export default {
       this.floatMenu.items = this.floatMenuItems[this.selectMenuItem];
       this.floatMenu.data = {
         storage: this.storage,
-        index: this.index,
+        path: this.info.path,
         type: "folder",
         currEle: currEle
       };

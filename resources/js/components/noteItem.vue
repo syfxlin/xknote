@@ -114,7 +114,7 @@ export default {
       this.floatMenu.items = this.floatMenuItems[this.storage];
       this.floatMenu.data = {
         storage: this.storage,
-        index: this.index,
+        path: this.info.path,
         type: "note",
         currEle: currEle
       };
@@ -144,7 +144,7 @@ export default {
       this.openNote(
         this.info,
         {
-          index: this.index,
+          path: this.info.path,
           storage: this.storage
         },
         this.mode
