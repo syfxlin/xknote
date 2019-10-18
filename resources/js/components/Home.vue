@@ -735,7 +735,7 @@ export default {
                 this.noteOperate("save", "local", note);
               }
             }
-            // TODO: 更新云端列表 cloudList信息
+            this.listOperate("add", "cloud", path, note);
           });
         }
         if (operate === "closeCurr") {
@@ -836,7 +836,6 @@ export default {
             ) {
               return;
             }
-            // TODO: 新建MD笔记其他操作
             document
               .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
               .classList.add("loading");
@@ -853,44 +852,35 @@ export default {
               d.getMinutes() +
               ":" +
               d.getSeconds();
-            // TODO: 将文档保存到currList
-            this.noteOperate(
-              "create",
-              this.lgModal.data.storage,
-              {
-                path:
-                  this.lgModal.data.select + "/" + this.lgModal.data.filename,
-                note: {
-                  title: this.lgModal.data.title,
-                  created_at: date,
-                  updated_at: date,
-                  author: "",
-                  content: ""
-                }
-              },
-              () => {
-                document
-                  .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-                  .classList.remove("loading");
-                this.lgModal.cancel();
-                this.loadCloudFolders();
+            let path =
+              this.lgModal.data.select + "/" + this.lgModal.data.filename;
+            let noteInfo = {
+              type: "note",
+              path: path,
+              name: this.lgModal.data.filename,
+              status: "N",
+              note: {
+                title: this.lgModal.data.title,
+                created_at: date,
+                updated_at: date,
+                author: "",
+                content: ""
               }
+            };
+            this.openNote(
+              noteInfo,
+              {
+                path: path,
+                storage: this.lgModal.data.storage
+              },
+              "normal",
+              true
             );
-            // this.openNote({
-            //   type: "note",
-            //   path: this.lgModal.data.select + "/" + this.lgModal.data.filename,
-            //   name: this.lgModal.data.filename,
-            //   status: "N",
-            //   note: {
-            //     title: this.lgModal.data.title,
-            //     created_at: date,
-            //     updated_at: date,
-            //     author: "",
-            //     content: ""
-            //   }
-            // }, {
-
-            // });
+            this.listOperate("add", this.lgModal.data.storage, path, noteInfo);
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.remove("loading");
+            this.lgModal.cancel();
           };
           this.lgModal.cancel = () => {
             uwFileName();
@@ -942,13 +932,15 @@ export default {
             document
               .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
               .classList.add("loading");
+            let path =
+              this.lgModal.data.select + "/" + this.lgModal.data.foldername;
             this.folderOperate(
               "create",
               {
-                path:
-                  this.lgModal.data.select + "/" + this.lgModal.data.foldername
+                path: path
               },
               () => {
+                this.listOperate("add", this.lgModal.data.storage, path);
                 document
                   .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
                   .classList.remove("loading");

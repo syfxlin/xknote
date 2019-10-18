@@ -11553,7 +11553,7 @@ __webpack_require__.r(__webpack_exports__);
     this.loadLocalNotes();
     this.loadCloudFolders();
     window.xknote = {};
-    window.listOperateP = this.listOperateP;
+    window.listOperate = this.listOperate;
   },
   methods: {
     showToast: function showToast(message, status) {
@@ -11644,6 +11644,10 @@ __webpack_require__.r(__webpack_exports__);
 
       if (!info) {
         info = document.querySelector('.cloud-tab [data-path="' + path + '"]');
+      }
+
+      if (!info) {
+        return;
       }
 
       var storage = info.getAttribute("data-storage");
@@ -11760,6 +11764,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this7 = this;
 
       var mode = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "normal";
+      var isNew = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
       var open = function open() {
         if (mode === "normal") {
@@ -11811,7 +11816,7 @@ __webpack_require__.r(__webpack_exports__);
         }
       };
 
-      if (source.storage === "cloud") {
+      if (!isNew && source.storage === "cloud") {
         var noteEle = document.querySelector('[data-path="' + note.path + '"][data-storage="cloud"]');
         var icon = noteEle.querySelector(".tile-action");
         icon.style.display = "unset";
@@ -12042,7 +12047,7 @@ __webpack_require__.r(__webpack_exports__);
       if (storage === "cloud") {
         arr = path.substring(1).split("/");
 
-        for (var i = 0; i < arr.length - 1; i++) {
+        for (var i = 0; operate !== "add" && i < arr.length - 1; i++) {
           list = list[arr[i]].sub;
         }
       }
@@ -12060,6 +12065,30 @@ __webpack_require__.r(__webpack_exports__);
 
         if (storage === "local") {
           return this.$set(this.localList, path, noteInfo);
+        }
+
+        if (storage === "cloud") {
+          var p = "";
+          var len = noteInfo === null ? arr.length : arr.length - 1;
+
+          for (var _i = 0; _i < len; _i++) {
+            p += "/" + arr[_i];
+
+            if (!list[arr[_i]]) {
+              this.$set(list, arr[_i], {
+                type: "folder",
+                path: p,
+                name: arr[_i],
+                sub: {}
+              });
+            }
+
+            list = list[arr[_i]].sub;
+          }
+
+          if (noteInfo !== null) {
+            this.$set(list, arr[arr.length - 1], noteInfo);
+          }
         }
       }
 
@@ -13172,8 +13201,9 @@ __webpack_require__.r(__webpack_exports__);
               } else {
                 _this3.noteOperate("save", "local", _note);
               }
-            } // TODO: 更新云端列表 cloudList信息
+            }
 
+            _this3.listOperate("add", "cloud", path, _note);
           });
         }
 
@@ -13270,15 +13300,17 @@ __webpack_require__.r(__webpack_exports__);
           this.lgModal.confirm = function () {
             if (!_this4.lgModal.data.filename || !_this4.lgModal.data.title || !_this4.lgModal.data.storage || _this4.lgModal.data.status !== "") {
               return;
-            } // TODO: 新建MD笔记其他操作
-
+            }
 
             document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
             var d = new Date();
-            var date = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds(); // TODO: 将文档保存到currList
-
-            _this4.noteOperate("create", _this4.lgModal.data.storage, {
-              path: _this4.lgModal.data.select + "/" + _this4.lgModal.data.filename,
+            var date = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+            var path = _this4.lgModal.data.select + "/" + _this4.lgModal.data.filename;
+            var noteInfo = {
+              type: "note",
+              path: path,
+              name: _this4.lgModal.data.filename,
+              status: "N",
               note: {
                 title: _this4.lgModal.data.title,
                 created_at: date,
@@ -13286,27 +13318,18 @@ __webpack_require__.r(__webpack_exports__);
                 author: "",
                 content: ""
               }
-            }, function () {
-              document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
+            };
 
-              _this4.lgModal.cancel();
+            _this4.openNote(noteInfo, {
+              path: path,
+              storage: _this4.lgModal.data.storage
+            }, "normal", true);
 
-              _this4.loadCloudFolders();
-            }); // this.openNote({
-            //   type: "note",
-            //   path: this.lgModal.data.select + "/" + this.lgModal.data.filename,
-            //   name: this.lgModal.data.filename,
-            //   status: "N",
-            //   note: {
-            //     title: this.lgModal.data.title,
-            //     created_at: date,
-            //     updated_at: date,
-            //     author: "",
-            //     content: ""
-            //   }
-            // }, {
-            // });
+            _this4.listOperate("add", _this4.lgModal.data.storage, path, noteInfo);
 
+            document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
+
+            _this4.lgModal.cancel();
           };
 
           this.lgModal.cancel = function () {
@@ -13357,10 +13380,13 @@ __webpack_require__.r(__webpack_exports__);
             }
 
             document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
+            var path = _this4.lgModal.data.select + "/" + _this4.lgModal.data.foldername;
 
             _this4.folderOperate("create", {
-              path: _this4.lgModal.data.select + "/" + _this4.lgModal.data.foldername
+              path: path
             }, function () {
+              _this4.listOperate("add", _this4.lgModal.data.storage, path);
+
               document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
 
               _this4.lgModal.cancel();
@@ -13670,12 +13696,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "folder-item",
-  props: ["info", "index", "storage", "mode", "openNote", "floatMenu"],
+  props: ["info", "storage", "mode", "openNote", "floatMenu"],
   data: function data() {
     return {
       idHash: Math.random().toString(36).substring(2, 8),
@@ -13824,10 +13848,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "note-item",
-  props: ["info", "status", "index", "storage", "mode", "openNote", "floatMenu"],
+  props: ["info", "status", "storage", "mode", "openNote", "floatMenu"],
   data: function data() {
     return {
       hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path,
@@ -25128,11 +25151,7 @@ var render = function() {
     "div",
     {
       staticClass: "accordion",
-      attrs: {
-        "data-index": _vm.index,
-        "data-storage": _vm.storage,
-        "data-path": _vm.info.path
-      }
+      attrs: { "data-storage": _vm.storage, "data-path": _vm.info.path }
     },
     [
       _c("input", {
@@ -25194,7 +25213,7 @@ var render = function() {
         _c(
           "ul",
           { staticClass: "menu menu-nav" },
-          _vm._l(_vm.info.sub, function(item, i) {
+          _vm._l(_vm.info.sub, function(item) {
             return _c(
               "li",
               { key: item.id, staticClass: "menu-item" },
@@ -25204,7 +25223,6 @@ var render = function() {
                       attrs: {
                         info: item,
                         status: "C",
-                        index: _vm.index + "/" + i,
                         storage: _vm.storage,
                         mode: _vm.mode,
                         openNote: _vm.openNote,
@@ -25217,7 +25235,6 @@ var render = function() {
                   ? _c("folder-item", {
                       attrs: {
                         info: item,
-                        index: _vm.index + "/" + i,
                         storage: _vm.storage,
                         mode: _vm.mode,
                         openNote: _vm.openNote,
@@ -25266,7 +25283,6 @@ var render = function() {
       attrs: {
         "data-badge": _vm.status,
         title: _vm.hoverTitle,
-        "data-index": _vm.index,
         "data-storage": _vm.storage,
         "data-path": _vm.info.path
       }

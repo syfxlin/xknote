@@ -110,7 +110,7 @@ export default {
     this.loadLocalNotes();
     this.loadCloudFolders();
     window.xknote = {};
-    window.listOperateP = this.listOperateP;
+    window.listOperate = this.listOperate;
   },
   methods: {
     showToast(message, status) {
@@ -187,6 +187,9 @@ export default {
       );
       if (!info) {
         info = document.querySelector('.cloud-tab [data-path="' + path + '"]');
+      }
+      if (!info) {
+        return;
       }
       let storage = info.getAttribute("data-storage");
       let item = this.listOperate("get", storage, path);
@@ -284,7 +287,7 @@ export default {
      * @param {string} mode 当前处于的模式
      * @returns void
      */
-    openNote(note, source, mode = "normal") {
+    openNote(note, source, mode = "normal", isNew = false) {
       let open = () => {
         if (mode === "normal") {
           for (let key in this.currList) {
@@ -329,7 +332,7 @@ export default {
           this.readOpened = JSON.parse(JSON.stringify(note));
         }
       };
-      if (source.storage === "cloud") {
+      if (!isNew && source.storage === "cloud") {
         let noteEle = document.querySelector(
           '[data-path="' + note.path + '"][data-storage="cloud"]'
         );
@@ -522,7 +525,7 @@ export default {
       let list = this[storage + "List"];
       if (storage === "cloud") {
         arr = path.substring(1).split("/");
-        for (let i = 0; i < arr.length - 1; i++) {
+        for (let i = 0; operate !== "add" && i < arr.length - 1; i++) {
           list = list[arr[i]].sub;
         }
       }
@@ -537,6 +540,25 @@ export default {
         }
         if (storage === "local") {
           return this.$set(this.localList, path, noteInfo);
+        }
+        if (storage === "cloud") {
+          let p = "";
+          let len = noteInfo === null ? arr.length : arr.length - 1;
+          for (let i = 0; i < len; i++) {
+            p += "/" + arr[i];
+            if (!list[arr[i]]) {
+              this.$set(list, arr[i], {
+                type: "folder",
+                path: p,
+                name: arr[i],
+                sub: {}
+              });
+            }
+            list = list[arr[i]].sub;
+          }
+          if (noteInfo !== null) {
+            this.$set(list, arr[arr.length - 1], noteInfo);
+          }
         }
       }
       if (operate === "delete") {

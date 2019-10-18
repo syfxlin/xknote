@@ -3,7 +3,6 @@
     :class="'tile tile-centered' + (status!=='C'&&mode!=='read' ? ' badge' : '')"
     :data-badge="status"
     :title="hoverTitle"
-    :data-index="index"
     :data-storage="storage"
     :data-path="info.path"
   >
@@ -27,15 +26,7 @@
 <script>
 export default {
   name: "note-item",
-  props: [
-    "info",
-    "status",
-    "index",
-    "storage",
-    "mode",
-    "openNote",
-    "floatMenu"
-  ],
+  props: ["info", "status", "storage", "mode", "openNote", "floatMenu"],
   data() {
     return {
       hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path,

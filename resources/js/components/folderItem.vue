@@ -1,5 +1,5 @@
 <template>
-  <div class="accordion" :data-index="index" :data-storage="storage" :data-path="info.path">
+  <div class="accordion" :data-storage="storage" :data-path="info.path">
     <!-- mark checked代表已经开启 -->
     <input :id="'accordion-' + idHash" type="checkbox" name="accordion-checkbox" hidden />
     <label class="accordion-header c-hand" :for="'accordion-' + idHash" :title="info.path">
@@ -17,12 +17,11 @@
     </label>
     <div class="accordion-body">
       <ul class="menu menu-nav">
-        <li class="menu-item" v-for="(item, i) in info.sub" :key="item.id">
+        <li class="menu-item" v-for="item in info.sub" :key="item.id">
           <note-item
             v-if="item.type==='note'"
             :info="item"
             :status="'C'"
-            :index="index + '/' + i"
             :storage="storage"
             :mode="mode"
             :openNote="openNote"
@@ -31,7 +30,6 @@
           <folder-item
             v-if="item.type==='folder'"
             :info="item"
-            :index="index + '/' + i"
             :storage="storage"
             :mode="mode"
             :openNote="openNote"
@@ -47,7 +45,7 @@
 import noteItem from "./noteItem.vue";
 export default {
   name: "folder-item",
-  props: ["info", "index", "storage", "mode", "openNote", "floatMenu"],
+  props: ["info", "storage", "mode", "openNote", "floatMenu"],
   data() {
     return {
       idHash: Math.random()
