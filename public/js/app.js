@@ -13437,27 +13437,20 @@ __webpack_require__.r(__webpack_exports__);
       var _this5 = this;
 
       document.querySelector(".xknote-check-local").classList.add("loading");
-      var checkList = [];
-
-      for (var i = 0; i < this.localList.length; i++) {
-        checkList.push(this.localList[i].path);
-      }
-
       window.axios.post("/api/notes/check", {
-        checkList: checkList
+        checkList: Object.keys(this.localList)
       }).then(function (res) {
-        console.log(res); // TODO: 比较Modal，同时执行一些操作，是否替换（本地to云端，云端to本地，还是不变）
-
+        // TODO: 比较Modal，同时执行一些操作，是否替换（本地to云端，云端to本地，还是不变）
         _this5.lgModal.data = [];
 
-        for (var _i = 0; _i < _this5.localList.length; _i++) {
+        for (var key in _this5.localList) {
           _this5.lgModal.data.push({
-            name: _this5.localList[_i].name,
-            path: _this5.localList[_i].path,
-            created_at_l: _this5.localList[_i].note.created_at,
-            updated_at_l: _this5.localList[_i].note.updated_at,
-            created_at_c: res.data.checkList[_i].created_at,
-            updated_at_c: res.data.checkList[_i].updated_at
+            name: _this5.localList[key].name,
+            path: _this5.localList[key].path,
+            created_at_l: _this5.localList[key].note.created_at,
+            updated_at_l: _this5.localList[key].note.updated_at,
+            created_at_c: res.data.checkList[key].created_at,
+            updated_at_c: res.data.checkList[key].updated_at
           });
         }
 
@@ -13465,6 +13458,42 @@ __webpack_require__.r(__webpack_exports__);
 
         document.querySelector(".xknote-check-local").classList.remove("loading");
       });
+    },
+    checkLocalOperate: function checkLocalOperate(operate, index) {
+      var _this6 = this;
+
+      var path = this.lgModal.data[index].path;
+
+      if (operate === "keepLocal") {
+        this.noteOperate("read", "local", {
+          path: path
+        }, function (data) {
+          _this6.noteOperate("save", "cloud", data, function () {
+            _this6.localList[path].status = "C";
+
+            _this6.$delete(_this6.lgModal.data, index); // 将更新后的状态保存到本地
+
+
+            _this6.noteOperate("save", "local", _this6.localList[path]);
+          });
+        });
+      }
+
+      if (operate === "keepCloud") {
+        this.noteOperate("read", "cloud", {
+          path: path
+        }, function (data) {
+          _this6.noteOperate("save", "local", data, function () {
+            _this6.localList[path].status = "C";
+
+            _this6.$delete(_this6.lgModal.data, index);
+          });
+        });
+      }
+
+      if (operate === "notOpe") {
+        this.$delete(this.lgModal.data, index);
+      }
     }
   },
   mounted: function mounted() {},
@@ -24644,7 +24673,63 @@ var render = function() {
                                   _vm._v(" "),
                                   _c("td", [_vm._v(_vm._s(item.updated_at_c))]),
                                   _vm._v(" "),
-                                  _vm._m(12, true)
+                                  _c("td", [
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass: "btn-group btn-group-block"
+                                      },
+                                      [
+                                        _c(
+                                          "button",
+                                          {
+                                            staticClass: "btn",
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.checkLocalOperate(
+                                                  "keepLocal",
+                                                  index
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [_vm._v("保留本地")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "button",
+                                          {
+                                            staticClass: "btn",
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.checkLocalOperate(
+                                                  "keepCloud",
+                                                  index
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [_vm._v("保留云端")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "button",
+                                          {
+                                            staticClass: "btn",
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.checkLocalOperate(
+                                                  "notOpe",
+                                                  index
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [_vm._v("不操作")]
+                                        )
+                                      ]
+                                    )
+                                  ])
                                 ])
                               }),
                               0
@@ -24864,20 +24949,6 @@ var staticRenderFns = [
         _c("th", [_vm._v("更新时间(云端)")]),
         _vm._v(" "),
         _c("th", [_vm._v("操作")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("div", { staticClass: "btn-group btn-group-block" }, [
-        _c("button", { staticClass: "btn" }, [_vm._v("保留本地")]),
-        _vm._v(" "),
-        _c("button", { staticClass: "btn" }, [_vm._v("保留云端")]),
-        _vm._v(" "),
-        _c("button", { staticClass: "btn" }, [_vm._v("不操作")])
       ])
     ])
   }

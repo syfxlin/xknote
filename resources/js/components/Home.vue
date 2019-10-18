@@ -425,9 +425,9 @@
                       <td>{{ item.updated_at_c }}</td>
                       <td>
                         <div class="btn-group btn-group-block">
-                          <button class="btn">保留本地</button>
-                          <button class="btn">保留云端</button>
-                          <button class="btn">不操作</button>
+                          <button class="btn" @click="checkLocalOperate('keepLocal', index)">保留本地</button>
+                          <button class="btn" @click="checkLocalOperate('keepCloud', index)">保留云端</button>
+                          <button class="btn" @click="checkLocalOperate('notOpe', index)">不操作</button>
                         </div>
                       </td>
                     </tr>
@@ -989,26 +989,21 @@ export default {
     },
     checkLocalStatus() {
       document.querySelector(".xknote-check-local").classList.add("loading");
-      var checkList = [];
-      for (let i = 0; i < this.localList.length; i++) {
-        checkList.push(this.localList[i].path);
-      }
       window.axios
         .post("/api/notes/check", {
-          checkList: checkList
+          checkList: Object.keys(this.localList)
         })
         .then(res => {
-          console.log(res);
           // TODO: 比较Modal，同时执行一些操作，是否替换（本地to云端，云端to本地，还是不变）
           this.lgModal.data = [];
-          for (let i = 0; i < this.localList.length; i++) {
+          for (let key in this.localList) {
             this.lgModal.data.push({
-              name: this.localList[i].name,
-              path: this.localList[i].path,
-              created_at_l: this.localList[i].note.created_at,
-              updated_at_l: this.localList[i].note.updated_at,
-              created_at_c: res.data.checkList[i].created_at,
-              updated_at_c: res.data.checkList[i].updated_at
+              name: this.localList[key].name,
+              path: this.localList[key].path,
+              created_at_l: this.localList[key].note.created_at,
+              updated_at_l: this.localList[key].note.updated_at,
+              created_at_c: res.data.checkList[key].created_at,
+              updated_at_c: res.data.checkList[key].updated_at
             });
           }
           this.navBarOperate("showCheckLocalStatus");
@@ -1016,6 +1011,30 @@ export default {
             .querySelector(".xknote-check-local")
             .classList.remove("loading");
         });
+    },
+    checkLocalOperate(operate, index) {
+      let path = this.lgModal.data[index].path;
+      if (operate === "keepLocal") {
+        this.noteOperate("read", "local", { path: path }, data => {
+          this.noteOperate("save", "cloud", data, () => {
+            this.localList[path].status = "C";
+            this.$delete(this.lgModal.data, index);
+            // 将更新后的状态保存到本地
+            this.noteOperate("save", "local", this.localList[path]);
+          });
+        });
+      }
+      if (operate === "keepCloud") {
+        this.noteOperate("read", "cloud", { path: path }, data => {
+          this.noteOperate("save", "local", data, () => {
+            this.localList[path].status = "C";
+            this.$delete(this.lgModal.data, index);
+          });
+        });
+      }
+      if (operate === "notOpe") {
+        this.$delete(this.lgModal.data, index);
+      }
     }
   },
   mounted() {},

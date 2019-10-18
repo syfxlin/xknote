@@ -93,15 +93,13 @@ class NoteModel
         $reList = [];
         foreach ($checkList as $index => $path) {
             if (!Storage::exists($path)) {
-                $reList[] = [
-                    'path' => $pathList[$index],
+                $reList[$pathList[$index]] = [
                     'created_at' => 'No exists',
                     'updated_at' => 'No exists'
                 ];
             } else {
                 $note = $this->get($path);
-                $reList[] = [
-                    'path' => $pathList[$index],
+                $reList[$pathList[$index]] = [
                     'created_at' => $note['created_at'],
                     'updated_at' => $note['updated_at']
                 ];
