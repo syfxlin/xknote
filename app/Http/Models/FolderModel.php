@@ -3,6 +3,7 @@
 namespace App\Http\Models;
 
 use Illuminate\Support\Facades\Storage;
+use Chumper\Zipper\Zipper;
 
 class FolderModel
 {
@@ -86,5 +87,17 @@ class FolderModel
     public function exist($path)
     {
         return Storage::exists($path);
+    }
+
+    public function zip($path, $zipPath)
+    {
+        if (file_exists($zipPath)) {
+            unlink($zipPath);
+        }
+        $zipper = new Zipper();
+        $zipper
+            ->make($zipPath)
+            ->add($path)
+            ->close();
     }
 }

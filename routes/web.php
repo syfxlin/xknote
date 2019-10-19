@@ -26,7 +26,10 @@ Route::prefix('api')
     ->middleware('auth')
     ->namespace('API')
     ->group(function () {
-        Route::get('/user', 'UserController@user');
+        Route::get('/user', 'UserController@get');
+        Route::post('/user', 'UserController@create');
+        Route::delete('/user', 'UserController@delete');
+        Route::put('/user', 'UserController@edit');
 
         Route::get('/admin/users', 'AdminController@getUser');
         Route::post('/admin/users', 'AdminController@createUser');
@@ -42,6 +45,8 @@ Route::prefix('api')
         Route::get('/folders/only', 'FolderController@getOnly');
         Route::get('/folders/flat', 'FolderController@getFlat');
         Route::get('/folders/exist', 'FolderController@exist');
+
+        Route::get('/export', 'FolderController@export');
 
         Route::get('/notes', 'NoteController@get');
         Route::post('/notes', 'NoteController@create');

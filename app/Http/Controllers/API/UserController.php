@@ -11,8 +11,68 @@ class UserController extends Controller
     {
     }
 
-    public function user(Request $request)
+    public function get(Request $request)
     {
         return $request->user();
+    }
+
+    public function create(Request $request)
+    {
+        $data = [
+            'username' => $request->username,
+            'nickname' => $request->nickname,
+            'email' => $request->email,
+            'password' => $request->password,
+            'password_confirmation' => $request->password_confirmation
+        ];
+        $right = $this->validator($data)->passes();
+        if (!$right) {
+            return response(
+                [
+                    'error' => 'Parameter error.'
+                ],
+                400
+            );
+        }
+        return [
+            'error' => false,
+            'user' => User::create([
+                'username' => $data['username'],
+                'nickname' => $data['nickname'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password'])
+            ])
+        ];
+    }
+
+    public function delete(Request $request)
+    {
+        $request->user()->delete();
+        return ['error' => false];
+    }
+
+    public function edit(Request $request)
+    {
+        $data = [
+            'username' => $request->username,
+            'nickname' => $request->nickname,
+            'email' => $request->email,
+            'password' => $request->password,
+            'password_confirmation' => $request->password_confirmation
+        ];
+        $right = $this->validator($data)->passes();
+        if (!$right) {
+            return response(
+                [
+                    'error' => 'Parameter error.'
+                ],
+                400
+            );
+        }
+        $request->user()->update($data);
+        return [
+            'error' => false,
+            'user' => $request->user()
+        ];
     }
 }

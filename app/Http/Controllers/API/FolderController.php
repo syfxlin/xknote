@@ -111,4 +111,17 @@ class FolderController extends Controller
             'exist' => $this->model->exist('uid_' . $id . $request->path)
         ];
     }
+
+    public function export(Request $request)
+    {
+        $id = $request->user()->id;
+        $path = '/';
+        if ($request->has('path')) {
+            $path = $request->path;
+        }
+        $zipPath = sys_get_temp_dir() . '/uid_' . $id . '.zip';
+        $path = storage_path() . '/app/uid_' . $id . '/' . $path;
+        $this->model->zip($path, $zipPath);
+        return response()->download($zipPath);
+    }
 }
