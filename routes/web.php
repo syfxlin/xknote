@@ -57,4 +57,8 @@ Route::prefix('api')
         Route::get('/notes/all', 'NoteController@getAll');
         Route::post('/notes/check', 'NoteController@checkStatus');
         Route::get('/notes/exist', 'NoteController@exist');
+
+        Route::get('/images/all', 'ImageController@getAll');
+        Route::post('/images', 'ImageController@upload');
+        Route::delete('/images', 'ImageController@delete');
     });
