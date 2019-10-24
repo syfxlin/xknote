@@ -19,10 +19,10 @@ class GitRepoController extends Controller
         if (
             !$request->has('path') ||
             !$request->has('repo') ||
-            !$request->has('initOrClone')
+            !$request->has('init_or_clone')
         ) {
             return response(
-                ['error' => 'Parameter not found. (path,repo,initOrClone)'],
+                ['error' => 'Parameter not found. (path,repo,init_or_clone)'],
                 400
             );
         }
@@ -30,7 +30,7 @@ class GitRepoController extends Controller
         $path = $request->path;
         $repo = $request->repo;
         $code = 500;
-        if ($request->initOrClone === 'init') {
+        if ($request->init_or_clone === 'init') {
             $code = $this->model->init($path, $id, $repo);
         } else {
             $code = $this->model->clone($path, $id, $repo);
@@ -97,14 +97,14 @@ class GitRepoController extends Controller
         $id = $request->user()->id;
         $path = $request->path;
         $repo = $request->repo;
-        $gitUser = null;
+        $git_user = null;
         if ($request->has('name') && $request->has('password')) {
-            $gitUser = [
+            $git_user = [
                 'git_name' => $request->name,
                 'git_password' => $request->password
             ];
         }
-        $this->model->configRemote($path, $id, $repo, $gitUser);
+        $this->model->configRemote($path, $id, $repo, $git_user);
         return ['error' => false];
     }
 

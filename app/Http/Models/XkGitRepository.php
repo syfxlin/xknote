@@ -17,11 +17,11 @@ class XkGitRepository extends GitRepository
         return $output;
     }
 
-    public function setConfig($gitUser)
+    public function setConfig($git_user)
     {
         return $this->begin()
-            ->run('git config user.name', $gitUser['git_name'])
-            ->run('git config user.email', $gitUser['git_email'])
+            ->run('git config user.name', $git_user['git_name'])
+            ->run('git config user.email', $git_user['git_email'])
             ->end();
     }
 

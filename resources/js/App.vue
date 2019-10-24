@@ -715,8 +715,8 @@ export default {
         if (storage === "cloud") {
           window.axios
             .put("/api/notes/rename", {
-              oldPath: noteInfo.oldNote.path,
-              newPath: noteInfo.note.path
+              old_path: noteInfo.oldNote.path,
+              new_path: noteInfo.note.path
             })
             .then(res => {
               console.log(res);
@@ -801,8 +801,8 @@ export default {
       if (operate === "rename") {
         window.axios
           .put("/api/folders", {
-            oldPath: folderInfo.oldFolder.path,
-            newPath: folderInfo.folder.path
+            old_path: folderInfo.oldFolder.path,
+            new_path: folderInfo.folder.path
           })
           .then(res => {
             console.log(res);

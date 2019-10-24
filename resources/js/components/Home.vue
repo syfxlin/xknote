@@ -998,7 +998,7 @@ export default {
       document.querySelector(".xknote-check-local").classList.add("loading");
       window.axios
         .post("/api/notes/check", {
-          checkList: Object.keys(this.localList)
+          check_list: Object.keys(this.localList)
         })
         .then(res => {
           this.lgModal.data = [];
@@ -1008,8 +1008,8 @@ export default {
               path: this.localList[key].path,
               created_at_l: this.localList[key].note.created_at,
               updated_at_l: this.localList[key].note.updated_at,
-              created_at_c: res.data.checkList[key].created_at,
-              updated_at_c: res.data.checkList[key].updated_at
+              created_at_c: res.data.check_list[key].created_at,
+              updated_at_c: res.data.check_list[key].updated_at
             });
           }
           this.navBarOperate("showCheckLocalStatus");

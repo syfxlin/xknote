@@ -7,36 +7,36 @@ use Chumper\Zipper\Zipper;
 
 class FolderModel
 {
-    public function get($dir = '', $checkGit = false, $mode = 'all')
+    public function get($dir = '', $check_git = false, $mode = 'all')
     {
         if ($mode === 'flat') {
             return $this->getFlat($dir);
         }
         $re = [];
-        $dirs = array_filter(Storage::directories($dir), function ($dirName) {
-            return !preg_match("/.git$/i", $dirName);
+        $dirs = array_filter(Storage::directories($dir), function ($dir_name) {
+            return !preg_match("/.git$/i", $dir_name);
         });
         $dirs = array_values($dirs);
-        foreach ($dirs as $dirName) {
-            $name = str_replace($dir . '/', '', $dirName);
+        foreach ($dirs as $dir_name) {
+            $name = str_replace($dir . '/', '', $dir_name);
             $re[$name] = [
                 'type' => 'folder',
-                'path' => preg_replace('/uid_\d+/i', '', $dirName),
+                'path' => preg_replace('/uid_\d+/i', '', $dir_name),
                 'name' => $name,
-                'sub' => $this->get($dirName, false, $mode)
+                'sub' => $this->get($dir_name, false, $mode)
             ];
-            if ($checkGit && Storage::exists($dirName . '/.git')) {
+            if ($check_git && Storage::exists($dir_name . '/.git')) {
                 $re[$name]['git'] = true;
             }
         }
         if ($mode === 'all') {
             $files = Storage::files($dir);
-            foreach ($files as $fileName) {
-                if (preg_match("/(.md$|.txt)/i", $fileName)) {
-                    $name = str_replace($dir . '/', '', $fileName);
+            foreach ($files as $file_name) {
+                if (preg_match("/(.md$|.txt)/i", $file_name)) {
+                    $name = str_replace($dir . '/', '', $file_name);
                     $re[$name] = [
                         'type' => 'note',
-                        'path' => preg_replace('/uid_\d+/i', '', $fileName),
+                        'path' => preg_replace('/uid_\d+/i', '', $file_name),
                         'name' => $name
                     ];
                 }
@@ -49,11 +49,11 @@ class FolderModel
     {
         $dirs = Storage::allDirectories($dir);
         $index = 0;
-        foreach ($dirs as $dirName) {
-            if (preg_match('/.git/i', $dirName)) {
+        foreach ($dirs as $dir_name) {
+            if (preg_match('/.git/i', $dir_name)) {
                 array_splice($dirs, $index, 1);
             } else {
-                $dirs[$index] = preg_replace('/uid_\d+/i', '', $dirName);
+                $dirs[$index] = preg_replace('/uid_\d+/i', '', $dir_name);
                 $index++;
             }
         }
@@ -75,12 +75,12 @@ class FolderModel
         return 200;
     }
 
-    public function move($newPath, $oldPath)
+    public function move($new_path, $old_path)
     {
-        if (!Storage::exists($oldPath)) {
+        if (!Storage::exists($old_path)) {
             return 404;
         }
-        Storage::move($oldPath, $newPath);
+        Storage::move($old_path, $new_path);
         return 200;
     }
 
@@ -89,14 +89,14 @@ class FolderModel
         return Storage::exists($path);
     }
 
-    public function zip($path, $zipPath)
+    public function zip($path, $zip_path)
     {
-        if (file_exists($zipPath)) {
-            unlink($zipPath);
+        if (file_exists($zip_path)) {
+            unlink($zip_path);
         }
         $zipper = new Zipper();
         $zipper
-            ->make($zipPath)
+            ->make($zip_path)
             ->add($path)
             ->close();
         return 200;

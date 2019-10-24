@@ -110,15 +110,15 @@ class NoteController extends Controller
     public function move(Request $request)
     {
         $id = $request->user()->id;
-        if (!$request->has('newPath') || !$request->has('oldPath')) {
+        if (!$request->has('new_path') || !$request->has('old_path')) {
             return response(
-                ['error' => 'Parameter not found. (newPath or oldPath)'],
+                ['error' => 'Parameter not found. (new_path or old_path)'],
                 400
             );
         }
-        $newPath = 'uid_' . $id . $request->newPath;
-        $oldPath = 'uid_' . $id . $request->oldPath;
-        if (preg_match('/\.\.\//i', $newPath . $oldPath)) {
+        $new_path = 'uid_' . $id . $request->new_path;
+        $old_path = 'uid_' . $id . $request->old_path;
+        if (preg_match('/\.\.\//i', $new_path . $old_path)) {
             return response(
                 [
                     'error' => 'You submitted a restricted character. (../)'
@@ -126,7 +126,7 @@ class NoteController extends Controller
                 400
             );
         }
-        $code = $this->model->move($newPath, $oldPath);
+        $code = $this->model->move($new_path, $old_path);
         if ($code === 404) {
             return response(
                 [
@@ -146,19 +146,19 @@ class NoteController extends Controller
     public function checkStatus(Request $request)
     {
         $id = $request->user()->id;
-        if (!$request->has('checkList')) {
+        if (!$request->has('check_list')) {
             return response(
-                ['error' => 'Parameter not found. (checkList)'],
+                ['error' => 'Parameter not found. (check_list)'],
                 400
             );
         }
-        $pathList = $request->checkList;
-        $checkList = [];
-        foreach ($pathList as $path) {
-            $checkList[] = 'uid_' . $id . $path;
+        $path_list = $request->check_list;
+        $check_list = [];
+        foreach ($path_list as $path) {
+            $check_list[] = 'uid_' . $id . $path;
         }
-        $res = $this->model->checkStatus($checkList, $pathList);
-        return ['error' => false, 'checkList' => $res];
+        $res = $this->model->checkStatus($check_list, $path_list);
+        return ['error' => false, 'check_list' => $res];
     }
 
     public function exist(Request $request)

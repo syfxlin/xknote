@@ -67,15 +67,15 @@ class FolderController extends Controller
     public function move(Request $request)
     {
         $id = $request->user()->id;
-        if (!$request->has('newPath') || !$request->has('oldPath')) {
+        if (!$request->has('new_path') || !$request->has('old_path')) {
             return response(
-                ['error' => 'Parameter not found. (newPath or oldPath)'],
+                ['error' => 'Parameter not found. (new_path or old_path)'],
                 400
             );
         }
-        $newPath = 'uid_' . $id . $request->newPath;
-        $oldPath = 'uid_' . $id . $request->oldPath;
-        if (preg_match('/\.\.\//i', $newPath . $oldPath)) {
+        $new_path = 'uid_' . $id . $request->new_path;
+        $old_path = 'uid_' . $id . $request->old_path;
+        if (preg_match('/\.\.\//i', $new_path . $old_path)) {
             return response(
                 [
                     'error' => 'You submitted a restricted character. (../)'
@@ -83,7 +83,7 @@ class FolderController extends Controller
                 400
             );
         }
-        $code = $this->model->move($newPath, $oldPath);
+        $code = $this->model->move($new_path, $old_path);
         if ($code === 404) {
             return response(
                 [
@@ -119,9 +119,9 @@ class FolderController extends Controller
         if ($request->has('path')) {
             $path = $request->path;
         }
-        $zipPath = sys_get_temp_dir() . '/uid_' . $id . '.zip';
+        $zip_path = sys_get_temp_dir() . '/uid_' . $id . '.zip';
         $path = storage_path() . '/app/uid_' . $id . '/' . $path;
-        $this->model->zip($path, $zipPath);
-        return response()->download($zipPath);
+        $this->model->zip($path, $zip_path);
+        return response()->download($zip_path);
     }
 }
