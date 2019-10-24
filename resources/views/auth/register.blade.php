@@ -33,11 +33,11 @@
             </div>
             <div class="form-group">
                 <div class="col-4 col-sm-12">
-                    <label for="nikename" class="form-label">Nike Name</label>
+                    <label for="nickname" class="form-label">Nick Name</label>
                 </div>
                 <div class="col-8 col-sm-12">
-                    <input id="nikename" type="text" class="form-input @error('nikename') is-invalid @enderror" name="nikename" value="{{ old('nikename') }}" required autocomplete="nikename" autofocus>
-                    @error('nikename')
+                    <input id="nickname" type="text" class="form-input @error('nickname') is-invalid @enderror" name="nickname" value="{{ old('nickname') }}" required autocomplete="nickname" autofocus>
+                    @error('nickname')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
@@ -75,12 +75,7 @@
                     <label for="password-confirm" class="form-label">Confirm Password</label>
                 </div>
                 <div class="col-8 col-sm-12">
-                    <input id="password-confirm" type="password" class="form-input @error('password-confirm') is-invalid @enderror" name="password_confirmation" required autocomplete="new-password">
-                    @error('password-confirm')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
+                    <input id="password-confirm" type="password" class="form-input" name="password_confirmation" required autocomplete="new-password">
                 </div>
             </div>
             <div class="form-group">
