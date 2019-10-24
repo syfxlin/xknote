@@ -58,4 +58,28 @@ class GitRepoController extends Controller
         ]);
         return ['error' => false];
     }
+
+    public function pull(Request $request)
+    {
+        if (!$request->has('path')) {
+            return response(['error' => 'Parameter not found. (path)'], 400);
+        }
+        $id = $request->user()->id;
+        $this->model->pull($request->path, $id);
+        return ['error' => false];
+    }
+
+    public function push(Request $request)
+    {
+        if (!$request->has('path')) {
+            return response(['error' => 'Parameter not found. (path)'], 400);
+        }
+        $id = $request->user()->id;
+        $force = $request->has('force') && $request->force == 'true';
+        $code = $this->model->push($request->path, $id, $force);
+        if ($code === 202) {
+            return ['error' => false, 'message' => 'Everything up-to-date'];
+        }
+        return ['error' => false];
+    }
 }

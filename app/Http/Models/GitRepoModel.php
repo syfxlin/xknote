@@ -54,7 +54,7 @@ class GitRepoModel
         return 200;
     }
 
-    public function push($path, $id)
+    public function push($path, $id, $force = false)
     {
         $repo = new XkGitRepository(
             storage_path() . '/app/uid_' . $id . '/' . $path
@@ -64,7 +64,11 @@ class GitRepoModel
         }
         $repo->addAllChanges();
         $repo->commit('Update: ' . date('Y-m-d_H:i'));
-        $repo->push('origin');
+        if (!$force) {
+            $repo->push('origin');
+        } else {
+            $repo->push('origin', ['--force']);
+        }
         return 200;
     }
 }

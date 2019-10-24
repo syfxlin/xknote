@@ -25,5 +25,6 @@ class ImageModel
     public function delete($name, $id)
     {
         Storage::delete('/public/images/uid_' . $id . '/' . $name);
+        return 200;
     }
 }

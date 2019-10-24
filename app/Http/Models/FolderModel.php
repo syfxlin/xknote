@@ -99,5 +99,6 @@ class FolderModel
             ->make($zipPath)
             ->add($path)
             ->close();
+        return 200;
     }
 }
