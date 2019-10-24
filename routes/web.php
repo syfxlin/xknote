@@ -62,6 +62,7 @@ Route::prefix('api')
         Route::post('/images', 'ImageController@upload');
         Route::delete('/images', 'ImageController@delete');
 
-        Route::get('/git', 'GitRepoController@initClone');
-        Route::get('/git/config', 'GitRepoController@config');
+        Route::get('/repo', 'GitRepoController@pull');
+        Route::post('/repo', 'GitRepoController@intiClone');
+        Route::put('/repo', 'GitRepoController@push');
     });
