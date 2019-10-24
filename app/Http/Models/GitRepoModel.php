@@ -13,7 +13,17 @@ class GitRepoModel
         $repo = XkGitRepository::init(
             storage_path() . '/app/uid_' . $id . '/' . $path
         );
-        $repo->addRemote('origin', $repoUrl);
+        preg_match('/(.*:\/\/)(.*)/i', $repoUrl, $url);
+        $gitUser = GitInfoModel::where('uid', $id)->get()[0];
+        $repo->addRemote(
+            'origin',
+            $url[1] .
+                $gitUser['git_name'] .
+                ':' .
+                decrypt($gitUser['git_password']) .
+                '@' .
+                $url[2]
+        );
         $repo->configInfo(GitInfoModel::where('uid', $id)->get()[0]);
         return 200;
     }
@@ -35,13 +45,32 @@ class GitRepoModel
         return 200;
     }
 
-    public function config($path, $id, $gitUser = null)
+    public function configInfo($path, $id, $gitUser = null)
     {
         $repo = new XkGitRepository(
             storage_path() . '/app/uid_' . $id . '/' . $path
         );
         $user = $gitUser ? $gitUser : GitInfoModel::where('uid', $id)->get()[0];
         $repo->configInfo($user);
+        return 200;
+    }
+
+    public function configRemote($path, $id, $repoUrl, $gitUser = null)
+    {
+        $repo = new XkGitRepository(
+            storage_path() . '/app/uid_' . $id . '/' . $path
+        );
+        preg_match('/(.*:\/\/)(.*)/i', $repoUrl, $url);
+        $user = $gitUser ? $gitUser : GitInfoModel::where('uid', $id)->get()[0];
+        $repo->setRemoteUrl(
+            'origin',
+            $url[1] .
+                $user['git_name'] .
+                ':' .
+                decrypt($user['git_password']) .
+                '@' .
+                $url[2]
+        );
         return 200;
     }
 

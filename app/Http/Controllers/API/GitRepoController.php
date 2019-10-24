@@ -40,6 +40,20 @@ class GitRepoController extends Controller
 
     public function config(Request $request)
     {
+        if (!$request->has('path')) {
+            return response(['error' => 'Parameter not found. (path)'], 400);
+        }
+        if ($request->has('email')) {
+            $this->configInfo($request);
+        }
+        if ($request->has('repo')) {
+            $this->configRemote($request);
+        }
+        return ['error' => false];
+    }
+
+    public function configInfo(Request $request)
+    {
         if (
             !$request->has('path') ||
             !$request->has('name') ||
@@ -56,6 +70,28 @@ class GitRepoController extends Controller
             'git_name' => $request->name,
             'git_email' => $request->email
         ]);
+        return ['error' => false];
+    }
+
+    public function configRemote(Request $request)
+    {
+        if (!$request->has('path') || !$request->has('repo')) {
+            return response(
+                ['error' => 'Parameter not found. (path,repo)'],
+                400
+            );
+        }
+        $id = $request->user()->id;
+        $path = $request->path;
+        $repo = $request->repo;
+        $gitUser = null;
+        if ($request->has('name') && $request->has('password')) {
+            $gitUser = [
+                'git_name' => $request->name,
+                'git_password' => $request->password
+            ];
+        }
+        $this->model->configRemote($path, $id, $repo, $gitUser);
         return ['error' => false];
     }
 
