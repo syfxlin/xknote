@@ -24,7 +24,7 @@ class GitRepoModel
                 '@' .
                 $url[2]
         );
-        $repo->configInfo(GitInfoModel::where('uid', $id)->get()[0]);
+        $repo->setConfig(GitInfoModel::where('uid', $id)->get()[0]);
         return 200;
     }
 
@@ -41,8 +41,27 @@ class GitRepoModel
                 $url[2],
             storage_path() . '/app/uid_' . $id . '/' . $path
         );
-        $repo->configInfo($gitUser);
+        $repo->setConfig($gitUser);
         return 200;
+    }
+
+    public function getConfig($path, $id)
+    {
+        $repo = new XkGitRepository(
+            storage_path() . '/app/uid_' . $id . '/' . $path
+        );
+        $remoteOrigin = $repo->getRemote('origin');
+        preg_match('/(.*:\/\/)(.*):(.*)@(.*)/i', $remoteOrigin, $url);
+        $remoteUrl = $url[1] . $url[4];
+        $name = $url[2];
+        $password = $url[3];
+        $email = $repo->getConfig(['user.email'])['user.email'];
+        return [
+            'remote_url' => $remoteUrl,
+            'name' => $name,
+            'password' => $password,
+            'email' => $email
+        ];
     }
 
     public function configInfo($path, $id, $gitUser = null)
@@ -51,7 +70,7 @@ class GitRepoModel
             storage_path() . '/app/uid_' . $id . '/' . $path
         );
         $user = $gitUser ? $gitUser : GitInfoModel::where('uid', $id)->get()[0];
-        $repo->configInfo($user);
+        $repo->setConfig($user);
         return 200;
     }
 
@@ -92,7 +111,7 @@ class GitRepoModel
             return 202;
         }
         $repo->addAllChanges();
-        $repo->commit('Update: ' . date('Y-m-d_H:i'));
+        $repo->setConfigommit('Update: ' . date('Y-m-d_H:i'));
         if (!$force) {
             $repo->push('origin');
         } else {

@@ -38,7 +38,20 @@ class GitRepoController extends Controller
         return ['error' => $code === 200 ? true : false];
     }
 
-    public function config(Request $request)
+    public function getConfig(Request $request)
+    {
+        if (!$request->has('path')) {
+            return response(['error' => 'Parameter not found. (path)'], 400);
+        }
+        $id = $request->user()->id;
+        $path = $request->path;
+        return [
+            'error' => false,
+            'config' => $this->model->getConfig($path, $id)
+        ];
+    }
+
+    public function setConfig(Request $request)
     {
         if (!$request->has('path')) {
             return response(['error' => 'Parameter not found. (path)'], 400);
