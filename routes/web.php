@@ -61,4 +61,6 @@ Route::prefix('api')
         Route::get('/images/all', 'ImageController@getAll');
         Route::post('/images', 'ImageController@upload');
         Route::delete('/images', 'ImageController@delete');
+
+        Route::get('/git', 'GitController@initClone');
     });
