@@ -15,6 +15,7 @@ class GitRepoModel
         );
         $repo->addRemote('origin', $repoUrl);
         $repo->configInfo(GitInfoModel::where('uid', $id)->get()[0]);
+        return 200;
     }
 
     public function clone($path, $id, $repoUrl)
@@ -31,6 +32,7 @@ class GitRepoModel
             storage_path() . '/app/uid_' . $id . '/' . $path
         );
         $repo->configInfo($gitUser);
+        return 200;
     }
 
     public function config($path, $id, $gitUser = null)
@@ -40,5 +42,29 @@ class GitRepoModel
         );
         $user = $gitUser ? $gitUser : GitInfoModel::where('uid', $id)->get()[0];
         $repo->configInfo($user);
+        return 200;
+    }
+
+    public function pull($path, $id)
+    {
+        $repo = new XkGitRepository(
+            storage_path() . '/app/uid_' . $id . '/' . $path
+        );
+        $repo->pull('origin');
+        return 200;
+    }
+
+    public function push($path, $id)
+    {
+        $repo = new XkGitRepository(
+            storage_path() . '/app/uid_' . $id . '/' . $path
+        );
+        if (!$repo->hasChanges()) {
+            return 202;
+        }
+        $repo->addAllChanges();
+        $repo->commit('Update: ' . date('Y-m-d_H:i'));
+        $repo->push('origin');
+        return 200;
     }
 }

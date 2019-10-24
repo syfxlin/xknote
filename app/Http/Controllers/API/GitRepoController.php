@@ -29,12 +29,13 @@ class GitRepoController extends Controller
         $id = $request->user()->id;
         $path = $request->path;
         $repo = $request->repo;
+        $code = 500;
         if ($request->initOrClone === 'init') {
-            $this->model->init($path, $id, $repo);
+            $code = $this->model->init($path, $id, $repo);
         } else {
-            $this->model->clone($path, $id, $repo);
+            $code = $this->model->clone($path, $id, $repo);
         }
-        return ['error' => false];
+        return ['error' => $code === 200 ? true : false];
     }
 
     public function config(Request $request)
