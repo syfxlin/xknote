@@ -15,7 +15,7 @@ class CreateGitInfoTable extends Migration
     {
         Schema::create('git_info', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigIncrements('uid');
+            $table->bigInteger('uid')->index();
             $table->string('git_name');
             $table->string('git_email');
             $table->string('git_password');

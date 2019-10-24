@@ -63,4 +63,5 @@ Route::prefix('api')
         Route::delete('/images', 'ImageController@delete');
 
         Route::get('/git', 'GitRepoController@initClone');
+        Route::get('/git/config', 'GitRepoController@config');
     });

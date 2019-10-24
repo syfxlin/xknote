@@ -3,27 +3,42 @@
 namespace App\Http\Models;
 
 use Illuminate\Support\Facades\Storage;
-use Cz\Git\GitRepository;
+use App\Http\Models\XkGitRepository;
+use App\Http\Models\GitInfoModel;
 
 class GitRepoModel
 {
     public function init($path, $id, $repoUrl)
     {
-        $repo = GitRepository::init(
+        $repo = XkGitRepository::init(
             storage_path() . '/app/uid_' . $id . '/' . $path
         );
         $repo->addRemote('origin', $repoUrl);
+        $repo->configInfo(GitInfoModel::where('uid', $id)->get()[0]);
     }
 
     public function clone($path, $id, $repoUrl)
     {
-        $repo = GitRepository::cloneRepository(
-            $repoUrl,
+        preg_match('/(.*:\/\/)(.*)/i', $repoUrl, $url);
+        $gitUser = GitInfoModel::where('uid', $id)->get()[0];
+        $repo = XkGitRepository::cloneRepository(
+            $url[1] .
+                $gitUser['git_name'] .
+                ':' .
+                decrypt($gitUser['git_password']) .
+                '@' .
+                $url[2],
             storage_path() . '/app/uid_' . $id . '/' . $path
         );
+        $repo->configInfo($gitUser);
     }
 
-    public function reconfig()
+    public function config($path, $id, $gitUser = null)
     {
+        $repo = new XkGitRepository(
+            storage_path() . '/app/uid_' . $id . '/' . $path
+        );
+        $user = $gitUser ? $gitUser : GitInfoModel::where('uid', $id)->get()[0];
+        $repo->configInfo($user);
     }
 }
