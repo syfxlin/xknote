@@ -5,7 +5,7 @@ namespace App\Http\Models;
 use Illuminate\Support\Facades\Storage;
 use Cz\Git\GitRepository;
 
-class GitModel
+class GitRepoModel
 {
     public function init($path, $id, $repoUrl)
     {

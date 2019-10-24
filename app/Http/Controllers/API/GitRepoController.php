@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Models\GitModel;
 
-class GitController extends Controller
+class GitRepoController extends Controller
 {
     public $model = null;
     public function __construct()
