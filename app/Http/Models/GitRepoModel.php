@@ -21,7 +21,7 @@ class GitRepoModel
     {
         $git_info = GitInfoModel::where('uid', $id);
         if ($git_info->count() <= 0) {
-            return 400;
+            return 404;
         }
         $git_user = $git_info->get()[0];
         $repo = XkGitRepository::init(
@@ -54,7 +54,7 @@ class GitRepoModel
     {
         $git_info = GitInfoModel::where('uid', $id);
         if ($git_info->count() <= 0) {
-            return 400;
+            return 404;
         }
         $git_user = $git_info->get()[0];
         preg_match('/(.*:\/\/)(.*)/i', $repo_url, $url);

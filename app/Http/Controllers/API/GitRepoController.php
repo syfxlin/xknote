@@ -51,13 +51,13 @@ class GitRepoController extends Controller
         } else {
             $code = $this->model->clone($path, $id, $repo);
         }
-        if ($code === 400) {
+        if ($code === 404) {
             return response(
                 [
                     'error' => true,
                     'message' => 'You need to set up Git information'
                 ],
-                400
+                404
             );
         }
         return ['error' => false];
