@@ -37,11 +37,17 @@ class GitInfoController extends Controller
                 400
             );
         }
-        GitInfoModel::where('uid', $id)->update([
+        $config_m = GitInfoModel::where('uid', $id);
+        $data = [
             'git_name' => $request->name,
             'git_email' => $request->email,
             'git_password' => $request->password
-        ]);
+        ];
+        if ($config_m->count() <= 0) {
+            $config_m->create($data);
+        } else {
+            $config_m->update($data);
+        }
         return ['error' => false];
     }
 }

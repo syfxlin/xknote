@@ -12,6 +12,7 @@
         "chumper/zipper": "^1.0",
         "czproject/git-php": "^3.17",
         "fideloper/proxy": "^4.0",
+        "guzzlehttp/guzzle": "~6.0",
         "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0"
     },

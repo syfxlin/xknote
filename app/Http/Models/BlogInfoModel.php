@@ -3,8 +3,7 @@
 namespace App\Http\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
-class GitInfoModel extends Model
+class BlogInfoModel extends Model
 {
-    protected $table = 'git_info';
+    protected $table = 'blog_info';
 }
