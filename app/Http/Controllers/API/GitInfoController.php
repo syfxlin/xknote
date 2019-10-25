@@ -8,4 +8,7 @@ use App\Http\Models\GitInfoModel;
 
 class GitInfoController extends Controller
 {
+    public function getInfo()
+    {
+    }
 }
