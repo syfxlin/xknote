@@ -45,11 +45,18 @@ class GitRepoController extends Controller
                 409
             );
         }
+        $git_user = null;
+        if (!$request->has('name') || !$request->has('password')) {
+            $git_user = [
+                'git_name' => $request->name,
+                'git_password' => $request->password
+            ];
+        }
         $code = 500;
         if ($request->init_or_clone === 'init') {
-            $code = $this->model->init($path, $id, $repo);
+            $code = $this->model->init($path, $id, $repo, $git_user);
         } else {
-            $code = $this->model->clone($path, $id, $repo);
+            $code = $this->model->clone($path, $id, $repo, $git_user);
         }
         if ($code === 404) {
             return response(

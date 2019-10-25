@@ -17,13 +17,16 @@ class GitRepoModel
      *
      * @return  int                状态
      */
-    public function init($path, $id, $repo_url)
+    public function init($path, $id, $repo_url, $git_user = null)
     {
-        $git_info = GitInfoModel::where('uid', $id);
-        if ($git_info->count() <= 0) {
-            return 404;
+        $user = $git_user;
+        if (!$user) {
+            $git_info = GitInfoModel::where('uid', $id);
+            if ($git_info->count() <= 0) {
+                return 404;
+            }
+            $user = $git_info->get()[0];
         }
-        $git_user = $git_info->get()[0];
         $repo = XkGitRepository::init(
             storage_path() . '/app/uid_' . $id . $path
         );
@@ -31,13 +34,13 @@ class GitRepoModel
         $repo->addRemote(
             'origin',
             $url[1] .
-                $git_user['git_name'] .
+                $user['git_name'] .
                 ':' .
-                decrypt($git_user['git_password']) .
+                decrypt($user['git_password']) .
                 '@' .
                 $url[2]
         );
-        $repo->setConfig($git_user);
+        $repo->setConfig($user);
         return 200;
     }
 
@@ -50,24 +53,27 @@ class GitRepoModel
      *
      * @return  int                状态
      */
-    public function clone($path, $id, $repo_url)
+    public function clone($path, $id, $repo_url, $git_user = null)
     {
-        $git_info = GitInfoModel::where('uid', $id);
-        if ($git_info->count() <= 0) {
-            return 404;
+        $user = $git_user;
+        if (!$user) {
+            $git_info = GitInfoModel::where('uid', $id);
+            if ($git_info->count() <= 0) {
+                return 404;
+            }
+            $user = $git_info->get()[0];
         }
-        $git_user = $git_info->get()[0];
         preg_match('/(.*:\/\/)(.*)/i', $repo_url, $url);
         $repo = XkGitRepository::cloneRepository(
             $url[1] .
-                $git_user['git_name'] .
+                $user['git_name'] .
                 ':' .
-                decrypt($git_user['git_password']) .
+                decrypt($user['git_password']) .
                 '@' .
                 $url[2],
             storage_path() . '/app/uid_' . $id . $path
         );
-        $repo->setConfig($git_user);
+        $repo->setConfig($user);
         return 200;
     }
 
