@@ -65,6 +65,13 @@ Route::prefix('api')
         Route::get('/repo', 'GitRepoController@pull');
         Route::post('/repo', 'GitRepoController@intiClone');
         Route::put('/repo', 'GitRepoController@push');
+        Route::get('/repo/conf', 'GitRepoController@getConfig');
+        Route::put('/repo/conf', 'GitRepoController@setConfig');
+
+        Route::get('/repo/git', 'GitInfoController@getConfig');
+        Route::put('/repo/git', 'GitInfoController@setConfig');
 
         Route::post('/blog', 'BlogController@push');
+        Route::put('/blog', 'BlogController@setConfig');
+        Route::get('/blog', 'BlogController@getConfig');
     });
