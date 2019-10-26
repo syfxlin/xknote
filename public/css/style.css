@@ -47,7 +47,8 @@ body {
  * Login Register
  */
 .xknote-register main,
-.xknote-login main {
+.xknote-login main,
+.xknote-reset main {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -55,16 +56,19 @@ body {
     height: calc(100% - 60px);
 }
 .xknote-register .register,
-.xknote-login .login {
+.xknote-login .login,
+.xknote-reset .reset {
     max-width: 90%;
     width: 25rem;
 }
 .xknote-register .register h1,
-.xknote-login .login h1 {
+.xknote-login .login h1,
+.xknote-reset .reset h1 {
     text-align: center;
 }
 .xknote-register footer,
-.xknote-login footer {
+.xknote-login footer,
+.xknote-reset footer {
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -306,7 +310,7 @@ body {
     margin-bottom: 0.2rem;
 }
 
-.toast {
+.app.toast {
     position: fixed;
     right: 1rem;
     top: 1rem;

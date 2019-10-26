@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'XK-Note注册')
+
 @section('body_class', 'xknote-register')
 
 @section('header')

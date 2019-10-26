@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre-exp.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre-icons.min.css">
         <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
-        <title>XK-Note登录</title>
+        <title>@yield('title')</title>
     </head>
     <body class="@yield('body_class')">
         <header class="navbar xknote-header">
