@@ -12,8 +12,29 @@ class BlogController extends Controller
 {
     public function push(Request $request)
     {
-        if (!$request->has('title') || !$request->has('content')) {
+        if (
+            !$request->has('title') ||
+            !$request->has('content') ||
+            !$request->has('status')
+        ) {
             return response(['error' => 'Parameter not found. (path)'], 400);
+        }
+        $data = [
+            'title' => $request->title,
+            'content' => $request->content,
+            'status' => $request->status
+        ];
+        if ($request->has('slug')) {
+            $data['slug'] = $request->slug;
+        }
+        if ($request->has('excerpt')) {
+            $data['excerpt'] = $request->excerpt;
+        }
+        if ($request->has('categories')) {
+            $data['categories'] = $request->categories;
+        }
+        if ($request->has('tags')) {
+            $data['tags'] = $request->tags;
         }
         $id = $request->user()->id;
         $config_m = BlogInfoModel::where('uid', $id);
@@ -27,13 +48,11 @@ class BlogController extends Controller
             );
         }
         $config = $config_m->get()[0];
+        $re = '';
         if ($config['blog_system'] === 'wordpress') {
-            $this->pushWordPress($config, [
-                'title' => $request->title,
-                'content' => $request->content
-                // Other
-            ]);
+            $re = $this->pushWordPress($config, $data);
         }
+        return ['error' => false, 'response' => $re];
     }
 
     public function pushWordPress($config, $post_info)
@@ -47,5 +66,6 @@ class BlogController extends Controller
                 'Authorization' => 'Bearer ' . $config['blog_token']
             ]
         ]);
+        return $response;
     }
 }
