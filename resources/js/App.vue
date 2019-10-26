@@ -37,7 +37,10 @@ import "./assets/style.css";
 export default {
   name: "App",
   created() {
+    // 当打开note中的时候防止更改
     window.xknoteOpenedChangeFlag = true;
+    // 是否是通过输入URL引发的query变动
+    window.inputQueryChangeFlag = false;
   },
   data() {
     return {
@@ -110,7 +113,6 @@ export default {
     this.loadLocalNotes();
     this.loadCloudFolders();
     window.xknote = {};
-    window.listOperate = this.listOperate;
   },
   methods: {
     showToast(message, status) {
@@ -289,6 +291,16 @@ export default {
      */
     openNote(note, source, mode = "normal", isNew = false) {
       let open = () => {
+        // 更改query
+        window.inputQueryChangeFlag = false;
+        if (!this.$route.query.note || this.$route.query.note !== note.path) {
+          this.$router.replace({
+            query: {
+              ...this.$route.query,
+              note: note.path
+            }
+          });
+        }
         if (mode === "normal") {
           for (let key in this.currList) {
             if (this.currList[key].path === note.path) {
@@ -907,12 +919,13 @@ export default {
       }
     },
     "$route.query": function(query) {
-      if (query.note) {
+      if (window.inputQueryChangeFlag && query.note) {
         let mode = "normal";
         if (this.$route.name === "Read") {
           mode = "read";
         }
         this.loadPathNote(query.note, mode);
+        window.inputQueryChangeFlag = true;
       }
     }
   }

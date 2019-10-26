@@ -11442,6 +11442,12 @@ module.exports = function isBuffer (obj) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _assets_style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./assets/style.css */ "./resources/js/assets/style.css");
 /* harmony import */ var _assets_style_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_assets_style_css__WEBPACK_IMPORTED_MODULE_0__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -11480,7 +11486,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "App",
   created: function created() {
-    window.xknoteOpenedChangeFlag = true;
+    // 当打开note中的时候防止更改
+    window.xknoteOpenedChangeFlag = true; // 是否是通过输入URL引发的query变动
+
+    window.inputQueryChangeFlag = false;
   },
   data: function data() {
     return {
@@ -11553,7 +11562,6 @@ __webpack_require__.r(__webpack_exports__);
     this.loadLocalNotes();
     this.loadCloudFolders();
     window.xknote = {};
-    window.listOperate = this.listOperate;
   },
   methods: {
     showToast: function showToast(message, status) {
@@ -11767,6 +11775,17 @@ __webpack_require__.r(__webpack_exports__);
       var isNew = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
       var open = function open() {
+        // 更改query
+        window.inputQueryChangeFlag = false;
+
+        if (!_this7.$route.query.note || _this7.$route.query.note !== note.path) {
+          _this7.$router.replace({
+            query: _objectSpread({}, _this7.$route.query, {
+              note: note.path
+            })
+          });
+        }
+
         if (mode === "normal") {
           for (var key in _this7.currList) {
             if (_this7.currList[key].path === note.path) {
@@ -12436,7 +12455,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     "$route.query": function $routeQuery(query) {
-      if (query.note) {
+      if (window.inputQueryChangeFlag && query.note) {
         var mode = "normal";
 
         if (this.$route.name === "Read") {
@@ -12444,6 +12463,7 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         this.loadPathNote(query.note, mode);
+        window.inputQueryChangeFlag = true;
       }
     }
   }
