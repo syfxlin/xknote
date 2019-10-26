@@ -31,10 +31,22 @@ Route::prefix('api')
         Route::delete('/user', 'UserController@delete');
         Route::put('/user', 'UserController@edit');
 
-        Route::get('/admin/users', 'AdminController@getUser');
-        Route::post('/admin/users', 'AdminController@createUser');
-        Route::delete('/admin/users/{id}', 'AdminController@deleteUser');
-        Route::put('/admin/users/{id}', 'AdminController@editUser');
+        Route::prefix('admin')
+            ->name('api.admin.')
+            ->group(function () {
+                Route::get('/users', 'AdminController@getUser');
+                Route::post('/users', 'AdminController@createUser');
+                Route::delete('/users/{id}', 'AdminController@deleteUser');
+                Route::put('/users/{id}', 'AdminController@editUser');
+                Route::get(
+                    '/users/{id}/notes',
+                    'AdminController@getUserNoteCount'
+                );
+                Route::delete(
+                    '/users/{id}/notes',
+                    'AdminController@deleteUserNote'
+                );
+            });
 
         Route::get('/folders', 'FolderController@get');
         Route::post('/folders', 'FolderController@create');

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
@@ -37,7 +38,11 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $enable_register =
+            DB::table('config')
+                ->where('config_name', 'enable_register')
+                ->get()[0]->config_value === 'true';
+        $this->middleware($enable_register ? 'guest' : 'admin');
     }
 
     /**

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Models\NoteModel;
+use App\Http\Models\FolderModel;
 
 class AdminController extends Controller
 {
@@ -116,5 +118,22 @@ class AdminController extends Controller
             'error' => false,
             'user' => User::find($id)
         ];
+    }
+
+    public function getUserNoteCount(Request $request, $id)
+    {
+        $note_m = new NoteModel();
+        $notes = $note_m->getAll('uid_' . $id);
+        return [
+            'error' => false,
+            'count' => count($notes)
+        ];
+    }
+
+    public function deleteUserNote(Request $request, $id)
+    {
+        $folder_m = new FolderModel();
+        $folder_m->delete('uid_' . $id);
+        return ['error' => false];
     }
 }

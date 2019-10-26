@@ -15,7 +15,10 @@ class CreateBlogInfoTable extends Migration
     {
         Schema::create('blog_info', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('uid')->index();
+            $table
+                ->bigInteger('uid')
+                ->index()
+                ->unique();
             $table->string('blog_system');
             $table->string('blog_url');
             $table

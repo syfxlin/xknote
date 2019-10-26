@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGitInfoTable extends Migration
+class CreteXknoteConfigTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,13 @@ class CreateGitInfoTable extends Migration
      */
     public function up()
     {
-        Schema::create('git_info', function (Blueprint $table) {
+        Schema::create('config', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table
-                ->bigInteger('uid')
-                ->index()
-                ->unique();
-            $table->string('git_name');
-            $table->string('git_email');
-            $table->string('git_password');
-            $table->timestamps();
+                ->string('config_name')
+                ->unique()
+                ->index();
+            $table->string('config_value');
         });
     }
 
@@ -33,6 +30,6 @@ class CreateGitInfoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('git_info');
+        Schema::dropIfExists('config');
     }
 }
