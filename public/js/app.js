@@ -12247,8 +12247,8 @@ __webpack_require__.r(__webpack_exports__);
 
         if (storage === "cloud") {
           window.axios.put("/api/notes/rename", {
-            oldPath: noteInfo.oldNote.path,
-            newPath: noteInfo.note.path
+            old_path: noteInfo.oldNote.path,
+            new_path: noteInfo.note.path
           }).then(function (res) {
             console.log(res);
 
@@ -12334,8 +12334,8 @@ __webpack_require__.r(__webpack_exports__);
 
       if (operate === "rename") {
         window.axios.put("/api/folders", {
-          oldPath: folderInfo.oldFolder.path,
-          newPath: folderInfo.folder.path
+          old_path: folderInfo.oldFolder.path,
+          new_path: folderInfo.folder.path
         }).then(function (res) {
           console.log(res);
 
@@ -13442,7 +13442,7 @@ __webpack_require__.r(__webpack_exports__);
 
       document.querySelector(".xknote-check-local").classList.add("loading");
       window.axios.post("/api/notes/check", {
-        checkList: Object.keys(this.localList)
+        check_list: Object.keys(this.localList)
       }).then(function (res) {
         _this5.lgModal.data = [];
 
@@ -13452,8 +13452,8 @@ __webpack_require__.r(__webpack_exports__);
             path: _this5.localList[key].path,
             created_at_l: _this5.localList[key].note.created_at,
             updated_at_l: _this5.localList[key].note.updated_at,
-            created_at_c: res.data.checkList[key].created_at,
-            updated_at_c: res.data.checkList[key].updated_at
+            created_at_c: res.data.check_list[key].created_at,
+            updated_at_c: res.data.check_list[key].updated_at
           });
         }
 
