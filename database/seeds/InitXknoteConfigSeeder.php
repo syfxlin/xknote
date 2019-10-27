@@ -12,6 +12,7 @@ class InitXknoteConfigSeeder extends Seeder
      */
     public function run()
     {
+        // init xknote config
         $config = [
             'enable_register' => 'true',
             'xknote_name' => 'XK-Note'

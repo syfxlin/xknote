@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Http\Controllers\Controller;
+use App\Http\Models\UserModel;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -75,11 +76,19 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'username' => $data['username'],
             'nickname' => $data['nickname'],
             'email' => $data['email'],
             'password' => Hash::make($data['password'])
         ]);
+        $default = UserModel::getDefaultConfig();
+        DB::table('user_config')->insert([
+            'uid' => $user->id,
+            'tinymce_setting' => json_encode($default['tinymceSetting']),
+            'ace_setting' => json_encode($default['aceSetting']),
+            'xk_setting' => json_encode($default['xkSetting'])
+        ]);
+        return $user;
     }
 }

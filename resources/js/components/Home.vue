@@ -482,7 +482,7 @@ export default {
     return {
       showSidebar: false, // 该属性只有在writeMode有用
       loadedEditor: false,
-      xknoteSetting: "/static/setting.json",
+      xknoteSetting: "/api/user/conf",
       smModal: {
         show: false,
         title: "",

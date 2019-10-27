@@ -42,6 +42,9 @@ body {
 #app div p {
     margin-top: 1rem;
 }
+#app-main {
+    overflow: hidden;
+}
 
 /*
  * Login Register

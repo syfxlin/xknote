@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Models\UserModel;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -84,5 +85,19 @@ class UserController extends Controller
             'error' => false,
             'user' => $request->user()
         ];
+    }
+
+    public function getConfig(Request $request)
+    {
+        $user_config = UserModel::where('uid', $request->user()->id)->get()[0];
+        return [
+            'tinymceSetting' => json_decode($user_config->tinymce_setting),
+            'aceSetting' => json_decode($user_config->ace_setting),
+            'xkSetting' => json_decode($user_config->xk_setting)
+        ];
+    }
+
+    public function setConfig(Request $request)
+    {
     }
 }

@@ -30,6 +30,7 @@ Route::prefix('api')
         Route::post('/user', 'UserController@create');
         Route::delete('/user', 'UserController@delete');
         Route::put('/user', 'UserController@edit');
+        Route::get('/user/conf', 'UserController@getConfig');
 
         Route::prefix('admin')
             ->name('api.admin.')
