@@ -26,6 +26,7 @@ class GitRepoModel
                 return 404;
             }
             $user = $git_info->get()[0];
+            $user['password'] = decrypt($user['git_password']);
         }
         $repo = XkGitRepository::init(
             storage_path() . '/app/uid_' . $id . $path
@@ -36,7 +37,7 @@ class GitRepoModel
             $url[1] .
                 $user['git_name'] .
                 ':' .
-                decrypt($user['git_password']) .
+                $user['password'] .
                 '@' .
                 $url[2]
         );
@@ -62,13 +63,14 @@ class GitRepoModel
                 return 404;
             }
             $user = $git_info->get()[0];
+            $user['password'] = decrypt($user['git_password']);
         }
         preg_match('/(.*:\/\/)(.*)/i', $repo_url, $url);
         $repo = XkGitRepository::cloneRepository(
             $url[1] .
                 $user['git_name'] .
                 ':' .
-                decrypt($user['git_password']) .
+                $user['git_password'] .
                 '@' .
                 $url[2],
             storage_path() . '/app/uid_' . $id . $path

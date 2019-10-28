@@ -773,6 +773,11 @@ export default {
         }
       }
       // folderItem专有操作
+      if (type === "folder") {
+        if (operate === "gitPush") {
+          // TODO: git操作
+        }
+      }
     },
     /**
      * 浮动菜单选项点击事件

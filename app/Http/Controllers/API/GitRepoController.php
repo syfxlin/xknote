@@ -46,10 +46,11 @@ class GitRepoController extends Controller
             );
         }
         $git_user = null;
-        if ($request->has('name') && $request->has('password')) {
+        if ($request->has('name') && $request->has('password') && $request->has('email')) {
             $git_user = [
                 'git_name' => $request->name,
-                'git_password' => $request->password
+                'git_password' => $request->password,
+                'git_email' => $request->email
             ];
         }
         $code = 500;

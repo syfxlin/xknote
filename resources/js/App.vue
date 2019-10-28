@@ -113,6 +113,7 @@ export default {
     this.loadLocalNotes();
     this.loadCloudFolders();
     window.xknote = {};
+    window.folderOperate = this.folderOperate;
   },
   methods: {
     showToast(message, status) {
@@ -876,6 +877,49 @@ export default {
         window.axios
           .get("/api/folders/exist", {
             params: { path: folderInfo.path }
+          })
+          .then(res => {
+            callS(res.data);
+          })
+          .catch(err => {
+            console.error(err);
+            callE(err);
+          });
+      }
+      if (operate === "gitPush" || operate === "gitPushForce") {
+        window.axios
+          .put("/api/repo", {
+            path: folderInfo.path,
+            force: operate === "gitPushForce"
+          })
+          .then(res => {
+            callS(res.data);
+          })
+          .catch(err => {
+            console.error(err);
+            callE(err);
+          });
+      }
+      if (operate === "gitPull") {
+        window.axios
+          .get("/api/repo", {
+            params: { path: folderInfo.path }
+          })
+          .then(res => {
+            callS(res.data);
+          })
+          .catch(err => {
+            console.error(err);
+            callE(err);
+          });
+      }
+      if (operate === "gitInit" || operate === "gitClone") {
+        window.axios
+          .post("/api/repo", {
+            path: folderInfo.path,
+            repo: folderInfo.repo,
+            init_or_clone: operate === "gitInit" ? "init" : "clone",
+            ...folderInfo.git_user
           })
           .then(res => {
             callS(res.data);

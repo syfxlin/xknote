@@ -82,12 +82,8 @@ export default {
             operate: "gitPull"
           },
           {
-            name: "Clone", // TODO: 未完成
-            operate: "gitClone"
-          },
-          {
-            name: "Init", // TODO: 未完成
-            operate: "gitInit"
+            name: "Init Clone", // TODO: 未完成
+            operate: "gitInitClone"
           },
           {
             name: "Push force", // TODO: 未完成
