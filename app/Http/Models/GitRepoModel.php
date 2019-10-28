@@ -26,7 +26,7 @@ class GitRepoModel
                 return 404;
             }
             $user = $git_info->get()[0];
-            $user['password'] = decrypt($user['git_password']);
+            $user['git_password'] = decrypt($user['git_password']);
         }
         $repo = XkGitRepository::init(
             storage_path() . '/app/uid_' . $id . $path
@@ -37,7 +37,7 @@ class GitRepoModel
             $url[1] .
                 $user['git_name'] .
                 ':' .
-                $user['password'] .
+                $user['git_password'] .
                 '@' .
                 $url[2]
         );
