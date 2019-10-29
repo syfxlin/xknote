@@ -20,6 +20,7 @@
         :readOpened.sync="readOpened"
         :loadCloudFolders="loadCloudFolders"
         :timeToast="timeToast"
+        :configOperate="configOperate"
         ref="children"
       ></router-view>
     </transition>
@@ -927,6 +928,52 @@ export default {
           })
           .catch(err => {
             console.error(err);
+            callE(err);
+          });
+      }
+      if (operate === "getGitConfig") {
+        window.axios
+          .get("/api/repo/conf", { params: { path: folderInfo.path } })
+          .then(res => {
+            callS(res.data.config);
+          })
+          .catch(err => {
+            console.error(err);
+            callE(err);
+          });
+        if (operate === "setGitConfig") {
+          window.axios
+            .put("/api/repo/conf", { ...folderInfo })
+            .then(res => {
+              callS(res.data);
+            })
+            .catch(err => {
+              console.log(err);
+              callE(err);
+            });
+        }
+      }
+    },
+    configOperate(operate, config = null, callS = () => {}, callE = () => {}) {
+      if (operate === "getGitConfig") {
+        window.axios
+          .get("/api/repo/git")
+          .then(res => {
+            callS(res.data.config);
+          })
+          .catch(err => {
+            console.error(err);
+            callE(err);
+          });
+      }
+      if (operate === "setGitConfig") {
+        window.axios
+          .put("/api/repo/git", { ...config })
+          .then(res => {
+            callS(res.data);
+          })
+          .catch(err => {
+            console.log(err);
             callE(err);
           });
       }

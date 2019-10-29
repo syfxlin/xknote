@@ -67,7 +67,7 @@ class AdminController extends Controller
 
     public function getUser(Request $request)
     {
-        return User::all();
+        return ['error' => false, 'users' => User::all()];
     }
 
     public function deleteUser(Request $request, $id)

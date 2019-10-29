@@ -9,11 +9,12 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function __construct()
-    { }
+    {
+    }
 
     public function get(Request $request)
     {
-        return $request->user();
+        return ['error' => false, 'user' => $request->user()];
     }
 
     public function create(Request $request)

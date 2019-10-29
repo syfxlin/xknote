@@ -74,20 +74,24 @@ export default {
             content: "Git"
           },
           {
-            name: "Push", // TODO: 未完成
+            name: "Push",
             operate: "gitPush"
           },
           {
-            name: "Pull", // TODO: 未完成
+            name: "Pull",
             operate: "gitPull"
           },
           {
-            name: "Init Clone", // TODO: 未完成
+            name: "Init Clone",
             operate: "gitInitClone"
           },
           {
-            name: "Push force", // TODO: 未完成
+            name: "Push Force",
             operate: "gitPushForce"
+          },
+          {
+            name: "Git Config",
+            operate: "gitConfig"
           }
         ],
         children: [

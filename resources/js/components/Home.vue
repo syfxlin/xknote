@@ -73,19 +73,19 @@
             <ul class="menu">
               <li class="divider" data-content="Git"></li>
               <li class="menu-item">
-                <a href="#">Push</a>
+                <a @click="navBarOperate('gitPush')">Push</a>
               </li>
               <li class="menu-item">
-                <a href="#">Pull</a>
+                <a @click="navBarOperate('gitPull')">Pull</a>
               </li>
               <li class="menu-item">
-                <a href="#">Clone</a>
+                <a @click="navBarOperate('gitInitClone')">Init Clone</a>
               </li>
               <li class="menu-item">
-                <a href="#">Init</a>
+                <a @click="navBarOperate('gitPushForce')">Push Force</a>
               </li>
               <li class="menu-item">
-                <a href="#">Push force</a>
+                <a @click="navBarOperate('gitConfig')">Git Config</a>
               </li>
             </ul>
           </div>
@@ -139,10 +139,10 @@
               <a @click="navBarOperate('showPersonalCenter')">个人中心</a>
             </li>
             <li class="menu-item">
-              <a @click="navBarOperate('showUserSetting')">用户设置</a>
+              <a @click="navBarOperate('showUserConfig')">用户设置</a>
             </li>
             <li class="menu-item">
-              <a @click="navBarOperate('showGitSetting')">Git设置</a>
+              <a @click="navBarOperate('showGitConfig')">Git设置</a>
             </li>
             <li class="menu-item">
               <a @click="navBarOperate('showSystemSetting')">系统管理</a>
@@ -399,8 +399,56 @@
                 </div>
               </template>
               <template v-if="lgModal.content==='PersonalCenter'">personalCenter</template>
-              <template v-if="lgModal.content==='UserSetting'">userSetting</template>
-              <template v-if="lgModal.content==='GitSetting'">gitSetting</template>
+              <template v-if="lgModal.content==='UserConfig'">userSetting</template>
+              <template v-if="lgModal.content==='GitConfig'">
+                <div class="form-horizontal">
+                  <div class="form-group">
+                    <div class="col-3 col-sm-12">
+                      <label class="form-label">Git用户名</label>
+                    </div>
+                    <div class="col-9 col-sm-12 has-icon-right">
+                      <input
+                        class="form-input"
+                        type="text"
+                        v-model="lgModal.data.git_name"
+                        required
+                      />
+                      <i
+                        :class="'form-icon icon' + (lgModal.data.status === 'loading' ? ' loading' : '')"
+                      ></i>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-3 col-sm-12">
+                      <label class="form-label">Git邮箱</label>
+                    </div>
+                    <div class="col-9 col-sm-12 has-icon-right">
+                      <input
+                        class="form-input"
+                        type="email"
+                        v-model="lgModal.data.git_email"
+                        required
+                      />
+                      <i
+                        :class="'form-icon icon' + (lgModal.data.status === 'loading' ? ' loading' : '')"
+                      ></i>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-3 col-sm-12">
+                      <label class="form-label">Git密码</label>
+                    </div>
+                    <div class="col-9 col-sm-12">
+                      <input
+                        class="form-input"
+                        type="password"
+                        v-model="lgModal.data.git_password"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              </template>
               <template v-if="lgModal.content==='SystemSetting'">systemSetting</template>
               <template v-if="lgModal.content==='CheckLocalStatus'">
                 <table class="table table-hover">
@@ -441,7 +489,7 @@
                       <label class="form-label">Repo地址</label>
                     </div>
                     <div class="col-9 col-sm-12">
-                      <input class="form-input" type="text" v-model="lgModal.data.repo" required />
+                      <input class="form-input" type="url" v-model="lgModal.data.repo" required />
                     </div>
                   </div>
                   <div class="form-group">
@@ -512,6 +560,66 @@
                   </div>
                 </div>
               </template>
+              <template v-if="lgModal.content==='GitItemConfig'">
+                <div class="form-horizontal">
+                  <div class="form-group">
+                    <div class="col-3 col-sm-12">
+                      <label class="form-label">Repo地址</label>
+                    </div>
+                    <div class="col-9 col-sm-12 has-icon-right">
+                      <input class="form-input" type="url" v-model="lgModal.data.repo" required />
+                      <i
+                        :class="'form-icon icon' + (lgModal.data.status === 'loading' ? ' loading' : '')"
+                      ></i>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-3 col-sm-12">
+                      <label class="form-label">Git用户名</label>
+                    </div>
+                    <div class="col-9 col-sm-12 has-icon-right">
+                      <input
+                        class="form-input"
+                        type="text"
+                        v-model="lgModal.data.git_name"
+                        required
+                      />
+                      <i
+                        :class="'form-icon icon' + (lgModal.data.status === 'loading' ? ' loading' : '')"
+                      ></i>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-3 col-sm-12">
+                      <label class="form-label">Git邮箱</label>
+                    </div>
+                    <div class="col-9 col-sm-12 has-icon-right">
+                      <input
+                        class="form-input"
+                        type="email"
+                        v-model="lgModal.data.git_email"
+                        required
+                      />
+                      <i
+                        :class="'form-icon icon' + (lgModal.data.status === 'loading' ? ' loading' : '')"
+                      ></i>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-3 col-sm-12">
+                      <label class="form-label">Git密码</label>
+                    </div>
+                    <div class="col-9 col-sm-12">
+                      <input
+                        class="form-input"
+                        type="password"
+                        v-model="lgModal.data.git_password"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              </template>
             </div>
           </div>
           <div class="modal-footer">
@@ -555,7 +663,8 @@ export default {
     "openNote",
     "writeMode",
     "loadCloudFolders",
-    "timeToast"
+    "timeToast",
+    "configOperate"
   ],
   data() {
     return {
@@ -852,117 +961,9 @@ export default {
         }
       }
       // folderItem专有操作
-      // TODO: Git操作
       if (type === "folder") {
-        if (operate === "gitPull") {
-          this.folderOperate(
-            operate,
-            { path: path },
-            () => {
-              this.timeToast("Git Pull成功！", "success", 1000);
-            },
-            error => {
-              this.timeToast("Git Pull失败，请重试！", "error", 1000);
-            }
-          );
-        }
-        if (operate === "gitPush") {
-          this.folderOperate(
-            operate,
-            { path: path },
-            () => {
-              this.timeToast("Git Push成功！", "success", 1000);
-            },
-            error => {
-              this.timeToast("Git Push失败，请重试！", "error", 1000);
-            }
-          );
-        }
-        if (operate === "gitPushForce") {
-          this.folderOperate(
-            operate,
-            { path: path },
-            () => {
-              this.timeToast("Git Push成功！", "success", 1000);
-            },
-            error => {
-              this.timeToast("Git Push失败，请重试！", "error", 1000);
-            }
-          );
-        }
-        if (operate === "gitInitClone") {
-          this.lgModal.content = "GitInitClone";
-          this.lgModal.title = "Git InitClone";
-          this.lgModal.show = true;
-          let wTimeout = null;
-          let watch = () => {
-            if (wTimeout) {
-              clearTimeout(wTimeout);
-            }
-            wTimeout = setTimeout(() => {
-              this.$set(this.lgModal.data, "status", "loading");
-              this.folderOperate(
-                "exist",
-                {
-                  path: this.lgModal.data.foldername + "/.git"
-                },
-                data => {
-                  if (data.exist) {
-                    this.$set(this.lgModal.data, "status", "error");
-                  } else {
-                    this.$set(this.lgModal.data, "status", "");
-                  }
-                }
-              );
-            }, 500);
-          };
-          let uwFolderName = this.$watch("lgModal.data.foldername", watch);
-          this.lgModal.confirm = () => {
-            if (
-              !this.lgModal.data.foldername ||
-              !this.lgModal.data.repo ||
-              !this.lgModal.data.init_or_clone ||
-              this.lgModal.data.status !== ""
-            ) {
-              return;
-            }
-            document
-              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-              .classList.add("loading");
-            let git_user = {};
-            if (
-              this.lgModal.data.git_name &&
-              this.lgModal.data.git_email &&
-              this.lgModal.data.git_password
-            ) {
-              git_user = {
-                name: this.lgModal.data.git_name,
-                email: this.lgModal.data.git_email,
-                password: this.lgModal.data.git_password
-              };
-            }
-            this.folderOperate(
-              this.lgModal.data.init_or_clone === "init"
-                ? "gitInit"
-                : "gitClone",
-              {
-                path: this.lgModal.data.foldername,
-                repo: this.lgModal.data.repo,
-                git_user: git_user
-              },
-              () => {
-                document
-                  .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-                  .classList.remove("loading");
-                this.lgModal.cancel();
-              }
-            );
-          };
-          this.lgModal.cancel = () => {
-            uwFolderName();
-            this.$set(this.lgModal, "data", {});
-            this.lgModal.show = false;
-          };
+        if (operate.indexOf("git") === 0) {
+          this.gitOperate(operate, path);
         }
       }
     },
@@ -1155,6 +1156,62 @@ export default {
             this.lgModal.show = false;
           };
         }
+        if (this.lgModal.content === "GitConfig") {
+          this.lgModal.title = "Git设置";
+          this.$set(this.lgModal.data, "status", "loading");
+          this.configOperate(
+            "getGitConfig",
+            null,
+            info => {
+              this.$set(this.lgModal.data, "git_name", info.git_name);
+              this.$set(this.lgModal.data, "git_email", info.git_email);
+              this.$set(this.lgModal.data, "status", "");
+            },
+            error => {
+              this.timeToast("获取信息失败！", "error", 1000);
+              this.$set(this.lgModal.data, "status", "");
+            }
+          );
+          this.lgModal.confirm = () => {
+            if (
+              !this.lgModal.data.git_name ||
+              !this.lgModal.data.git_email ||
+              !this.lgModal.data.git_password ||
+              this.lgModal.data.status !== ""
+            ) {
+              return;
+            }
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.add("loading");
+            this.configOperate(
+              "setGitConfig",
+              {
+                git_name: this.lgModal.data.git_name,
+                git_email: this.lgModal.data.git_email,
+                git_password: this.lgModal.data.git_password
+              },
+              () => {
+                document
+                  .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+                  .classList.remove("loading");
+                this.lgModal.cancel();
+                this.timeToast("设置成功！", "success", 1000);
+              },
+              error => {
+                this.timeToast("设置失败，请重试！", "error", 1000);
+              }
+            );
+          };
+          this.lgModal.cancel = () => {
+            this.$set(this.lgModal, "data", {});
+            this.lgModal.show = false;
+          };
+        }
+      }
+      if (operate.indexOf("git") === 0) {
+        let path = this.xknoteOpened.path;
+        this.gitOperate(operate, path.substring(0, path.indexOf("/", 1)));
       }
       if (operate === "saveLocal" || operate === "saveCloud") {
         this.floatMenu.saveAndClose = false;
@@ -1232,6 +1289,174 @@ export default {
       }
       if (operate === "notOpe") {
         this.$delete(this.lgModal.data, index);
+      }
+    },
+    gitOperate(operate, path) {
+      if (operate === "gitPull") {
+        this.folderOperate(
+          operate,
+          { path: path },
+          () => {
+            this.timeToast("Git Pull成功！", "success", 1000);
+          },
+          error => {
+            this.timeToast("Git Pull失败，请重试！", "error", 1000);
+          }
+        );
+      }
+      if (operate === "gitPush") {
+        this.folderOperate(
+          operate,
+          { path: path },
+          () => {
+            this.timeToast("Git Push成功！", "success", 1000);
+          },
+          error => {
+            this.timeToast("Git Push失败，请重试！", "error", 1000);
+          }
+        );
+      }
+      if (operate === "gitPushForce") {
+        this.folderOperate(
+          operate,
+          { path: path },
+          () => {
+            this.timeToast("Git Push成功！", "success", 1000);
+          },
+          error => {
+            this.timeToast("Git Push失败，请重试！", "error", 1000);
+          }
+        );
+      }
+      if (operate === "gitInitClone") {
+        this.lgModal.content = "GitInitClone";
+        this.lgModal.title = "Git InitClone";
+        this.lgModal.show = true;
+        let wTimeout = null;
+        let watch = () => {
+          if (wTimeout) {
+            clearTimeout(wTimeout);
+          }
+          wTimeout = setTimeout(() => {
+            this.$set(this.lgModal.data, "status", "loading");
+            this.folderOperate(
+              "exist",
+              {
+                path: this.lgModal.data.foldername + "/.git"
+              },
+              data => {
+                if (data.exist) {
+                  this.$set(this.lgModal.data, "status", "error");
+                } else {
+                  this.$set(this.lgModal.data, "status", "");
+                }
+              }
+            );
+          }, 500);
+        };
+        let uwFolderName = this.$watch("lgModal.data.foldername", watch);
+        this.lgModal.confirm = () => {
+          if (
+            !this.lgModal.data.foldername ||
+            !this.lgModal.data.repo ||
+            !this.lgModal.data.init_or_clone ||
+            this.lgModal.data.status !== ""
+          ) {
+            return;
+          }
+          document
+            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+            .classList.add("loading");
+          let git_user = {};
+          if (
+            this.lgModal.data.git_name &&
+            this.lgModal.data.git_email &&
+            this.lgModal.data.git_password
+          ) {
+            git_user = {
+              git_name: this.lgModal.data.git_name,
+              git_email: this.lgModal.data.git_email,
+              git_password: this.lgModal.data.git_password
+            };
+          }
+          this.folderOperate(
+            this.lgModal.data.init_or_clone === "init" ? "gitInit" : "gitClone",
+            {
+              path: this.lgModal.data.foldername,
+              repo: this.lgModal.data.repo,
+              git_user: git_user
+            },
+            () => {
+              document
+                .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+                .classList.remove("loading");
+              this.lgModal.cancel();
+              this.timeToast("Git Init或Clone成功！", "success", 1000);
+            }
+          );
+        };
+        this.lgModal.cancel = () => {
+          uwFolderName();
+          this.$set(this.lgModal, "data", {});
+          this.lgModal.show = false;
+        };
+      }
+      if (operate === "gitConfig") {
+        this.lgModal.title = "Git设置";
+        this.lgModal.content = "GitItemConfig";
+        this.lgModal.show = true;
+        this.$set(this.lgModal.data, "status", "loading");
+        this.folderOperate(
+          "getGitConfig",
+          { path: path },
+          info => {
+            this.$set(this.lgModal.data, "repo", info.repo);
+            this.$set(this.lgModal.data, "git_name", info.git_name);
+            this.$set(this.lgModal.data, "git_email", info.git_email);
+            this.$set(this.lgModal.data, "status", "");
+          },
+          error => {
+            this.timeToast("获取信息失败！", "error", 1000);
+            this.$set(this.lgModal.data, "status", "");
+          }
+        );
+        this.lgModal.confirm = () => {
+          if (
+            !this.lgModal.data.git_name ||
+            !this.lgModal.data.git_email ||
+            !this.lgModal.data.git_password ||
+            this.lgModal.data.status !== ""
+          ) {
+            return;
+          }
+          document
+            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+            .classList.add("loading");
+          this.folderOperate(
+            "setGitConfig",
+            {
+              repo: this.lgModal.data.repo,
+              git_name: this.lgModal.data.git_name,
+              git_email: this.lgModal.data.git_email,
+              git_password: this.lgModal.data.git_password,
+              path: path
+            },
+            () => {
+              document
+                .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+                .classList.remove("loading");
+              this.lgModal.cancel();
+              this.timeToast("设置成功！", "success", 1000);
+            },
+            error => {
+              this.timeToast("设置失败，请重试！", "error", 1000);
+            }
+          );
+        };
+        this.lgModal.cancel = () => {
+          this.$set(this.lgModal, "data", {});
+          this.lgModal.show = false;
+        };
       }
     }
   },

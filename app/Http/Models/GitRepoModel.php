@@ -94,13 +94,11 @@ class GitRepoModel
         preg_match('/(.*:\/\/)(.*):(.*)@(.*)/i', $remote_origin, $url);
         $remote_url = $url[1] . $url[4];
         $name = $url[2];
-        $password = $url[3];
         $email = $repo->getConfig(['user.email'])['user.email'];
         return [
-            'remote_url' => $remote_url,
-            'name' => $name,
-            'password' => $password,
-            'email' => $email
+            'repo' => $remote_url,
+            'git_name' => $name,
+            'git_email' => $email
         ];
     }
 
@@ -182,7 +180,7 @@ class GitRepoModel
             return 202;
         }
         $repo->addAllChanges();
-        $repo->setConfigommit('Update: ' . date('Y-m-d_H:i'));
+        $repo->commit('Update: ' . date('Y-m-d_H:i'));
         if (!$force) {
             $repo->push('origin');
         } else {

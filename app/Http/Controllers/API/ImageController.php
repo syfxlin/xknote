@@ -17,7 +17,7 @@ class ImageController extends Controller
     public function getAll(Request $request)
     {
         $id = $request->user()->id;
-        return $this->model->getAll($id);
+        return ['error' => false, 'images' => $this->model->getAll($id)];
     }
 
     public function upload(Request $request)

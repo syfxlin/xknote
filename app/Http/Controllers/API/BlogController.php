@@ -22,7 +22,7 @@ class BlogController extends Controller
                 404
             );
         }
-        return $git_info->get()[0];
+        return ['error' => false, 'config' => $git_info->get()[0]];
     }
 
     public function setConfig(Request $request)
@@ -56,7 +56,7 @@ class BlogController extends Controller
                 return response(
                     [
                         'error' =>
-                        'Parameter not found. (blog_username,blog_password)'
+                            'Parameter not found. (blog_username,blog_password)'
                     ],
                     400
                 );
@@ -65,8 +65,12 @@ class BlogController extends Controller
                 $data['blog_password'] = $request->blog_password;
             }
         }
-        $data['uid'] = $id;
-        BlogInfoModel::updateOrCreate($data);
+        $info_m = BlogInfoModel::where('uid', $id);
+        if ($info_m->count() <= 0) {
+            BlogInfoModel::create($data);
+        } else {
+            $info_m->update($data);
+        }
         return ['error' => false];
     }
 

@@ -33,6 +33,7 @@ class GitRepoController extends Controller
                 400
             );
         }
+        // TODO: 判断path中没有多余的/
         $id = $request->user()->id;
         $path = $request->path;
         $repo = $request->repo;
@@ -46,11 +47,15 @@ class GitRepoController extends Controller
             );
         }
         $git_user = null;
-        if ($request->has('name') && $request->has('password') && $request->has('email')) {
+        if (
+            $request->has('git_name') &&
+            $request->has('git_password') &&
+            $request->has('git_email')
+        ) {
             $git_user = [
-                'git_name' => $request->name,
-                'git_password' => $request->password,
-                'git_email' => $request->email
+                'git_name' => $request->git_name,
+                'git_password' => $request->git_password,
+                'git_email' => $request->git_email
             ];
         }
         $code = 500;
@@ -112,7 +117,7 @@ class GitRepoController extends Controller
         if (!$request->has('path')) {
             return response(['error' => 'Parameter not found. (path)'], 400);
         }
-        if ($request->has('email')) {
+        if ($request->has('git_email')) {
             $this->configInfo($request);
         }
         if ($request->has('repo')) {
@@ -132,11 +137,11 @@ class GitRepoController extends Controller
     {
         if (
             !$request->has('path') ||
-            !$request->has('name') ||
-            !$request->has('email')
+            !$request->has('git_name') ||
+            !$request->has('git_email')
         ) {
             return response(
-                ['error' => 'Parameter not found. (path,name,email)'],
+                ['error' => 'Parameter not found. (path,git_name,git_email)'],
                 400
             );
         }
@@ -152,8 +157,8 @@ class GitRepoController extends Controller
             );
         }
         $this->model->config($path, $id, [
-            'git_name' => $request->name,
-            'git_email' => $request->email
+            'git_name' => $request->git_name,
+            'git_email' => $request->git_email
         ]);
         return ['error' => false];
     }
@@ -186,10 +191,10 @@ class GitRepoController extends Controller
             );
         }
         $git_user = null;
-        if ($request->has('name') && $request->has('password')) {
+        if ($request->has('git_name') && $request->has('git_password')) {
             $git_user = [
-                'git_name' => $request->name,
-                'git_password' => $request->password
+                'git_name' => $request->git_name,
+                'git_password' => $request->git_password
             ];
         }
         $this->model->configRemote($path, $id, $repo, $git_user);

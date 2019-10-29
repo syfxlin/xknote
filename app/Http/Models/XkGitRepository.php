@@ -12,7 +12,7 @@ class XkGitRepository extends GitRepository
         foreach ($config as $c) {
             $output[$c] = $this->extractFromCommand(
                 'git config --local --get ' . $c
-            );
+            )[0];
         }
         return $output;
     }
@@ -27,6 +27,6 @@ class XkGitRepository extends GitRepository
 
     public function getRemote($branch)
     {
-        return $this->extractFromCommand('git remote get-url', $branch);
+        return $this->extractFromCommand('git remote get-url ' . $branch)[0];
     }
 }
