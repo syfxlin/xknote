@@ -11491,7 +11491,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     // 当打开note中的时候防止更改
     window.xknoteOpenedChangeFlag = true; // 是否是通过输入URL引发的query变动
 
-    window.inputQueryChangeFlag = false;
+    window.inputQueryChangeFlag = true;
   },
   data: function data() {
     return {
@@ -11564,7 +11564,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.loadLocalNotes();
     this.loadCloudFolders();
     window.xknote = {};
-    window.folderOperate = this.folderOperate;
   },
   methods: {
     showToast: function showToast(message, status) {
@@ -11649,6 +11648,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         });
       });
     },
+    // TODO: cloud-tab加载过慢导致info为null
     loadPathNote: function loadPathNote(path) {
       var mode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "normal";
       var info = document.querySelector('.local-tab [data-path="' + path + '"]');
@@ -11834,7 +11834,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
 
         if (mode === "read") {
-          _this7.readOpened = JSON.parse(JSON.stringify(note));
+          _this7.$set(_this7, "readOpened", JSON.parse(JSON.stringify(note)));
         }
       };
 
@@ -12549,8 +12549,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
 
         this.loadPathNote(query.note, mode);
-        window.inputQueryChangeFlag = true;
       }
+
+      window.inputQueryChangeFlag = true;
     }
   }
 });
@@ -14135,9 +14136,10 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this2 = this;
 
-    this.watchNote();
     this.$nextTick(function () {
       _this2.loadFirstNote("read");
+
+      _this2.watchNote();
     });
 
     if (!window.toggleToc) {
@@ -14167,6 +14169,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   watch: {
+    readOpened: "watchNote",
     "readOpened.note.content": "watchNote"
   }
 });

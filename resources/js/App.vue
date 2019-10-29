@@ -42,7 +42,7 @@ export default {
     // 当打开note中的时候防止更改
     window.xknoteOpenedChangeFlag = true;
     // 是否是通过输入URL引发的query变动
-    window.inputQueryChangeFlag = false;
+    window.inputQueryChangeFlag = true;
   },
   data() {
     return {
@@ -115,7 +115,6 @@ export default {
     this.loadLocalNotes();
     this.loadCloudFolders();
     window.xknote = {};
-    window.folderOperate = this.folderOperate;
   },
   methods: {
     showToast(message, status) {
@@ -186,6 +185,7 @@ export default {
         });
       });
     },
+    // TODO: cloud-tab加载过慢导致info为null
     loadPathNote(path, mode = "normal") {
       let info = document.querySelector(
         '.local-tab [data-path="' + path + '"]'
@@ -344,7 +344,7 @@ export default {
           });
         }
         if (mode === "read") {
-          this.readOpened = JSON.parse(JSON.stringify(note));
+          this.$set(this, "readOpened", JSON.parse(JSON.stringify(note)));
         }
       };
       if (!isNew && source.storage === "cloud") {
@@ -1017,8 +1017,8 @@ export default {
           mode = "read";
         }
         this.loadPathNote(query.note, mode);
-        window.inputQueryChangeFlag = true;
       }
+      window.inputQueryChangeFlag = true;
     }
   }
 };

@@ -119,9 +119,9 @@ export default {
     }
   },
   mounted() {
-    this.watchNote();
     this.$nextTick(() => {
       this.loadFirstNote("read");
+      this.watchNote();
     });
     if (!window.toggleToc) {
       window.toggleToc = ele => {
@@ -147,6 +147,7 @@ export default {
     }
   },
   watch: {
+    readOpened: "watchNote",
     "readOpened.note.content": "watchNote"
   }
 };
