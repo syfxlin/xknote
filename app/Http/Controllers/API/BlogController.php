@@ -56,7 +56,7 @@ class BlogController extends Controller
                 return response(
                     [
                         'error' =>
-                            'Parameter not found. (blog_username,blog_password)'
+                        'Parameter not found. (blog_username,blog_password)'
                     ],
                     400
                 );
@@ -65,12 +65,8 @@ class BlogController extends Controller
                 $data['blog_password'] = $request->blog_password;
             }
         }
-        $config_m = BlogInfoModel::where('uid', $id);
-        if ($config_m->count() <= 0) {
-            $config_m->create($data);
-        } else {
-            $config_m->update($data);
-        }
+        $data['uid'] = $id;
+        BlogInfoModel::updateOrCreate($data);
         return ['error' => false];
     }
 
