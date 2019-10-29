@@ -9,8 +9,7 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function __construct()
-    {
-    }
+    { }
 
     public function get(Request $request)
     {
@@ -99,5 +98,6 @@ class UserController extends Controller
 
     public function setConfig(Request $request)
     {
+        //TODO: 未完成
     }
 }

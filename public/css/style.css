@@ -220,16 +220,16 @@ body {
 .xknote-tab-content .tile-click {
     cursor: pointer;
 }
-.xknote-tab-content .tile-content[children='input'] .tile-click,
-.xknote-tab-content .accordion-header[children='input'] span {
+.xknote-tab-content .tile-content[children="input"] .tile-click,
+.xknote-tab-content .accordion-header[children="input"] span {
     display: none;
 }
 .xknote-tab-content .tile-content input,
 .xknote-tab-content .accordion-header input {
     display: none;
 }
-.xknote-tab-content .tile-content[children='input'] input,
-.xknote-tab-content .accordion-header[children='input'] input {
+.xknote-tab-content .tile-content[children="input"] input,
+.xknote-tab-content .accordion-header[children="input"] input {
     display: block;
 }
 .xknote-tab-content .tile-action .loading {
@@ -313,7 +313,7 @@ body {
     margin-bottom: 0.2rem;
 }
 
-.app.toast {
+#app-main .toast {
     position: fixed;
     right: 1rem;
     top: 1rem;

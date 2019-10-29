@@ -19,6 +19,7 @@
         :openNote="openNote"
         :readOpened.sync="readOpened"
         :loadCloudFolders="loadCloudFolders"
+        :timeToast="timeToast"
         ref="children"
       ></router-view>
     </transition>

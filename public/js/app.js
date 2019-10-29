@@ -11482,6 +11482,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "App",
@@ -12971,6 +12972,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 
@@ -12983,7 +12985,7 @@ __webpack_require__.r(__webpack_exports__);
     "folder-item": _folderItem_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
     "only-folder-item": _onlyFolderItem__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
-  props: ["xknoteTab", "switchTab", "currListSource", "currList", "cloudList", "localList", "xknoteOpened", "xknoteOpenedIndex", "noteBaseInfo", "loadFirstNote", "listOperate", "noteOperate", "folderOperate", "setXknoteOpened", "openNote", "writeMode", "loadCloudFolders"],
+  props: ["xknoteTab", "switchTab", "currListSource", "currList", "cloudList", "localList", "xknoteOpened", "xknoteOpenedIndex", "noteBaseInfo", "loadFirstNote", "listOperate", "noteOperate", "folderOperate", "setXknoteOpened", "openNote", "writeMode", "loadCloudFolders", "timeToast"],
   data: function data() {
     var _this = this;
 
@@ -13298,10 +13300,33 @@ __webpack_require__.r(__webpack_exports__);
           }
         }
       } // folderItem专有操作
+      // TODO: Git操作
 
 
       if (type === "folder") {
-        if (operate === "gitPush") {// TODO: git操作
+        if (operate === "gitPull") {
+          this.folderOperate(operate, {
+            path: path
+          }, function () {
+            _this3.timeToast("Git Pull成功！", "success", 1000);
+          }, function (error) {
+            _this3.timeToast("Git Pull失败，请重试！", "error", 1000);
+          });
+        }
+
+        if (operate === "gitPush") {
+          this.folderOperate(operate, {
+            path: path
+          }, function () {
+            _this3.timeToast("Git Push成功！", "success", 1000);
+          }, function (error) {
+            _this3.timeToast("Git Push失败，请重试！", "error", 1000);
+          });
+        }
+
+        if (operate === "gitInitClone") {
+          this.lgModal.content = "GitInitClone";
+          this.lgModal.show = true;
         }
       }
     },
@@ -13563,7 +13588,9 @@ __webpack_require__.r(__webpack_exports__);
       }
     }
   },
-  mounted: function mounted() {},
+  mounted: function mounted() {
+    window.timeToast = this.timeToast;
+  },
   watch: {
     writeMode: function writeMode() {
       this.switchWriteMode();
@@ -14223,7 +14250,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.active {\r\n  color: #585858;\n}\n#toc li img {\r\n  width: 1.05em;\n}\r\n", ""]);
+exports.push([module.i, "\n.active {\n  color: #585858;\n}\n#toc li img {\n  width: 1.05em;\n}\n", ""]);
 
 // exports
 
@@ -23412,7 +23439,8 @@ var render = function() {
               switchTab: _vm.switchTab,
               openNote: _vm.openNote,
               readOpened: _vm.readOpened,
-              loadCloudFolders: _vm.loadCloudFolders
+              loadCloudFolders: _vm.loadCloudFolders,
+              timeToast: _vm.timeToast
             },
             on: {
               "update:xknoteTab": function($event) {
@@ -24795,6 +24823,10 @@ var render = function() {
                             )
                           ])
                         ]
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.lgModal.content === "GitInitClone"
+                      ? [_vm._v("Git InitClone")]
                       : _vm._e()
                   ],
                   2

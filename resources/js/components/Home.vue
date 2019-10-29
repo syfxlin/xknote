@@ -434,6 +434,7 @@
                   </tbody>
                 </table>
               </template>
+              <template v-if="lgModal.content==='GitInitClone'">Git InitClone</template>
             </div>
           </div>
           <div class="modal-footer">
@@ -476,7 +477,8 @@ export default {
     "setXknoteOpened",
     "openNote",
     "writeMode",
-    "loadCloudFolders"
+    "loadCloudFolders",
+    "timeToast"
   ],
   data() {
     return {
@@ -773,9 +775,35 @@ export default {
         }
       }
       // folderItem专有操作
+      // TODO: Git操作
       if (type === "folder") {
+        if (operate === "gitPull") {
+          this.folderOperate(
+            operate,
+            { path: path },
+            () => {
+              this.timeToast("Git Pull成功！", "success", 1000);
+            },
+            error => {
+              this.timeToast("Git Pull失败，请重试！", "error", 1000);
+            }
+          );
+        }
         if (operate === "gitPush") {
-          // TODO: git操作
+          this.folderOperate(
+            operate,
+            { path: path },
+            () => {
+              this.timeToast("Git Push成功！", "success", 1000);
+            },
+            error => {
+              this.timeToast("Git Push失败，请重试！", "error", 1000);
+            }
+          );
+        }
+        if (operate === "gitInitClone") {
+          this.lgModal.content = "GitInitClone";
+          this.lgModal.show = true;
         }
       }
     },
@@ -1048,7 +1076,9 @@ export default {
       }
     }
   },
-  mounted() {},
+  mounted() {
+    window.timeToast = this.timeToast;
+  },
   watch: {
     writeMode() {
       this.switchWriteMode();
