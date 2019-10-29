@@ -11628,7 +11628,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     loadCloudFolders: function loadCloudFolders() {
       var _this3 = this;
 
-      this.folderOperate("readAll", null, function (data) {
+      this.folderOperate("readAll", null).then(function (data) {
         _this3.cloudList = data.folders;
       });
     },
@@ -11849,7 +11849,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
 
         btn.querySelector(".loading").style.display = "block";
-        this.noteOperate("read", "cloud", note, function (data) {
+        this.noteOperate("read", "cloud", note).then(function (data) {
           // note.note = data.note;
           _this7.$set(note, "note", data.note);
 
@@ -12139,360 +12139,360 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this8 = this;
 
       var noteInfo = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-      var callS = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : function () {};
-      var callE = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : function () {};
-
-      if (operate === "read") {
-        if (storage === "local") {
-          this.noteLocalDB("read", noteInfo.path, function (e, data) {
-            callS(data);
-          });
-        }
-
-        if (storage === "cloud") {
-          window.axios.get("/api/notes", {
-            params: {
-              path: noteInfo.path
-            }
-          }).then(function (res) {
-            callS(res.data);
-          })["catch"](function (err) {
-            console.error(err);
-
-            _this8.timeToast("加载失败！请重试。", "error", 1000);
-
-            callE(err);
-          });
-        }
-      }
-
-      if (operate === "create") {
-        if (storage === "cloud") {
-          window.axios.post("/api/notes", {
-            path: noteInfo.path,
-            title: noteInfo.note.title,
-            author: noteInfo.note.author,
-            created_at: noteInfo.note.created_at,
-            updated_at: noteInfo.note.updated_at,
-            content: noteInfo.note.content
-          }).then(function (res) {
-            _this8.timeToast("新建笔记成功！", "success", 1000);
-
-            if (res.data.error == false) {
-              callS(res);
-            } else {
-              callE(res);
-            }
-          })["catch"](function (err) {
-            console.error(err);
-
-            _this8.timeToast("新建笔记失败！请重试。", "error", 1000);
-
-            callE(err);
-          });
-        }
-      }
-
-      if (operate === "delete") {
-        if (storage === "local") {
-          this.noteLocalDB("delete", noteInfo.path, function (e, data) {
-            callS(data);
-          }, callE);
-        }
-
-        if (storage === "cloud") {
-          window.axios["delete"]("/api/notes", {
-            params: {
-              path: noteInfo.path
-            }
-          }).then(function (res) {
-            console.log(res);
-
-            _this8.timeToast("删除成功！", "success", 1000);
-
-            if (res.data.error == false) {
-              callS(res);
-            } else {
-              callE(res);
-            }
-          })["catch"](function (err) {
-            console.error(err);
-
-            _this8.timeToast("删除失败！请重试。", "error", 1000);
-
-            callE(err);
-          });
-        }
-      }
-
-      if (operate === "save") {
-        if (storage === "local") {
-          this.noteLocalDB("delete", noteInfo.path, function () {
-            _this8.timeToast("保存到本地成功！", "success", 1000);
-
-            _this8.noteLocalDB("add", noteInfo, callS, callE);
-          }, callE);
-        }
-
-        if (storage === "cloud") {
-          window.axios.put("/api/notes", {
-            path: noteInfo.path,
-            title: noteInfo.note.title,
-            author: noteInfo.note.author,
-            created_at: noteInfo.note.created_at,
-            updated_at: noteInfo.note.updated_at,
-            content: noteInfo.note.content
-          }).then(function (res) {
-            _this8.timeToast("保存到云端成功！", "success", 1000);
-
-            if (res.data.error == false) {
-              callS(res);
-            } else {
-              callE(res);
-            }
-          })["catch"](function (err) {
-            console.error(err);
-
-            _this8.timeToast("保存到云端失败！请重试。", "error", 1000);
-
-            callE(err);
-          });
-        }
-      }
-
-      if (operate === "rename") {
-        if (storage === "local") {
-          this.noteLocalDB("delete", noteInfo.oldNote.path);
-          this.noteLocalDB("add", noteInfo.note);
-          callS();
-        }
-
-        if (storage === "cloud") {
-          window.axios.put("/api/notes/rename", {
-            old_path: noteInfo.oldNote.path,
-            new_path: noteInfo.note.path
-          }).then(function (res) {
-            console.log(res);
-
-            _this8.timeToast("重命名成功！", "success", 1000);
-
-            if (res.data.error == false) {
-              callS(res);
-            } else {
-              callE(res);
-            }
-          })["catch"](function (err) {
-            console.error(err);
-
-            _this8.timeToast("重命名失败！请重试。", "error", 1000);
-
-            callE(err);
-          });
-        }
-      }
-
-      if (operate === "exist") {
-        if (storage === "cloud") {
-          window.axios.get("/api/notes/exist", {
-            params: {
-              path: noteInfo.path
-            }
-          }).then(function (res) {
-            callS(res.data);
-          })["catch"](function (err) {
-            console.error(err);
-            callE(err);
-          });
-        }
-
-        if (storage === "local") {
-          var flag = false;
-
-          for (var i = 0; i < this.localList.length; i++) {
-            if (this.localList[i].path === noteInfo.path) {
-              flag = true;
-            }
+      return new Promise(function (resolve, reject) {
+        if (operate === "read") {
+          if (storage === "local") {
+            _this8.noteLocalDB("read", noteInfo.path, function (e, data) {
+              resolve(data);
+            });
           }
 
-          callS({
-            exist: flag
-          });
+          if (storage === "cloud") {
+            window.axios.get("/api/notes", {
+              params: {
+                path: noteInfo.path
+              }
+            }).then(function (res) {
+              resolve(res.data);
+            })["catch"](function (err) {
+              console.error(err);
+
+              _this8.timeToast("加载失败！请重试。", "error", 1000);
+
+              reject(err);
+            });
+          }
         }
-      }
+
+        if (operate === "create") {
+          if (storage === "cloud") {
+            window.axios.post("/api/notes", {
+              path: noteInfo.path,
+              title: noteInfo.note.title,
+              author: noteInfo.note.author,
+              created_at: noteInfo.note.created_at,
+              updated_at: noteInfo.note.updated_at,
+              content: noteInfo.note.content
+            }).then(function (res) {
+              _this8.timeToast("新建笔记成功！", "success", 1000);
+
+              if (res.data.error == false) {
+                resolve(res);
+              } else {
+                reject(res);
+              }
+            })["catch"](function (err) {
+              console.error(err);
+
+              _this8.timeToast("新建笔记失败！请重试。", "error", 1000);
+
+              resolve(err);
+            });
+          }
+        }
+
+        if (operate === "delete") {
+          if (storage === "local") {
+            _this8.noteLocalDB("delete", noteInfo.path, function (e, data) {
+              reject(data);
+            }, reject);
+          }
+
+          if (storage === "cloud") {
+            window.axios["delete"]("/api/notes", {
+              params: {
+                path: noteInfo.path
+              }
+            }).then(function (res) {
+              console.log(res);
+
+              _this8.timeToast("删除成功！", "success", 1000);
+
+              if (res.data.error == false) {
+                resolve(res);
+              } else {
+                reject(res);
+              }
+            })["catch"](function (err) {
+              console.error(err);
+
+              _this8.timeToast("删除失败！请重试。", "error", 1000);
+
+              reject(err);
+            });
+          }
+        }
+
+        if (operate === "save") {
+          if (storage === "local") {
+            _this8.noteLocalDB("delete", noteInfo.path, function () {
+              _this8.timeToast("保存到本地成功！", "success", 1000);
+
+              _this8.noteLocalDB("add", noteInfo, resolve, reject);
+            }, reject);
+          }
+
+          if (storage === "cloud") {
+            window.axios.put("/api/notes", {
+              path: noteInfo.path,
+              title: noteInfo.note.title,
+              author: noteInfo.note.author,
+              created_at: noteInfo.note.created_at,
+              updated_at: noteInfo.note.updated_at,
+              content: noteInfo.note.content
+            }).then(function (res) {
+              _this8.timeToast("保存到云端成功！", "success", 1000);
+
+              if (res.data.error == false) {
+                resolve(res);
+              } else {
+                reject(res);
+              }
+            })["catch"](function (err) {
+              console.error(err);
+
+              _this8.timeToast("保存到云端失败！请重试。", "error", 1000);
+
+              reject(err);
+            });
+          }
+        }
+
+        if (operate === "rename") {
+          if (storage === "local") {
+            _this8.noteLocalDB("delete", noteInfo.oldNote.path);
+
+            _this8.noteLocalDB("add", noteInfo.note);
+
+            resolve();
+          }
+
+          if (storage === "cloud") {
+            window.axios.put("/api/notes/rename", {
+              old_path: noteInfo.oldNote.path,
+              new_path: noteInfo.note.path
+            }).then(function (res) {
+              console.log(res);
+
+              _this8.timeToast("重命名成功！", "success", 1000);
+
+              if (res.data.error == false) {
+                resolve(res);
+              } else {
+                reject(res);
+              }
+            })["catch"](function (err) {
+              console.error(err);
+
+              _this8.timeToast("重命名失败！请重试。", "error", 1000);
+
+              reject(err);
+            });
+          }
+        }
+
+        if (operate === "exist") {
+          if (storage === "cloud") {
+            window.axios.get("/api/notes/exist", {
+              params: {
+                path: noteInfo.path
+              }
+            }).then(function (res) {
+              resolve(res.data);
+            })["catch"](function (err) {
+              console.error(err);
+              reject(err);
+            });
+          }
+
+          if (storage === "local") {
+            var flag = false;
+
+            for (var i = 0; i < _this8.localList.length; i++) {
+              if (_this8.localList[i].path === noteInfo.path) {
+                flag = true;
+              }
+            }
+
+            resolve({
+              exist: flag
+            });
+          }
+        }
+      });
     },
     folderOperate: function folderOperate(operate) {
       var _this9 = this;
 
       var folderInfo = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-      var callS = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function () {};
-      var callE = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : function () {};
-
-      if (operate === "readAll") {
-        window.axios.get("/api/folders").then(function (res) {
-          callS(res.data);
-        })["catch"](function (err) {
-          console.error(err);
-          callE(err);
-        });
-      }
-
-      if (operate === "readFlat") {
-        window.axios.get("/api/folders/flat").then(function (res) {
-          callS(res.data);
-        })["catch"](function (err) {
-          console.error(err);
-          callE(err);
-        });
-      }
-
-      if (operate === "readOnly") {
-        window.axios.get("/api/folders/only").then(function (res) {
-          callS(res.data);
-        })["catch"](function (err) {
-          console.error(err);
-          callE(err);
-        });
-      }
-
-      if (operate === "rename") {
-        window.axios.put("/api/folders", {
-          old_path: folderInfo.oldFolder.path,
-          new_path: folderInfo.folder.path
-        }).then(function (res) {
-          console.log(res);
-
-          _this9.timeToast("重命名成功！", "success", 1000);
-
-          if (res.data.error == false) {
-            callS(res);
-          } else {
-            callE(res);
-          }
-        })["catch"](function (err) {
-          console.error(err);
-
-          _this9.timeToast("重命名失败！请重试。", "error", 1000);
-
-          callE(err);
-        });
-      }
-
-      if (operate === "create") {
-        window.axios.post("/api/folders", {
-          path: folderInfo.path
-        }).then(function (res) {
-          _this9.timeToast("创建文件夹成功！", "success", 1000);
-
-          if (res.data.error == false) {
-            callS(res);
-          } else {
-            callE(res);
-          }
-        })["catch"](function (err) {
-          console.error(err);
-
-          _this9.timeToast("创建文件夹失败！请重试。", "error", 1000);
-
-          callE(err);
-        });
-      }
-
-      if (operate === "delete") {
-        window.axios["delete"]("/api/folders", {
-          params: {
-            path: folderInfo.path
-          }
-        }).then(function (res) {
-          console.log(res);
-
-          _this9.timeToast("删除成功！", "success", 1000);
-
-          if (res.data.error == false) {
-            callS(res);
-          } else {
-            callE(res);
-          }
-        })["catch"](function (err) {
-          console.error(err);
-
-          _this9.timeToast("删除失败！请重试。", "error", 1000);
-
-          callE(err);
-        });
-      }
-
-      if (operate === "exist") {
-        window.axios.get("/api/folders/exist", {
-          params: {
-            path: folderInfo.path
-          }
-        }).then(function (res) {
-          callS(res.data);
-        })["catch"](function (err) {
-          console.error(err);
-          callE(err);
-        });
-      }
-
-      if (operate === "gitPush" || operate === "gitPushForce") {
-        window.axios.put("/api/repo", {
-          path: folderInfo.path,
-          force: operate === "gitPushForce"
-        }).then(function (res) {
-          callS(res.data);
-        })["catch"](function (err) {
-          console.error(err);
-          callE(err);
-        });
-      }
-
-      if (operate === "gitPull") {
-        window.axios.get("/api/repo", {
-          params: {
-            path: folderInfo.path
-          }
-        }).then(function (res) {
-          callS(res.data);
-        })["catch"](function (err) {
-          console.error(err);
-          callE(err);
-        });
-      }
-
-      if (operate === "gitInit" || operate === "gitClone") {
-        window.axios.post("/api/repo", _objectSpread({
-          path: folderInfo.path,
-          repo: folderInfo.repo,
-          init_or_clone: operate === "gitInit" ? "init" : "clone"
-        }, folderInfo.git_user)).then(function (res) {
-          callS(res.data);
-        })["catch"](function (err) {
-          console.error(err);
-          callE(err);
-        });
-      }
-
-      if (operate === "getGitConfig") {
-        window.axios.get("/api/repo/conf", {
-          params: {
-            path: folderInfo.path
-          }
-        }).then(function (res) {
-          callS(res.data.config);
-        })["catch"](function (err) {
-          console.error(err);
-          callE(err);
-        });
-
-        if (operate === "setGitConfig") {
-          window.axios.put("/api/repo/conf", _objectSpread({}, folderInfo)).then(function (res) {
-            callS(res.data);
+      return new Promise(function (resolve, reject) {
+        if (operate === "readAll") {
+          window.axios.get("/api/folders").then(function (res) {
+            resolve(res.data);
           })["catch"](function (err) {
-            console.log(err);
-            callE(err);
+            console.error(err);
+            reject(err);
           });
         }
-      }
+
+        if (operate === "readFlat") {
+          window.axios.get("/api/folders/flat").then(function (res) {
+            resolve(res.data);
+          })["catch"](function (err) {
+            console.error(err);
+            reject(err);
+          });
+        }
+
+        if (operate === "readOnly") {
+          window.axios.get("/api/folders/only").then(function (res) {
+            resolve(res.data);
+          })["catch"](function (err) {
+            console.error(err);
+            reject(err);
+          });
+        }
+
+        if (operate === "rename") {
+          window.axios.put("/api/folders", {
+            old_path: folderInfo.oldFolder.path,
+            new_path: folderInfo.folder.path
+          }).then(function (res) {
+            console.log(res);
+
+            _this9.timeToast("重命名成功！", "success", 1000);
+
+            if (res.data.error == false) {
+              resolve(res);
+            } else {
+              reject(res);
+            }
+          })["catch"](function (err) {
+            console.error(err);
+
+            _this9.timeToast("重命名失败！请重试。", "error", 1000);
+
+            reject(err);
+          });
+        }
+
+        if (operate === "create") {
+          window.axios.post("/api/folders", {
+            path: folderInfo.path
+          }).then(function (res) {
+            _this9.timeToast("创建文件夹成功！", "success", 1000);
+
+            if (res.data.error == false) {
+              resolve(res);
+            } else {
+              reject(res);
+            }
+          })["catch"](function (err) {
+            console.error(err);
+
+            _this9.timeToast("创建文件夹失败！请重试。", "error", 1000);
+
+            reject(err);
+          });
+        }
+
+        if (operate === "delete") {
+          window.axios["delete"]("/api/folders", {
+            params: {
+              path: folderInfo.path
+            }
+          }).then(function (res) {
+            console.log(res);
+
+            _this9.timeToast("删除成功！", "success", 1000);
+
+            if (res.data.error == false) {
+              resolve(res);
+            } else {
+              reject(res);
+            }
+          })["catch"](function (err) {
+            console.error(err);
+
+            _this9.timeToast("删除失败！请重试。", "error", 1000);
+
+            reject(err);
+          });
+        }
+
+        if (operate === "exist") {
+          window.axios.get("/api/folders/exist", {
+            params: {
+              path: folderInfo.path
+            }
+          }).then(function (res) {
+            resolve(res.data);
+          })["catch"](function (err) {
+            console.error(err);
+            reject(err);
+          });
+        }
+
+        if (operate === "gitPush" || operate === "gitPushForce") {
+          window.axios.put("/api/repo", {
+            path: folderInfo.path,
+            force: operate === "gitPushForce"
+          }).then(function (res) {
+            resolve(res.data);
+          })["catch"](function (err) {
+            console.error(err);
+            reject(err);
+          });
+        }
+
+        if (operate === "gitPull") {
+          window.axios.get("/api/repo", {
+            params: {
+              path: folderInfo.path
+            }
+          }).then(function (res) {
+            resolve(res.data);
+          })["catch"](function (err) {
+            console.error(err);
+            reject(err);
+          });
+        }
+
+        if (operate === "gitInit" || operate === "gitClone") {
+          window.axios.post("/api/repo", _objectSpread({
+            path: folderInfo.path,
+            repo: folderInfo.repo,
+            init_or_clone: operate === "gitInit" ? "init" : "clone"
+          }, folderInfo.git_user)).then(function (res) {
+            resolve(res.data);
+          })["catch"](function (err) {
+            console.error(err);
+            reject(err);
+          });
+        }
+
+        if (operate === "getGitConfig") {
+          window.axios.get("/api/repo/conf", {
+            params: {
+              path: folderInfo.path
+            }
+          }).then(function (res) {
+            resolve(res.data.config);
+          })["catch"](function (err) {
+            console.error(err);
+            reject(err);
+          });
+
+          if (operate === "setGitConfig") {
+            window.axios.put("/api/repo/conf", _objectSpread({}, folderInfo)).then(function (res) {
+              resolve(res.data);
+            })["catch"](function (err) {
+              console.log(err);
+              reject(err);
+            });
+          }
+        }
+      });
     },
     configOperate: function configOperate(operate) {
       var config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
@@ -13341,11 +13341,11 @@ __webpack_require__.r(__webpack_exports__);
           var info = _this3.listOperate("get", storage, path);
 
           if (type === "note") {
-            _this3.noteOperate(operate, storage, info, function (res) {
+            _this3.noteOperate(operate, storage, info).then(function (res) {
               _this3.listOperate("delete", storage, path);
             });
           } else {
-            _this3.folderOperate(operate, info, function (res) {
+            _this3.folderOperate(operate, info).then(function (res) {
               _this3.listOperate("delete", storage, path);
             });
           }
@@ -13392,11 +13392,11 @@ __webpack_require__.r(__webpack_exports__);
               _this3.noteOperate(operate, s, {
                 oldNote: oldInfo,
                 note: info
-              }, function (res) {
+              }).then(function (res) {
                 curr.querySelector(".tile-content").removeAttribute("children");
                 input.removeEventListener("keydown", keyEv);
                 input.removeAttribute("disabled");
-              }, function (err) {
+              })["catch"](function (err) {
                 info.path = oldInfo.path;
                 info.name = oldInfo.name;
                 input.removeAttribute("disabled");
@@ -13405,11 +13405,11 @@ __webpack_require__.r(__webpack_exports__);
               _this3.folderOperate(operate, {
                 oldFolder: oldInfo,
                 folder: info
-              }, function (res) {
+              }).then(function (res) {
                 curr.querySelector(".accordion-header").removeAttribute("children");
                 input.removeEventListener("keydown", keyEv);
                 input.removeAttribute("disabled");
-              }, function (err) {
+              })["catch"](function (err) {
                 info.path = oldInfo.path;
                 info.name = oldInfo.name;
                 input.removeAttribute("disabled");
@@ -13434,7 +13434,7 @@ __webpack_require__.r(__webpack_exports__);
             } // 保存到本地（实际操作）
 
 
-            this.noteOperate("save", "local", note, function () {
+            this.noteOperate("save", "local", note).then(function () {
               if (_this3.floatMenu.saveAndClose) {
                 note = _this3.listOperate("delete", "curr", path);
 
@@ -13458,14 +13458,14 @@ __webpack_require__.r(__webpack_exports__);
             var icon = noteEle.querySelector(".tile-action");
             icon.style.display = "unset";
             var btn = icon.querySelector(".btn");
-            this.noteOperate("read", "cloud", note, function (data) {
+            this.noteOperate("read", "cloud", note).then(function (data) {
               _this3.$set(note, "note", data.note);
 
               note.status = "C";
               btn.querySelector(".loading").style.display = "none";
               icon.style.display = "";
 
-              _this3.noteOperate("save", "local", note, function () {
+              _this3.noteOperate("save", "local", note).then(function () {
                 _this3.listOperate("add", "local", path, note);
               });
             });
@@ -13475,7 +13475,7 @@ __webpack_require__.r(__webpack_exports__);
         if (operate === "saveCloud") {
           var _note = this.listOperate("get", storage, path);
 
-          this.noteOperate("save", "cloud", _note, function () {
+          this.noteOperate("save", "cloud", _note).then(function () {
             _note.status = "C";
 
             if (storage === "curr") {
@@ -13564,7 +13564,7 @@ __webpack_require__.r(__webpack_exports__);
 
         if (this.lgModal.content === "CreateNote") {
           this.lgModal.title = "新建MD笔记";
-          this.folderOperate("readOnly", null, function (data) {
+          this.folderOperate("readOnly", null).then(function (data) {
             _this4.$set(_this4.lgModal.data, "folders", data.folders);
           });
           var wTimeout = null;
@@ -13586,7 +13586,7 @@ __webpack_require__.r(__webpack_exports__);
 
               _this4.noteOperate("exist", _this4.lgModal.data.storage, {
                 path: _this4.lgModal.data.select + "/" + _this4.lgModal.data.filename
-              }, function (data) {
+              }).then(function (data) {
                 if (data.exist) {
                   _this4.$set(_this4.lgModal.data, "status", "error");
                 } else {
@@ -13648,7 +13648,7 @@ __webpack_require__.r(__webpack_exports__);
 
         if (this.lgModal.content === "CreateFolder") {
           this.lgModal.title = "新建文件夹";
-          this.folderOperate("readOnly", null, function (data) {
+          this.folderOperate("readOnly", null).then(function (data) {
             _this4.$set(_this4.lgModal.data, "folders", data.folders);
           });
           var _wTimeout = null;
@@ -13663,7 +13663,7 @@ __webpack_require__.r(__webpack_exports__);
 
               _this4.folderOperate("exist", {
                 path: _this4.lgModal.data.select + "/" + _this4.lgModal.data.foldername
-              }, function (data) {
+              }).then(function (data) {
                 if (data.exist) {
                   _this4.$set(_this4.lgModal.data, "status", "error");
                 } else {
@@ -13687,7 +13687,7 @@ __webpack_require__.r(__webpack_exports__);
 
             _this4.folderOperate("create", {
               path: path
-            }, function () {
+            }).then(function () {
               _this4.listOperate("add", _this4.lgModal.data.storage, path);
 
               document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
@@ -13818,7 +13818,7 @@ __webpack_require__.r(__webpack_exports__);
       if (operate === "keepLocal") {
         this.noteOperate("read", "local", {
           path: path
-        }, function (data) {
+        }).then(function (data) {
           _this6.noteOperate("save", "cloud", data, function () {
             _this6.localList[path].status = "C";
 
@@ -13833,8 +13833,8 @@ __webpack_require__.r(__webpack_exports__);
       if (operate === "keepCloud") {
         this.noteOperate("read", "cloud", {
           path: path
-        }, function (data) {
-          _this6.noteOperate("save", "local", data, function () {
+        }).then(function (data) {
+          _this6.noteOperate("save", "local", data).then(function () {
             _this6.localList[path].status = "C";
 
             _this6.$delete(_this6.lgModal.data, index);
@@ -13852,9 +13852,9 @@ __webpack_require__.r(__webpack_exports__);
       if (operate === "gitPull") {
         this.folderOperate(operate, {
           path: path
-        }, function () {
+        }).then(function () {
           _this7.timeToast("Git Pull成功！", "success", 1000);
-        }, function (error) {
+        })["catch"](function (error) {
           _this7.timeToast("Git Pull失败，请重试！", "error", 1000);
         });
       }
@@ -13862,9 +13862,9 @@ __webpack_require__.r(__webpack_exports__);
       if (operate === "gitPush") {
         this.folderOperate(operate, {
           path: path
-        }, function () {
+        }).then(function () {
           _this7.timeToast("Git Push成功！", "success", 1000);
-        }, function (error) {
+        })["catch"](function (error) {
           _this7.timeToast("Git Push失败，请重试！", "error", 1000);
         });
       }
@@ -13872,9 +13872,9 @@ __webpack_require__.r(__webpack_exports__);
       if (operate === "gitPushForce") {
         this.folderOperate(operate, {
           path: path
-        }, function () {
+        }).then(function () {
           _this7.timeToast("Git Push成功！", "success", 1000);
-        }, function (error) {
+        })["catch"](function (error) {
           _this7.timeToast("Git Push失败，请重试！", "error", 1000);
         });
       }
@@ -13895,7 +13895,7 @@ __webpack_require__.r(__webpack_exports__);
 
             _this7.folderOperate("exist", {
               path: _this7.lgModal.data.foldername + "/.git"
-            }, function (data) {
+            }).then(function (data) {
               if (data.exist) {
                 _this7.$set(_this7.lgModal.data, "status", "error");
               } else {
@@ -13927,7 +13927,7 @@ __webpack_require__.r(__webpack_exports__);
             path: _this7.lgModal.data.foldername,
             repo: _this7.lgModal.data.repo,
             git_user: git_user
-          }, function () {
+          }).then(function () {
             document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
 
             _this7.lgModal.cancel();
@@ -13952,7 +13952,7 @@ __webpack_require__.r(__webpack_exports__);
         this.$set(this.lgModal.data, "status", "loading");
         this.folderOperate("getGitConfig", {
           path: path
-        }, function (info) {
+        }).then(function (info) {
           _this7.$set(_this7.lgModal.data, "repo", info.repo);
 
           _this7.$set(_this7.lgModal.data, "git_name", info.git_name);
@@ -13960,7 +13960,7 @@ __webpack_require__.r(__webpack_exports__);
           _this7.$set(_this7.lgModal.data, "git_email", info.git_email);
 
           _this7.$set(_this7.lgModal.data, "status", "");
-        }, function (error) {
+        })["catch"](function (error) {
           _this7.timeToast("获取信息失败！", "error", 1000);
 
           _this7.$set(_this7.lgModal.data, "status", "");
@@ -13979,13 +13979,13 @@ __webpack_require__.r(__webpack_exports__);
             git_email: _this7.lgModal.data.git_email,
             git_password: _this7.lgModal.data.git_password,
             path: path
-          }, function () {
+          }).then(function () {
             document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
 
             _this7.lgModal.cancel();
 
             _this7.timeToast("设置成功！", "success", 1000);
-          }, function (error) {
+          })["catch"](function (error) {
             _this7.timeToast("设置失败，请重试！", "error", 1000);
           });
         };

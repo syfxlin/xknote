@@ -769,11 +769,11 @@ export default {
           this.smModal.show = false;
           let info = this.listOperate("get", storage, path);
           if (type === "note") {
-            this.noteOperate(operate, storage, info, res => {
+            this.noteOperate(operate, storage, info).then(res => {
               this.listOperate("delete", storage, path);
             });
           } else {
-            this.folderOperate(operate, info, res => {
+            this.folderOperate(operate, info).then(res => {
               this.listOperate("delete", storage, path);
             });
           }
@@ -815,46 +815,39 @@ export default {
               if (storage === "curr") {
                 s = this.currListSource[path].storage;
               }
-              this.noteOperate(
-                operate,
-                s,
-                {
-                  oldNote: oldInfo,
-                  note: info
-                },
-                res => {
+              this.noteOperate(operate, s, {
+                oldNote: oldInfo,
+                note: info
+              })
+                .then(res => {
                   curr
                     .querySelector(".tile-content")
                     .removeAttribute("children");
                   input.removeEventListener("keydown", keyEv);
                   input.removeAttribute("disabled");
-                },
-                err => {
+                })
+                .catch(err => {
                   info.path = oldInfo.path;
                   info.name = oldInfo.name;
                   input.removeAttribute("disabled");
-                }
-              );
+                });
             } else {
-              this.folderOperate(
-                operate,
-                {
-                  oldFolder: oldInfo,
-                  folder: info
-                },
-                res => {
+              this.folderOperate(operate, {
+                oldFolder: oldInfo,
+                folder: info
+              })
+                .then(res => {
                   curr
                     .querySelector(".accordion-header")
                     .removeAttribute("children");
                   input.removeEventListener("keydown", keyEv);
                   input.removeAttribute("disabled");
-                },
-                err => {
+                })
+                .catch(err => {
                   info.path = oldInfo.path;
                   info.name = oldInfo.name;
                   input.removeAttribute("disabled");
-                }
-              );
+                });
             }
           }
         };
@@ -871,7 +864,7 @@ export default {
               note.status = "L";
             }
             // 保存到本地（实际操作）
-            this.noteOperate("save", "local", note, () => {
+            this.noteOperate("save", "local", note).then(() => {
               if (this.floatMenu.saveAndClose) {
                 note = this.listOperate("delete", "curr", path);
                 this.setXknoteOpened(
@@ -896,12 +889,12 @@ export default {
             let icon = noteEle.querySelector(".tile-action");
             icon.style.display = "unset";
             let btn = icon.querySelector(".btn");
-            this.noteOperate("read", "cloud", note, data => {
+            this.noteOperate("read", "cloud", note).then(data => {
               this.$set(note, "note", data.note);
               note.status = "C";
               btn.querySelector(".loading").style.display = "none";
               icon.style.display = "";
-              this.noteOperate("save", "local", note, () => {
+              this.noteOperate("save", "local", note).then(() => {
                 this.listOperate("add", "local", path, note);
               });
             });
@@ -909,7 +902,7 @@ export default {
         }
         if (operate === "saveCloud") {
           let note = this.listOperate("get", storage, path);
-          this.noteOperate("save", "cloud", note, () => {
+          this.noteOperate("save", "cloud", note).then(() => {
             note.status = "C";
             if (storage === "curr") {
               if (this.currListSource[path].storage === "local") {
@@ -992,7 +985,7 @@ export default {
         this.lgModal.content = operate.substring(4);
         if (this.lgModal.content === "CreateNote") {
           this.lgModal.title = "新建MD笔记";
-          this.folderOperate("readOnly", null, data => {
+          this.folderOperate("readOnly", null).then(data => {
             this.$set(this.lgModal.data, "folders", data.folders);
           });
           let wTimeout = null;
@@ -1007,21 +1000,16 @@ export default {
                 this.$set(this.lgModal.data, "status", "error");
                 return;
               }
-              this.noteOperate(
-                "exist",
-                this.lgModal.data.storage,
-                {
-                  path:
-                    this.lgModal.data.select + "/" + this.lgModal.data.filename
-                },
-                data => {
-                  if (data.exist) {
-                    this.$set(this.lgModal.data, "status", "error");
-                  } else {
-                    this.$set(this.lgModal.data, "status", "");
-                  }
+              this.noteOperate("exist", this.lgModal.data.storage, {
+                path:
+                  this.lgModal.data.select + "/" + this.lgModal.data.filename
+              }).then(data => {
+                if (data.exist) {
+                  this.$set(this.lgModal.data, "status", "error");
+                } else {
+                  this.$set(this.lgModal.data, "status", "");
                 }
-              );
+              });
             }, 500);
           };
           let uwFileName = this.$watch("lgModal.data.filename", watch);
@@ -1092,7 +1080,7 @@ export default {
         }
         if (this.lgModal.content === "CreateFolder") {
           this.lgModal.title = "新建文件夹";
-          this.folderOperate("readOnly", null, data => {
+          this.folderOperate("readOnly", null).then(data => {
             this.$set(this.lgModal.data, "folders", data.folders);
           });
           let wTimeout = null;
@@ -1102,22 +1090,16 @@ export default {
             }
             wTimeout = setTimeout(() => {
               this.$set(this.lgModal.data, "status", "loading");
-              this.folderOperate(
-                "exist",
-                {
-                  path:
-                    this.lgModal.data.select +
-                    "/" +
-                    this.lgModal.data.foldername
-                },
-                data => {
-                  if (data.exist) {
-                    this.$set(this.lgModal.data, "status", "error");
-                  } else {
-                    this.$set(this.lgModal.data, "status", "");
-                  }
+              this.folderOperate("exist", {
+                path:
+                  this.lgModal.data.select + "/" + this.lgModal.data.foldername
+              }).then(data => {
+                if (data.exist) {
+                  this.$set(this.lgModal.data, "status", "error");
+                } else {
+                  this.$set(this.lgModal.data, "status", "");
                 }
-              );
+              });
             }, 500);
           };
           let uwFolderName = this.$watch("lgModal.data.foldername", watch);
@@ -1134,20 +1116,16 @@ export default {
               .classList.add("loading");
             let path =
               this.lgModal.data.select + "/" + this.lgModal.data.foldername;
-            this.folderOperate(
-              "create",
-              {
-                path: path
-              },
-              () => {
-                this.listOperate("add", this.lgModal.data.storage, path);
-                document
-                  .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-                  .classList.remove("loading");
-                this.lgModal.cancel();
-                this.loadCloudFolders();
-              }
-            );
+            this.folderOperate("create", {
+              path: path
+            }).then(() => {
+              this.listOperate("add", this.lgModal.data.storage, path);
+              document
+                .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+                .classList.remove("loading");
+              this.lgModal.cancel();
+              this.loadCloudFolders();
+            });
           };
           this.lgModal.cancel = () => {
             uwFolderName();
@@ -1270,7 +1248,7 @@ export default {
     checkLocalOperate(operate, index) {
       let path = this.lgModal.data[index].path;
       if (operate === "keepLocal") {
-        this.noteOperate("read", "local", { path: path }, data => {
+        this.noteOperate("read", "local", { path: path }).then(data => {
           this.noteOperate("save", "cloud", data, () => {
             this.localList[path].status = "C";
             this.$delete(this.lgModal.data, index);
@@ -1280,8 +1258,8 @@ export default {
         });
       }
       if (operate === "keepCloud") {
-        this.noteOperate("read", "cloud", { path: path }, data => {
-          this.noteOperate("save", "local", data, () => {
+        this.noteOperate("read", "cloud", { path: path }).then(data => {
+          this.noteOperate("save", "local", data).then(() => {
             this.localList[path].status = "C";
             this.$delete(this.lgModal.data, index);
           });
@@ -1293,40 +1271,31 @@ export default {
     },
     gitOperate(operate, path) {
       if (operate === "gitPull") {
-        this.folderOperate(
-          operate,
-          { path: path },
-          () => {
+        this.folderOperate(operate, { path: path })
+          .then(() => {
             this.timeToast("Git Pull成功！", "success", 1000);
-          },
-          error => {
+          })
+          .catch(error => {
             this.timeToast("Git Pull失败，请重试！", "error", 1000);
-          }
-        );
+          });
       }
       if (operate === "gitPush") {
-        this.folderOperate(
-          operate,
-          { path: path },
-          () => {
+        this.folderOperate(operate, { path: path })
+          .then(() => {
             this.timeToast("Git Push成功！", "success", 1000);
-          },
-          error => {
+          })
+          .catch(error => {
             this.timeToast("Git Push失败，请重试！", "error", 1000);
-          }
-        );
+          });
       }
       if (operate === "gitPushForce") {
-        this.folderOperate(
-          operate,
-          { path: path },
-          () => {
+        this.folderOperate(operate, { path: path })
+          .then(() => {
             this.timeToast("Git Push成功！", "success", 1000);
-          },
-          error => {
+          })
+          .catch(error => {
             this.timeToast("Git Push失败，请重试！", "error", 1000);
-          }
-        );
+          });
       }
       if (operate === "gitInitClone") {
         this.lgModal.content = "GitInitClone";
@@ -1339,19 +1308,15 @@ export default {
           }
           wTimeout = setTimeout(() => {
             this.$set(this.lgModal.data, "status", "loading");
-            this.folderOperate(
-              "exist",
-              {
-                path: this.lgModal.data.foldername + "/.git"
-              },
-              data => {
-                if (data.exist) {
-                  this.$set(this.lgModal.data, "status", "error");
-                } else {
-                  this.$set(this.lgModal.data, "status", "");
-                }
+            this.folderOperate("exist", {
+              path: this.lgModal.data.foldername + "/.git"
+            }).then(data => {
+              if (data.exist) {
+                this.$set(this.lgModal.data, "status", "error");
+              } else {
+                this.$set(this.lgModal.data, "status", "");
               }
-            );
+            });
           }, 500);
         };
         let uwFolderName = this.$watch("lgModal.data.foldername", watch);
@@ -1385,15 +1350,14 @@ export default {
               path: this.lgModal.data.foldername,
               repo: this.lgModal.data.repo,
               git_user: git_user
-            },
-            () => {
-              document
-                .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-                .classList.remove("loading");
-              this.lgModal.cancel();
-              this.timeToast("Git Init或Clone成功！", "success", 1000);
             }
-          );
+          ).then(() => {
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.remove("loading");
+            this.lgModal.cancel();
+            this.timeToast("Git Init或Clone成功！", "success", 1000);
+          });
         };
         this.lgModal.cancel = () => {
           uwFolderName();
@@ -1406,20 +1370,17 @@ export default {
         this.lgModal.content = "GitItemConfig";
         this.lgModal.show = true;
         this.$set(this.lgModal.data, "status", "loading");
-        this.folderOperate(
-          "getGitConfig",
-          { path: path },
-          info => {
+        this.folderOperate("getGitConfig", { path: path })
+          .then(info => {
             this.$set(this.lgModal.data, "repo", info.repo);
             this.$set(this.lgModal.data, "git_name", info.git_name);
             this.$set(this.lgModal.data, "git_email", info.git_email);
             this.$set(this.lgModal.data, "status", "");
-          },
-          error => {
+          })
+          .catch(error => {
             this.timeToast("获取信息失败！", "error", 1000);
             this.$set(this.lgModal.data, "status", "");
-          }
-        );
+          });
         this.lgModal.confirm = () => {
           if (
             !this.lgModal.data.git_name ||
@@ -1432,26 +1393,23 @@ export default {
           document
             .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
             .classList.add("loading");
-          this.folderOperate(
-            "setGitConfig",
-            {
-              repo: this.lgModal.data.repo,
-              git_name: this.lgModal.data.git_name,
-              git_email: this.lgModal.data.git_email,
-              git_password: this.lgModal.data.git_password,
-              path: path
-            },
-            () => {
+          this.folderOperate("setGitConfig", {
+            repo: this.lgModal.data.repo,
+            git_name: this.lgModal.data.git_name,
+            git_email: this.lgModal.data.git_email,
+            git_password: this.lgModal.data.git_password,
+            path: path
+          })
+            .then(() => {
               document
                 .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
                 .classList.remove("loading");
               this.lgModal.cancel();
               this.timeToast("设置成功！", "success", 1000);
-            },
-            error => {
+            })
+            .catch(error => {
               this.timeToast("设置失败，请重试！", "error", 1000);
-            }
-          );
+            });
         };
         this.lgModal.cancel = () => {
           this.$set(this.lgModal, "data", {});

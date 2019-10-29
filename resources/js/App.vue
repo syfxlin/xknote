@@ -168,7 +168,7 @@ export default {
      * @returns void
      */
     loadCloudFolders() {
-      this.folderOperate("readAll", null, data => {
+      this.folderOperate("readAll", null).then(data => {
         this.cloudList = data.folders;
       });
     },
@@ -358,7 +358,7 @@ export default {
           btn.querySelector(".icon").style.display = "none";
         }
         btn.querySelector(".loading").style.display = "block";
-        this.noteOperate("read", "cloud", note, data => {
+        this.noteOperate("read", "cloud", note).then(data => {
           // note.note = data.note;
           this.$set(note, "note", data.note);
           note.status = "C";
@@ -594,365 +594,358 @@ export default {
      *   @param {object=} noteInfo.note (rename) 新的笔记信息
      * @returns void
      */
-    noteOperate(
-      operate,
-      storage,
-      noteInfo = null,
-      callS = () => {},
-      callE = () => {}
-    ) {
-      if (operate === "read") {
-        if (storage === "local") {
-          this.noteLocalDB("read", noteInfo.path, (e, data) => {
-            callS(data);
-          });
+    noteOperate(operate, storage, noteInfo = null) {
+      return new Promise((resolve, reject) => {
+        if (operate === "read") {
+          if (storage === "local") {
+            this.noteLocalDB("read", noteInfo.path, (e, data) => {
+              resolve(data);
+            });
+          }
+          if (storage === "cloud") {
+            window.axios
+              .get("/api/notes", {
+                params: {
+                  path: noteInfo.path
+                }
+              })
+              .then(res => {
+                resolve(res.data);
+              })
+              .catch(err => {
+                console.error(err);
+                this.timeToast("加载失败！请重试。", "error", 1000);
+                reject(err);
+              });
+          }
         }
-        if (storage === "cloud") {
-          window.axios
-            .get("/api/notes", {
-              params: {
-                path: noteInfo.path
+        if (operate === "create") {
+          if (storage === "cloud") {
+            window.axios
+              .post("/api/notes", {
+                path: noteInfo.path,
+                title: noteInfo.note.title,
+                author: noteInfo.note.author,
+                created_at: noteInfo.note.created_at,
+                updated_at: noteInfo.note.updated_at,
+                content: noteInfo.note.content
+              })
+              .then(res => {
+                this.timeToast("新建笔记成功！", "success", 1000);
+                if (res.data.error == false) {
+                  resolve(res);
+                } else {
+                  reject(res);
+                }
+              })
+              .catch(err => {
+                console.error(err);
+                this.timeToast("新建笔记失败！请重试。", "error", 1000);
+                resolve(err);
+              });
+          }
+        }
+        if (operate === "delete") {
+          if (storage === "local") {
+            this.noteLocalDB(
+              "delete",
+              noteInfo.path,
+              (e, data) => {
+                reject(data);
+              },
+              reject
+            );
+          }
+          if (storage === "cloud") {
+            window.axios
+              .delete("/api/notes", {
+                params: {
+                  path: noteInfo.path
+                }
+              })
+              .then(res => {
+                console.log(res);
+                this.timeToast("删除成功！", "success", 1000);
+                if (res.data.error == false) {
+                  resolve(res);
+                } else {
+                  reject(res);
+                }
+              })
+              .catch(err => {
+                console.error(err);
+                this.timeToast("删除失败！请重试。", "error", 1000);
+                reject(err);
+              });
+          }
+        }
+        if (operate === "save") {
+          if (storage === "local") {
+            this.noteLocalDB(
+              "delete",
+              noteInfo.path,
+              () => {
+                this.timeToast("保存到本地成功！", "success", 1000);
+                this.noteLocalDB("add", noteInfo, resolve, reject);
+              },
+              reject
+            );
+          }
+          if (storage === "cloud") {
+            window.axios
+              .put("/api/notes", {
+                path: noteInfo.path,
+                title: noteInfo.note.title,
+                author: noteInfo.note.author,
+                created_at: noteInfo.note.created_at,
+                updated_at: noteInfo.note.updated_at,
+                content: noteInfo.note.content
+              })
+              .then(res => {
+                this.timeToast("保存到云端成功！", "success", 1000);
+                if (res.data.error == false) {
+                  resolve(res);
+                } else {
+                  reject(res);
+                }
+              })
+              .catch(err => {
+                console.error(err);
+                this.timeToast("保存到云端失败！请重试。", "error", 1000);
+                reject(err);
+              });
+          }
+        }
+        if (operate === "rename") {
+          if (storage === "local") {
+            this.noteLocalDB("delete", noteInfo.oldNote.path);
+            this.noteLocalDB("add", noteInfo.note);
+            resolve();
+          }
+          if (storage === "cloud") {
+            window.axios
+              .put("/api/notes/rename", {
+                old_path: noteInfo.oldNote.path,
+                new_path: noteInfo.note.path
+              })
+              .then(res => {
+                console.log(res);
+                this.timeToast("重命名成功！", "success", 1000);
+                if (res.data.error == false) {
+                  resolve(res);
+                } else {
+                  reject(res);
+                }
+              })
+              .catch(err => {
+                console.error(err);
+                this.timeToast("重命名失败！请重试。", "error", 1000);
+                reject(err);
+              });
+          }
+        }
+        if (operate === "exist") {
+          if (storage === "cloud") {
+            window.axios
+              .get("/api/notes/exist", {
+                params: { path: noteInfo.path }
+              })
+              .then(res => {
+                resolve(res.data);
+              })
+              .catch(err => {
+                console.error(err);
+                reject(err);
+              });
+          }
+          if (storage === "local") {
+            let flag = false;
+            for (let i = 0; i < this.localList.length; i++) {
+              if (this.localList[i].path === noteInfo.path) {
+                flag = true;
               }
-            })
+            }
+            resolve({ exist: flag });
+          }
+        }
+      });
+    },
+    folderOperate(operate, folderInfo = null) {
+      return new Promise((resolve, reject) => {
+        if (operate === "readAll") {
+          window.axios
+            .get("/api/folders")
             .then(res => {
-              callS(res.data);
+              resolve(res.data);
             })
             .catch(err => {
               console.error(err);
-              this.timeToast("加载失败！请重试。", "error", 1000);
-              callE(err);
+              reject(err);
             });
         }
-      }
-      if (operate === "create") {
-        if (storage === "cloud") {
+        if (operate === "readFlat") {
           window.axios
-            .post("/api/notes", {
-              path: noteInfo.path,
-              title: noteInfo.note.title,
-              author: noteInfo.note.author,
-              created_at: noteInfo.note.created_at,
-              updated_at: noteInfo.note.updated_at,
-              content: noteInfo.note.content
+            .get("/api/folders/flat")
+            .then(res => {
+              resolve(res.data);
+            })
+            .catch(err => {
+              console.error(err);
+              reject(err);
+            });
+        }
+        if (operate === "readOnly") {
+          window.axios
+            .get("/api/folders/only")
+            .then(res => {
+              resolve(res.data);
+            })
+            .catch(err => {
+              console.error(err);
+              reject(err);
+            });
+        }
+        if (operate === "rename") {
+          window.axios
+            .put("/api/folders", {
+              old_path: folderInfo.oldFolder.path,
+              new_path: folderInfo.folder.path
             })
             .then(res => {
-              this.timeToast("新建笔记成功！", "success", 1000);
+              console.log(res);
+              this.timeToast("重命名成功！", "success", 1000);
               if (res.data.error == false) {
-                callS(res);
+                resolve(res);
               } else {
-                callE(res);
+                reject(res);
               }
             })
             .catch(err => {
               console.error(err);
-              this.timeToast("新建笔记失败！请重试。", "error", 1000);
-              callE(err);
+              this.timeToast("重命名失败！请重试。", "error", 1000);
+              reject(err);
             });
         }
-      }
-      if (operate === "delete") {
-        if (storage === "local") {
-          this.noteLocalDB(
-            "delete",
-            noteInfo.path,
-            (e, data) => {
-              callS(data);
-            },
-            callE
-          );
-        }
-        if (storage === "cloud") {
+        if (operate === "create") {
           window.axios
-            .delete("/api/notes", {
+            .post("/api/folders", {
+              path: folderInfo.path
+            })
+            .then(res => {
+              this.timeToast("创建文件夹成功！", "success", 1000);
+              if (res.data.error == false) {
+                resolve(res);
+              } else {
+                reject(res);
+              }
+            })
+            .catch(err => {
+              console.error(err);
+              this.timeToast("创建文件夹失败！请重试。", "error", 1000);
+              reject(err);
+            });
+        }
+        if (operate === "delete") {
+          window.axios
+            .delete("/api/folders", {
               params: {
-                path: noteInfo.path
+                path: folderInfo.path
               }
             })
             .then(res => {
               console.log(res);
               this.timeToast("删除成功！", "success", 1000);
               if (res.data.error == false) {
-                callS(res);
+                resolve(res);
               } else {
-                callE(res);
+                reject(res);
               }
             })
             .catch(err => {
               console.error(err);
               this.timeToast("删除失败！请重试。", "error", 1000);
-              callE(err);
+              reject(err);
             });
         }
-      }
-      if (operate === "save") {
-        if (storage === "local") {
-          this.noteLocalDB(
-            "delete",
-            noteInfo.path,
-            () => {
-              this.timeToast("保存到本地成功！", "success", 1000);
-              this.noteLocalDB("add", noteInfo, callS, callE);
-            },
-            callE
-          );
-        }
-        if (storage === "cloud") {
+        if (operate === "exist") {
           window.axios
-            .put("/api/notes", {
-              path: noteInfo.path,
-              title: noteInfo.note.title,
-              author: noteInfo.note.author,
-              created_at: noteInfo.note.created_at,
-              updated_at: noteInfo.note.updated_at,
-              content: noteInfo.note.content
+            .get("/api/folders/exist", {
+              params: { path: folderInfo.path }
             })
             .then(res => {
-              this.timeToast("保存到云端成功！", "success", 1000);
-              if (res.data.error == false) {
-                callS(res);
-              } else {
-                callE(res);
-              }
+              resolve(res.data);
             })
             .catch(err => {
               console.error(err);
-              this.timeToast("保存到云端失败！请重试。", "error", 1000);
-              callE(err);
+              reject(err);
             });
         }
-      }
-      if (operate === "rename") {
-        if (storage === "local") {
-          this.noteLocalDB("delete", noteInfo.oldNote.path);
-          this.noteLocalDB("add", noteInfo.note);
-          callS();
-        }
-        if (storage === "cloud") {
+        if (operate === "gitPush" || operate === "gitPushForce") {
           window.axios
-            .put("/api/notes/rename", {
-              old_path: noteInfo.oldNote.path,
-              new_path: noteInfo.note.path
+            .put("/api/repo", {
+              path: folderInfo.path,
+              force: operate === "gitPushForce"
             })
             .then(res => {
-              console.log(res);
-              this.timeToast("重命名成功！", "success", 1000);
-              if (res.data.error == false) {
-                callS(res);
-              } else {
-                callE(res);
-              }
+              resolve(res.data);
             })
             .catch(err => {
               console.error(err);
-              this.timeToast("重命名失败！请重试。", "error", 1000);
-              callE(err);
+              reject(err);
             });
         }
-      }
-      if (operate === "exist") {
-        if (storage === "cloud") {
+        if (operate === "gitPull") {
           window.axios
-            .get("/api/notes/exist", {
-              params: { path: noteInfo.path }
+            .get("/api/repo", {
+              params: { path: folderInfo.path }
             })
             .then(res => {
-              callS(res.data);
+              resolve(res.data);
             })
             .catch(err => {
               console.error(err);
-              callE(err);
+              reject(err);
             });
         }
-        if (storage === "local") {
-          let flag = false;
-          for (let i = 0; i < this.localList.length; i++) {
-            if (this.localList[i].path === noteInfo.path) {
-              flag = true;
-            }
+        if (operate === "gitInit" || operate === "gitClone") {
+          window.axios
+            .post("/api/repo", {
+              path: folderInfo.path,
+              repo: folderInfo.repo,
+              init_or_clone: operate === "gitInit" ? "init" : "clone",
+              ...folderInfo.git_user
+            })
+            .then(res => {
+              resolve(res.data);
+            })
+            .catch(err => {
+              console.error(err);
+              reject(err);
+            });
+        }
+        if (operate === "getGitConfig") {
+          window.axios
+            .get("/api/repo/conf", { params: { path: folderInfo.path } })
+            .then(res => {
+              resolve(res.data.config);
+            })
+            .catch(err => {
+              console.error(err);
+              reject(err);
+            });
+          if (operate === "setGitConfig") {
+            window.axios
+              .put("/api/repo/conf", { ...folderInfo })
+              .then(res => {
+                resolve(res.data);
+              })
+              .catch(err => {
+                console.log(err);
+                reject(err);
+              });
           }
-          callS({ exist: flag });
         }
-      }
-    },
-    folderOperate(
-      operate,
-      folderInfo = null,
-      callS = () => {},
-      callE = () => {}
-    ) {
-      if (operate === "readAll") {
-        window.axios
-          .get("/api/folders")
-          .then(res => {
-            callS(res.data);
-          })
-          .catch(err => {
-            console.error(err);
-            callE(err);
-          });
-      }
-      if (operate === "readFlat") {
-        window.axios
-          .get("/api/folders/flat")
-          .then(res => {
-            callS(res.data);
-          })
-          .catch(err => {
-            console.error(err);
-            callE(err);
-          });
-      }
-      if (operate === "readOnly") {
-        window.axios
-          .get("/api/folders/only")
-          .then(res => {
-            callS(res.data);
-          })
-          .catch(err => {
-            console.error(err);
-            callE(err);
-          });
-      }
-      if (operate === "rename") {
-        window.axios
-          .put("/api/folders", {
-            old_path: folderInfo.oldFolder.path,
-            new_path: folderInfo.folder.path
-          })
-          .then(res => {
-            console.log(res);
-            this.timeToast("重命名成功！", "success", 1000);
-            if (res.data.error == false) {
-              callS(res);
-            } else {
-              callE(res);
-            }
-          })
-          .catch(err => {
-            console.error(err);
-            this.timeToast("重命名失败！请重试。", "error", 1000);
-            callE(err);
-          });
-      }
-      if (operate === "create") {
-        window.axios
-          .post("/api/folders", {
-            path: folderInfo.path
-          })
-          .then(res => {
-            this.timeToast("创建文件夹成功！", "success", 1000);
-            if (res.data.error == false) {
-              callS(res);
-            } else {
-              callE(res);
-            }
-          })
-          .catch(err => {
-            console.error(err);
-            this.timeToast("创建文件夹失败！请重试。", "error", 1000);
-            callE(err);
-          });
-      }
-      if (operate === "delete") {
-        window.axios
-          .delete("/api/folders", {
-            params: {
-              path: folderInfo.path
-            }
-          })
-          .then(res => {
-            console.log(res);
-            this.timeToast("删除成功！", "success", 1000);
-            if (res.data.error == false) {
-              callS(res);
-            } else {
-              callE(res);
-            }
-          })
-          .catch(err => {
-            console.error(err);
-            this.timeToast("删除失败！请重试。", "error", 1000);
-            callE(err);
-          });
-      }
-      if (operate === "exist") {
-        window.axios
-          .get("/api/folders/exist", {
-            params: { path: folderInfo.path }
-          })
-          .then(res => {
-            callS(res.data);
-          })
-          .catch(err => {
-            console.error(err);
-            callE(err);
-          });
-      }
-      if (operate === "gitPush" || operate === "gitPushForce") {
-        window.axios
-          .put("/api/repo", {
-            path: folderInfo.path,
-            force: operate === "gitPushForce"
-          })
-          .then(res => {
-            callS(res.data);
-          })
-          .catch(err => {
-            console.error(err);
-            callE(err);
-          });
-      }
-      if (operate === "gitPull") {
-        window.axios
-          .get("/api/repo", {
-            params: { path: folderInfo.path }
-          })
-          .then(res => {
-            callS(res.data);
-          })
-          .catch(err => {
-            console.error(err);
-            callE(err);
-          });
-      }
-      if (operate === "gitInit" || operate === "gitClone") {
-        window.axios
-          .post("/api/repo", {
-            path: folderInfo.path,
-            repo: folderInfo.repo,
-            init_or_clone: operate === "gitInit" ? "init" : "clone",
-            ...folderInfo.git_user
-          })
-          .then(res => {
-            callS(res.data);
-          })
-          .catch(err => {
-            console.error(err);
-            callE(err);
-          });
-      }
-      if (operate === "getGitConfig") {
-        window.axios
-          .get("/api/repo/conf", { params: { path: folderInfo.path } })
-          .then(res => {
-            callS(res.data.config);
-          })
-          .catch(err => {
-            console.error(err);
-            callE(err);
-          });
-        if (operate === "setGitConfig") {
-          window.axios
-            .put("/api/repo/conf", { ...folderInfo })
-            .then(res => {
-              callS(res.data);
-            })
-            .catch(err => {
-              console.log(err);
-              callE(err);
-            });
-        }
-      }
+      });
     },
     configOperate(operate, config = null, callS = () => {}, callE = () => {}) {
       if (operate === "getGitConfig") {
