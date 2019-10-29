@@ -83,7 +83,14 @@ export default {
     "note-item": noteItem,
     "folder-item": folderItem
   },
-  props: ["cloudList", "localList", "readOpened", "openNote", "loadFirstNote"],
+  props: [
+    "cloudList",
+    "localList",
+    "readOpened",
+    "openNote",
+    "loadFirstNote",
+    "loadCloudFolders"
+  ],
   data() {
     return {
       xknoteTab: "toc",
@@ -118,37 +125,37 @@ export default {
       });
     }
   },
-  mounted() {
+  async mounted() {
+    await this.loadCloudFolders();
     this.$nextTick(() => {
       this.loadFirstNote("read");
       this.watchNote();
-    });
-    if (!window.toggleToc) {
-      window.toggleToc = ele => {
-        var display = ele.nextElementSibling.nextElementSibling.style.display;
-        if (display === "" || display === "block") {
-          ele.nextElementSibling.nextElementSibling.style.display = "none";
-          ele.setAttribute("src", "/static/svg/plus-square.svg");
-        } else {
-          ele.nextElementSibling.nextElementSibling.style.display = "block";
-          ele.setAttribute("src", "/static/svg/minus-square.svg");
-        }
-      };
-    }
-    if (!window.sta) {
-      window.sta = anchorName => {
-        if (anchorName) {
-          let anchorElement = document.getElementById(anchorName);
-          if (anchorElement) {
-            anchorElement.scrollIntoView(true);
+      if (!window.toggleToc) {
+        window.toggleToc = ele => {
+          var display = ele.nextElementSibling.nextElementSibling.style.display;
+          if (display === "" || display === "block") {
+            ele.nextElementSibling.nextElementSibling.style.display = "none";
+            ele.setAttribute("src", "/static/svg/plus-square.svg");
+          } else {
+            ele.nextElementSibling.nextElementSibling.style.display = "block";
+            ele.setAttribute("src", "/static/svg/minus-square.svg");
           }
-        }
-      };
-    }
+        };
+      }
+      if (!window.sta) {
+        window.sta = anchorName => {
+          if (anchorName) {
+            let anchorElement = document.getElementById(anchorName);
+            if (anchorElement) {
+              anchorElement.scrollIntoView(true);
+            }
+          }
+        };
+      }
+    });
   },
   watch: {
-    readOpened: "watchNote",
-    "readOpened.note.content": "watchNote"
+    readOpened: "watchNote"
   }
 };
 </script>

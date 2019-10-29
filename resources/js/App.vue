@@ -113,7 +113,7 @@ export default {
   },
   mounted() {
     this.loadLocalNotes();
-    this.loadCloudFolders();
+    // this.loadCloudFolders();
     window.xknote = {};
   },
   methods: {
@@ -167,10 +167,10 @@ export default {
      * @param void
      * @returns void
      */
-    loadCloudFolders() {
-      this.folderOperate("readAll", null).then(data => {
-        this.cloudList = data.folders;
-      });
+    async loadCloudFolders() {
+      let data = await this.folderOperate("readAll", null);
+      this.cloudList = data.folders;
+      return data;
     },
     /**
      * 读取本地的笔记
@@ -999,17 +999,19 @@ export default {
     "xknoteOpened.note.title": "watchNote",
     $route(to, from) {
       this.prevRouter = from.name;
-      if (to.name === "Read") {
-        this.readOpened = JSON.parse(JSON.stringify(this.xknoteOpened));
+      if (window.inputQueryChangeFlag && to.name === "Read") {
+        this.$set(
+          this,
+          "readOpened",
+          JSON.parse(JSON.stringify(this.xknoteOpened))
+        );
       }
-    },
-    "$route.query": function(query) {
-      if (window.inputQueryChangeFlag && query.note) {
+      if (window.inputQueryChangeFlag && this.$route.query.note) {
         let mode = "normal";
         if (this.$route.name === "Read") {
           mode = "read";
         }
-        this.loadPathNote(query.note, mode);
+        this.loadPathNote(this.$route.query.note, mode);
       }
       window.inputQueryChangeFlag = true;
     }

@@ -735,7 +735,7 @@ export default {
      * @param {string} e event的名称
      * @returns void
      */
-    editorLoaded(e) {
+    async editorLoaded(e) {
       if (e === "interfaceLoad") {
         window.XKEditor.ace.getSession().on("change", () => {
           if (window.xknoteOpenedChangeFlag) {
@@ -744,11 +744,14 @@ export default {
         });
       }
       if (e === "componentLoad") {
-        this.loadFirstNote();
-        this.loadedEditor = true;
-        if (this.writeMode) {
-          this.switchWriteMode();
-        }
+        await this.loadCloudFolders();
+        this.$nextTick(() => {
+          this.loadFirstNote();
+          this.loadedEditor = true;
+          if (this.writeMode) {
+            this.switchWriteMode();
+          }
+        });
       }
     },
     /**
