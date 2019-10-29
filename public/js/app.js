@@ -12973,6 +12973,83 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -13324,9 +13401,78 @@ __webpack_require__.r(__webpack_exports__);
           });
         }
 
+        if (operate === "gitPushForce") {
+          this.folderOperate(operate, {
+            path: path
+          }, function () {
+            _this3.timeToast("Git Push成功！", "success", 1000);
+          }, function (error) {
+            _this3.timeToast("Git Push失败，请重试！", "error", 1000);
+          });
+        }
+
         if (operate === "gitInitClone") {
           this.lgModal.content = "GitInitClone";
+          this.lgModal.title = "Git InitClone";
           this.lgModal.show = true;
+          var wTimeout = null;
+
+          var watch = function watch() {
+            if (wTimeout) {
+              clearTimeout(wTimeout);
+            }
+
+            wTimeout = setTimeout(function () {
+              _this3.$set(_this3.lgModal.data, "status", "loading");
+
+              _this3.folderOperate("exist", {
+                path: _this3.lgModal.data.foldername + "/.git"
+              }, function (data) {
+                if (data.exist) {
+                  _this3.$set(_this3.lgModal.data, "status", "error");
+                } else {
+                  _this3.$set(_this3.lgModal.data, "status", "");
+                }
+              });
+            }, 500);
+          };
+
+          var uwFolderName = this.$watch("lgModal.data.foldername", watch);
+
+          this.lgModal.confirm = function () {
+            if (!_this3.lgModal.data.foldername || !_this3.lgModal.data.repo || !_this3.lgModal.data.init_or_clone || _this3.lgModal.data.status !== "") {
+              return;
+            }
+
+            document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
+            var git_user = {};
+
+            if (_this3.lgModal.data.git_name && _this3.lgModal.data.git_email && _this3.lgModal.data.git_password) {
+              git_user = {
+                name: _this3.lgModal.data.git_name,
+                email: _this3.lgModal.data.git_email,
+                password: _this3.lgModal.data.git_password
+              };
+            }
+
+            _this3.folderOperate(_this3.lgModal.data.init_or_clone === "init" ? "gitInit" : "gitClone", {
+              path: _this3.lgModal.data.foldername,
+              repo: _this3.lgModal.data.repo,
+              git_user: git_user
+            }, function () {
+              document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
+
+              _this3.lgModal.cancel();
+            });
+          };
+
+          this.lgModal.cancel = function () {
+            uwFolderName();
+
+            _this3.$set(_this3.lgModal, "data", {});
+
+            _this3.lgModal.show = false;
+          };
         }
       }
     },
@@ -14231,7 +14377,7 @@ exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader
 
 
 // module
-exports.push([module.i, "\n#app-main {\n  height: 100%;\n}\n", ""]);
+exports.push([module.i, "\n#app-main {\r\n  height: 100%;\n}\r\n", ""]);
 
 // exports
 
@@ -24826,7 +24972,259 @@ var render = function() {
                       : _vm._e(),
                     _vm._v(" "),
                     _vm.lgModal.content === "GitInitClone"
-                      ? [_vm._v("Git InitClone")]
+                      ? [
+                          _c("div", { staticClass: "form-horizontal" }, [
+                            _c("div", { staticClass: "form-group" }, [
+                              _vm._m(12),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "col-9 col-sm-12" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.lgModal.data.repo,
+                                      expression: "lgModal.data.repo"
+                                    }
+                                  ],
+                                  staticClass: "form-input",
+                                  attrs: { type: "text", required: "" },
+                                  domProps: { value: _vm.lgModal.data.repo },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.lgModal.data,
+                                        "repo",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _vm._m(13),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass: "col-9 col-sm-12 has-icon-right"
+                                },
+                                [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.lgModal.data.foldername,
+                                        expression: "lgModal.data.foldername"
+                                      }
+                                    ],
+                                    class:
+                                      "form-input" +
+                                      (_vm.lgModal.data.status === "error"
+                                        ? " is-error"
+                                        : ""),
+                                    attrs: { type: "text", required: "" },
+                                    domProps: {
+                                      value: _vm.lgModal.data.foldername
+                                    },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.lgModal.data,
+                                          "foldername",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("i", {
+                                    class:
+                                      "form-icon icon" +
+                                      (_vm.lgModal.data.status === "loading"
+                                        ? " loading"
+                                        : "")
+                                  })
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _vm._m(14),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "col-9 col-sm-12" }, [
+                                _c(
+                                  "select",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.lgModal.data.init_or_clone,
+                                        expression: "lgModal.data.init_or_clone"
+                                      }
+                                    ],
+                                    staticClass: "form-select",
+                                    attrs: { required: "" },
+                                    on: {
+                                      change: function($event) {
+                                        var $$selectedVal = Array.prototype.filter
+                                          .call($event.target.options, function(
+                                            o
+                                          ) {
+                                            return o.selected
+                                          })
+                                          .map(function(o) {
+                                            var val =
+                                              "_value" in o ? o._value : o.value
+                                            return val
+                                          })
+                                        _vm.$set(
+                                          _vm.lgModal.data,
+                                          "init_or_clone",
+                                          $event.target.multiple
+                                            ? $$selectedVal
+                                            : $$selectedVal[0]
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c("option", { attrs: { value: "init" } }, [
+                                      _vm._v("Init")
+                                    ]),
+                                    _vm._v(" "),
+                                    _c(
+                                      "option",
+                                      { attrs: { value: "clone" } },
+                                      [_vm._v("Clone")]
+                                    )
+                                  ]
+                                )
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _vm._m(15),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "col-9 col-sm-12" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.lgModal.data.git_name,
+                                      expression: "lgModal.data.git_name"
+                                    }
+                                  ],
+                                  staticClass: "form-input",
+                                  attrs: {
+                                    type: "text",
+                                    placeholder: "若不填写则使用全局默认的配置"
+                                  },
+                                  domProps: {
+                                    value: _vm.lgModal.data.git_name
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.lgModal.data,
+                                        "git_name",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _vm._m(16),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "col-9 col-sm-12" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.lgModal.data.git_email,
+                                      expression: "lgModal.data.git_email"
+                                    }
+                                  ],
+                                  staticClass: "form-input",
+                                  attrs: {
+                                    type: "email",
+                                    placeholder: "若不填写则使用全局默认的配置"
+                                  },
+                                  domProps: {
+                                    value: _vm.lgModal.data.git_email
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.lgModal.data,
+                                        "git_email",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _vm._m(17),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "col-9 col-sm-12" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.lgModal.data.git_password,
+                                      expression: "lgModal.data.git_password"
+                                    }
+                                  ],
+                                  staticClass: "form-input",
+                                  attrs: {
+                                    type: "password",
+                                    placeholder: "若不填写则使用全局默认的配置"
+                                  },
+                                  domProps: {
+                                    value: _vm.lgModal.data.git_password
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.lgModal.data,
+                                        "git_password",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ])
+                            ])
+                          ])
+                        ]
                       : _vm._e()
                   ],
                   2
@@ -25041,6 +25439,54 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("操作")])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-3 col-sm-12" }, [
+      _c("label", { staticClass: "form-label" }, [_vm._v("Repo地址")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-3 col-sm-12" }, [
+      _c("label", { staticClass: "form-label" }, [_vm._v("文件夹名")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-3 col-sm-12" }, [
+      _c("label", { staticClass: "form-label" }, [_vm._v("Init/Clone")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-3 col-sm-12" }, [
+      _c("label", { staticClass: "form-label" }, [_vm._v("Git用户名")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-3 col-sm-12" }, [
+      _c("label", { staticClass: "form-label" }, [_vm._v("Git邮箱")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-3 col-sm-12" }, [
+      _c("label", { staticClass: "form-label" }, [_vm._v("Git密码")])
     ])
   }
 ]
@@ -29509,8 +29955,8 @@ var routes = [{
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\VSCode-src\xknote\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\VSCode-src\xknote\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! F:\VSCode-src\Laravel\xknote-2\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! F:\VSCode-src\Laravel\xknote-2\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ }),

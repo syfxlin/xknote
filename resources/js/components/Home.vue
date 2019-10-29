@@ -434,7 +434,84 @@
                   </tbody>
                 </table>
               </template>
-              <template v-if="lgModal.content==='GitInitClone'">Git InitClone</template>
+              <template v-if="lgModal.content==='GitInitClone'">
+                <div class="form-horizontal">
+                  <div class="form-group">
+                    <div class="col-3 col-sm-12">
+                      <label class="form-label">Repo地址</label>
+                    </div>
+                    <div class="col-9 col-sm-12">
+                      <input class="form-input" type="text" v-model="lgModal.data.repo" required />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-3 col-sm-12">
+                      <label class="form-label">文件夹名</label>
+                    </div>
+                    <div class="col-9 col-sm-12 has-icon-right">
+                      <input
+                        :class="'form-input' + (lgModal.data.status === 'error' ? ' is-error' : '')"
+                        type="text"
+                        v-model="lgModal.data.foldername"
+                        required
+                      />
+                      <i
+                        :class="'form-icon icon' + (lgModal.data.status === 'loading' ? ' loading' : '')"
+                      ></i>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-3 col-sm-12">
+                      <label class="form-label">Init/Clone</label>
+                    </div>
+                    <div class="col-9 col-sm-12">
+                      <select class="form-select" v-model="lgModal.data.init_or_clone" required>
+                        <option value="init">Init</option>
+                        <option value="clone">Clone</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-3 col-sm-12">
+                      <label class="form-label">Git用户名</label>
+                    </div>
+                    <div class="col-9 col-sm-12">
+                      <input
+                        class="form-input"
+                        type="text"
+                        v-model="lgModal.data.git_name"
+                        placeholder="若不填写则使用全局默认的配置"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-3 col-sm-12">
+                      <label class="form-label">Git邮箱</label>
+                    </div>
+                    <div class="col-9 col-sm-12">
+                      <input
+                        class="form-input"
+                        type="email"
+                        v-model="lgModal.data.git_email"
+                        placeholder="若不填写则使用全局默认的配置"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-3 col-sm-12">
+                      <label class="form-label">Git密码</label>
+                    </div>
+                    <div class="col-9 col-sm-12">
+                      <input
+                        class="form-input"
+                        type="password"
+                        v-model="lgModal.data.git_password"
+                        placeholder="若不填写则使用全局默认的配置"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </template>
             </div>
           </div>
           <div class="modal-footer">
@@ -801,9 +878,91 @@ export default {
             }
           );
         }
+        if (operate === "gitPushForce") {
+          this.folderOperate(
+            operate,
+            { path: path },
+            () => {
+              this.timeToast("Git Push成功！", "success", 1000);
+            },
+            error => {
+              this.timeToast("Git Push失败，请重试！", "error", 1000);
+            }
+          );
+        }
         if (operate === "gitInitClone") {
           this.lgModal.content = "GitInitClone";
+          this.lgModal.title = "Git InitClone";
           this.lgModal.show = true;
+          let wTimeout = null;
+          let watch = () => {
+            if (wTimeout) {
+              clearTimeout(wTimeout);
+            }
+            wTimeout = setTimeout(() => {
+              this.$set(this.lgModal.data, "status", "loading");
+              this.folderOperate(
+                "exist",
+                {
+                  path: this.lgModal.data.foldername + "/.git"
+                },
+                data => {
+                  if (data.exist) {
+                    this.$set(this.lgModal.data, "status", "error");
+                  } else {
+                    this.$set(this.lgModal.data, "status", "");
+                  }
+                }
+              );
+            }, 500);
+          };
+          let uwFolderName = this.$watch("lgModal.data.foldername", watch);
+          this.lgModal.confirm = () => {
+            if (
+              !this.lgModal.data.foldername ||
+              !this.lgModal.data.repo ||
+              !this.lgModal.data.init_or_clone ||
+              this.lgModal.data.status !== ""
+            ) {
+              return;
+            }
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.add("loading");
+            let git_user = {};
+            if (
+              this.lgModal.data.git_name &&
+              this.lgModal.data.git_email &&
+              this.lgModal.data.git_password
+            ) {
+              git_user = {
+                name: this.lgModal.data.git_name,
+                email: this.lgModal.data.git_email,
+                password: this.lgModal.data.git_password
+              };
+            }
+            this.folderOperate(
+              this.lgModal.data.init_or_clone === "init"
+                ? "gitInit"
+                : "gitClone",
+              {
+                path: this.lgModal.data.foldername,
+                repo: this.lgModal.data.repo,
+                git_user: git_user
+              },
+              () => {
+                document
+                  .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+                  .classList.remove("loading");
+                this.lgModal.cancel();
+              }
+            );
+          };
+          this.lgModal.cancel = () => {
+            uwFolderName();
+            this.$set(this.lgModal, "data", {});
+            this.lgModal.show = false;
+          };
         }
       }
     },
