@@ -99,9 +99,20 @@ class GitRepoController extends Controller
                 404
             );
         }
+        $data = $this->model->getConfig($path, $id);
+        if ($data === 404) {
+            return response(
+                [
+                    'error' => true,
+                    'message' =>
+                        'The settings are not found in the current repo, please reset them.'
+                ],
+                404
+            );
+        }
         return [
             'error' => false,
-            'config' => $this->model->getConfig($path, $id)
+            'config' => $data
         ];
     }
 

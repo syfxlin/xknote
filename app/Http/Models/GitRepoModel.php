@@ -90,11 +90,18 @@ class GitRepoModel
     public function getConfig($path, $id)
     {
         $repo = new XkGitRepository(storage_path() . '/app/uid_' . $id . $path);
-        $remote_origin = $repo->getRemote('origin');
+        try {
+            $remote_origin = $repo->getRemote('origin');
+            $email = $repo->getConfig(['user.email'])['user.email'];
+        } catch (\Exception $error) {
+            return 404;
+        }
         preg_match('/(.*:\/\/)(.*):(.*)@(.*)/i', $remote_origin, $url);
+        if (count($url) <= 1) {
+            return 404;
+        }
         $remote_url = $url[1] . $url[4];
         $name = $url[2];
-        $email = $repo->getConfig(['user.email'])['user.email'];
         return [
             'repo' => $remote_url,
             'git_name' => $name,

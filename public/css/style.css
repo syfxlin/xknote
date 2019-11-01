@@ -284,6 +284,7 @@ body {
 
 .float-menu {
     position: fixed;
+    z-index: 1001;
 }
 .float-menu .menu-item a {
     cursor: pointer;
