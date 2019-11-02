@@ -89,12 +89,7 @@ class UserController extends Controller
 
     public function getConfig(Request $request)
     {
-        $user_config = UserModel::where('uid', $request->user()->id)->get()[0];
-        return [
-            'tinymceSetting' => json_decode($user_config->tinymce_setting),
-            'aceSetting' => json_decode($user_config->ace_setting),
-            'xkSetting' => json_decode($user_config->xk_setting)
-        ];
+        return UserModel::getConfig($request->user()->id);
     }
 
     public function setConfig(Request $request)

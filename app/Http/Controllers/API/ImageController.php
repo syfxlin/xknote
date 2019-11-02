@@ -24,6 +24,22 @@ class ImageController extends Controller
     {
         if ($request->hasFile('file')) {
             $file = $request->file('file');
+            $size = $file->getClientSize();
+            if (
+                $size >=
+                1024 *
+                    1024 *
+                    intval(
+                        DB::table('config')
+                            ->where('config_name', 'upload_limit')
+                            ->get()[0]->config_value
+                    )
+            ) {
+                return [
+                    'error' => true,
+                    'meassge' => '文件大小超过限制'
+                ];
+            }
             $ext = $file->getClientOriginalExtension();
             if (in_array($ext, ['jpg', 'jpeg', 'gif', 'png', 'bmp', 'webp'])) {
                 if ($file->isValid()) {
