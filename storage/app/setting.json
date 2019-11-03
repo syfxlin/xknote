@@ -7,7 +7,7 @@
     "aceSetting": {
         "theme": "ace/theme/solarized_light",
         "keyboardHandler": null,
-        "fontSize": "7px",
+        "fontSize": "17px",
         "wrap": "free",
         "cursorStyle": "ace",
         "foldStyle": "markbegin",

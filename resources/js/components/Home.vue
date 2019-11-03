@@ -245,11 +245,12 @@
       </transition>
       <section :class="'column ' + (!writeMode ? 'col-10' : 'col-12')" id="xknote-editor">
         <xk-editor
-          :settingApi="xknoteSetting"
+          settingApi="/api/user/conf"
           :contentProps="xknoteOpened.note.content"
           v-on:loadHook="editorLoaded"
           v-show="loadedEditor"
           :class="!writeMode ? '' : 'col-8'"
+          ref="xkeditor"
         />
         <div v-show="!loadedEditor" class="editor-loading">
           <div class="loading loading-lg"></div>
@@ -399,7 +400,27 @@
                 </div>
               </template>
               <template v-if="lgModal.content==='PersonalCenter'">personalCenter</template>
-              <template v-if="lgModal.content==='UserConfig'">userSetting</template>
+              <template v-if="lgModal.content==='UserConfig'">
+                <div class="form-horizontal">
+                  <div
+                    class="form-group"
+                    v-for="(value, key) in $refs.xkeditor.setting.aceSetting"
+                    :key="key"
+                  >
+                    <div class="col-3 col-sm-12">
+                      <!-- TODO: 重命名 -->
+                      <label class="form-label">{{ settingList[key] }}</label>
+                    </div>
+                    <div class="col-9 col-sm-12 has-icon-right">
+                      <input
+                        class="form-input"
+                        type="text"
+                        v-model="$refs.xkeditor.setting.aceSetting[key]"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </template>
               <template v-if="lgModal.content==='GitConfig'">
                 <div class="form-horizontal">
                   <div class="form-group">
@@ -637,6 +658,7 @@ import XK_Editor from "xkeditor";
 import noteItem from "./noteItem.vue";
 import folderItem from "./folderItem.vue";
 import onlyFolderItem from "./onlyFolderItem";
+import iSettingList from "../utils/settingList";
 export default {
   name: "home",
   components: {
@@ -668,9 +690,9 @@ export default {
   ],
   data() {
     return {
+      settingList: iSettingList,
       showSidebar: false, // 该属性只有在writeMode有用
       loadedEditor: false,
-      xknoteSetting: "/api/user/conf",
       smModal: {
         show: false,
         title: "",
