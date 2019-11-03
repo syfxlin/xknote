@@ -23,73 +23,13 @@
           placeholder="Title"
           v-model="xknoteOpened.note.title"
         />
-        <div class="dropdown">
-          <div class="btn-group">
-            <a @click="navBarOperate('saveCloud')" class="btn">云端保存</a>
-            <a href="#" class="btn dropdown-toggle" tabindex="0">
-              <i class="icon icon-caret"></i>
-            </a>
-            <ul class="menu">
-              <li class="menu-item">
-                <a @click="navBarOperate('saveLocal')">本地保存</a>
-              </li>
-              <li class="menu-item">
-                <a @click="navBarOperate('saveAllCloud')">全部保存到云端</a>
-              </li>
-              <li class="menu-item">
-                <a @click="navBarOperate('saveAllLocal')">全部保存到本地</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="dropdown">
-          <div class="btn-group">
-            <a href="#" class="btn dropdown-toggle" tabindex="0">
-              导出
-              <i class="icon icon-caret"></i>
-            </a>
-            <ul class="menu">
-              <li class="menu-item">
-                <a @click="navBarOperate('downloadMarkdown')">导出为Markdown文件</a>
-              </li>
-              <li class="menu-item">
-                <a @click="navBarOperate('downloadHTML')">导出HTML文件</a>
-              </li>
-              <li class="menu-item">
-                <a @click="navBarOperate('downloadFullHTML')">导出带样式的HTML文件</a>
-              </li>
-              <li class="menu-item">
-                <a @click="navBarOperate('downloadReadHTML')">导出阅读模式的HTML文件</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="dropdown">
-          <div class="btn-group">
-            <a href="#" class="btn dropdown-toggle" tabindex="0">
-              操作
-              <i class="icon icon-caret"></i>
-            </a>
-            <ul class="menu">
-              <li class="divider" data-content="Git"></li>
-              <li class="menu-item">
-                <a @click="navBarOperate('gitPush')">Push</a>
-              </li>
-              <li class="menu-item">
-                <a @click="navBarOperate('gitPull')">Pull</a>
-              </li>
-              <li class="menu-item">
-                <a @click="navBarOperate('gitInitClone')">Init Clone</a>
-              </li>
-              <li class="menu-item">
-                <a @click="navBarOperate('gitPushForce')">Push Force</a>
-              </li>
-              <li class="menu-item">
-                <a @click="navBarOperate('gitConfig')">Git Config</a>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <dropdown
+          v-for="item in navBarListC"
+          :key="item.id"
+          :mainItem="item.mainItem"
+          :items="item.items"
+          :operate="navBarOperate"
+        />
         <div class="popover popover-bottom">
           <button class="btn">信息</button>
           <div class="popover-container">
@@ -113,46 +53,20 @@
         </div>
       </section>
       <section class="navbar-section">
-        <div class="dropdown">
-          <div class="btn-group">
-            <a class="btn btn-primary" @click="navBarOperate('showCreateNote')">新建MD笔记</a>
-            <a class="btn btn-primary dropdown-toggle" tabindex="0">
-              <i class="icon icon-caret"></i>
-            </a>
-            <ul class="menu">
-              <li class="menu-item">
-                <a @click="navBarOperate('showCreateFolder')">新建文件夹</a>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <dropdown
+          :mainItem="navBarListR[0].mainItem"
+          :items="navBarListR[0].items"
+          :operate="navBarOperate"
+        />
         <router-link to="/read" class="btn btn-link">阅读模式</router-link>
         <router-link v-if="!writeMode" to="/write" class="btn btn-link">写作模式</router-link>
         <router-link v-if="writeMode" to="/" class="btn btn-link">普通模式</router-link>
-        <div class="dropdown dropdown-right">
-          <a href="#" class="btn btn-link dropdown-toggle" tabindex="0">
-            { name }
-            <i class="icon icon-caret"></i>
-          </a>
-          <ul class="menu">
-            <li class="menu-item">
-              <a @click="navBarOperate('showPersonalCenter')">个人中心</a>
-            </li>
-            <li class="menu-item">
-              <a @click="navBarOperate('showUserConfig')">用户设置</a>
-            </li>
-            <li class="menu-item">
-              <a @click="navBarOperate('showGitConfig')">Git设置</a>
-            </li>
-            <li class="menu-item">
-              <a @click="navBarOperate('showSystemSetting')">系统管理</a>
-            </li>
-            <li class="divider"></li>
-            <li class="menu-item">
-              <a @click="logout">登出</a>
-            </li>
-          </ul>
-        </div>
+        <dropdown
+          :mainItem="navBarListR[1].mainItem"
+          :items="navBarListR[1].items"
+          :operate="navBarOperate"
+          :right="true"
+        />
       </section>
     </header>
     <div class="columns">
@@ -658,14 +572,17 @@ import XK_Editor from "xkeditor";
 import noteItem from "./noteItem.vue";
 import folderItem from "./folderItem.vue";
 import onlyFolderItem from "./onlyFolderItem";
+import dropdown from "./dropdown";
 import iSettingList from "../utils/settingList";
+import dropdownList from "../utils/dropdownList";
 export default {
   name: "home",
   components: {
     "xk-editor": XK_Editor,
     "note-item": noteItem,
     "folder-item": folderItem,
-    "only-folder-item": onlyFolderItem
+    "only-folder-item": onlyFolderItem,
+    dropdown
   },
   props: [
     "xknoteTab",
@@ -691,6 +608,8 @@ export default {
   data() {
     return {
       settingList: iSettingList,
+      navBarListC: dropdownList.navBarListC,
+      navBarListR: dropdownList.navBarListR,
       showSidebar: false, // 该属性只有在writeMode有用
       loadedEditor: false,
       smModal: {
@@ -1245,6 +1164,9 @@ export default {
         );
       }
       // TODO: 导出阅读模式的HTML
+      if (operate === "logout") {
+        this.logout();
+      }
     },
     checkLocalStatus() {
       document.querySelector(".xknote-check-local").classList.add("loading");

@@ -12617,7 +12617,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _noteItem_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./noteItem.vue */ "./resources/js/components/noteItem.vue");
 /* harmony import */ var _folderItem_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./folderItem.vue */ "./resources/js/components/folderItem.vue");
 /* harmony import */ var _onlyFolderItem__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./onlyFolderItem */ "./resources/js/components/onlyFolderItem.vue");
-/* harmony import */ var _utils_settingList__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/settingList */ "./resources/js/utils/settingList.js");
+/* harmony import */ var _dropdown__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./dropdown */ "./resources/js/components/dropdown.vue");
+/* harmony import */ var _utils_settingList__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/settingList */ "./resources/js/utils/settingList.js");
+/* harmony import */ var _utils_dropdownList__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/dropdownList */ "./resources/js/utils/dropdownList.js");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -13193,92 +13195,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
+
 
 
 
@@ -13290,14 +13208,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     "xk-editor": xkeditor__WEBPACK_IMPORTED_MODULE_1__["default"],
     "note-item": _noteItem_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
     "folder-item": _folderItem_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
-    "only-folder-item": _onlyFolderItem__WEBPACK_IMPORTED_MODULE_4__["default"]
+    "only-folder-item": _onlyFolderItem__WEBPACK_IMPORTED_MODULE_4__["default"],
+    dropdown: _dropdown__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   props: ["xknoteTab", "switchTab", "currListSource", "currList", "cloudList", "localList", "xknoteOpened", "xknoteOpenedIndex", "noteBaseInfo", "loadFirstNote", "listOperate", "noteOperate", "folderOperate", "setXknoteOpened", "openNote", "writeMode", "loadCloudFolders", "timeToast", "configOperate"],
   data: function data() {
     var _this = this;
 
     return {
-      settingList: _utils_settingList__WEBPACK_IMPORTED_MODULE_5__["default"],
+      settingList: _utils_settingList__WEBPACK_IMPORTED_MODULE_6__["default"],
+      navBarListC: _utils_dropdownList__WEBPACK_IMPORTED_MODULE_7__["default"].navBarListC,
+      navBarListR: _utils_dropdownList__WEBPACK_IMPORTED_MODULE_7__["default"].navBarListR,
       showSidebar: false,
       // 该属性只有在writeMode有用
       loadedEditor: false,
@@ -13890,6 +13811,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         window.XKEditor.download(this.xknoteOpened.name.replace(".md", ""), "fullhtml");
       } // TODO: 导出阅读模式的HTML
 
+
+      if (operate === "logout") {
+        this.logout();
+      }
     },
     checkLocalStatus: function checkLocalStatus() {
       var _this5 = this;
@@ -14310,6 +14235,52 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   watch: {
     readOpened: "watchNote"
   }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/dropdown.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/dropdown.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "dropdown",
+  props: ["items", "mainItem", "operate", "right"]
 });
 
 /***/ }),
@@ -24869,303 +24840,86 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c("section", { staticClass: "navbar-center" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.xknoteOpened.note.title,
-              expression: "xknoteOpened.note.title"
-            }
-          ],
-          staticClass: "form-input",
-          attrs: { id: "xknote-title", type: "text", placeholder: "Title" },
-          domProps: { value: _vm.xknoteOpened.note.title },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.$set(_vm.xknoteOpened.note, "title", $event.target.value)
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "dropdown" }, [
-          _c("div", { staticClass: "btn-group" }, [
-            _c(
-              "a",
+      _c(
+        "section",
+        { staticClass: "navbar-center" },
+        [
+          _c("input", {
+            directives: [
               {
-                staticClass: "btn",
-                on: {
-                  click: function($event) {
-                    return _vm.navBarOperate("saveCloud")
-                  }
+                name: "model",
+                rawName: "v-model",
+                value: _vm.xknoteOpened.note.title,
+                expression: "xknoteOpened.note.title"
+              }
+            ],
+            staticClass: "form-input",
+            attrs: { id: "xknote-title", type: "text", placeholder: "Title" },
+            domProps: { value: _vm.xknoteOpened.note.title },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
                 }
-              },
-              [_vm._v("云端保存")]
-            ),
-            _vm._v(" "),
-            _vm._m(0),
-            _vm._v(" "),
-            _c("ul", { staticClass: "menu" }, [
-              _c("li", { staticClass: "menu-item" }, [
-                _c(
-                  "a",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.navBarOperate("saveLocal")
-                      }
-                    }
-                  },
-                  [_vm._v("本地保存")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c(
-                  "a",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.navBarOperate("saveAllCloud")
-                      }
-                    }
-                  },
-                  [_vm._v("全部保存到云端")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c(
-                  "a",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.navBarOperate("saveAllLocal")
-                      }
-                    }
-                  },
-                  [_vm._v("全部保存到本地")]
-                )
-              ])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "dropdown" }, [
-          _c("div", { staticClass: "btn-group" }, [
-            _vm._m(1),
-            _vm._v(" "),
-            _c("ul", { staticClass: "menu" }, [
-              _c("li", { staticClass: "menu-item" }, [
-                _c(
-                  "a",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.navBarOperate("downloadMarkdown")
-                      }
-                    }
-                  },
-                  [_vm._v("导出为Markdown文件")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c(
-                  "a",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.navBarOperate("downloadHTML")
-                      }
-                    }
-                  },
-                  [_vm._v("导出HTML文件")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c(
-                  "a",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.navBarOperate("downloadFullHTML")
-                      }
-                    }
-                  },
-                  [_vm._v("导出带样式的HTML文件")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c(
-                  "a",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.navBarOperate("downloadReadHTML")
-                      }
-                    }
-                  },
-                  [_vm._v("导出阅读模式的HTML文件")]
-                )
-              ])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "dropdown" }, [
-          _c("div", { staticClass: "btn-group" }, [
-            _vm._m(2),
-            _vm._v(" "),
-            _c("ul", { staticClass: "menu" }, [
-              _c("li", {
-                staticClass: "divider",
-                attrs: { "data-content": "Git" }
-              }),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c(
-                  "a",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.navBarOperate("gitPush")
-                      }
-                    }
-                  },
-                  [_vm._v("Push")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c(
-                  "a",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.navBarOperate("gitPull")
-                      }
-                    }
-                  },
-                  [_vm._v("Pull")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c(
-                  "a",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.navBarOperate("gitInitClone")
-                      }
-                    }
-                  },
-                  [_vm._v("Init Clone")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c(
-                  "a",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.navBarOperate("gitPushForce")
-                      }
-                    }
-                  },
-                  [_vm._v("Push Force")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c(
-                  "a",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.navBarOperate("gitConfig")
-                      }
-                    }
-                  },
-                  [_vm._v("Git Config")]
-                )
-              ])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "popover popover-bottom" }, [
-          _c("button", { staticClass: "btn" }, [_vm._v("信息")]),
+                _vm.$set(_vm.xknoteOpened.note, "title", $event.target.value)
+              }
+            }
+          }),
           _vm._v(" "),
-          _c("div", { staticClass: "popover-container" }, [
-            _c("div", { staticClass: "card" }, [
-              _c("div", { staticClass: "card-body" }, [
-                _c("p", [
-                  _vm._v("\n                创建时间：\n                "),
-                  _c("span", [_vm._v(_vm._s(_vm.xknoteOpened.note.created_at))])
-                ]),
-                _vm._v(" "),
-                _c("p", [
-                  _vm._v("\n                修改时间：\n                "),
-                  _c("span", [_vm._v(_vm._s(_vm.xknoteOpened.note.updated_at))])
-                ]),
-                _vm._v(" "),
-                _c("p", [
-                  _vm._v("\n                路径：\n                "),
-                  _c("span", [_vm._v(_vm._s(_vm.xknoteOpened.path))])
+          _vm._l(_vm.navBarListC, function(item) {
+            return _c("dropdown", {
+              key: item.id,
+              attrs: {
+                mainItem: item.mainItem,
+                items: item.items,
+                operate: _vm.navBarOperate
+              }
+            })
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "popover popover-bottom" }, [
+            _c("button", { staticClass: "btn" }, [_vm._v("信息")]),
+            _vm._v(" "),
+            _c("div", { staticClass: "popover-container" }, [
+              _c("div", { staticClass: "card" }, [
+                _c("div", { staticClass: "card-body" }, [
+                  _c("p", [
+                    _vm._v("\n                创建时间：\n                "),
+                    _c("span", [
+                      _vm._v(_vm._s(_vm.xknoteOpened.note.created_at))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v("\n                修改时间：\n                "),
+                    _c("span", [
+                      _vm._v(_vm._s(_vm.xknoteOpened.note.updated_at))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v("\n                路径：\n                "),
+                    _c("span", [_vm._v(_vm._s(_vm.xknoteOpened.path))])
+                  ])
                 ])
               ])
             ])
           ])
-        ])
-      ]),
+        ],
+        2
+      ),
       _vm._v(" "),
       _c(
         "section",
         { staticClass: "navbar-section" },
         [
-          _c("div", { staticClass: "dropdown" }, [
-            _c("div", { staticClass: "btn-group" }, [
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-primary",
-                  on: {
-                    click: function($event) {
-                      return _vm.navBarOperate("showCreateNote")
-                    }
-                  }
-                },
-                [_vm._v("新建MD笔记")]
-              ),
-              _vm._v(" "),
-              _vm._m(3),
-              _vm._v(" "),
-              _c("ul", { staticClass: "menu" }, [
-                _c("li", { staticClass: "menu-item" }, [
-                  _c(
-                    "a",
-                    {
-                      on: {
-                        click: function($event) {
-                          return _vm.navBarOperate("showCreateFolder")
-                        }
-                      }
-                    },
-                    [_vm._v("新建文件夹")]
-                  )
-                ])
-              ])
-            ])
-          ]),
+          _c("dropdown", {
+            attrs: {
+              mainItem: _vm.navBarListR[0].mainItem,
+              items: _vm.navBarListR[0].items,
+              operate: _vm.navBarOperate
+            }
+          }),
           _vm._v(" "),
           _c(
             "router-link",
@@ -25189,73 +24943,14 @@ var render = function() {
               )
             : _vm._e(),
           _vm._v(" "),
-          _c("div", { staticClass: "dropdown dropdown-right" }, [
-            _vm._m(4),
-            _vm._v(" "),
-            _c("ul", { staticClass: "menu" }, [
-              _c("li", { staticClass: "menu-item" }, [
-                _c(
-                  "a",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.navBarOperate("showPersonalCenter")
-                      }
-                    }
-                  },
-                  [_vm._v("个人中心")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c(
-                  "a",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.navBarOperate("showUserConfig")
-                      }
-                    }
-                  },
-                  [_vm._v("用户设置")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c(
-                  "a",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.navBarOperate("showGitConfig")
-                      }
-                    }
-                  },
-                  [_vm._v("Git设置")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c(
-                  "a",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.navBarOperate("showSystemSetting")
-                      }
-                    }
-                  },
-                  [_vm._v("系统管理")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "divider" }),
-              _vm._v(" "),
-              _c("li", { staticClass: "menu-item" }, [
-                _c("a", { on: { click: _vm.logout } }, [_vm._v("登出")])
-              ])
-            ])
-          ])
+          _c("dropdown", {
+            attrs: {
+              mainItem: _vm.navBarListR[1].mainItem,
+              items: _vm.navBarListR[1].items,
+              operate: _vm.navBarOperate,
+              right: true
+            }
+          })
         ],
         1
       )
@@ -25755,7 +25450,7 @@ var render = function() {
                       ? [
                           _c("div", { staticClass: "form-horizontal" }, [
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(5),
+                              _vm._m(0),
                               _vm._v(" "),
                               _c(
                                 "div",
@@ -25807,7 +25502,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(6),
+                              _vm._m(1),
                               _vm._v(" "),
                               _c("div", { staticClass: "col-9 col-sm-12" }, [
                                 _c("input", {
@@ -25839,7 +25534,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(7),
+                              _vm._m(2),
                               _vm._v(" "),
                               _c("div", { staticClass: "col-9 col-sm-12" }, [
                                 _c(
@@ -25896,7 +25591,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(8),
+                              _vm._m(3),
                               _vm._v(" "),
                               _c(
                                 "div",
@@ -25970,7 +25665,7 @@ var render = function() {
                       ? [
                           _c("div", { staticClass: "form-horizontal" }, [
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(9),
+                              _vm._m(4),
                               _vm._v(" "),
                               _c(
                                 "div",
@@ -26022,7 +25717,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(10),
+                              _vm._m(5),
                               _vm._v(" "),
                               _c(
                                 "div",
@@ -26175,7 +25870,7 @@ var render = function() {
                       ? [
                           _c("div", { staticClass: "form-horizontal" }, [
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(11),
+                              _vm._m(6),
                               _vm._v(" "),
                               _c(
                                 "div",
@@ -26223,7 +25918,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(12),
+                              _vm._m(7),
                               _vm._v(" "),
                               _c(
                                 "div",
@@ -26271,7 +25966,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(13),
+                              _vm._m(8),
                               _vm._v(" "),
                               _c("div", { staticClass: "col-9 col-sm-12" }, [
                                 _c("input", {
@@ -26314,7 +26009,7 @@ var render = function() {
                     _vm.lgModal.content === "CheckLocalStatus"
                       ? [
                           _c("table", { staticClass: "table table-hover" }, [
-                            _vm._m(14),
+                            _vm._m(9),
                             _vm._v(" "),
                             _c(
                               "tbody",
@@ -26401,7 +26096,7 @@ var render = function() {
                       ? [
                           _c("div", { staticClass: "form-horizontal" }, [
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(15),
+                              _vm._m(10),
                               _vm._v(" "),
                               _c("div", { staticClass: "col-9 col-sm-12" }, [
                                 _c("input", {
@@ -26433,7 +26128,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(16),
+                              _vm._m(11),
                               _vm._v(" "),
                               _c(
                                 "div",
@@ -26485,7 +26180,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(17),
+                              _vm._m(12),
                               _vm._v(" "),
                               _c("div", { staticClass: "col-9 col-sm-12" }, [
                                 _c(
@@ -26540,7 +26235,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(18),
+                              _vm._m(13),
                               _vm._v(" "),
                               _c("div", { staticClass: "col-9 col-sm-12" }, [
                                 _c("input", {
@@ -26577,7 +26272,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(19),
+                              _vm._m(14),
                               _vm._v(" "),
                               _c("div", { staticClass: "col-9 col-sm-12" }, [
                                 _c("input", {
@@ -26614,7 +26309,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(20),
+                              _vm._m(15),
                               _vm._v(" "),
                               _c("div", { staticClass: "col-9 col-sm-12" }, [
                                 _c("input", {
@@ -26657,7 +26352,7 @@ var render = function() {
                       ? [
                           _c("div", { staticClass: "form-horizontal" }, [
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(21),
+                              _vm._m(16),
                               _vm._v(" "),
                               _c(
                                 "div",
@@ -26703,7 +26398,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(22),
+                              _vm._m(17),
                               _vm._v(" "),
                               _c(
                                 "div",
@@ -26751,7 +26446,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(23),
+                              _vm._m(18),
                               _vm._v(" "),
                               _c(
                                 "div",
@@ -26799,7 +26494,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(24),
+                              _vm._m(19),
                               _vm._v(" "),
                               _c("div", { staticClass: "col-9 col-sm-12" }, [
                                 _c("input", {
@@ -26874,80 +26569,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      {
-        staticClass: "btn dropdown-toggle",
-        attrs: { href: "#", tabindex: "0" }
-      },
-      [_c("i", { staticClass: "icon icon-caret" })]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      {
-        staticClass: "btn dropdown-toggle",
-        attrs: { href: "#", tabindex: "0" }
-      },
-      [
-        _vm._v("\n            导出\n            "),
-        _c("i", { staticClass: "icon icon-caret" })
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      {
-        staticClass: "btn dropdown-toggle",
-        attrs: { href: "#", tabindex: "0" }
-      },
-      [
-        _vm._v("\n            操作\n            "),
-        _c("i", { staticClass: "icon icon-caret" })
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      {
-        staticClass: "btn btn-primary dropdown-toggle",
-        attrs: { tabindex: "0" }
-      },
-      [_c("i", { staticClass: "icon icon-caret" })]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      {
-        staticClass: "btn btn-link dropdown-toggle",
-        attrs: { href: "#", tabindex: "0" }
-      },
-      [
-        _vm._v("\n          { name }\n          "),
-        _c("i", { staticClass: "icon icon-caret" })
-      ]
-    )
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -27365,6 +26986,105 @@ var staticRenderFns = [
     )
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/dropdown.vue?vue&type=template&id=7e7894dc&":
+/*!***********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/dropdown.vue?vue&type=template&id=7e7894dc& ***!
+  \***********************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { class: "dropdown" + (_vm.right ? " dropdown-right" : "") },
+    [
+      _c("div", { staticClass: "btn-group" }, [
+        _vm.mainItem.operate
+          ? _c(
+              "a",
+              {
+                class:
+                  "btn" + (_vm.mainItem.style ? " " + _vm.mainItem.style : ""),
+                on: {
+                  click: function($event) {
+                    return _vm.operate(_vm.mainItem.operate)
+                  }
+                }
+              },
+              [_vm._v(_vm._s(_vm.mainItem.name))]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            class:
+              "btn dropdown-toggle" +
+              (_vm.mainItem.style ? " " + _vm.mainItem.style : ""),
+            attrs: { href: "#", tabindex: "0" }
+          },
+          [
+            _vm._v(
+              "\n      " +
+                _vm._s(!_vm.mainItem.operate ? _vm.mainItem.name : "") +
+                "\n      "
+            ),
+            _c("i", { staticClass: "icon icon-caret" })
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "ul",
+          { staticClass: "menu" },
+          _vm._l(_vm.items, function(item) {
+            return _c(
+              "li",
+              { key: item.id, staticClass: "menu-item" },
+              [
+                item.name !== "divider"
+                  ? [
+                      _c(
+                        "a",
+                        {
+                          on: {
+                            click: function($event) {
+                              return _vm.operate(item.operate)
+                            }
+                          }
+                        },
+                        [_vm._v(_vm._s(item.name))]
+                      )
+                    ]
+                  : [
+                      _c("li", {
+                        staticClass: "divider",
+                        attrs: { "data-content": item.content }
+                      })
+                    ]
+              ],
+              2
+            )
+          }),
+          0
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -31325,6 +31045,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/dropdown.vue":
+/*!**********************************************!*\
+  !*** ./resources/js/components/dropdown.vue ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _dropdown_vue_vue_type_template_id_7e7894dc___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dropdown.vue?vue&type=template&id=7e7894dc& */ "./resources/js/components/dropdown.vue?vue&type=template&id=7e7894dc&");
+/* harmony import */ var _dropdown_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dropdown.vue?vue&type=script&lang=js& */ "./resources/js/components/dropdown.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _dropdown_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _dropdown_vue_vue_type_template_id_7e7894dc___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _dropdown_vue_vue_type_template_id_7e7894dc___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/dropdown.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/dropdown.vue?vue&type=script&lang=js&":
+/*!***********************************************************************!*\
+  !*** ./resources/js/components/dropdown.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_dropdown_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./dropdown.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/dropdown.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_dropdown_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/dropdown.vue?vue&type=template&id=7e7894dc&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/dropdown.vue?vue&type=template&id=7e7894dc& ***!
+  \*****************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_dropdown_vue_vue_type_template_id_7e7894dc___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./dropdown.vue?vue&type=template&id=7e7894dc& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/dropdown.vue?vue&type=template&id=7e7894dc&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_dropdown_vue_vue_type_template_id_7e7894dc___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_dropdown_vue_vue_type_template_id_7e7894dc___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/folderItem.vue":
 /*!************************************************!*\
   !*** ./resources/js/components/folderItem.vue ***!
@@ -31567,6 +31356,113 @@ var routes = [{
   }
 }];
 /* harmony default export */ __webpack_exports__["default"] = (routes);
+
+/***/ }),
+
+/***/ "./resources/js/utils/dropdownList.js":
+/*!********************************************!*\
+  !*** ./resources/js/utils/dropdownList.js ***!
+  \********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var navBarListC = [{
+  mainItem: {
+    name: '云端保存',
+    operate: 'saveCloud'
+  },
+  items: [{
+    name: '本地保存',
+    operate: 'saveLocal'
+  }, {
+    name: '全部保存到云端',
+    operate: 'saveAllCloud'
+  }, {
+    name: '全部保存到本地',
+    operate: 'saveAllLocal'
+  }]
+}, {
+  mainItem: {
+    name: '导出'
+  },
+  items: [{
+    name: '导出为Markdown文件',
+    operate: 'downloadMarkdown'
+  }, {
+    name: '导出HTML文件',
+    operate: 'downloadHTML'
+  }, {
+    name: '导出带样式的HTML文件',
+    operate: 'downloadFullHTML'
+  }, {
+    name: '导出阅读模式的HTML文件',
+    operate: 'downloadReadHTML'
+  }]
+}, {
+  mainItem: {
+    name: '操作'
+  },
+  items: [{
+    name: 'divider',
+    content: 'Git'
+  }, {
+    name: 'Push',
+    operate: 'gitPush'
+  }, {
+    name: 'Pull',
+    operate: 'gitPull'
+  }, {
+    name: 'Init Clone',
+    operate: 'gitInitClone'
+  }, {
+    name: 'Push Force',
+    operate: 'gitPushForce'
+  }, {
+    name: 'Git Config',
+    operate: 'gitConfig'
+  }]
+}];
+var navBarListR = [{
+  mainItem: {
+    name: '新建MD笔记',
+    operate: 'showCreateNote',
+    style: 'btn-primary'
+  },
+  items: [{
+    name: '新建文件夹',
+    operate: 'showCreateFolder'
+  }]
+}, {
+  mainItem: {
+    name: '{ name }',
+    style: 'btn-link'
+  },
+  items: [{
+    name: '个人中心',
+    operate: 'showPersonalCenter'
+  }, {
+    name: '用户设置',
+    operate: 'showUserConfig'
+  }, {
+    name: 'Git设置',
+    operate: 'showGitConfig'
+  }, {
+    name: '系统管理',
+    operate: 'showSystemSetting'
+  }, {
+    name: 'divider',
+    content: null
+  }, {
+    name: '登出',
+    operate: 'logout'
+  }]
+}];
+/* harmony default export */ __webpack_exports__["default"] = ({
+  navBarListC: navBarListC,
+  navBarListR: navBarListR
+});
 
 /***/ }),
 
