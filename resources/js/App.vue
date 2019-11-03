@@ -584,6 +584,9 @@ export default {
         }
         return noteList;
       }
+      if (operate === "set") {
+        this.$set(list, arr[arr.length - 1], { ...noteInfo });
+      }
     },
     /**
      * 操作笔记
@@ -979,20 +982,29 @@ export default {
      */
     watchNote() {
       if (!window.xknoteOpenedChangeFlag) return;
-      this.xknoteOpened.status = "N";
+      this.$set(this.xknoteOpened, "status", "N");
       var d = new Date();
-      this.xknoteOpened.note.updated_at =
+      this.$set(
+        this.xknoteOpened.note,
+        "updated_at",
         d.getFullYear() +
-        "/" +
-        (d.getMonth() + 1) +
-        "/" +
-        d.getDate() +
-        " " +
-        d.getHours() +
-        ":" +
-        d.getMinutes() +
-        ":" +
-        d.getSeconds();
+          "/" +
+          (d.getMonth() + 1) +
+          "/" +
+          d.getDate() +
+          " " +
+          d.getHours() +
+          ":" +
+          d.getMinutes() +
+          ":" +
+          d.getSeconds()
+      );
+      this.listOperate(
+        "set",
+        this.xknoteOpenedIndex.source.storage,
+        this.xknoteOpenedIndex.source.path,
+        this.xknoteOpened
+      );
     }
   },
   watch: {
