@@ -11489,20 +11489,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -11528,44 +11514,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return state.toast;
     }
   }), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])("note", ["getReData"])),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("note", ["switchTab", "folderOperateS", "noteOperateS", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("db", ["optionsDB"]), {
-    listOperate: function listOperate(operate, storage, path) {
-      var noteInfo = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
-      return this.listOperateS({
-        operate: operate,
-        storage: storage,
-        path: path,
-        noteInfo: noteInfo
-      });
-    },
-    listOperateS: function listOperateS(data) {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("db", ["optionsDB"]), {
+    listOperate: function listOperate(data) {
       this.$store.commit("note/LIST_OPERATE", data, {
         root: true
       });
+      this.$store.commit("note/CHANGE_COUNT");
       return this.getReData;
-    },
-    noteOperate: function noteOperate(operate, storage) {
-      var _this = this;
-
-      var noteInfo = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-      return new Promise(function (resolve, reject) {
-        _this.noteOperateS({
-          operate: operate,
-          storage: storage,
-          noteInfo: noteInfo
-        }).then(resolve)["catch"](reject);
-      });
-    },
-    folderOperate: function folderOperate(operate) {
-      var _this2 = this;
-
-      var folderInfo = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-      return new Promise(function (resolve, reject) {
-        _this2.folderOperateS({
-          operate: operate,
-          folderInfo: folderInfo
-        }).then(resolve)["catch"](reject);
-      });
     },
     // TODO: cloud-tab加载过慢导致info为null
     loadPathNote: function () {
@@ -11598,7 +11553,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               case 5:
                 storage = info.getAttribute("data-storage");
                 _context.next = 8;
-                return this.listOperateS({
+                return this.listOperate({
                   operate: "get",
                   storage: storage,
                   path: path
@@ -11632,7 +11587,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
      * @returns void
      */
     loadFirstNote: function loadFirstNote() {
-      var _this3 = this;
+      var _this = this;
 
       var mode = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "normal";
 
@@ -11654,10 +11609,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           data: "rememberNote"
         }).then(function (data) {
           if (data) {
-            _this3.loadPathNote(data.path, mode);
+            _this.loadPathNote(data.path, mode);
           }
 
-          _this3.timedTask("saveCurrOpenedNote");
+          _this.timedTask("saveCurrOpenedNote");
         });
       }
     },
@@ -11668,17 +11623,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
      * @returns void
      */
     timedTask: function timedTask(task) {
-      var _this4 = this;
+      var _this2 = this;
 
       if (task === "saveCurrOpenedNote") {
         // 每10秒中将当前打开的笔记信息保存至本地数据库，用以下次开启做准备
         setInterval(function () {
-          if (_this4.xknoteOpened.path !== "" && _this4.$route.name === "Home") {
-            _this4.optionsDB({
+          if (_this2.xknoteOpened.path !== "" && _this2.$route.name === "Home") {
+            _this2.optionsDB({
               operate: "put",
               data: {
                 name: "rememberNote",
-                path: _this4.xknoteOpened.path
+                path: _this2.xknoteOpened.path
               }
             });
 
@@ -11735,7 +11690,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
      * @returns void
      */
     openNote: function openNote(note, source) {
-      var _this5 = this;
+      var _this3 = this;
 
       var mode = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "normal";
       var isNew = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
@@ -11744,17 +11699,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         // 更改query
         window.inputQueryChangeFlag = false;
 
-        if (!_this5.$route.query.note || _this5.$route.query.note !== note.path) {
-          _this5.$router.replace({
-            query: _objectSpread({}, _this5.$route.query, {
+        if (!_this3.$route.query.note || _this3.$route.query.note !== note.path) {
+          _this3.$router.replace({
+            query: _objectSpread({}, _this3.$route.query, {
               note: note.path
             })
           });
         }
 
         if (mode === "normal") {
-          for (var key in _this5.currList) {
-            if (_this5.currList[key].path === note.path) {
+          for (var key in _this3.currList) {
+            if (_this3.currList[key].path === note.path) {
               source.path = note.path; //TODO: 修改
 
               source.storage = "curr";
@@ -11762,14 +11717,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           } // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
 
 
-          _this5.setXknoteOpened(note);
+          _this3.setXknoteOpened(note);
 
           window.xknoteOpenedChangeFlag = false; // 添加到currList，同时将源数据添加到currListSource
 
           var currPath;
 
           if (source.storage !== "curr") {
-            _this5.listOperateS({
+            _this3.listOperate({
               operate: "add",
               storage: "curr",
               path: note.path,
@@ -11784,14 +11739,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             currPath = source.path;
           }
 
-          _this5.setXknoteOpenedIndexA({
+          _this3.setXknoteOpenedIndexA({
             curr: currPath,
             source: source
           });
 
-          _this5.switchTab("curr");
+          _this3.switchTab("curr");
 
-          _this5.$nextTick(function () {
+          _this3.$nextTick(function () {
             // 添加当前打开的文件的active效果
             var ele;
             ele = document.querySelector(".active[data-storage='curr']");
@@ -11806,7 +11761,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
 
         if (mode === "read") {
-          _this5.setReadOpenedA(JSON.parse(JSON.stringify(note)));
+          _this3.setReadOpenedA(JSON.parse(JSON.stringify(note)));
         }
       };
 
@@ -11821,13 +11776,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
 
         btn.querySelector(".loading").style.display = "block";
-        this.noteOperateS({
+        this.noteOperate({
           operate: "read",
           storage: "cloud",
           noteInfo: note
         }).then(function (data) {
           // note.note = data.note;
-          _this5.$set(note, "note", data.note);
+          _this3.$set(note, "note", data.note);
 
           note.status = "C";
           icon.style.display = "";
@@ -11874,15 +11829,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
      */
     watchNote: function watchNote() {
       if (!window.xknoteOpenedChangeFlag) return;
-      this.$set(this.xknoteOpened, "status", "N");
       var d = new Date();
-      this.$set(this.xknoteOpened.note, "updated_at", d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds());
-      this.listOperateS({
-        operate: "set",
-        storage: this.xknoteOpenedIndex.source.storage,
-        path: this.xknoteOpenedIndex.source.path,
-        noteInfo: this.xknoteOpened
-      });
+      this.setXknoteOpenedA(_objectSpread({}, this.xknoteOpened, {
+        status: "N",
+        note: _objectSpread({}, this.xknoteOpened.note, {
+          updated_at: d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds()
+        })
+      }));
+
+      if (this.xknoteOpened.path !== "") {
+        this.listOperate({
+          operate: "set",
+          storage: "curr",
+          path: this.xknoteOpenedIndex.source.path,
+          noteInfo: this.xknoteOpened
+        });
+      }
     }
   }),
   watch: {
@@ -12496,7 +12458,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     dropdown: _dropdown__WEBPACK_IMPORTED_MODULE_6__["default"],
     modal: _modal__WEBPACK_IMPORTED_MODULE_7__["default"]
   },
-  props: ["loadFirstNote", "listOperate", "listOperateS", "noteOperate", "folderOperate", "setXknoteOpened", "openNote", "writeMode", "timeToast", "configOperate"],
+  props: ["loadFirstNote", "setXknoteOpened", "openNote", "writeMode", "configOperate", "listOperate"],
   data: function data() {
     var _this = this;
 
@@ -12535,8 +12497,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])("note", ["currBadgeCount", "localBadgeCount", "getReData"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])("note", ["noteBaseInfo", "xknoteOpened", "xknoteOpenedIndex", "currListSource", "currList", "cloudList", "localList", "xknoteTab", "readOpened"])),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])("note", ["switchTab", "folderOperateS", "noteOperateS", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA"]), {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])("note", ["getReData"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])("note", ["noteBaseInfo", "xknoteOpened", "xknoteOpenedIndex", "currListSource", "currList", "cloudList", "localList", "xknoteTab", "readOpened", "currBadgeCount", "localBadgeCount"])),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])("toast", ["timeToast"]), {
     logout: function logout() {
       window.axios.post("/logout").then(function () {
         window.location.href = "/";
@@ -12626,33 +12588,57 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.smModal.confirm = function () {
           _this3.smModal.show = false;
 
-          var info = _this3.listOperateS({
+          var info = _this3.listOperate({
             operate: "get",
             storage: storage,
             path: path
           });
 
           if (type === "note") {
-            _this3.noteOperateS({
+            _this3.noteOperate({
               operate: operate,
               storage: storage,
               noteInfo: info
             }).then(function (res) {
-              _this3.listOperateS({
+              _this3.listOperate({
                 operate: "delete",
                 storage: storage,
                 path: path
               });
+
+              _this3.timeToast({
+                message: "删除成功！",
+                status: "success",
+                delay: 1000
+              });
+            })["catch"](function (err) {
+              _this3.timeToast({
+                message: "删除失败！请重试。",
+                status: "error",
+                delay: 1000
+              });
             });
           } else {
-            _this3.folderOperateS({
+            _this3.folderOperate({
               operate: operate,
               noteInfo: info
             }).then(function (res) {
-              _this3.listOperateS({
+              _this3.listOperate({
                 operate: "delete",
                 storage: storage,
                 path: path
+              });
+            }).then(function () {
+              _this3.timeToast({
+                message: "删除成功！",
+                status: "success",
+                delay: 1000
+              });
+            })["catch"](function (err) {
+              _this3.timeToast({
+                message: "删除失败！请重试。",
+                status: "error",
+                delay: 1000
               });
             });
           }
@@ -12665,7 +12651,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (operate === "rename") {
         // 先获取到旧的Note信息，为了防止对象的变动所以需要克隆对象，利用json转换即可方便克隆对象
-        var info = this.listOperateS({
+        var info = this.listOperate({
           operate: "get",
           storage: storage,
           path: path
@@ -12687,23 +12673,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             var value = e.target.value;
             var newPath = info.path.replace(new RegExp(info.name + "$"), value);
 
-            _this3.listOperateS({
-              operate: "delete",
-              storage: storage,
-              path: info.path
-            });
-
-            _this3.listOperateS({
+            _this3.listOperate({
               operate: "add",
               storage: storage,
               path: newPath,
               noteInfo: {
                 note: info,
-                soucre: {
+                source: {
                   path: newPath,
-                  storage: storage
+                  storage: _this3.currListSource[info.path].storage
                 }
               }
+            });
+
+            _this3.listOperate({
+              operate: "delete",
+              storage: storage,
+              path: info.path
             }); // TODO: 修复
 
 
@@ -12715,10 +12701,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               var s = storage;
 
               if (storage === "curr") {
-                s = _this3.currListSource[path].storage;
+                s = _this3.currListSource[newPath].storage;
               }
 
-              _this3.noteOperateS({
+              _this3.noteOperate({
                 operate: operate,
                 storage: s,
                 noteInfo: {
@@ -12729,13 +12715,25 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 curr.querySelector(".tile-content").removeAttribute("children");
                 input.removeEventListener("keydown", keyEv);
                 input.removeAttribute("disabled");
+
+                _this3.timeToast({
+                  message: "重命名成功！",
+                  status: "success",
+                  delay: 1000
+                });
               })["catch"](function (err) {
                 info.path = oldInfo.path;
                 info.name = oldInfo.name;
                 input.removeAttribute("disabled");
+
+                _this3.timeToast({
+                  message: "重命名失败！请重试。",
+                  status: "error",
+                  delay: 1000
+                });
               });
             } else {
-              _this3.folderOperateS({
+              _this3.folderOperate({
                 operate: operate,
                 folderInfo: {
                   oldFolder: oldInfo,
@@ -12745,10 +12743,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 curr.querySelector(".accordion-header").removeAttribute("children");
                 input.removeEventListener("keydown", keyEv);
                 input.removeAttribute("disabled");
+
+                _this3.timeToast({
+                  message: "重命名成功！",
+                  status: "success",
+                  delay: 1000
+                });
               })["catch"](function (err) {
                 info.path = oldInfo.path;
                 info.name = oldInfo.name;
                 input.removeAttribute("disabled");
+
+                _this3.timeToast({
+                  message: "重命名失败！请重试。",
+                  status: "error",
+                  delay: 1000
+                });
               });
             }
           }
@@ -12760,13 +12770,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (type === "note") {
         if (operate === "saveLocal") {
-          var note = this.listOperateS({
+          var note = this.listOperate({
             operate: "get",
             storage: storage,
             path: path
           }); // Path相同的时候视为同一文档，但保存时并未删除，所以需要调整判断
 
-          this.listOperateS({
+          this.listOperate({
             operate: "delete",
             storage: "local",
             path: path
@@ -12778,13 +12788,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             } // 保存到本地（实际操作）
 
 
-            this.noteOperateS({
+            this.noteOperate({
               operate: "save",
               storage: "local",
               noteInfo: note
             }).then(function () {
               if (_this3.floatMenu.saveAndClose) {
-                note = _this3.listOperateS({
+                note = _this3.listOperate({
                   operate: "delete",
                   storage: "curr",
                   path: path
@@ -12793,7 +12803,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
               }
 
-              var localIndex = _this3.listOperateS({
+              var localIndex = _this3.listOperate({
                 operate: "add",
                 storage: "local",
                 path: path,
@@ -12810,6 +12820,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                   }
                 });
               }
+
+              _this3.timeToast({
+                message: "保存到本地成功！",
+                status: "success",
+                delay: 1000
+              });
+            })["catch"](function (err) {
+              _this3.timeToast({
+                message: "保存到本地失败！",
+                status: "error",
+                delay: 1000
+              });
             });
           }
 
@@ -12818,7 +12840,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             var icon = noteEle.querySelector(".tile-action");
             icon.style.display = "unset";
             var btn = icon.querySelector(".btn");
-            this.noteOperateS({
+            this.noteOperate({
               operate: "read",
               storage: "cloud",
               noteInfo: note
@@ -12829,30 +12851,48 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               btn.querySelector(".loading").style.display = "none";
               icon.style.display = "";
 
-              _this3.noteOperateS({
+              _this3.noteOperate({
                 operate: "save",
                 storage: "local",
                 noteInfo: note
               }).then(function () {
-                _this3.listOperateS({
+                _this3.listOperate({
                   operate: "add",
                   storage: "local",
                   path: path,
                   noteInfo: note
                 });
+
+                _this3.timeToast({
+                  message: "保存到本地成功！",
+                  status: "success",
+                  delay: 1000
+                });
+              })["catch"](function (err) {
+                _this3.timeToast({
+                  message: "保存到本地失败！请重试。",
+                  status: "error",
+                  delay: 1000
+                });
+              });
+            })["catch"](function (err) {
+              _this3.timeToast({
+                message: "加载失败！请重试。",
+                status: "error",
+                delay: 1000
               });
             });
           }
         }
 
         if (operate === "saveCloud") {
-          var _note = this.listOperateS({
+          var _note = this.listOperate({
             operate: "get",
             storage: storage,
             path: path
           });
 
-          this.noteOperateS({
+          this.noteOperate({
             operate: "save",
             storage: "cloud",
             noteInfo: _note
@@ -12861,7 +12901,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
             if (storage === "curr") {
               if (_this3.currListSource[path].storage === "local") {
-                _this3.noteOperateS({
+                _this3.noteOperate({
                   operate: "save",
                   storage: "local",
                   noteInfo: _note
@@ -12869,7 +12909,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               }
 
               if (_this3.floatMenu.saveAndClose) {
-                _this3.listOperateS({
+                _this3.listOperate({
                   operate: "delete",
                   storage: "curr",
                   path: path
@@ -12881,19 +12921,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
             if (storage === "local") {
               if (_this3.floatMenu.saveAndClose) {
-                _this3.noteOperateS({
+                _this3.noteOperate({
                   operate: "delete",
                   storage: "local",
                   noteInfo: _note
                 });
 
-                _this3.listOperateS({
+                _this3.listOperate({
                   operate: "delete",
                   storage: storage,
                   path: path
                 });
               } else {
-                _this3.noteOperateS({
+                _this3.noteOperate({
                   operate: "save",
                   storage: "local",
                   noteInfo: _note
@@ -12901,11 +12941,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               }
             }
 
-            _this3.listOperateS({
+            _this3.listOperate({
               operate: "add",
               storage: "cloud",
               path: path,
               noteInfo: _note
+            });
+
+            _this3.timeToast({
+              message: "保存到云端成功！",
+              status: "success",
+              delay: 1000
+            });
+          })["catch"](function (err) {
+            _this3.timeToast({
+              message: "保存到云端失败！请重试。",
+              status: "error",
+              delay: 1000
             });
           });
         }
@@ -12914,23 +12966,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           // 如果笔记在未保存状态关闭则先弹出modal提示是否下关闭
           var closeCurr = function closeCurr() {
             if (path == _this3.xknoteOpenedIndex.curr) {
-              debugger;
-
               _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
-
-              debugger;
             }
 
-            _this3.listOperateS({
+            _this3.listOperate({
               operate: "delete",
               storage: "curr",
               path: path
             });
-
-            debugger;
           };
 
-          if (this.listOperateS({
+          if (this.listOperate({
             operate: "get",
             storage: storage,
             path: path
@@ -12984,7 +13030,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         if (this.lgModal.content === "CreateNote") {
           this.lgModal.title = "新建MD笔记";
-          this.folderOperateS({
+          this.folderOperate({
             operate: "readOnly",
             folderInfo: null
           }).then(function (data) {
@@ -13007,7 +13053,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 return;
               }
 
-              _this4.noteOperateS({
+              _this4.noteOperate({
                 operate: "exist",
                 storage: _this4.lgModal.data.storage,
                 noteInfo: {
@@ -13055,7 +13101,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               storage: _this4.lgModal.data.storage
             }, "normal", true);
 
-            _this4.listOperateS({
+            _this4.listOperate({
               operate: "add",
               storage: _this4.lgModal.data.storage,
               path: path,
@@ -13080,7 +13126,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         if (this.lgModal.content === "CreateFolder") {
           this.lgModal.title = "新建文件夹";
-          this.folderOperateS({
+          this.folderOperate({
             operate: "readOnly",
             folderInfo: null
           }).then(function (data) {
@@ -13096,7 +13142,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             _wTimeout = setTimeout(function () {
               _this4.$set(_this4.lgModal.data, "status", "loading");
 
-              _this4.folderOperateS({
+              _this4.folderOperate({
                 operate: "exist",
                 folderInfo: {
                   path: _this4.lgModal.data.select + "/" + _this4.lgModal.data.foldername
@@ -13123,13 +13169,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
             var path = _this4.lgModal.data.select + "/" + _this4.lgModal.data.foldername;
 
-            _this4.folderOperateS({
+            _this4.folderOperate({
               operate: "create",
               folderInfo: {
                 path: path
               }
             }).then(function () {
-              _this4.listOperateS({
+              _this4.listOperate({
                 operate: "add",
                 storage: _this4.lgModal.data.storage,
                 path: path
@@ -13140,6 +13186,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               _this4.lgModal.cancel();
 
               _this4.loadCloudFolders();
+
+              _this4.timeToast({
+                message: "创建文件夹成功！",
+                status: "success",
+                delay: 1000
+              });
+            })["catch"](function (err) {
+              _this4.timeToast({
+                message: "创建文件夹失败！请重试。",
+                status: "error",
+                delay: 1000
+              });
             });
           };
 
@@ -13164,7 +13222,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
             _this4.$set(_this4.lgModal.data, "status", "");
           }, function (error) {
-            _this4.timeToast("获取信息失败！", "error", 1000);
+            _this4.timeToast({
+              message: "获取信息失败！",
+              status: "error",
+              delay: 1000
+            });
 
             _this4.$set(_this4.lgModal.data, "status", "");
           });
@@ -13185,9 +13247,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
               _this4.lgModal.cancel();
 
-              _this4.timeToast("设置成功！", "success", 1000);
+              _this4.timeToast({
+                message: "设置成功！",
+                status: "success",
+                delay: 1000
+              });
             }, function (error) {
-              _this4.timeToast("设置失败，请重试！", "error", 1000);
+              _this4.timeToast({
+                message: "设置失败，请重试！",
+                status: "error",
+                delay: 1000
+              });
             });
           };
 
@@ -13265,14 +13335,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var path = this.lgModal.data[index].path;
 
       if (operate === "keepLocal") {
-        this.noteOperateS({
+        this.noteOperate({
           operate: "read",
           storage: "local",
           noteInfo: {
             path: path
           }
         }).then(function (data) {
-          _this6.noteOperateS({
+          _this6.noteOperate({
             operate: "save",
             storage: "cloud",
             noteInfo: data
@@ -13282,7 +13352,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             _this6.$delete(_this6.lgModal.data, index); // 将更新后的状态保存到本地
 
 
-            _this6.noteOperateS({
+            _this6.noteOperate({
               operate: "save",
               storage: "local",
               noteInfo: _this6.localList[path]
@@ -13292,14 +13362,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       if (operate === "keepCloud") {
-        this.noteOperateS({
+        this.noteOperate({
           operate: "read",
           storage: "cloud",
           noteInfo: {
             path: path
           }
         }).then(function (data) {
-          _this6.noteOperateS({
+          _this6.noteOperate({
             operate: "save",
             storage: "local",
             noteInfo: data
@@ -13319,41 +13389,65 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this7 = this;
 
       if (operate === "gitPull") {
-        this.folderOperateS({
+        this.folderOperate({
           operate: operate,
           folderInfo: {
             path: path
           }
         }).then(function () {
-          _this7.timeToast("Git Pull成功！", "success", 1000);
+          _this7.timeToast({
+            message: "Git Pull成功！",
+            status: "success",
+            delay: 1000
+          });
         })["catch"](function (error) {
-          _this7.timeToast("Git Pull失败，请重试！", "error", 1000);
+          _this7.timeToast({
+            message: "Git Pull失败，请重试！",
+            status: "error",
+            delay: 1000
+          });
         });
       }
 
       if (operate === "gitPush") {
-        this.folderOperateS({
+        this.folderOperate({
           operate: operate,
           folderInfo: {
             path: path
           }
         }).then(function () {
-          _this7.timeToast("Git Push成功！", "success", 1000);
+          _this7.timeToast({
+            message: "Git Push成功！",
+            status: "success",
+            delay: 1000
+          });
         })["catch"](function (error) {
-          _this7.timeToast("Git Push失败，请重试！", "error", 1000);
+          _this7.timeToast({
+            message: "Git Push失败，请重试！",
+            status: "error",
+            delay: 1000
+          });
         });
       }
 
       if (operate === "gitPushForce") {
-        this.folderOperateS({
+        this.folderOperate({
           operate: operate,
           folderInfo: {
             path: path
           }
         }).then(function () {
-          _this7.timeToast("Git Push成功！", "success", 1000);
+          _this7.timeToast({
+            message: "Git Push成功！",
+            status: "success",
+            delay: 1000
+          });
         })["catch"](function (error) {
-          _this7.timeToast("Git Push失败，请重试！", "error", 1000);
+          _this7.timeToast({
+            message: "Git Push失败，请重试！",
+            status: "error",
+            delay: 1000
+          });
         });
       }
 
@@ -13371,7 +13465,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           wTimeout = setTimeout(function () {
             _this7.$set(_this7.lgModal.data, "status", "loading");
 
-            _this7.folderOperateS({
+            _this7.folderOperate({
               operate: "exist",
               folderInfo: {
                 path: _this7.lgModal.data.foldername + "/.git"
@@ -13404,7 +13498,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             };
           }
 
-          _this7.folderOperateS({
+          _this7.folderOperate({
             operate: _this7.lgModal.data.init_or_clone === "init" ? "gitInit" : "gitClone",
             folderInfo: {
               path: _this7.lgModal.data.foldername,
@@ -13416,7 +13510,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
             _this7.lgModal.cancel();
 
-            _this7.timeToast("Git Init或Clone成功！", "success", 1000);
+            _this7.timeToast({
+              message: "Git Init或Clone成功！",
+              status: "success",
+              delay: 1000
+            });
           });
         };
 
@@ -13434,7 +13532,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.lgModal.content = "GitItemConfig";
         this.lgModal.show = true;
         this.$set(this.lgModal.data, "status", "loading");
-        this.folderOperateS({
+        this.folderOperate({
           operate: "getGitConfig",
           folderInfo: {
             path: path
@@ -13448,7 +13546,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
           _this7.$set(_this7.lgModal.data, "status", "");
         })["catch"](function (error) {
-          _this7.timeToast("获取信息失败！", "error", 1000);
+          _this7.timeToast({
+            message: "获取信息失败！",
+            status: "error",
+            delay: 1000
+          });
 
           _this7.$set(_this7.lgModal.data, "status", "");
         });
@@ -13460,7 +13562,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
           document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
 
-          _this7.folderOperateS({
+          _this7.folderOperate({
             operate: "setGitConfig",
             folderInfo: {
               repo: _this7.lgModal.data.repo,
@@ -13474,9 +13576,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
             _this7.lgModal.cancel();
 
-            _this7.timeToast("设置成功！", "success", 1000);
+            _this7.timeToast({
+              message: "设置成功！",
+              status: "success",
+              delay: 1000
+            });
           })["catch"](function (error) {
-            _this7.timeToast("设置失败，请重试！", "error", 1000);
+            _this7.timeToast({
+              message: "设置失败，请重试！",
+              status: "error",
+              delay: 1000
+            });
           });
         };
 
@@ -13609,7 +13719,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     "note-item": _noteItem_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
     "folder-item": _folderItem_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
-  props: ["openNote", "loadFirstNote", "loadCloudFolders"],
+  props: ["openNote", "loadFirstNote"],
   data: function data() {
     return {
       xknoteTab: "toc",
@@ -13618,7 +13728,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_4__["mapState"])("note", ["cloudList", "localList", "readOpened"])),
-  methods: {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_4__["mapActions"])("note", ["loadCloudFolders"]), {
     switchTab: function switchTab(tabName) {
       this.xknoteTab = tabName;
     },
@@ -13639,7 +13749,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _this.initTocTree();
       });
     }
-  },
+  }),
   mounted: function () {
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
@@ -14295,7 +14405,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.read-toc li img {\r\n  width: 1.05em;\r\n  display: inline-block;\r\n  vertical-align: middle;\r\n  margin-right: 0.4em;\r\n  padding-top: 0.1em;\n}\n.read-toc li a {\r\n  font-size: 1.05em;\r\n  vertical-align: middle;\n}\n.hero-body p {\r\n  margin: 0;\n}\n.read-sidebar {\r\n  top: 0;\r\n  right: 0;\r\n  height: 100%;\r\n  display: flex;\r\n  flex-direction: column;\n}\n.read-sidebar .xknote-tab-content {\r\n  margin: 0.8rem 0 0.8rem 1.6rem;\n}\n.read-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  min-height: 100vh;\r\n  border-right: 1px solid #ddd;\n}\n.read-header .hero-body {\r\n  padding: 0.4rem 3rem;\n}\n.read-content {\r\n  flex: 1;\r\n  padding: 2rem 3rem;\n}\n.read-footer {\r\n  padding: 1.5em 0 !important;\n}\n.to-normal-btn {\r\n  bottom: 1rem;\r\n  right: 1rem;\r\n  position: fixed;\n}\r\n", ""]);
+exports.push([module.i, "\n.read-toc li img {\n  width: 1.05em;\n  display: inline-block;\n  vertical-align: middle;\n  margin-right: 0.4em;\n  padding-top: 0.1em;\n}\n.read-toc li a {\n  font-size: 1.05em;\n  vertical-align: middle;\n}\n.hero-body p {\n  margin: 0;\n}\n.read-sidebar {\n  top: 0;\n  right: 0;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n}\n.read-sidebar .xknote-tab-content {\n  margin: 0.8rem 0 0.8rem 1.6rem;\n}\n.read-container {\n  display: flex;\n  flex-direction: column;\n  min-height: 100vh;\n  border-right: 1px solid #ddd;\n}\n.read-header .hero-body {\n  padding: 0.4rem 3rem;\n}\n.read-content {\n  flex: 1;\n  padding: 2rem 3rem;\n}\n.read-footer {\n  padding: 1.5em 0 !important;\n}\n.to-normal-btn {\n  bottom: 1rem;\n  right: 1rem;\n  position: fixed;\n}\n", ""]);
 
 // exports
 
@@ -24186,82 +24296,12 @@ var render = function() {
           _c("router-view", {
             ref: "children",
             attrs: {
-              xknoteTab: _vm.xknoteTab,
-              currListSource: _vm.currListSource,
-              currList: _vm.currList,
-              cloudList: _vm.cloudList,
-              localList: _vm.localList,
-              xknoteOpened: _vm.xknoteOpened,
-              xknoteOpenedIndex: _vm.xknoteOpenedIndex,
-              noteBaseInfo: _vm.noteBaseInfo,
               loadFirstNote: _vm.loadFirstNote,
-              listOperate: _vm.listOperate,
-              noteOperate: _vm.noteOperate,
-              folderOperate: _vm.folderOperate,
               setXknoteOpened: _vm.setXknoteOpened,
-              switchTab: _vm.switchTab,
               openNote: _vm.openNote,
-              readOpened: _vm.readOpened,
-              loadCloudFolders: _vm.loadCloudFolders,
               timeToast: _vm.timeToast,
               configOperate: _vm.configOperate,
-              listOperateS: _vm.listOperateS
-            },
-            on: {
-              "update:xknoteTab": function($event) {
-                _vm.xknoteTab = $event
-              },
-              "update:xknote-tab": function($event) {
-                _vm.xknoteTab = $event
-              },
-              "update:currListSource": function($event) {
-                _vm.currListSource = $event
-              },
-              "update:curr-list-source": function($event) {
-                _vm.currListSource = $event
-              },
-              "update:currList": function($event) {
-                _vm.currList = $event
-              },
-              "update:curr-list": function($event) {
-                _vm.currList = $event
-              },
-              "update:cloudList": function($event) {
-                _vm.cloudList = $event
-              },
-              "update:cloud-list": function($event) {
-                _vm.cloudList = $event
-              },
-              "update:localList": function($event) {
-                _vm.localList = $event
-              },
-              "update:local-list": function($event) {
-                _vm.localList = $event
-              },
-              "update:xknoteOpened": function($event) {
-                _vm.xknoteOpened = $event
-              },
-              "update:xknote-opened": function($event) {
-                _vm.xknoteOpened = $event
-              },
-              "update:xknoteOpenedIndex": function($event) {
-                _vm.xknoteOpenedIndex = $event
-              },
-              "update:xknote-opened-index": function($event) {
-                _vm.xknoteOpenedIndex = $event
-              },
-              "update:noteBaseInfo": function($event) {
-                _vm.noteBaseInfo = $event
-              },
-              "update:note-base-info": function($event) {
-                _vm.noteBaseInfo = $event
-              },
-              "update:readOpened": function($event) {
-                _vm.readOpened = $event
-              },
-              "update:read-opened": function($event) {
-                _vm.readOpened = $event
-              }
+              listOperate: _vm.listOperate
             }
           })
         ],
@@ -31795,6 +31835,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_note__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/note */ "./resources/js/store/modules/note.js");
 /* harmony import */ var _modules_toast__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/toast */ "./resources/js/store/modules/toast.js");
 /* harmony import */ var _modules_db__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/db */ "./resources/js/store/modules/db.js");
+/* harmony import */ var _modules_tools__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/tools */ "./resources/js/store/modules/tools.js");
+
 
 
 
@@ -31805,7 +31847,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
   modules: {
     note: _modules_note__WEBPACK_IMPORTED_MODULE_2__["default"],
     toast: _modules_toast__WEBPACK_IMPORTED_MODULE_3__["default"],
-    db: _modules_db__WEBPACK_IMPORTED_MODULE_4__["default"]
+    db: _modules_db__WEBPACK_IMPORTED_MODULE_4__["default"],
+    tools: _modules_tools__WEBPACK_IMPORTED_MODULE_5__["default"]
   }
 }));
 
@@ -32024,49 +32067,50 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 var types = {
-  SET_CLOUD: "SET_CLOUD",
-  ADD_LOCAL: "ADD_LOCAL",
-  SET_OPENED: "SET_OPENED",
-  SET_READED: "SET_READED",
-  SET_OPENED_INDEX: "SET_OPENED_INDEX",
-  LIST_OPERATE: "LIST_OPERATE",
-  SET_CURR_LIST_SOURCE: "SET_CURR_LIST_SOURCE"
+  SET_CLOUD: 'SET_CLOUD',
+  ADD_LOCAL: 'ADD_LOCAL',
+  SET_OPENED: 'SET_OPENED',
+  SET_READED: 'SET_READED',
+  SET_OPENED_INDEX: 'SET_OPENED_INDEX',
+  LIST_OPERATE: 'LIST_OPERATE',
+  SET_CURR_LIST_SOURCE: 'SET_CURR_LIST_SOURCE',
+  CHANGE_COUNT: 'CHANGE_COUNT'
 };
 var state = {
   noteBaseInfo: {
-    type: "note",
-    path: "",
-    name: "",
-    status: "N",
+    type: 'note',
+    path: '',
+    name: '',
+    status: 'N',
     note: {
-      title: "",
-      author: "",
-      content: "暂未打开任何文件，请选择文件。",
-      created_at: "",
-      updated_at: ""
+      title: '',
+      author: '',
+      content: '暂未打开任何文件，请选择文件。',
+      created_at: '',
+      updated_at: ''
     }
   },
   xknoteOpened: {
-    type: "note",
-    path: "",
-    name: "",
-    status: "N",
+    type: 'note',
+    path: '',
+    name: '',
+    status: 'N',
     note: {
-      title: "",
-      author: "",
-      content: "暂未打开任何文件，请选择文件。",
-      created_at: "",
-      updated_at: ""
+      title: '',
+      author: '',
+      content: '暂未打开任何文件，请选择文件。',
+      created_at: '',
+      updated_at: ''
     }
   },
   // 存储当前开启的文档的位置，当前位置和源位置
   // curr存储的是位于currList的索引
   // source存储的分别是源的位置 本地or云端（data-storage） 在其列表中的index（data-index）
   xknoteOpenedIndex: {
-    curr: "",
+    curr: '',
     source: {
-      path: "",
-      storage: ""
+      path: '',
+      storage: ''
     }
   },
   // currList的扩展信息
@@ -32074,46 +32118,26 @@ var state = {
   currList: {},
   cloudList: {},
   localList: {},
-  xknoteTab: "cloud",
+  xknoteTab: 'cloud',
   readOpened: {
-    type: "note",
-    path: "",
-    name: "",
-    status: "N",
+    type: 'note',
+    path: '',
+    name: '',
+    status: 'N',
     note: {
-      title: "",
-      author: "",
-      content: "暂未打开任何文件，请选择文件。",
-      created_at: "",
-      updated_at: ""
+      title: '',
+      author: '',
+      content: '暂未打开任何文件，请选择文件。',
+      created_at: '',
+      updated_at: ''
     }
   },
-  reData: null
+  reData: null,
+  currBadgeCount: 0,
+  localBadgeCount: 0
 }; // getters
 
 var getters = {
-  currBadgeCount: function currBadgeCount(state) {
-    var count = 0;
-
-    for (var key in state.currList) {
-      if (state.currList[key].status === "N") {
-        count++;
-      }
-    }
-
-    return count;
-  },
-  localBadgeCount: function localBadgeCount(state) {
-    var count = 0;
-
-    for (var key in state.localList) {
-      if (state.localList[key].status === "N") {
-        count++;
-      }
-    }
-
-    return count;
-  },
   getReData: function getReData(state) {
     return state.reData;
   }
@@ -32122,7 +32146,7 @@ var getters = {
 var actions = {
   switchTab: function switchTab(_ref, tabName) {
     var commit = _ref.commit;
-    commit("switchTab", tabName);
+    commit('switchTab', tabName);
   },
   loadCloudFolders: function () {
     var _loadCloudFolders = _asyncToGenerator(
@@ -32135,8 +32159,8 @@ var actions = {
             case 0:
               commit = _ref2.commit, dispatch = _ref2.dispatch;
               _context.next = 3;
-              return dispatch("folderOperateS", {
-                operate: "readAll",
+              return dispatch('folderOperate', {
+                operate: 'readAll',
                 folderInfo: null
               });
 
@@ -32162,9 +32186,9 @@ var actions = {
   loadLocalNotes: function loadLocalNotes(_ref3) {
     var commit = _ref3.commit,
         dispatch = _ref3.dispatch;
-    dispatch("db/noteLocalDB", {
-      operate: "readAll",
-      data: ""
+    dispatch('db/noteLocalDB', {
+      operate: 'readAll',
+      data: ''
     }, {
       root: true
     }).then(function (list) {
@@ -32178,15 +32202,15 @@ var actions = {
       });
     });
   },
-  folderOperateS: function folderOperateS(_ref4, _ref5) {
+  folderOperate: function folderOperate(_ref4, _ref5) {
     var commit = _ref4.commit,
         dispatch = _ref4.dispatch;
     var operate = _ref5.operate,
         _ref5$folderInfo = _ref5.folderInfo,
         folderInfo = _ref5$folderInfo === void 0 ? null : _ref5$folderInfo;
     return new Promise(function (resolve, reject) {
-      if (operate === "readAll") {
-        window.axios.get("/api/folders").then(function (res) {
+      if (operate === 'readAll') {
+        window.axios.get('/api/folders').then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
           console.error(err);
@@ -32194,8 +32218,8 @@ var actions = {
         });
       }
 
-      if (operate === "readFlat") {
-        window.axios.get("/api/folders/flat").then(function (res) {
+      if (operate === 'readFlat') {
+        window.axios.get('/api/folders/flat').then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
           console.error(err);
@@ -32203,8 +32227,8 @@ var actions = {
         });
       }
 
-      if (operate === "readOnly") {
-        window.axios.get("/api/folders/only").then(function (res) {
+      if (operate === 'readOnly') {
+        window.axios.get('/api/folders/only').then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
           console.error(err);
@@ -32212,12 +32236,12 @@ var actions = {
         });
       }
 
-      if (operate === "rename") {
-        window.axios.put("/api/folders", {
+      if (operate === 'rename') {
+        window.axios.put('/api/folders', {
           old_path: folderInfo.oldFolder.path,
           new_path: folderInfo.folder.path
         }).then(function (res) {
-          console.log(res); // this.timeToast('重命名成功！', 'success', 1000);
+          console.log(res);
 
           if (res.data.error == false) {
             resolve(res);
@@ -32225,36 +32249,33 @@ var actions = {
             reject(res);
           }
         })["catch"](function (err) {
-          console.error(err); // this.timeToast('重命名失败！请重试。', 'error', 1000);
-
+          console.error(err);
           reject(err);
         });
       }
 
-      if (operate === "create") {
-        window.axios.post("/api/folders", {
+      if (operate === 'create') {
+        window.axios.post('/api/folders', {
           path: folderInfo.path
         }).then(function (res) {
-          // this.timeToast('创建文件夹成功！', 'success', 1000);
           if (res.data.error == false) {
             resolve(res);
           } else {
             reject(res);
           }
         })["catch"](function (err) {
-          console.error(err); // this.timeToast('创建文件夹失败！请重试。', 'error', 1000);
-
+          console.error(err);
           reject(err);
         });
       }
 
-      if (operate === "delete") {
-        window.axios["delete"]("/api/folders", {
+      if (operate === 'delete') {
+        window.axios["delete"]('/api/folders', {
           params: {
             path: folderInfo.path
           }
         }).then(function (res) {
-          console.log(res); // this.timeToast('删除成功！', 'success', 1000);
+          console.log(res);
 
           if (res.data.error == false) {
             resolve(res);
@@ -32262,14 +32283,13 @@ var actions = {
             reject(res);
           }
         })["catch"](function (err) {
-          console.error(err); // this.timeToast('删除失败！请重试。', 'error', 1000);
-
+          console.error(err);
           reject(err);
         });
       }
 
-      if (operate === "exist") {
-        window.axios.get("/api/folders/exist", {
+      if (operate === 'exist') {
+        window.axios.get('/api/folders/exist', {
           params: {
             path: folderInfo.path
           }
@@ -32282,10 +32302,10 @@ var actions = {
       } // TODO: 添加加载时提示
 
 
-      if (operate === "gitPush" || operate === "gitPushForce") {
-        window.axios.put("/api/repo", {
+      if (operate === 'gitPush' || operate === 'gitPushForce') {
+        window.axios.put('/api/repo', {
           path: folderInfo.path,
-          force: operate === "gitPushForce"
+          force: operate === 'gitPushForce'
         }).then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
@@ -32294,8 +32314,8 @@ var actions = {
         });
       }
 
-      if (operate === "gitPull") {
-        window.axios.get("/api/repo", {
+      if (operate === 'gitPull') {
+        window.axios.get('/api/repo', {
           params: {
             path: folderInfo.path
           }
@@ -32307,11 +32327,11 @@ var actions = {
         });
       }
 
-      if (operate === "gitInit" || operate === "gitClone") {
-        window.axios.post("/api/repo", _objectSpread({
+      if (operate === 'gitInit' || operate === 'gitClone') {
+        window.axios.post('/api/repo', _objectSpread({
           path: folderInfo.path,
           repo: folderInfo.repo,
-          init_or_clone: operate === "gitInit" ? "init" : "clone"
+          init_or_clone: operate === 'gitInit' ? 'init' : 'clone'
         }, folderInfo.git_user)).then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
@@ -32320,8 +32340,8 @@ var actions = {
         });
       }
 
-      if (operate === "getGitConfig") {
-        window.axios.get("/api/repo/conf", {
+      if (operate === 'getGitConfig') {
+        window.axios.get('/api/repo/conf', {
           params: {
             path: folderInfo.path
           }
@@ -32332,8 +32352,8 @@ var actions = {
           reject(err);
         });
 
-        if (operate === "setGitConfig") {
-          window.axios.put("/api/repo/conf", _objectSpread({}, folderInfo)).then(function (res) {
+        if (operate === 'setGitConfig') {
+          window.axios.put('/api/repo/conf', _objectSpread({}, folderInfo)).then(function (res) {
             resolve(res.data);
           })["catch"](function (err) {
             console.log(err);
@@ -32343,7 +32363,7 @@ var actions = {
       }
     });
   },
-  noteOperateS: function noteOperateS(_ref6, _ref7) {
+  noteOperate: function noteOperate(_ref6, _ref7) {
     var _this = this;
 
     var commit = _ref6.commit,
@@ -32353,34 +32373,35 @@ var actions = {
         _ref7$noteInfo = _ref7.noteInfo,
         noteInfo = _ref7$noteInfo === void 0 ? null : _ref7$noteInfo;
     return new Promise(function (resolve, reject) {
-      if (operate === "read") {
-        if (storage === "local") {
-          dispatch("db/noteLocalDB", {
-            operate: "read",
+      if (operate === 'read') {
+        if (storage === 'local') {
+          dispatch('db/noteLocalDB', {
+            operate: 'read',
             data: noteInfo.path
           }, {
             root: true
-          }).then(resolve);
+          }).then(function (res) {
+            resolve(res);
+          });
         }
 
-        if (storage === "cloud") {
-          window.axios.get("/api/notes", {
+        if (storage === 'cloud') {
+          window.axios.get('/api/notes', {
             params: {
               path: noteInfo.path
             }
           }).then(function (res) {
             resolve(res.data);
           })["catch"](function (err) {
-            console.error(err); // this.timeToast('加载失败！请重试。', 'error', 1000);
-
+            console.error(err);
             reject(err);
           });
         }
       }
 
-      if (operate === "create") {
-        if (storage === "cloud") {
-          window.axios.post("/api/notes", {
+      if (operate === 'create') {
+        if (storage === 'cloud') {
+          window.axios.post('/api/notes', {
             path: noteInfo.path,
             title: noteInfo.note.title,
             author: noteInfo.note.author,
@@ -32388,39 +32409,37 @@ var actions = {
             updated_at: noteInfo.note.updated_at,
             content: noteInfo.note.content
           }).then(function (res) {
-            // this.timeToast('新建笔记成功！', 'success', 1000);
             if (res.data.error == false) {
               resolve(res);
             } else {
               reject(res);
             }
           })["catch"](function (err) {
-            console.error(err); // this.timeToast('新建笔记失败！请重试。', 'error', 1000);
-
+            console.error(err);
             resolve(err);
           });
         }
       }
 
-      if (operate === "delete") {
-        if (storage === "local") {
-          dispatch("db/noteLocalDB", {
-            operate: "delete",
+      if (operate === 'delete') {
+        if (storage === 'local') {
+          dispatch('db/noteLocalDB', {
+            operate: 'delete',
             data: noteInfo.path
           }, {
             root: true
           }).then(function (data) {
-            reject(data);
+            resolve(data);
           })["catch"](reject);
         }
 
-        if (storage === "cloud") {
-          window.axios["delete"]("/api/notes", {
+        if (storage === 'cloud') {
+          window.axios["delete"]('/api/notes', {
             params: {
               path: noteInfo.path
             }
           }).then(function (res) {
-            console.log(res); // this.timeToast('删除成功！', 'success', 1000);
+            console.log(res);
 
             if (res.data.error == false) {
               resolve(res);
@@ -32428,33 +32447,33 @@ var actions = {
               reject(res);
             }
           })["catch"](function (err) {
-            console.error(err); // this.timeToast('删除失败！请重试。', 'error', 1000);
-
+            console.error(err);
             reject(err);
           });
         }
       }
 
-      if (operate === "save") {
-        if (storage === "local") {
-          dispatch("db/noteLocalDB", {
-            operate: "delete",
+      if (operate === 'save') {
+        if (storage === 'local') {
+          dispatch('db/noteLocalDB', {
+            operate: 'delete',
             data: noteInfo.path
           }, {
             root: true
           }).then(function () {
-            // this.timeToast('保存到本地成功！', 'success', 1000);
-            return dispatch("db/noteLocalDB", {
-              operate: "add",
+            dispatch('db/noteLocalDB', {
+              operate: 'add',
               data: noteInfo
             }, {
               root: true
-            });
+            }).then(function (res) {
+              resolve(res);
+            })["catch"](reject);
           })["catch"](reject);
         }
 
-        if (storage === "cloud") {
-          window.axios.put("/api/notes", {
+        if (storage === 'cloud') {
+          window.axios.put('/api/notes', {
             path: noteInfo.path,
             title: noteInfo.note.title,
             author: noteInfo.note.author,
@@ -32462,30 +32481,28 @@ var actions = {
             updated_at: noteInfo.note.updated_at,
             content: noteInfo.note.content
           }).then(function (res) {
-            // this.timeToast('保存到云端成功！', 'success', 1000);
             if (res.data.error == false) {
               resolve(res);
             } else {
               reject(res);
             }
           })["catch"](function (err) {
-            console.error(err); // this.timeToast('保存到云端失败！请重试。', 'error', 1000);
-
+            console.error(err);
             reject(err);
           });
         }
       }
 
-      if (operate === "rename") {
-        if (storage === "local") {
-          dispatch("db/noteLocalDB", {
-            operate: "delete",
+      if (operate === 'rename') {
+        if (storage === 'local') {
+          dispatch('db/noteLocalDB', {
+            operate: 'delete',
             data: noteInfo.oldNote.path
           }, {
             root: true
           });
-          dispatch("db/noteLocalDB", {
-            operate: "add",
+          dispatch('db/noteLocalDB', {
+            operate: 'add',
             data: noteInfo.note
           }, {
             root: true
@@ -32493,12 +32510,12 @@ var actions = {
           resolve();
         }
 
-        if (storage === "cloud") {
-          window.axios.put("/api/notes/rename", {
+        if (storage === 'cloud') {
+          window.axios.put('/api/notes/rename', {
             old_path: noteInfo.oldNote.path,
             new_path: noteInfo.note.path
           }).then(function (res) {
-            console.log(res); // this.timeToast('重命名成功！', 'success', 1000);
+            console.log(res);
 
             if (res.data.error == false) {
               resolve(res);
@@ -32506,16 +32523,15 @@ var actions = {
               reject(res);
             }
           })["catch"](function (err) {
-            console.error(err); // this.timeToast('重命名失败！请重试。', 'error', 1000);
-
+            console.error(err);
             reject(err);
           });
         }
       }
 
-      if (operate === "exist") {
-        if (storage === "cloud") {
-          window.axios.get("/api/notes/exist", {
+      if (operate === 'exist') {
+        if (storage === 'cloud') {
+          window.axios.get('/api/notes/exist', {
             params: {
               path: noteInfo.path
             }
@@ -32527,7 +32543,7 @@ var actions = {
           });
         }
 
-        if (storage === "local") {
+        if (storage === 'local') {
           var flag = false;
 
           for (var i = 0; i < _this.localList.length; i++) {
@@ -32572,22 +32588,22 @@ var mutations = (_mutations = {
       _ref12$noteInfo = _ref12.noteInfo,
       noteInfo = _ref12$noteInfo === void 0 ? null : _ref12$noteInfo;
   var arr = [path];
-  var list = state[storage + "List"];
+  var list = state[storage + 'List'];
 
-  if (storage === "cloud") {
-    arr = path.substring(1).split("/");
+  if (storage === 'cloud') {
+    arr = path.substring(1).split('/');
 
-    for (var i = 0; operate !== "add" && i < arr.length - 1; i++) {
+    for (var i = 0; operate !== 'add' && i < arr.length - 1; i++) {
       list = list[arr[i]].sub;
     }
   }
 
-  if (operate === "get") {
+  if (operate === 'get') {
     state.reData = list[arr[arr.length - 1]];
   }
 
-  if (operate === "add") {
-    if (storage === "curr") {
+  if (operate === 'add') {
+    if (storage === 'curr') {
       // let currIndex = this.$set(this.currList, path, noteInfo.note);
       // this.$set(this.currListSource, path, noteInfo.source);
       state.currList[path] = noteInfo.note;
@@ -32595,18 +32611,18 @@ var mutations = (_mutations = {
       state.reData = path;
     }
 
-    if (storage === "local") {
+    if (storage === 'local') {
       // return this.$set(this.localList, path, noteInfo);
       state.localList[path] = noteInfo;
       state.reData = path;
     }
 
-    if (storage === "cloud") {
-      var p = "";
+    if (storage === 'cloud') {
+      var p = '';
       var len = noteInfo === null ? arr.length : arr.length - 1;
 
       for (var _i = 0; _i < len; _i++) {
-        p += "/" + arr[_i];
+        p += '/' + arr[_i];
 
         if (!list[arr[_i]]) {
           // this.$set(list, arr[i], {
@@ -32616,7 +32632,7 @@ var mutations = (_mutations = {
           //   sub: {}
           // });
           list[arr[_i]] = {
-            type: "folder",
+            type: 'folder',
             path: p,
             name: arr[_i],
             sub: {}
@@ -32633,12 +32649,12 @@ var mutations = (_mutations = {
     }
   }
 
-  if (operate === "delete") {
+  if (operate === 'delete') {
     var noteList = list[arr[arr.length - 1]]; // this.$delete(list, arr[arr.length - 1]);
 
     delete list[arr[arr.length - 1]];
 
-    if (storage === "curr") {
+    if (storage === 'curr') {
       // this.$delete(this.currListSource, arr[arr.length - 1]);
       delete state.currListSource[arr[arr.length - 1]];
     }
@@ -32646,9 +32662,9 @@ var mutations = (_mutations = {
     state.reData = noteList;
   }
 
-  if (operate === "set") {
+  if (operate === 'set') {
     // this.$set(list, arr[arr.length - 1], { ...noteInfo });
-    list[arr[arr.length - 1]] = _objectSpread({}, noteInfo);
+    list[arr[arr.length - 1]] = noteInfo;
   }
 }), _defineProperty(_mutations, types.SET_CLOUD, function (state, cloudList) {
   state.cloudList = cloudList;
@@ -32666,6 +32682,21 @@ var mutations = (_mutations = {
   var path = _ref14.path,
       source = _ref14.source;
   state.currListSource[path] = source;
+}), _defineProperty(_mutations, types.CHANGE_COUNT, function (state) {
+  state.currBadgeCount = 0;
+  state.localBadgeCount = 0;
+
+  for (var key in state.currList) {
+    if (state.currList[key].status === 'N') {
+      state.currBadgeCount++;
+    }
+  }
+
+  for (var _key in state.localList) {
+    if (state.localList[_key].status === 'N') {
+      state.localBadgeCount++;
+    }
+  }
 }), _mutations);
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
@@ -32768,6 +32799,93 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, types.SHOW, functi
 }), _defineProperty(_mutations, types.PUSH_LIST, function (state, toast) {
   state.toastList.push(toast);
 }), _mutations);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: state,
+  getters: getters,
+  actions: actions,
+  mutations: mutations
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/modules/tools.js":
+/*!*********************************************!*\
+  !*** ./resources/js/store/modules/tools.js ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var _this = undefined;
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var types = {
+  SET_SM_MODAL: 'SET_SM_MODAL'
+};
+var state = {
+  smModal: {
+    show: false,
+    title: '',
+    content: '',
+    data: {},
+    confirm: function confirm() {},
+    cancel: function cancel() {
+      _this.smModal.show = false;
+    }
+  },
+  lgModal: {
+    show: false,
+    title: '',
+    content: '',
+    data: {},
+    confirm: function confirm() {},
+    cancel: function cancel() {
+      _this.lgModal.show = false;
+    }
+  },
+  floatMenu: {
+    show: false,
+    items: [],
+    data: {},
+    saveAndClose: true
+  }
+};
+var getters = {};
+var actions = {
+  showSmModal: function showSmModal(_ref, modal) {
+    var commit = _ref.commit;
+    commit(_objectSpread({}, modal, {
+      show: true
+    }));
+  },
+  hideSmModal: function hideSmModal(_ref2) {
+    var _this2 = this;
+
+    var commit = _ref2.commit;
+    commit({
+      show: false,
+      title: '',
+      content: '',
+      data: {},
+      confirm: function confirm() {},
+      cancel: function cancel() {
+        _this2.smModal.show = false;
+      }
+    });
+  }
+};
+
+var mutations = _defineProperty({}, types.SET_SM_MODAL, function (state, modal) {
+  this.smModal = modal;
+});
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
   state: state,
@@ -32954,8 +33072,8 @@ var settingList = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\VSCode-src\xknote\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\VSCode-src\xknote\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! F:\VSCode-src\Laravel\xknote-2\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! F:\VSCode-src\Laravel\xknote-2\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ }),

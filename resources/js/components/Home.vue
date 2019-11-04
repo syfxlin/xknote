@@ -540,15 +540,11 @@ export default {
   },
   props: [
     "loadFirstNote",
-    "listOperate",
-    "listOperateS",
-    "noteOperate",
-    "folderOperate",
     "setXknoteOpened",
     "openNote",
     "writeMode",
-    "timeToast",
-    "configOperate"
+    "configOperate",
+    "listOperate"
   ],
   data() {
     return {
@@ -586,7 +582,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("note", ["currBadgeCount", "localBadgeCount", "getReData"]),
+    ...mapGetters("note", ["getReData"]),
     ...mapState("note", [
       "noteBaseInfo",
       "xknoteOpened",
@@ -596,20 +592,23 @@ export default {
       "cloudList",
       "localList",
       "xknoteTab",
-      "readOpened"
+      "readOpened",
+      "currBadgeCount",
+      "localBadgeCount"
     ])
   },
   methods: {
     ...mapActions("note", [
       "switchTab",
-      "folderOperateS",
-      "noteOperateS",
+      "folderOperate",
+      "noteOperate",
       "loadCloudFolders",
       "loadLocalNotes",
       "setXknoteOpenedA",
       "setReadOpenedA",
       "setXknoteOpenedIndexA"
     ]),
+    ...mapActions("toast", ["timeToast"]),
     logout() {
       window.axios.post("/logout").then(function() {
         window.location.href = "/";
@@ -659,33 +658,59 @@ export default {
         this.smModal.show = true;
         this.smModal.confirm = () => {
           this.smModal.show = false;
-          let info = this.listOperateS({
+          let info = this.listOperate({
             operate: "get",
             storage: storage,
             path: path
           });
           if (type === "note") {
-            this.noteOperateS({
+            this.noteOperate({
               operate: operate,
               storage: storage,
               noteInfo: info
-            }).then(res => {
-              this.listOperateS({
-                operate: "delete",
-                storage: storage,
-                path: path
-              });
-            });
-          } else {
-            this.folderOperateS({ operate: operate, noteInfo: info }).then(
-              res => {
-                this.listOperateS({
+            })
+              .then(res => {
+                this.listOperate({
                   operate: "delete",
                   storage: storage,
                   path: path
                 });
-              }
-            );
+                this.timeToast({
+                  message: "删除成功！",
+                  status: "success",
+                  delay: 1000
+                });
+              })
+              .catch(err => {
+                this.timeToast({
+                  message: "删除失败！请重试。",
+                  status: "error",
+                  delay: 1000
+                });
+              });
+          } else {
+            this.folderOperate({ operate: operate, noteInfo: info })
+              .then(res => {
+                this.listOperate({
+                  operate: "delete",
+                  storage: storage,
+                  path: path
+                });
+              })
+              .then(() => {
+                this.timeToast({
+                  message: "删除成功！",
+                  status: "success",
+                  delay: 1000
+                });
+              })
+              .catch(err => {
+                this.timeToast({
+                  message: "删除失败！请重试。",
+                  status: "error",
+                  delay: 1000
+                });
+              });
           }
         };
         this.smModal.cancel = () => {
@@ -694,7 +719,7 @@ export default {
       }
       if (operate === "rename") {
         // 先获取到旧的Note信息，为了防止对象的变动所以需要克隆对象，利用json转换即可方便克隆对象
-        let info = this.listOperateS({
+        let info = this.listOperate({
           operate: "get",
           storage: storage,
           path: path
@@ -715,22 +740,22 @@ export default {
           if (e.key === "Enter") {
             let value = e.target.value;
             let newPath = info.path.replace(new RegExp(info.name + "$"), value);
-            this.listOperateS({
-              operate: "delete",
-              storage: storage,
-              path: info.path
-            });
-            this.listOperateS({
+            this.listOperate({
               operate: "add",
               storage: storage,
               path: newPath,
               noteInfo: {
                 note: info,
-                soucre: {
+                source: {
                   path: newPath,
-                  storage: storage
+                  storage: this.currListSource[info.path].storage
                 }
               }
+            });
+            this.listOperate({
+              operate: "delete",
+              storage: storage,
+              path: info.path
             });
             // TODO: 修复
             info.path = newPath;
@@ -739,9 +764,9 @@ export default {
             if (type === "note") {
               let s = storage;
               if (storage === "curr") {
-                s = this.currListSource[path].storage;
+                s = this.currListSource[newPath].storage;
               }
-              this.noteOperateS({
+              this.noteOperate({
                 operate: operate,
                 storage: s,
                 noteInfo: {
@@ -755,14 +780,24 @@ export default {
                     .removeAttribute("children");
                   input.removeEventListener("keydown", keyEv);
                   input.removeAttribute("disabled");
+                  this.timeToast({
+                    message: "重命名成功！",
+                    status: "success",
+                    delay: 1000
+                  });
                 })
                 .catch(err => {
                   info.path = oldInfo.path;
                   info.name = oldInfo.name;
                   input.removeAttribute("disabled");
+                  this.timeToast({
+                    message: "重命名失败！请重试。",
+                    status: "error",
+                    delay: 1000
+                  });
                 });
             } else {
-              this.folderOperateS({
+              this.folderOperate({
                 operate: operate,
                 folderInfo: {
                   oldFolder: oldInfo,
@@ -775,11 +810,21 @@ export default {
                     .removeAttribute("children");
                   input.removeEventListener("keydown", keyEv);
                   input.removeAttribute("disabled");
+                  this.timeToast({
+                    message: "重命名成功！",
+                    status: "success",
+                    delay: 1000
+                  });
                 })
                 .catch(err => {
                   info.path = oldInfo.path;
                   info.name = oldInfo.name;
                   input.removeAttribute("disabled");
+                  this.timeToast({
+                    message: "重命名失败！请重试。",
+                    status: "error",
+                    delay: 1000
+                  });
                 });
             }
           }
@@ -789,13 +834,13 @@ export default {
       // noteItem专有操作
       if (type === "note") {
         if (operate === "saveLocal") {
-          let note = this.listOperateS({
+          let note = this.listOperate({
             operate: "get",
             storage: storage,
             path: path
           });
           // Path相同的时候视为同一文档，但保存时并未删除，所以需要调整判断
-          this.listOperateS({
+          this.listOperate({
             operate: "delete",
             storage: "local",
             path: path
@@ -805,38 +850,51 @@ export default {
               note.status = "L";
             }
             // 保存到本地（实际操作）
-            this.noteOperateS({
+            this.noteOperate({
               operate: "save",
               storage: "local",
               noteInfo: note
-            }).then(() => {
-              if (this.floatMenu.saveAndClose) {
-                note = this.listOperateS({
-                  operate: "delete",
-                  storage: "curr",
-                  path: path
-                });
-                this.setXknoteOpened(
-                  JSON.parse(JSON.stringify(this.noteBaseInfo))
-                );
-              }
-              let localIndex = this.listOperateS({
-                operate: "add",
-                storage: "local",
-                path: path,
-                noteInfo: note
-              });
-              // 若不是从localList中打开的文件就不会有currListSource的信息，如果用户选择不关闭保存，则需要添加source信息，防止后续操作出现问题
-              if (!this.floatMenu.saveAndClose) {
-                this.setCurrListSourceA({
+            })
+              .then(() => {
+                if (this.floatMenu.saveAndClose) {
+                  note = this.listOperate({
+                    operate: "delete",
+                    storage: "curr",
+                    path: path
+                  });
+                  this.setXknoteOpened(
+                    JSON.parse(JSON.stringify(this.noteBaseInfo))
+                  );
+                }
+                let localIndex = this.listOperate({
+                  operate: "add",
+                  storage: "local",
                   path: path,
-                  source: {
-                    path: localIndex,
-                    storage: "local"
-                  }
+                  noteInfo: note
                 });
-              }
-            });
+                // 若不是从localList中打开的文件就不会有currListSource的信息，如果用户选择不关闭保存，则需要添加source信息，防止后续操作出现问题
+                if (!this.floatMenu.saveAndClose) {
+                  this.setCurrListSourceA({
+                    path: path,
+                    source: {
+                      path: localIndex,
+                      storage: "local"
+                    }
+                  });
+                }
+                this.timeToast({
+                  message: "保存到本地成功！",
+                  status: "success",
+                  delay: 1000
+                });
+              })
+              .catch(err => {
+                this.timeToast({
+                  message: "保存到本地失败！",
+                  status: "error",
+                  delay: 1000
+                });
+              });
           }
           if (storage === "cloud") {
             let noteEle = document.querySelector(
@@ -845,108 +903,139 @@ export default {
             let icon = noteEle.querySelector(".tile-action");
             icon.style.display = "unset";
             let btn = icon.querySelector(".btn");
-            this.noteOperateS({
+            this.noteOperate({
               operate: "read",
               storage: "cloud",
               noteInfo: note
-            }).then(data => {
-              this.$set(note, "note", data.note);
-              note.status = "C";
-              btn.querySelector(".loading").style.display = "none";
-              icon.style.display = "";
-              this.noteOperateS({
-                operate: "save",
-                storage: "local",
-                noteInfo: note
-              }).then(() => {
-                this.listOperateS({
-                  operate: "add",
+            })
+              .then(data => {
+                this.$set(note, "note", data.note);
+                note.status = "C";
+                btn.querySelector(".loading").style.display = "none";
+                icon.style.display = "";
+                this.noteOperate({
+                  operate: "save",
                   storage: "local",
-                  path: path,
                   noteInfo: note
+                })
+                  .then(() => {
+                    this.listOperate({
+                      operate: "add",
+                      storage: "local",
+                      path: path,
+                      noteInfo: note
+                    });
+                    this.timeToast({
+                      message: "保存到本地成功！",
+                      status: "success",
+                      delay: 1000
+                    });
+                  })
+                  .catch(err => {
+                    this.timeToast({
+                      message: "保存到本地失败！请重试。",
+                      status: "error",
+                      delay: 1000
+                    });
+                  });
+              })
+              .catch(err => {
+                this.timeToast({
+                  message: "加载失败！请重试。",
+                  status: "error",
+                  delay: 1000
                 });
               });
-            });
           }
         }
         if (operate === "saveCloud") {
-          let note = this.listOperateS({
+          let note = this.listOperate({
             operate: "get",
             storage: storage,
             path: path
           });
-          this.noteOperateS({
+          this.noteOperate({
             operate: "save",
             storage: "cloud",
             noteInfo: note
-          }).then(() => {
-            note.status = "C";
-            if (storage === "curr") {
-              if (this.currListSource[path].storage === "local") {
-                this.noteOperateS({
-                  operate: "save",
-                  storage: "local",
-                  noteInfo: note
-                });
+          })
+            .then(() => {
+              note.status = "C";
+              if (storage === "curr") {
+                if (this.currListSource[path].storage === "local") {
+                  this.noteOperate({
+                    operate: "save",
+                    storage: "local",
+                    noteInfo: note
+                  });
+                }
+                if (this.floatMenu.saveAndClose) {
+                  this.listOperate({
+                    operate: "delete",
+                    storage: "curr",
+                    path: path
+                  });
+                  this.setXknoteOpened(
+                    JSON.parse(JSON.stringify(this.noteBaseInfo))
+                  );
+                }
               }
-              if (this.floatMenu.saveAndClose) {
-                this.listOperateS({
-                  operate: "delete",
-                  storage: "curr",
-                  path: path
-                });
-                this.setXknoteOpened(
-                  JSON.parse(JSON.stringify(this.noteBaseInfo))
-                );
+              if (storage === "local") {
+                if (this.floatMenu.saveAndClose) {
+                  this.noteOperate({
+                    operate: "delete",
+                    storage: "local",
+                    noteInfo: note
+                  });
+                  this.listOperate({
+                    operate: "delete",
+                    storage: storage,
+                    path: path
+                  });
+                } else {
+                  this.noteOperate({
+                    operate: "save",
+                    storage: "local",
+                    noteInfo: note
+                  });
+                }
               }
-            }
-            if (storage === "local") {
-              if (this.floatMenu.saveAndClose) {
-                this.noteOperateS({
-                  operate: "delete",
-                  storage: "local",
-                  noteInfo: note
-                });
-                this.listOperateS({
-                  operate: "delete",
-                  storage: storage,
-                  path: path
-                });
-              } else {
-                this.noteOperateS({
-                  operate: "save",
-                  storage: "local",
-                  noteInfo: note
-                });
-              }
-            }
-            this.listOperateS({
-              operate: "add",
-              storage: "cloud",
-              path: path,
-              noteInfo: note
+              this.listOperate({
+                operate: "add",
+                storage: "cloud",
+                path: path,
+                noteInfo: note
+              });
+              this.timeToast({
+                message: "保存到云端成功！",
+                status: "success",
+                delay: 1000
+              });
+            })
+            .catch(err => {
+              this.timeToast({
+                message: "保存到云端失败！请重试。",
+                status: "error",
+                delay: 1000
+              });
             });
-          });
         }
         if (operate === "closeCurr") {
           // 如果笔记在未保存状态关闭则先弹出modal提示是否下关闭
           let closeCurr = () => {
             if (path == this.xknoteOpenedIndex.curr) {
-              debugger;
               this.setXknoteOpened(
                 JSON.parse(JSON.stringify(this.noteBaseInfo))
               );
-              debugger;
             }
-            this.listOperateS({
+            this.listOperate({
               operate: "delete",
               storage: "curr",
               path: path
             });
-            debugger;
           };
           if (
-            this.listOperateS({ operate: "get", storage: storage, path: path })
+            this.listOperate({ operate: "get", storage: storage, path: path })
               .status === "N"
           ) {
             this.smModal.title = "关闭";
@@ -997,7 +1086,7 @@ export default {
         this.lgModal.content = operate.substring(4);
         if (this.lgModal.content === "CreateNote") {
           this.lgModal.title = "新建MD笔记";
-          this.folderOperateS({ operate: "readOnly", folderInfo: null }).then(
+          this.folderOperate({ operate: "readOnly", folderInfo: null }).then(
             data => {
               this.$set(this.lgModal.data, "folders", data.folders);
             }
@@ -1014,7 +1103,7 @@ export default {
                 this.$set(this.lgModal.data, "status", "error");
                 return;
               }
-              this.noteOperateS({
+              this.noteOperate({
                 operate: "exist",
                 storage: this.lgModal.data.storage,
                 noteInfo: {
@@ -1082,7 +1171,7 @@ export default {
               "normal",
               true
             );
-            this.listOperateS({
+            this.listOperate({
               operate: "add",
               storage: this.lgModal.data.storage,
               path: path,
@@ -1103,7 +1192,7 @@ export default {
         }
         if (this.lgModal.content === "CreateFolder") {
           this.lgModal.title = "新建文件夹";
-          this.folderOperateS({ operate: "readOnly", folderInfo: null }).then(
+          this.folderOperate({ operate: "readOnly", folderInfo: null }).then(
             data => {
               this.$set(this.lgModal.data, "folders", data.folders);
             }
@@ -1115,7 +1204,7 @@ export default {
             }
             wTimeout = setTimeout(() => {
               this.$set(this.lgModal.data, "status", "loading");
-              this.folderOperateS({
+              this.folderOperate({
                 operate: "exist",
                 folderInfo: {
                   path:
@@ -1146,23 +1235,36 @@ export default {
               .classList.add("loading");
             let path =
               this.lgModal.data.select + "/" + this.lgModal.data.foldername;
-            this.folderOperateS({
+            this.folderOperate({
               operate: "create",
               folderInfo: {
                 path: path
               }
-            }).then(() => {
-              this.listOperateS({
-                operate: "add",
-                storage: this.lgModal.data.storage,
-                path: path
+            })
+              .then(() => {
+                this.listOperate({
+                  operate: "add",
+                  storage: this.lgModal.data.storage,
+                  path: path
+                });
+                document
+                  .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+                  .classList.remove("loading");
+                this.lgModal.cancel();
+                this.loadCloudFolders();
+                this.timeToast({
+                  message: "创建文件夹成功！",
+                  status: "success",
+                  delay: 1000
+                });
+              })
+              .catch(err => {
+                this.timeToast({
+                  message: "创建文件夹失败！请重试。",
+                  status: "error",
+                  delay: 1000
+                });
               });
-              document
-                .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-                .classList.remove("loading");
-              this.lgModal.cancel();
-              this.loadCloudFolders();
-            });
           };
           this.lgModal.cancel = () => {
             uwFolderName();
@@ -1183,7 +1285,11 @@ export default {
               this.$set(this.lgModal.data, "status", "");
             },
             error => {
-              this.timeToast("获取信息失败！", "error", 1000);
+              this.timeToast({
+                message: "获取信息失败！",
+                status: "error",
+                delay: 1000
+              });
               this.$set(this.lgModal.data, "status", "");
             }
           );
@@ -1211,10 +1317,18 @@ export default {
                   .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
                   .classList.remove("loading");
                 this.lgModal.cancel();
-                this.timeToast("设置成功！", "success", 1000);
+                this.timeToast({
+                  message: "设置成功！",
+                  status: "success",
+                  delay: 1000
+                });
               },
               error => {
-                this.timeToast("设置失败，请重试！", "error", 1000);
+                this.timeToast({
+                  message: "设置失败，请重试！",
+                  status: "error",
+                  delay: 1000
+                });
               }
             );
           };
@@ -1288,12 +1402,12 @@ export default {
     checkLocalOperate(operate, index) {
       let path = this.lgModal.data[index].path;
       if (operate === "keepLocal") {
-        this.noteOperateS({
+        this.noteOperate({
           operate: "read",
           storage: "local",
           noteInfo: { path: path }
         }).then(data => {
-          this.noteOperateS({
+          this.noteOperate({
             operate: "save",
             storage: "cloud",
             noteInfo: data
@@ -1302,7 +1416,7 @@ export default {
             //TODO: 修改使用action修改
             this.$delete(this.lgModal.data, index);
             // 将更新后的状态保存到本地
-            this.noteOperateS({
+            this.noteOperate({
               operate: "save",
               storage: "local",
               noteInfo: this.localList[path]
@@ -1311,12 +1425,12 @@ export default {
         });
       }
       if (operate === "keepCloud") {
-        this.noteOperateS({
+        this.noteOperate({
           operate: "read",
           storage: "cloud",
           noteInfo: { path: path }
         }).then(data => {
-          this.noteOperateS({
+          this.noteOperate({
             operate: "save",
             storage: "local",
             noteInfo: data
@@ -1332,30 +1446,54 @@ export default {
     },
     gitOperate(operate, path) {
       if (operate === "gitPull") {
-        this.folderOperateS({ operate: operate, folderInfo: { path: path } })
+        this.folderOperate({ operate: operate, folderInfo: { path: path } })
           .then(() => {
-            this.timeToast("Git Pull成功！", "success", 1000);
+            this.timeToast({
+              message: "Git Pull成功！",
+              status: "success",
+              delay: 1000
+            });
           })
           .catch(error => {
-            this.timeToast("Git Pull失败，请重试！", "error", 1000);
+            this.timeToast({
+              message: "Git Pull失败，请重试！",
+              status: "error",
+              delay: 1000
+            });
           });
       }
       if (operate === "gitPush") {
-        this.folderOperateS({ operate: operate, folderInfo: { path: path } })
+        this.folderOperate({ operate: operate, folderInfo: { path: path } })
           .then(() => {
-            this.timeToast("Git Push成功！", "success", 1000);
+            this.timeToast({
+              message: "Git Push成功！",
+              status: "success",
+              delay: 1000
+            });
           })
           .catch(error => {
-            this.timeToast("Git Push失败，请重试！", "error", 1000);
+            this.timeToast({
+              message: "Git Push失败，请重试！",
+              status: "error",
+              delay: 1000
+            });
           });
       }
       if (operate === "gitPushForce") {
-        this.folderOperateS({ operate: operate, folderInfo: { path: path } })
+        this.folderOperate({ operate: operate, folderInfo: { path: path } })
           .then(() => {
-            this.timeToast("Git Push成功！", "success", 1000);
+            this.timeToast({
+              message: "Git Push成功！",
+              status: "success",
+              delay: 1000
+            });
           })
           .catch(error => {
-            this.timeToast("Git Push失败，请重试！", "error", 1000);
+            this.timeToast({
+              message: "Git Push失败，请重试！",
+              status: "error",
+              delay: 1000
+            });
           });
       }
       if (operate === "gitInitClone") {
@@ -1369,7 +1507,7 @@ export default {
           }
           wTimeout = setTimeout(() => {
             this.$set(this.lgModal.data, "status", "loading");
-            this.folderOperateS({
+            this.folderOperate({
               operate: "exist",
               folderInfo: {
                 path: this.lgModal.data.foldername + "/.git"
@@ -1408,7 +1546,7 @@ export default {
               git_password: this.lgModal.data.git_password
             };
           }
-          this.folderOperateS({
+          this.folderOperate({
             operate:
               this.lgModal.data.init_or_clone === "init"
                 ? "gitInit"
@@ -1423,7 +1561,11 @@ export default {
               .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
               .classList.remove("loading");
             this.lgModal.cancel();
-            this.timeToast("Git Init或Clone成功！", "success", 1000);
+            this.timeToast({
+              message: "Git Init或Clone成功！",
+              status: "success",
+              delay: 1000
+            });
           });
         };
         this.lgModal.cancel = () => {
@@ -1437,7 +1579,7 @@ export default {
         this.lgModal.content = "GitItemConfig";
         this.lgModal.show = true;
         this.$set(this.lgModal.data, "status", "loading");
-        this.folderOperateS({
+        this.folderOperate({
           operate: "getGitConfig",
           folderInfo: { path: path }
         })
@@ -1448,7 +1590,11 @@ export default {
             this.$set(this.lgModal.data, "status", "");
           })
           .catch(error => {
-            this.timeToast("获取信息失败！", "error", 1000);
+            this.timeToast({
+              message: "获取信息失败！",
+              status: "error",
+              delay: 1000
+            });
             this.$set(this.lgModal.data, "status", "");
           });
         this.lgModal.confirm = () => {
@@ -1463,7 +1609,7 @@ export default {
           document
             .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
             .classList.add("loading");
-          this.folderOperateS({
+          this.folderOperate({
             operate: "setGitConfig",
             folderInfo: {
               repo: this.lgModal.data.repo,
@@ -1478,10 +1624,18 @@ export default {
                 .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
                 .classList.remove("loading");
               this.lgModal.cancel();
-              this.timeToast("设置成功！", "success", 1000);
+              this.timeToast({
+                message: "设置成功！",
+                status: "success",
+                delay: 1000
+              });
             })
             .catch(error => {
-              this.timeToast("设置失败，请重试！", "error", 1000);
+              this.timeToast({
+                message: "设置失败，请重试！",
+                status: "error",
+                delay: 1000
+              });
             });
         };
         this.lgModal.cancel = () => {

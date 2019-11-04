@@ -2,26 +2,12 @@
   <main id="app-main">
     <transition name="fade" mode="out-in">
       <router-view
-        :xknoteTab.sync="xknoteTab"
-        :currListSource.sync="currListSource"
-        :currList.sync="currList"
-        :cloudList.sync="cloudList"
-        :localList.sync="localList"
-        :xknoteOpened.sync="xknoteOpened"
-        :xknoteOpenedIndex.sync="xknoteOpenedIndex"
-        :noteBaseInfo.sync="noteBaseInfo"
         :loadFirstNote="loadFirstNote"
-        :listOperate="listOperate"
-        :noteOperate="noteOperate"
-        :folderOperate="folderOperate"
         :setXknoteOpened="setXknoteOpened"
-        :switchTab="switchTab"
         :openNote="openNote"
-        :readOpened.sync="readOpened"
-        :loadCloudFolders="loadCloudFolders"
         :timeToast="timeToast"
         :configOperate="configOperate"
-        :listOperateS="listOperateS"
+        :listOperate="listOperate"
         ref="children"
       ></router-view>
     </transition>
@@ -34,7 +20,7 @@
 
 <script>
 import "./assets/style.css";
-import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   name: "App",
   created() {
@@ -73,8 +59,8 @@ export default {
   methods: {
     ...mapActions("note", [
       "switchTab",
-      "folderOperateS",
-      "noteOperateS",
+      "folderOperate",
+      "noteOperate",
       "loadCloudFolders",
       "loadLocalNotes",
       "setXknoteOpenedA",
@@ -83,38 +69,10 @@ export default {
     ]),
     ...mapActions("toast", ["timeToast"]),
     ...mapActions("db", ["optionsDB"]),
-    listOperate(operate, storage, path, noteInfo = null) {
-      return this.listOperateS({
-        operate: operate,
-        storage: storage,
-        path: path,
-        noteInfo: noteInfo
-      });
-    },
-    listOperateS(data) {
+    listOperate(data) {
       this.$store.commit("note/LIST_OPERATE", data, { root: true });
+      this.$store.commit("note/CHANGE_COUNT");
       return this.getReData;
-    },
-    noteOperate(operate, storage, noteInfo = null) {
-      return new Promise((resolve, reject) => {
-        this.noteOperateS({
-          operate: operate,
-          storage: storage,
-          noteInfo: noteInfo
-        })
-          .then(resolve)
-          .catch(reject);
-      });
-    },
-    folderOperate(operate, folderInfo = null) {
-      return new Promise((resolve, reject) => {
-        this.folderOperateS({
-          operate: operate,
-          folderInfo: folderInfo
-        })
-          .then(resolve)
-          .catch(reject);
-      });
     },
     // TODO: cloud-tab加载过慢导致info为null
     async loadPathNote(path, mode = "normal") {
@@ -128,7 +86,7 @@ export default {
         return;
       }
       let storage = info.getAttribute("data-storage");
-      let item = await this.listOperateS({
+      let item = await this.listOperate({
         operate: "get",
         storage: storage,
         path: path
@@ -255,7 +213,7 @@ export default {
           // 添加到currList，同时将源数据添加到currListSource
           let currPath;
           if (source.storage !== "curr") {
-            this.listOperateS({
+            this.listOperate({
               operate: "add",
               storage: "curr",
               path: note.path,
@@ -303,7 +261,7 @@ export default {
           btn.querySelector(".icon").style.display = "none";
         }
         btn.querySelector(".loading").style.display = "block";
-        this.noteOperateS({
+        this.noteOperate({
           operate: "read",
           storage: "cloud",
           noteInfo: note
@@ -353,29 +311,34 @@ export default {
      */
     watchNote() {
       if (!window.xknoteOpenedChangeFlag) return;
-      this.$set(this.xknoteOpened, "status", "N");
       var d = new Date();
-      this.$set(
-        this.xknoteOpened.note,
-        "updated_at",
-        d.getFullYear() +
-          "/" +
-          (d.getMonth() + 1) +
-          "/" +
-          d.getDate() +
-          " " +
-          d.getHours() +
-          ":" +
-          d.getMinutes() +
-          ":" +
-          d.getSeconds()
-      );
-      this.listOperateS({
-        operate: "set",
-        storage: this.xknoteOpenedIndex.source.storage,
-        path: this.xknoteOpenedIndex.source.path,
-        noteInfo: this.xknoteOpened
+      this.setXknoteOpenedA({
+        ...this.xknoteOpened,
+        status: "N",
+        note: {
+          ...this.xknoteOpened.note,
+          updated_at:
+            d.getFullYear() +
+            "/" +
+            (d.getMonth() + 1) +
+            "/" +
+            d.getDate() +
+            " " +
+            d.getHours() +
+            ":" +
+            d.getMinutes() +
+            ":" +
+            d.getSeconds()
+        }
       });
+      if (this.xknoteOpened.path !== "") {
+        this.listOperate({
+          operate: "set",
+          storage: "curr",
+          path: this.xknoteOpenedIndex.source.path,
+          noteInfo: this.xknoteOpened
+        });
+      }
     }
   },
   watch: {

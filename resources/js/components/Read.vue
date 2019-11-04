@@ -77,14 +77,14 @@ import {
   toHtml,
   getTocHtml
 } from "../../../node_modules/xkeditor/src/utils/switchContent.js";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 export default {
   name: "read-mode",
   components: {
     "note-item": noteItem,
     "folder-item": folderItem
   },
-  props: ["openNote", "loadFirstNote", "loadCloudFolders"],
+  props: ["openNote", "loadFirstNote"],
   data() {
     return {
       xknoteTab: "toc",
@@ -96,6 +96,7 @@ export default {
     ...mapState("note", ["cloudList", "localList", "readOpened"])
   },
   methods: {
+    ...mapActions("note", ["loadCloudFolders"]),
     switchTab(tabName) {
       this.xknoteTab = tabName;
     },
