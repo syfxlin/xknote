@@ -1,9 +1,10 @@
-import './bootstrap';
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import "./bootstrap";
+import Vue from "vue";
+import VueRouter from "vue-router";
 Vue.use(VueRouter);
-import routes from './routes';
-import App from './App.vue';
+import routes from "./routes";
+import App from "./App.vue";
+import store from "./store";
 
 const router = new VueRouter({
   routes
@@ -12,10 +13,11 @@ const router = new VueRouter({
 window.nThis = {};
 
 window.vm = new Vue({
-  el: '#app',
+  el: "#app",
   components: {
     App
   },
-  template: '<App/>',
-  router
+  template: "<App/>",
+  router,
+  store
 });

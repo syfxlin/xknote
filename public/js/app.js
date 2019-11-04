@@ -11456,7 +11456,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _assets_style_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./assets/style.css */ "./resources/js/assets/style.css");
 /* harmony import */ var _assets_style_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_assets_style_css__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -11464,46 +11469,40 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "App",
@@ -11516,129 +11515,155 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   data: function data() {
     return {
       // 存储当前开启的文档信息（开启于Editor中）
-      noteBaseInfo: {
-        type: "note",
-        path: "",
-        name: "",
-        status: "N",
-        note: {
-          title: "",
-          author: "",
-          content: "暂未打开任何文件，请选择文件。",
-          created_at: "",
-          updated_at: ""
-        }
-      },
-      xknoteOpened: {
-        type: "note",
-        path: "",
-        name: "",
-        status: "N",
-        note: {
-          title: "",
-          author: "",
-          content: "暂未打开任何文件，请选择文件。",
-          created_at: "",
-          updated_at: ""
-        }
-      },
-      // 存储当前开启的文档的位置，当前位置和源位置
-      // curr存储的是位于currList的索引
-      // source存储的分别是源的位置 本地or云端（data-storage） 在其列表中的index（data-index）
-      xknoteOpenedIndex: {
-        curr: "",
-        source: {
-          path: "",
-          storage: ""
-        }
-      },
-      // currList的扩展信息
-      currListSource: {},
-      currList: {},
-      cloudList: {},
-      localList: {},
-      xknoteTab: "cloud",
-      readOpened: {
-        type: "note",
-        path: "",
-        name: "",
-        status: "N",
-        note: {
-          title: "",
-          author: "",
-          content: "暂未打开任何文件，请选择文件。",
-          created_at: "",
-          updated_at: ""
-        }
-      },
-      prevRouter: null,
-      toast: {
-        show: false,
-        message: "",
-        status: "",
-        toastList: []
-      }
+      // noteBaseInfo: {
+      //   type: "note",
+      //   path: "",
+      //   name: "",
+      //   status: "N",
+      //   note: {
+      //     title: "",
+      //     author: "",
+      //     content: "暂未打开任何文件，请选择文件。",
+      //     created_at: "",
+      //     updated_at: ""
+      //   }
+      // },
+      // xknoteOpened: {
+      //   type: "note",
+      //   path: "",
+      //   name: "",
+      //   status: "N",
+      //   note: {
+      //     title: "",
+      //     author: "",
+      //     content: "暂未打开任何文件，请选择文件。",
+      //     created_at: "",
+      //     updated_at: ""
+      //   }
+      // },
+      // // 存储当前开启的文档的位置，当前位置和源位置
+      // // curr存储的是位于currList的索引
+      // // source存储的分别是源的位置 本地or云端（data-storage） 在其列表中的index（data-index）
+      // xknoteOpenedIndex: {
+      //   curr: "",
+      //   source: {
+      //     path: "",
+      //     storage: ""
+      //   }
+      // },
+      // // currList的扩展信息
+      // currListSource: {},
+      // currList: {},
+      // cloudList: {},
+      // localList: {},
+      // xknoteTab: "cloud",
+      // readOpened: {
+      //   type: "note",
+      //   path: "",
+      //   name: "",
+      //   status: "N",
+      //   note: {
+      //     title: "",
+      //     author: "",
+      //     content: "暂未打开任何文件，请选择文件。",
+      //     created_at: "",
+      //     updated_at: ""
+      //   }
+      // },
+      prevRouter: null // toast: {
+      //   show: false,
+      //   message: "",
+      //   status: "",
+      //   toastList: []
+      // }
+
     };
   },
   mounted: function mounted() {
     this.loadLocalNotes(); // this.loadCloudFolders();
 
     window.xknote = {};
+    window.timeToast = this.timeToast;
   },
-  methods: {
-    showToast: function showToast(message, status) {
-      this.toast.message = message;
-      this.toast.status = status;
-      this.toast.show = true;
-      var toast = document.querySelector(".toast");
-      toast.style.opacity = "1";
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])({
+    noteBaseInfo: function noteBaseInfo(state) {
+      return state.note.noteBaseInfo;
     },
-    hideToast: function hideToast() {
-      var _this = this;
-
-      var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
-      var toast = document.querySelector(".toast");
-      toast.style.opacity = "0";
-      setTimeout(function () {
-        _this.toast.show = false;
-        callback();
-      }, 500);
+    xknoteOpened: function xknoteOpened(state) {
+      return state.note.xknoteOpened;
     },
-    popToast: function popToast() {
-      var _this2 = this;
-
-      var toast = this.toast.toastList[0];
-      this.showToast(toast.message, toast.status);
-      setTimeout(function () {
-        _this2.hideToast(function () {
-          _this2.toast.toastList.shift();
-
-          if (_this2.toast.toastList.length !== 0) {
-            _this2.popToast();
-          }
-        });
-      }, toast.delay);
+    xknoteOpenedIndex: function xknoteOpenedIndex(state) {
+      return state.note.xknoteOpenedIndex;
     },
-    timeToast: function timeToast(message, status, delay) {
-      this.toast.toastList.push({
-        message: message,
-        status: status,
-        delay: delay
-      });
-
-      if (this.toast.toastList.length === 1) {
-        this.popToast();
-      }
+    currListSource: function currListSource(state) {
+      return state.note.currListSource;
     },
+    currList: function currList(state) {
+      return state.note.currList;
+    },
+    cloudList: function cloudList(state) {
+      return state.note.cloudList;
+    },
+    localList: function localList(state) {
+      return state.note.localList;
+    },
+    xknoteTab: function xknoteTab(state) {
+      return state.note.xknoteTab;
+    },
+    readOpened: function readOpened(state) {
+      return state.note.readOpened;
+    },
+    toast: function toast(state) {
+      return state.toast;
+    }
+  })),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "listOperate"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("toast", ["timeToast"]), {
+    // showToast(message, status) {
+    //   this.toast.message = message;
+    //   this.toast.status = status;
+    //   this.toast.show = true;
+    //   let toast = document.querySelector(".toast");
+    //   toast.style.opacity = "1";
+    // },
+    // hideToast(callback = () => {}) {
+    //   let toast = document.querySelector(".toast");
+    //   toast.style.opacity = "0";
+    //   setTimeout(() => {
+    //     this.toast.show = false;
+    //     callback();
+    //   }, 500);
+    // },
+    // popToast() {
+    //   let toast = this.toast.toastList[0];
+    //   this.showToast(toast.message, toast.status);
+    //   setTimeout(() => {
+    //     this.hideToast(() => {
+    //       this.toast.toastList.shift();
+    //       if (this.toast.toastList.length !== 0) {
+    //         this.popToast();
+    //       }
+    //     });
+    //   }, toast.delay);
+    // },
+    // timeToast(message, status, delay) {
+    //   this.toast.toastList.push({
+    //     message: message,
+    //     status: status,
+    //     delay: delay
+    //   });
+    //   if (this.toast.toastList.length === 1) {
+    //     this.popToast();
+    //   }
+    // },
 
     /**
      * 切换Tab
      * @param {string} tabName 要切换到的Tab名称
      * @returns void
      */
-    switchTab: function switchTab(tabName) {
-      this.xknoteTab = tabName;
-    },
+    // switchTab(tabName) {
+    //   this.xknoteTab = tabName;
+    // },
 
     /**
      * 读取云端的文件夹及笔记
@@ -11683,12 +11708,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
      * @returns void
      */
     loadLocalNotes: function loadLocalNotes() {
-      var _this3 = this;
+      var _this = this;
 
       this.noteLocalDB("readAll", "", function (e, list) {
         // this.localList = list;
         list.forEach(function (item) {
-          _this3.$set(_this3.localList, item.path, item);
+          _this.$set(_this.localList, item.path, item);
         });
       });
     },
@@ -11719,7 +11744,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
      * @returns void
      */
     loadFirstNote: function loadFirstNote() {
-      var _this4 = this;
+      var _this2 = this;
 
       var mode = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "normal";
 
@@ -11738,10 +11763,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       } else {
         this.optionsDB("read", "rememberNote", function (e, data) {
           if (data) {
-            _this4.loadPathNote(data.path, mode);
+            _this2.loadPathNote(data.path, mode);
           }
 
-          _this4.timedTask("saveCurrOpenedNote");
+          _this2.timedTask("saveCurrOpenedNote");
         });
       }
     },
@@ -11752,15 +11777,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
      * @returns void
      */
     timedTask: function timedTask(task) {
-      var _this5 = this;
+      var _this3 = this;
 
       if (task === "saveCurrOpenedNote") {
         // 每10秒中将当前打开的笔记信息保存至本地数据库，用以下次开启做准备
         setInterval(function () {
-          if (_this5.xknoteOpened.path !== "" && _this5.$route.name === "Home") {
-            _this5.optionsDB("put", {
+          if (_this3.xknoteOpened.path !== "" && _this3.$route.name === "Home") {
+            _this3.optionsDB("put", {
               name: "rememberNote",
-              path: _this5.xknoteOpened.path
+              path: _this3.xknoteOpened.path
             });
 
             console.log("remeberNote");
@@ -11816,7 +11841,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
      * @returns void
      */
     openNote: function openNote(note, source) {
-      var _this6 = this;
+      var _this4 = this;
 
       var mode = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "normal";
       var isNew = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
@@ -11825,17 +11850,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         // 更改query
         window.inputQueryChangeFlag = false;
 
-        if (!_this6.$route.query.note || _this6.$route.query.note !== note.path) {
-          _this6.$router.replace({
-            query: _objectSpread({}, _this6.$route.query, {
+        if (!_this4.$route.query.note || _this4.$route.query.note !== note.path) {
+          _this4.$router.replace({
+            query: _objectSpread({}, _this4.$route.query, {
               note: note.path
             })
           });
         }
 
         if (mode === "normal") {
-          for (var key in _this6.currList) {
-            if (_this6.currList[key].path === note.path) {
+          for (var key in _this4.currList) {
+            if (_this4.currList[key].path === note.path) {
               source.path = note.path; //TODO: 修改
 
               source.storage = "curr";
@@ -11843,27 +11868,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           } // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
 
 
-          _this6.setXknoteOpened(note);
+          _this4.setXknoteOpened(note);
 
           window.xknoteOpenedChangeFlag = false; // 添加到currList，同时将源数据添加到currListSource
 
           var currPath;
 
           if (source.storage !== "curr") {
-            currPath = _this6.listOperate("add", "curr", note.path, {
+            currPath = _this4.listOperate("add", "curr", note.path, {
               note: note,
               source: source
             });
-            _this6.xknoteOpenedIndex.curr = note.path;
+            _this4.xknoteOpenedIndex.curr = note.path;
           } else {
-            _this6.xknoteOpenedIndex.curr = source.path;
+            _this4.xknoteOpenedIndex.curr = source.path;
             currPath = source.path;
           }
 
-          _this6.xknoteOpenedIndex.source = source;
-          _this6.xknoteTab = "curr";
+          _this4.xknoteOpenedIndex.source = source;
+          _this4.xknoteTab = "curr";
 
-          _this6.$nextTick(function () {
+          _this4.$nextTick(function () {
             // 添加当前打开的文件的active效果
             var ele;
             ele = document.querySelector(".active[data-storage='curr']");
@@ -11878,7 +11903,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
 
         if (mode === "read") {
-          _this6.$set(_this6, "readOpened", JSON.parse(JSON.stringify(note)));
+          _this4.$set(_this4, "readOpened", JSON.parse(JSON.stringify(note)));
         }
       };
 
@@ -11895,7 +11920,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         btn.querySelector(".loading").style.display = "block";
         this.noteOperate("read", "cloud", note).then(function (data) {
           // note.note = data.note;
-          _this6.$set(note, "note", data.note);
+          _this4.$set(note, "note", data.note);
 
           note.status = "C";
           icon.style.display = "";
@@ -12105,74 +12130,59 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
      *   @param {object=} noteInfo.source （add curr）笔记来源
      * @returns {object | number} 笔记信息（get,delete）或者当前笔记的索引（add）
      */
-    listOperate: function listOperate(operate, storage, path) {
-      var noteInfo = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
-      var arr = [path];
-      var list = this[storage + "List"];
-
-      if (storage === "cloud") {
-        arr = path.substring(1).split("/");
-
-        for (var i = 0; operate !== "add" && i < arr.length - 1; i++) {
-          list = list[arr[i]].sub;
-        }
-      }
-
-      if (operate === "get") {
-        return list[arr[arr.length - 1]];
-      }
-
-      if (operate === "add") {
-        if (storage === "curr") {
-          var currIndex = this.$set(this.currList, path, noteInfo.note);
-          this.$set(this.currListSource, path, noteInfo.source);
-          return currIndex;
-        }
-
-        if (storage === "local") {
-          return this.$set(this.localList, path, noteInfo);
-        }
-
-        if (storage === "cloud") {
-          var p = "";
-          var len = noteInfo === null ? arr.length : arr.length - 1;
-
-          for (var _i = 0; _i < len; _i++) {
-            p += "/" + arr[_i];
-
-            if (!list[arr[_i]]) {
-              this.$set(list, arr[_i], {
-                type: "folder",
-                path: p,
-                name: arr[_i],
-                sub: {}
-              });
-            }
-
-            list = list[arr[_i]].sub;
-          }
-
-          if (noteInfo !== null) {
-            this.$set(list, arr[arr.length - 1], noteInfo);
-          }
-        }
-      }
-
-      if (operate === "delete") {
-        var noteList = list[arr[arr.length - 1]];
-        this.$delete(list, arr[arr.length - 1]);
-
-        if (storage === "curr") {
-          this.$delete(this.currListSource, arr[arr.length - 1]);
-        }
-
-        return noteList;
-      }
-
-      if (operate === "set") {
-        this.$set(list, arr[arr.length - 1], _objectSpread({}, noteInfo));
-      }
-    },
+    // listOperate(operate, storage, path, noteInfo = null) {
+    //   let arr = [path];
+    //   let list = this[storage + "List"];
+    //   if (storage === "cloud") {
+    //     arr = path.substring(1).split("/");
+    //     for (let i = 0; operate !== "add" && i < arr.length - 1; i++) {
+    //       list = list[arr[i]].sub;
+    //     }
+    //   }
+    //   if (operate === "get") {
+    //     return list[arr[arr.length - 1]];
+    //   }
+    //   if (operate === "add") {
+    //     if (storage === "curr") {
+    //       let currIndex = this.$set(this.currList, path, noteInfo.note);
+    //       this.$set(this.currListSource, path, noteInfo.source);
+    //       return currIndex;
+    //     }
+    //     if (storage === "local") {
+    //       return this.$set(this.localList, path, noteInfo);
+    //     }
+    //     if (storage === "cloud") {
+    //       let p = "";
+    //       let len = noteInfo === null ? arr.length : arr.length - 1;
+    //       for (let i = 0; i < len; i++) {
+    //         p += "/" + arr[i];
+    //         if (!list[arr[i]]) {
+    //           this.$set(list, arr[i], {
+    //             type: "folder",
+    //             path: p,
+    //             name: arr[i],
+    //             sub: {}
+    //           });
+    //         }
+    //         list = list[arr[i]].sub;
+    //       }
+    //       if (noteInfo !== null) {
+    //         this.$set(list, arr[arr.length - 1], noteInfo);
+    //       }
+    //     }
+    //   }
+    //   if (operate === "delete") {
+    //     let noteList = list[arr[arr.length - 1]];
+    //     this.$delete(list, arr[arr.length - 1]);
+    //     if (storage === "curr") {
+    //       this.$delete(this.currListSource, arr[arr.length - 1]);
+    //     }
+    //     return noteList;
+    //   }
+    //   if (operate === "set") {
+    //     this.$set(list, arr[arr.length - 1], { ...noteInfo });
+    //   }
+    // },
 
     /**
      * 操作笔记
@@ -12183,366 +12193,360 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
      *   @param {object=} noteInfo.note (rename) 新的笔记信息
      * @returns void
      */
-    noteOperate: function noteOperate(operate, storage) {
-      var _this7 = this;
-
-      var noteInfo = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-      return new Promise(function (resolve, reject) {
-        if (operate === "read") {
-          if (storage === "local") {
-            _this7.noteLocalDB("read", noteInfo.path, function (e, data) {
-              resolve(data);
-            });
-          }
-
-          if (storage === "cloud") {
-            window.axios.get("/api/notes", {
-              params: {
-                path: noteInfo.path
-              }
-            }).then(function (res) {
-              resolve(res.data);
-            })["catch"](function (err) {
-              console.error(err);
-
-              _this7.timeToast("加载失败！请重试。", "error", 1000);
-
-              reject(err);
-            });
-          }
-        }
-
-        if (operate === "create") {
-          if (storage === "cloud") {
-            window.axios.post("/api/notes", {
-              path: noteInfo.path,
-              title: noteInfo.note.title,
-              author: noteInfo.note.author,
-              created_at: noteInfo.note.created_at,
-              updated_at: noteInfo.note.updated_at,
-              content: noteInfo.note.content
-            }).then(function (res) {
-              _this7.timeToast("新建笔记成功！", "success", 1000);
-
-              if (res.data.error == false) {
-                resolve(res);
-              } else {
-                reject(res);
-              }
-            })["catch"](function (err) {
-              console.error(err);
-
-              _this7.timeToast("新建笔记失败！请重试。", "error", 1000);
-
-              resolve(err);
-            });
-          }
-        }
-
-        if (operate === "delete") {
-          if (storage === "local") {
-            _this7.noteLocalDB("delete", noteInfo.path, function (e, data) {
-              reject(data);
-            }, reject);
-          }
-
-          if (storage === "cloud") {
-            window.axios["delete"]("/api/notes", {
-              params: {
-                path: noteInfo.path
-              }
-            }).then(function (res) {
-              console.log(res);
-
-              _this7.timeToast("删除成功！", "success", 1000);
-
-              if (res.data.error == false) {
-                resolve(res);
-              } else {
-                reject(res);
-              }
-            })["catch"](function (err) {
-              console.error(err);
-
-              _this7.timeToast("删除失败！请重试。", "error", 1000);
-
-              reject(err);
-            });
-          }
-        }
-
-        if (operate === "save") {
-          if (storage === "local") {
-            _this7.noteLocalDB("delete", noteInfo.path, function () {
-              _this7.timeToast("保存到本地成功！", "success", 1000);
-
-              _this7.noteLocalDB("add", noteInfo, resolve, reject);
-            }, reject);
-          }
-
-          if (storage === "cloud") {
-            window.axios.put("/api/notes", {
-              path: noteInfo.path,
-              title: noteInfo.note.title,
-              author: noteInfo.note.author,
-              created_at: noteInfo.note.created_at,
-              updated_at: noteInfo.note.updated_at,
-              content: noteInfo.note.content
-            }).then(function (res) {
-              _this7.timeToast("保存到云端成功！", "success", 1000);
-
-              if (res.data.error == false) {
-                resolve(res);
-              } else {
-                reject(res);
-              }
-            })["catch"](function (err) {
-              console.error(err);
-
-              _this7.timeToast("保存到云端失败！请重试。", "error", 1000);
-
-              reject(err);
-            });
-          }
-        }
-
-        if (operate === "rename") {
-          if (storage === "local") {
-            _this7.noteLocalDB("delete", noteInfo.oldNote.path);
-
-            _this7.noteLocalDB("add", noteInfo.note);
-
-            resolve();
-          }
-
-          if (storage === "cloud") {
-            window.axios.put("/api/notes/rename", {
-              old_path: noteInfo.oldNote.path,
-              new_path: noteInfo.note.path
-            }).then(function (res) {
-              console.log(res);
-
-              _this7.timeToast("重命名成功！", "success", 1000);
-
-              if (res.data.error == false) {
-                resolve(res);
-              } else {
-                reject(res);
-              }
-            })["catch"](function (err) {
-              console.error(err);
-
-              _this7.timeToast("重命名失败！请重试。", "error", 1000);
-
-              reject(err);
-            });
-          }
-        }
-
-        if (operate === "exist") {
-          if (storage === "cloud") {
-            window.axios.get("/api/notes/exist", {
-              params: {
-                path: noteInfo.path
-              }
-            }).then(function (res) {
-              resolve(res.data);
-            })["catch"](function (err) {
-              console.error(err);
-              reject(err);
-            });
-          }
-
-          if (storage === "local") {
-            var flag = false;
-
-            for (var i = 0; i < _this7.localList.length; i++) {
-              if (_this7.localList[i].path === noteInfo.path) {
-                flag = true;
-              }
-            }
-
-            resolve({
-              exist: flag
-            });
-          }
-        }
-      });
-    },
-    folderOperate: function folderOperate(operate) {
-      var _this8 = this;
-
-      var folderInfo = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-      return new Promise(function (resolve, reject) {
-        if (operate === "readAll") {
-          window.axios.get("/api/folders").then(function (res) {
-            resolve(res.data);
-          })["catch"](function (err) {
-            console.error(err);
-            reject(err);
-          });
-        }
-
-        if (operate === "readFlat") {
-          window.axios.get("/api/folders/flat").then(function (res) {
-            resolve(res.data);
-          })["catch"](function (err) {
-            console.error(err);
-            reject(err);
-          });
-        }
-
-        if (operate === "readOnly") {
-          window.axios.get("/api/folders/only").then(function (res) {
-            resolve(res.data);
-          })["catch"](function (err) {
-            console.error(err);
-            reject(err);
-          });
-        }
-
-        if (operate === "rename") {
-          window.axios.put("/api/folders", {
-            old_path: folderInfo.oldFolder.path,
-            new_path: folderInfo.folder.path
-          }).then(function (res) {
-            console.log(res);
-
-            _this8.timeToast("重命名成功！", "success", 1000);
-
-            if (res.data.error == false) {
-              resolve(res);
-            } else {
-              reject(res);
-            }
-          })["catch"](function (err) {
-            console.error(err);
-
-            _this8.timeToast("重命名失败！请重试。", "error", 1000);
-
-            reject(err);
-          });
-        }
-
-        if (operate === "create") {
-          window.axios.post("/api/folders", {
-            path: folderInfo.path
-          }).then(function (res) {
-            _this8.timeToast("创建文件夹成功！", "success", 1000);
-
-            if (res.data.error == false) {
-              resolve(res);
-            } else {
-              reject(res);
-            }
-          })["catch"](function (err) {
-            console.error(err);
-
-            _this8.timeToast("创建文件夹失败！请重试。", "error", 1000);
-
-            reject(err);
-          });
-        }
-
-        if (operate === "delete") {
-          window.axios["delete"]("/api/folders", {
-            params: {
-              path: folderInfo.path
-            }
-          }).then(function (res) {
-            console.log(res);
-
-            _this8.timeToast("删除成功！", "success", 1000);
-
-            if (res.data.error == false) {
-              resolve(res);
-            } else {
-              reject(res);
-            }
-          })["catch"](function (err) {
-            console.error(err);
-
-            _this8.timeToast("删除失败！请重试。", "error", 1000);
-
-            reject(err);
-          });
-        }
-
-        if (operate === "exist") {
-          window.axios.get("/api/folders/exist", {
-            params: {
-              path: folderInfo.path
-            }
-          }).then(function (res) {
-            resolve(res.data);
-          })["catch"](function (err) {
-            console.error(err);
-            reject(err);
-          });
-        } // TODO: 添加加载时提示
-
-
-        if (operate === "gitPush" || operate === "gitPushForce") {
-          window.axios.put("/api/repo", {
-            path: folderInfo.path,
-            force: operate === "gitPushForce"
-          }).then(function (res) {
-            resolve(res.data);
-          })["catch"](function (err) {
-            console.error(err);
-            reject(err);
-          });
-        }
-
-        if (operate === "gitPull") {
-          window.axios.get("/api/repo", {
-            params: {
-              path: folderInfo.path
-            }
-          }).then(function (res) {
-            resolve(res.data);
-          })["catch"](function (err) {
-            console.error(err);
-            reject(err);
-          });
-        }
-
-        if (operate === "gitInit" || operate === "gitClone") {
-          window.axios.post("/api/repo", _objectSpread({
-            path: folderInfo.path,
-            repo: folderInfo.repo,
-            init_or_clone: operate === "gitInit" ? "init" : "clone"
-          }, folderInfo.git_user)).then(function (res) {
-            resolve(res.data);
-          })["catch"](function (err) {
-            console.error(err);
-            reject(err);
-          });
-        }
-
-        if (operate === "getGitConfig") {
-          window.axios.get("/api/repo/conf", {
-            params: {
-              path: folderInfo.path
-            }
-          }).then(function (res) {
-            resolve(res.data.config);
-          })["catch"](function (err) {
-            console.error(err);
-            reject(err);
-          });
-
-          if (operate === "setGitConfig") {
-            window.axios.put("/api/repo/conf", _objectSpread({}, folderInfo)).then(function (res) {
-              resolve(res.data);
-            })["catch"](function (err) {
-              console.log(err);
-              reject(err);
-            });
-          }
-        }
-      });
-    },
+    // noteOperate(operate, storage, noteInfo = null) {
+    //   return new Promise((resolve, reject) => {
+    //     if (operate === "read") {
+    //       if (storage === "local") {
+    //         this.noteLocalDB("read", noteInfo.path, (e, data) => {
+    //           resolve(data);
+    //         });
+    //       }
+    //       if (storage === "cloud") {
+    //         window.axios
+    //           .get("/api/notes", {
+    //             params: {
+    //               path: noteInfo.path
+    //             }
+    //           })
+    //           .then(res => {
+    //             resolve(res.data);
+    //           })
+    //           .catch(err => {
+    //             console.error(err);
+    //             this.timeToast("加载失败！请重试。", "error", 1000);
+    //             reject(err);
+    //           });
+    //       }
+    //     }
+    //     if (operate === "create") {
+    //       if (storage === "cloud") {
+    //         window.axios
+    //           .post("/api/notes", {
+    //             path: noteInfo.path,
+    //             title: noteInfo.note.title,
+    //             author: noteInfo.note.author,
+    //             created_at: noteInfo.note.created_at,
+    //             updated_at: noteInfo.note.updated_at,
+    //             content: noteInfo.note.content
+    //           })
+    //           .then(res => {
+    //             this.timeToast("新建笔记成功！", "success", 1000);
+    //             if (res.data.error == false) {
+    //               resolve(res);
+    //             } else {
+    //               reject(res);
+    //             }
+    //           })
+    //           .catch(err => {
+    //             console.error(err);
+    //             this.timeToast("新建笔记失败！请重试。", "error", 1000);
+    //             resolve(err);
+    //           });
+    //       }
+    //     }
+    //     if (operate === "delete") {
+    //       if (storage === "local") {
+    //         this.noteLocalDB(
+    //           "delete",
+    //           noteInfo.path,
+    //           (e, data) => {
+    //             reject(data);
+    //           },
+    //           reject
+    //         );
+    //       }
+    //       if (storage === "cloud") {
+    //         window.axios
+    //           .delete("/api/notes", {
+    //             params: {
+    //               path: noteInfo.path
+    //             }
+    //           })
+    //           .then(res => {
+    //             console.log(res);
+    //             this.timeToast("删除成功！", "success", 1000);
+    //             if (res.data.error == false) {
+    //               resolve(res);
+    //             } else {
+    //               reject(res);
+    //             }
+    //           })
+    //           .catch(err => {
+    //             console.error(err);
+    //             this.timeToast("删除失败！请重试。", "error", 1000);
+    //             reject(err);
+    //           });
+    //       }
+    //     }
+    //     if (operate === "save") {
+    //       if (storage === "local") {
+    //         this.noteLocalDB(
+    //           "delete",
+    //           noteInfo.path,
+    //           () => {
+    //             this.timeToast("保存到本地成功！", "success", 1000);
+    //             this.noteLocalDB("add", noteInfo, resolve, reject);
+    //           },
+    //           reject
+    //         );
+    //       }
+    //       if (storage === "cloud") {
+    //         window.axios
+    //           .put("/api/notes", {
+    //             path: noteInfo.path,
+    //             title: noteInfo.note.title,
+    //             author: noteInfo.note.author,
+    //             created_at: noteInfo.note.created_at,
+    //             updated_at: noteInfo.note.updated_at,
+    //             content: noteInfo.note.content
+    //           })
+    //           .then(res => {
+    //             this.timeToast("保存到云端成功！", "success", 1000);
+    //             if (res.data.error == false) {
+    //               resolve(res);
+    //             } else {
+    //               reject(res);
+    //             }
+    //           })
+    //           .catch(err => {
+    //             console.error(err);
+    //             this.timeToast("保存到云端失败！请重试。", "error", 1000);
+    //             reject(err);
+    //           });
+    //       }
+    //     }
+    //     if (operate === "rename") {
+    //       if (storage === "local") {
+    //         this.noteLocalDB("delete", noteInfo.oldNote.path);
+    //         this.noteLocalDB("add", noteInfo.note);
+    //         resolve();
+    //       }
+    //       if (storage === "cloud") {
+    //         window.axios
+    //           .put("/api/notes/rename", {
+    //             old_path: noteInfo.oldNote.path,
+    //             new_path: noteInfo.note.path
+    //           })
+    //           .then(res => {
+    //             console.log(res);
+    //             this.timeToast("重命名成功！", "success", 1000);
+    //             if (res.data.error == false) {
+    //               resolve(res);
+    //             } else {
+    //               reject(res);
+    //             }
+    //           })
+    //           .catch(err => {
+    //             console.error(err);
+    //             this.timeToast("重命名失败！请重试。", "error", 1000);
+    //             reject(err);
+    //           });
+    //       }
+    //     }
+    //     if (operate === "exist") {
+    //       if (storage === "cloud") {
+    //         window.axios
+    //           .get("/api/notes/exist", {
+    //             params: { path: noteInfo.path }
+    //           })
+    //           .then(res => {
+    //             resolve(res.data);
+    //           })
+    //           .catch(err => {
+    //             console.error(err);
+    //             reject(err);
+    //           });
+    //       }
+    //       if (storage === "local") {
+    //         let flag = false;
+    //         for (let i = 0; i < this.localList.length; i++) {
+    //           if (this.localList[i].path === noteInfo.path) {
+    //             flag = true;
+    //           }
+    //         }
+    //         resolve({ exist: flag });
+    //       }
+    //     }
+    //   });
+    // },
+    // folderOperate(operate, folderInfo = null) {
+    //   return new Promise((resolve, reject) => {
+    //     if (operate === "readAll") {
+    //       window.axios
+    //         .get("/api/folders")
+    //         .then(res => {
+    //           resolve(res.data);
+    //         })
+    //         .catch(err => {
+    //           console.error(err);
+    //           reject(err);
+    //         });
+    //     }
+    //     if (operate === "readFlat") {
+    //       window.axios
+    //         .get("/api/folders/flat")
+    //         .then(res => {
+    //           resolve(res.data);
+    //         })
+    //         .catch(err => {
+    //           console.error(err);
+    //           reject(err);
+    //         });
+    //     }
+    //     if (operate === "readOnly") {
+    //       window.axios
+    //         .get("/api/folders/only")
+    //         .then(res => {
+    //           resolve(res.data);
+    //         })
+    //         .catch(err => {
+    //           console.error(err);
+    //           reject(err);
+    //         });
+    //     }
+    //     if (operate === "rename") {
+    //       window.axios
+    //         .put("/api/folders", {
+    //           old_path: folderInfo.oldFolder.path,
+    //           new_path: folderInfo.folder.path
+    //         })
+    //         .then(res => {
+    //           console.log(res);
+    //           this.timeToast("重命名成功！", "success", 1000);
+    //           if (res.data.error == false) {
+    //             resolve(res);
+    //           } else {
+    //             reject(res);
+    //           }
+    //         })
+    //         .catch(err => {
+    //           console.error(err);
+    //           this.timeToast("重命名失败！请重试。", "error", 1000);
+    //           reject(err);
+    //         });
+    //     }
+    //     if (operate === "create") {
+    //       window.axios
+    //         .post("/api/folders", {
+    //           path: folderInfo.path
+    //         })
+    //         .then(res => {
+    //           this.timeToast("创建文件夹成功！", "success", 1000);
+    //           if (res.data.error == false) {
+    //             resolve(res);
+    //           } else {
+    //             reject(res);
+    //           }
+    //         })
+    //         .catch(err => {
+    //           console.error(err);
+    //           this.timeToast("创建文件夹失败！请重试。", "error", 1000);
+    //           reject(err);
+    //         });
+    //     }
+    //     if (operate === "delete") {
+    //       window.axios
+    //         .delete("/api/folders", {
+    //           params: {
+    //             path: folderInfo.path
+    //           }
+    //         })
+    //         .then(res => {
+    //           console.log(res);
+    //           this.timeToast("删除成功！", "success", 1000);
+    //           if (res.data.error == false) {
+    //             resolve(res);
+    //           } else {
+    //             reject(res);
+    //           }
+    //         })
+    //         .catch(err => {
+    //           console.error(err);
+    //           this.timeToast("删除失败！请重试。", "error", 1000);
+    //           reject(err);
+    //         });
+    //     }
+    //     if (operate === "exist") {
+    //       window.axios
+    //         .get("/api/folders/exist", {
+    //           params: { path: folderInfo.path }
+    //         })
+    //         .then(res => {
+    //           resolve(res.data);
+    //         })
+    //         .catch(err => {
+    //           console.error(err);
+    //           reject(err);
+    //         });
+    //     }
+    //     // TODO: 添加加载时提示
+    //     if (operate === "gitPush" || operate === "gitPushForce") {
+    //       window.axios
+    //         .put("/api/repo", {
+    //           path: folderInfo.path,
+    //           force: operate === "gitPushForce"
+    //         })
+    //         .then(res => {
+    //           resolve(res.data);
+    //         })
+    //         .catch(err => {
+    //           console.error(err);
+    //           reject(err);
+    //         });
+    //     }
+    //     if (operate === "gitPull") {
+    //       window.axios
+    //         .get("/api/repo", {
+    //           params: { path: folderInfo.path }
+    //         })
+    //         .then(res => {
+    //           resolve(res.data);
+    //         })
+    //         .catch(err => {
+    //           console.error(err);
+    //           reject(err);
+    //         });
+    //     }
+    //     if (operate === "gitInit" || operate === "gitClone") {
+    //       window.axios
+    //         .post("/api/repo", {
+    //           path: folderInfo.path,
+    //           repo: folderInfo.repo,
+    //           init_or_clone: operate === "gitInit" ? "init" : "clone",
+    //           ...folderInfo.git_user
+    //         })
+    //         .then(res => {
+    //           resolve(res.data);
+    //         })
+    //         .catch(err => {
+    //           console.error(err);
+    //           reject(err);
+    //         });
+    //     }
+    //     if (operate === "getGitConfig") {
+    //       window.axios
+    //         .get("/api/repo/conf", { params: { path: folderInfo.path } })
+    //         .then(res => {
+    //           resolve(res.data.config);
+    //         })
+    //         .catch(err => {
+    //           console.error(err);
+    //           reject(err);
+    //         });
+    //       if (operate === "setGitConfig") {
+    //         window.axios
+    //           .put("/api/repo/conf", { ...folderInfo })
+    //           .then(res => {
+    //             resolve(res.data);
+    //           })
+    //           .catch(err => {
+    //             console.log(err);
+    //             reject(err);
+    //           });
+    //       }
+    //     }
+    //   });
+    // },
     configOperate: function configOperate(operate) {
       var config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
       var callS = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function () {};
@@ -12579,7 +12583,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.$set(this.xknoteOpened.note, "updated_at", d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds());
       this.listOperate("set", this.xknoteOpenedIndex.source.storage, this.xknoteOpenedIndex.source.path, this.xknoteOpened);
     }
-  },
+  }),
   watch: {
     "xknoteOpened.note.content": "watchNote",
     "xknoteOpened.note.title": "watchNote",
@@ -12601,6 +12605,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       window.inputQueryChangeFlag = true;
+    },
+    "toast.show": function toastShow(val) {
+      var toast = document.querySelector(".toast");
+
+      if (val) {
+        toast.style.visibility = "visible";
+        toast.style.opacity = "1";
+      } else {
+        setTimeout(function () {
+          toast.style.visibility = "hidden";
+        }, 500);
+        toast.style.opacity = "0";
+      }
     }
   }
 });
@@ -14767,7 +14784,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.active {\n  color: #585858;\n}\n#toc li img {\n  width: 1.05em;\n}\n", ""]);
+exports.push([module.i, "\n.active {\r\n  color: #585858;\n}\n#toc li img {\r\n  width: 1.05em;\n}\r\n", ""]);
 
 // exports
 
@@ -14786,7 +14803,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.read-toc li img {\n  width: 1.05em;\n  display: inline-block;\n  vertical-align: middle;\n  margin-right: 0.4em;\n  padding-top: 0.1em;\n}\n.read-toc li a {\n  font-size: 1.05em;\n  vertical-align: middle;\n}\n.hero-body p {\n  margin: 0;\n}\n.read-sidebar {\n  top: 0;\n  right: 0;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n}\n.read-sidebar .xknote-tab-content {\n  margin: 0.8rem 0 0.8rem 1.6rem;\n}\n.read-container {\n  display: flex;\n  flex-direction: column;\n  min-height: 100vh;\n  border-right: 1px solid #ddd;\n}\n.read-header .hero-body {\n  padding: 0.4rem 3rem;\n}\n.read-content {\n  flex: 1;\n  padding: 2rem 3rem;\n}\n.read-footer {\n  padding: 1.5em 0 !important;\n}\n.to-normal-btn {\n  bottom: 1rem;\n  right: 1rem;\n  position: fixed;\n}\n", ""]);
+exports.push([module.i, "\n.read-toc li img {\r\n  width: 1.05em;\r\n  display: inline-block;\r\n  vertical-align: middle;\r\n  margin-right: 0.4em;\r\n  padding-top: 0.1em;\n}\n.read-toc li a {\r\n  font-size: 1.05em;\r\n  vertical-align: middle;\n}\n.hero-body p {\r\n  margin: 0;\n}\n.read-sidebar {\r\n  top: 0;\r\n  right: 0;\r\n  height: 100%;\r\n  display: flex;\r\n  flex-direction: column;\n}\n.read-sidebar .xknote-tab-content {\r\n  margin: 0.8rem 0 0.8rem 1.6rem;\n}\n.read-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  min-height: 100vh;\r\n  border-right: 1px solid #ddd;\n}\n.read-header .hero-body {\r\n  padding: 0.4rem 3rem;\n}\n.read-content {\r\n  flex: 1;\r\n  padding: 2rem 3rem;\n}\n.read-footer {\r\n  padding: 1.5em 0 !important;\n}\n.to-normal-btn {\r\n  bottom: 1rem;\r\n  right: 1rem;\r\n  position: fixed;\n}\r\n", ""]);
 
 // exports
 
@@ -24758,18 +24775,11 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c(
-        "div",
-        {
-          class: "toast toast-" + _vm.toast.status,
-          style: _vm.toast.show ? "visibility: visible;" : "visibility: hidden;"
-        },
-        [
-          _c("button", { staticClass: "btn btn-clear float-right" }),
-          _vm._v(" "),
-          _c("p", [_vm._v(_vm._s(_vm.toast.message))])
-        ]
-      )
+      _c("div", { class: "toast toast-" + _vm.toast.status }, [
+        _c("button", { staticClass: "btn btn-clear float-right" }),
+        _vm._v(" "),
+        _c("p", [_vm._v(_vm._s(_vm.toast.message))])
+      ])
     ],
     1
   )
@@ -27315,6 +27325,1037 @@ function normalizeComponent (
   }
 }
 
+
+/***/ }),
+
+/***/ "./node_modules/vuex/dist/vuex.esm.js":
+/*!********************************************!*\
+  !*** ./node_modules/vuex/dist/vuex.esm.js ***!
+  \********************************************/
+/*! exports provided: default, Store, install, mapState, mapMutations, mapGetters, mapActions, createNamespacedHelpers */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Store", function() { return Store; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "install", function() { return install; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapState", function() { return mapState; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapMutations", function() { return mapMutations; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapGetters", function() { return mapGetters; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapActions", function() { return mapActions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createNamespacedHelpers", function() { return createNamespacedHelpers; });
+/**
+ * vuex v3.1.1
+ * (c) 2019 Evan You
+ * @license MIT
+ */
+function applyMixin (Vue) {
+  var version = Number(Vue.version.split('.')[0]);
+
+  if (version >= 2) {
+    Vue.mixin({ beforeCreate: vuexInit });
+  } else {
+    // override init and inject vuex init procedure
+    // for 1.x backwards compatibility.
+    var _init = Vue.prototype._init;
+    Vue.prototype._init = function (options) {
+      if ( options === void 0 ) options = {};
+
+      options.init = options.init
+        ? [vuexInit].concat(options.init)
+        : vuexInit;
+      _init.call(this, options);
+    };
+  }
+
+  /**
+   * Vuex init hook, injected into each instances init hooks list.
+   */
+
+  function vuexInit () {
+    var options = this.$options;
+    // store injection
+    if (options.store) {
+      this.$store = typeof options.store === 'function'
+        ? options.store()
+        : options.store;
+    } else if (options.parent && options.parent.$store) {
+      this.$store = options.parent.$store;
+    }
+  }
+}
+
+var target = typeof window !== 'undefined'
+  ? window
+  : typeof global !== 'undefined'
+    ? global
+    : {};
+var devtoolHook = target.__VUE_DEVTOOLS_GLOBAL_HOOK__;
+
+function devtoolPlugin (store) {
+  if (!devtoolHook) { return }
+
+  store._devtoolHook = devtoolHook;
+
+  devtoolHook.emit('vuex:init', store);
+
+  devtoolHook.on('vuex:travel-to-state', function (targetState) {
+    store.replaceState(targetState);
+  });
+
+  store.subscribe(function (mutation, state) {
+    devtoolHook.emit('vuex:mutation', mutation, state);
+  });
+}
+
+/**
+ * Get the first item that pass the test
+ * by second argument function
+ *
+ * @param {Array} list
+ * @param {Function} f
+ * @return {*}
+ */
+
+/**
+ * forEach for object
+ */
+function forEachValue (obj, fn) {
+  Object.keys(obj).forEach(function (key) { return fn(obj[key], key); });
+}
+
+function isObject (obj) {
+  return obj !== null && typeof obj === 'object'
+}
+
+function isPromise (val) {
+  return val && typeof val.then === 'function'
+}
+
+function assert (condition, msg) {
+  if (!condition) { throw new Error(("[vuex] " + msg)) }
+}
+
+function partial (fn, arg) {
+  return function () {
+    return fn(arg)
+  }
+}
+
+// Base data struct for store's module, package with some attribute and method
+var Module = function Module (rawModule, runtime) {
+  this.runtime = runtime;
+  // Store some children item
+  this._children = Object.create(null);
+  // Store the origin module object which passed by programmer
+  this._rawModule = rawModule;
+  var rawState = rawModule.state;
+
+  // Store the origin module's state
+  this.state = (typeof rawState === 'function' ? rawState() : rawState) || {};
+};
+
+var prototypeAccessors = { namespaced: { configurable: true } };
+
+prototypeAccessors.namespaced.get = function () {
+  return !!this._rawModule.namespaced
+};
+
+Module.prototype.addChild = function addChild (key, module) {
+  this._children[key] = module;
+};
+
+Module.prototype.removeChild = function removeChild (key) {
+  delete this._children[key];
+};
+
+Module.prototype.getChild = function getChild (key) {
+  return this._children[key]
+};
+
+Module.prototype.update = function update (rawModule) {
+  this._rawModule.namespaced = rawModule.namespaced;
+  if (rawModule.actions) {
+    this._rawModule.actions = rawModule.actions;
+  }
+  if (rawModule.mutations) {
+    this._rawModule.mutations = rawModule.mutations;
+  }
+  if (rawModule.getters) {
+    this._rawModule.getters = rawModule.getters;
+  }
+};
+
+Module.prototype.forEachChild = function forEachChild (fn) {
+  forEachValue(this._children, fn);
+};
+
+Module.prototype.forEachGetter = function forEachGetter (fn) {
+  if (this._rawModule.getters) {
+    forEachValue(this._rawModule.getters, fn);
+  }
+};
+
+Module.prototype.forEachAction = function forEachAction (fn) {
+  if (this._rawModule.actions) {
+    forEachValue(this._rawModule.actions, fn);
+  }
+};
+
+Module.prototype.forEachMutation = function forEachMutation (fn) {
+  if (this._rawModule.mutations) {
+    forEachValue(this._rawModule.mutations, fn);
+  }
+};
+
+Object.defineProperties( Module.prototype, prototypeAccessors );
+
+var ModuleCollection = function ModuleCollection (rawRootModule) {
+  // register root module (Vuex.Store options)
+  this.register([], rawRootModule, false);
+};
+
+ModuleCollection.prototype.get = function get (path) {
+  return path.reduce(function (module, key) {
+    return module.getChild(key)
+  }, this.root)
+};
+
+ModuleCollection.prototype.getNamespace = function getNamespace (path) {
+  var module = this.root;
+  return path.reduce(function (namespace, key) {
+    module = module.getChild(key);
+    return namespace + (module.namespaced ? key + '/' : '')
+  }, '')
+};
+
+ModuleCollection.prototype.update = function update$1 (rawRootModule) {
+  update([], this.root, rawRootModule);
+};
+
+ModuleCollection.prototype.register = function register (path, rawModule, runtime) {
+    var this$1 = this;
+    if ( runtime === void 0 ) runtime = true;
+
+  if (true) {
+    assertRawModule(path, rawModule);
+  }
+
+  var newModule = new Module(rawModule, runtime);
+  if (path.length === 0) {
+    this.root = newModule;
+  } else {
+    var parent = this.get(path.slice(0, -1));
+    parent.addChild(path[path.length - 1], newModule);
+  }
+
+  // register nested modules
+  if (rawModule.modules) {
+    forEachValue(rawModule.modules, function (rawChildModule, key) {
+      this$1.register(path.concat(key), rawChildModule, runtime);
+    });
+  }
+};
+
+ModuleCollection.prototype.unregister = function unregister (path) {
+  var parent = this.get(path.slice(0, -1));
+  var key = path[path.length - 1];
+  if (!parent.getChild(key).runtime) { return }
+
+  parent.removeChild(key);
+};
+
+function update (path, targetModule, newModule) {
+  if (true) {
+    assertRawModule(path, newModule);
+  }
+
+  // update target module
+  targetModule.update(newModule);
+
+  // update nested modules
+  if (newModule.modules) {
+    for (var key in newModule.modules) {
+      if (!targetModule.getChild(key)) {
+        if (true) {
+          console.warn(
+            "[vuex] trying to add a new module '" + key + "' on hot reloading, " +
+            'manual reload is needed'
+          );
+        }
+        return
+      }
+      update(
+        path.concat(key),
+        targetModule.getChild(key),
+        newModule.modules[key]
+      );
+    }
+  }
+}
+
+var functionAssert = {
+  assert: function (value) { return typeof value === 'function'; },
+  expected: 'function'
+};
+
+var objectAssert = {
+  assert: function (value) { return typeof value === 'function' ||
+    (typeof value === 'object' && typeof value.handler === 'function'); },
+  expected: 'function or object with "handler" function'
+};
+
+var assertTypes = {
+  getters: functionAssert,
+  mutations: functionAssert,
+  actions: objectAssert
+};
+
+function assertRawModule (path, rawModule) {
+  Object.keys(assertTypes).forEach(function (key) {
+    if (!rawModule[key]) { return }
+
+    var assertOptions = assertTypes[key];
+
+    forEachValue(rawModule[key], function (value, type) {
+      assert(
+        assertOptions.assert(value),
+        makeAssertionMessage(path, key, type, value, assertOptions.expected)
+      );
+    });
+  });
+}
+
+function makeAssertionMessage (path, key, type, value, expected) {
+  var buf = key + " should be " + expected + " but \"" + key + "." + type + "\"";
+  if (path.length > 0) {
+    buf += " in module \"" + (path.join('.')) + "\"";
+  }
+  buf += " is " + (JSON.stringify(value)) + ".";
+  return buf
+}
+
+var Vue; // bind on install
+
+var Store = function Store (options) {
+  var this$1 = this;
+  if ( options === void 0 ) options = {};
+
+  // Auto install if it is not done yet and `window` has `Vue`.
+  // To allow users to avoid auto-installation in some cases,
+  // this code should be placed here. See #731
+  if (!Vue && typeof window !== 'undefined' && window.Vue) {
+    install(window.Vue);
+  }
+
+  if (true) {
+    assert(Vue, "must call Vue.use(Vuex) before creating a store instance.");
+    assert(typeof Promise !== 'undefined', "vuex requires a Promise polyfill in this browser.");
+    assert(this instanceof Store, "store must be called with the new operator.");
+  }
+
+  var plugins = options.plugins; if ( plugins === void 0 ) plugins = [];
+  var strict = options.strict; if ( strict === void 0 ) strict = false;
+
+  // store internal state
+  this._committing = false;
+  this._actions = Object.create(null);
+  this._actionSubscribers = [];
+  this._mutations = Object.create(null);
+  this._wrappedGetters = Object.create(null);
+  this._modules = new ModuleCollection(options);
+  this._modulesNamespaceMap = Object.create(null);
+  this._subscribers = [];
+  this._watcherVM = new Vue();
+
+  // bind commit and dispatch to self
+  var store = this;
+  var ref = this;
+  var dispatch = ref.dispatch;
+  var commit = ref.commit;
+  this.dispatch = function boundDispatch (type, payload) {
+    return dispatch.call(store, type, payload)
+  };
+  this.commit = function boundCommit (type, payload, options) {
+    return commit.call(store, type, payload, options)
+  };
+
+  // strict mode
+  this.strict = strict;
+
+  var state = this._modules.root.state;
+
+  // init root module.
+  // this also recursively registers all sub-modules
+  // and collects all module getters inside this._wrappedGetters
+  installModule(this, state, [], this._modules.root);
+
+  // initialize the store vm, which is responsible for the reactivity
+  // (also registers _wrappedGetters as computed properties)
+  resetStoreVM(this, state);
+
+  // apply plugins
+  plugins.forEach(function (plugin) { return plugin(this$1); });
+
+  var useDevtools = options.devtools !== undefined ? options.devtools : Vue.config.devtools;
+  if (useDevtools) {
+    devtoolPlugin(this);
+  }
+};
+
+var prototypeAccessors$1 = { state: { configurable: true } };
+
+prototypeAccessors$1.state.get = function () {
+  return this._vm._data.$$state
+};
+
+prototypeAccessors$1.state.set = function (v) {
+  if (true) {
+    assert(false, "use store.replaceState() to explicit replace store state.");
+  }
+};
+
+Store.prototype.commit = function commit (_type, _payload, _options) {
+    var this$1 = this;
+
+  // check object-style commit
+  var ref = unifyObjectStyle(_type, _payload, _options);
+    var type = ref.type;
+    var payload = ref.payload;
+    var options = ref.options;
+
+  var mutation = { type: type, payload: payload };
+  var entry = this._mutations[type];
+  if (!entry) {
+    if (true) {
+      console.error(("[vuex] unknown mutation type: " + type));
+    }
+    return
+  }
+  this._withCommit(function () {
+    entry.forEach(function commitIterator (handler) {
+      handler(payload);
+    });
+  });
+  this._subscribers.forEach(function (sub) { return sub(mutation, this$1.state); });
+
+  if (
+     true &&
+    options && options.silent
+  ) {
+    console.warn(
+      "[vuex] mutation type: " + type + ". Silent option has been removed. " +
+      'Use the filter functionality in the vue-devtools'
+    );
+  }
+};
+
+Store.prototype.dispatch = function dispatch (_type, _payload) {
+    var this$1 = this;
+
+  // check object-style dispatch
+  var ref = unifyObjectStyle(_type, _payload);
+    var type = ref.type;
+    var payload = ref.payload;
+
+  var action = { type: type, payload: payload };
+  var entry = this._actions[type];
+  if (!entry) {
+    if (true) {
+      console.error(("[vuex] unknown action type: " + type));
+    }
+    return
+  }
+
+  try {
+    this._actionSubscribers
+      .filter(function (sub) { return sub.before; })
+      .forEach(function (sub) { return sub.before(action, this$1.state); });
+  } catch (e) {
+    if (true) {
+      console.warn("[vuex] error in before action subscribers: ");
+      console.error(e);
+    }
+  }
+
+  var result = entry.length > 1
+    ? Promise.all(entry.map(function (handler) { return handler(payload); }))
+    : entry[0](payload);
+
+  return result.then(function (res) {
+    try {
+      this$1._actionSubscribers
+        .filter(function (sub) { return sub.after; })
+        .forEach(function (sub) { return sub.after(action, this$1.state); });
+    } catch (e) {
+      if (true) {
+        console.warn("[vuex] error in after action subscribers: ");
+        console.error(e);
+      }
+    }
+    return res
+  })
+};
+
+Store.prototype.subscribe = function subscribe (fn) {
+  return genericSubscribe(fn, this._subscribers)
+};
+
+Store.prototype.subscribeAction = function subscribeAction (fn) {
+  var subs = typeof fn === 'function' ? { before: fn } : fn;
+  return genericSubscribe(subs, this._actionSubscribers)
+};
+
+Store.prototype.watch = function watch (getter, cb, options) {
+    var this$1 = this;
+
+  if (true) {
+    assert(typeof getter === 'function', "store.watch only accepts a function.");
+  }
+  return this._watcherVM.$watch(function () { return getter(this$1.state, this$1.getters); }, cb, options)
+};
+
+Store.prototype.replaceState = function replaceState (state) {
+    var this$1 = this;
+
+  this._withCommit(function () {
+    this$1._vm._data.$$state = state;
+  });
+};
+
+Store.prototype.registerModule = function registerModule (path, rawModule, options) {
+    if ( options === void 0 ) options = {};
+
+  if (typeof path === 'string') { path = [path]; }
+
+  if (true) {
+    assert(Array.isArray(path), "module path must be a string or an Array.");
+    assert(path.length > 0, 'cannot register the root module by using registerModule.');
+  }
+
+  this._modules.register(path, rawModule);
+  installModule(this, this.state, path, this._modules.get(path), options.preserveState);
+  // reset store to update getters...
+  resetStoreVM(this, this.state);
+};
+
+Store.prototype.unregisterModule = function unregisterModule (path) {
+    var this$1 = this;
+
+  if (typeof path === 'string') { path = [path]; }
+
+  if (true) {
+    assert(Array.isArray(path), "module path must be a string or an Array.");
+  }
+
+  this._modules.unregister(path);
+  this._withCommit(function () {
+    var parentState = getNestedState(this$1.state, path.slice(0, -1));
+    Vue.delete(parentState, path[path.length - 1]);
+  });
+  resetStore(this);
+};
+
+Store.prototype.hotUpdate = function hotUpdate (newOptions) {
+  this._modules.update(newOptions);
+  resetStore(this, true);
+};
+
+Store.prototype._withCommit = function _withCommit (fn) {
+  var committing = this._committing;
+  this._committing = true;
+  fn();
+  this._committing = committing;
+};
+
+Object.defineProperties( Store.prototype, prototypeAccessors$1 );
+
+function genericSubscribe (fn, subs) {
+  if (subs.indexOf(fn) < 0) {
+    subs.push(fn);
+  }
+  return function () {
+    var i = subs.indexOf(fn);
+    if (i > -1) {
+      subs.splice(i, 1);
+    }
+  }
+}
+
+function resetStore (store, hot) {
+  store._actions = Object.create(null);
+  store._mutations = Object.create(null);
+  store._wrappedGetters = Object.create(null);
+  store._modulesNamespaceMap = Object.create(null);
+  var state = store.state;
+  // init all modules
+  installModule(store, state, [], store._modules.root, true);
+  // reset vm
+  resetStoreVM(store, state, hot);
+}
+
+function resetStoreVM (store, state, hot) {
+  var oldVm = store._vm;
+
+  // bind store public getters
+  store.getters = {};
+  var wrappedGetters = store._wrappedGetters;
+  var computed = {};
+  forEachValue(wrappedGetters, function (fn, key) {
+    // use computed to leverage its lazy-caching mechanism
+    // direct inline function use will lead to closure preserving oldVm.
+    // using partial to return function with only arguments preserved in closure enviroment.
+    computed[key] = partial(fn, store);
+    Object.defineProperty(store.getters, key, {
+      get: function () { return store._vm[key]; },
+      enumerable: true // for local getters
+    });
+  });
+
+  // use a Vue instance to store the state tree
+  // suppress warnings just in case the user has added
+  // some funky global mixins
+  var silent = Vue.config.silent;
+  Vue.config.silent = true;
+  store._vm = new Vue({
+    data: {
+      $$state: state
+    },
+    computed: computed
+  });
+  Vue.config.silent = silent;
+
+  // enable strict mode for new vm
+  if (store.strict) {
+    enableStrictMode(store);
+  }
+
+  if (oldVm) {
+    if (hot) {
+      // dispatch changes in all subscribed watchers
+      // to force getter re-evaluation for hot reloading.
+      store._withCommit(function () {
+        oldVm._data.$$state = null;
+      });
+    }
+    Vue.nextTick(function () { return oldVm.$destroy(); });
+  }
+}
+
+function installModule (store, rootState, path, module, hot) {
+  var isRoot = !path.length;
+  var namespace = store._modules.getNamespace(path);
+
+  // register in namespace map
+  if (module.namespaced) {
+    store._modulesNamespaceMap[namespace] = module;
+  }
+
+  // set state
+  if (!isRoot && !hot) {
+    var parentState = getNestedState(rootState, path.slice(0, -1));
+    var moduleName = path[path.length - 1];
+    store._withCommit(function () {
+      Vue.set(parentState, moduleName, module.state);
+    });
+  }
+
+  var local = module.context = makeLocalContext(store, namespace, path);
+
+  module.forEachMutation(function (mutation, key) {
+    var namespacedType = namespace + key;
+    registerMutation(store, namespacedType, mutation, local);
+  });
+
+  module.forEachAction(function (action, key) {
+    var type = action.root ? key : namespace + key;
+    var handler = action.handler || action;
+    registerAction(store, type, handler, local);
+  });
+
+  module.forEachGetter(function (getter, key) {
+    var namespacedType = namespace + key;
+    registerGetter(store, namespacedType, getter, local);
+  });
+
+  module.forEachChild(function (child, key) {
+    installModule(store, rootState, path.concat(key), child, hot);
+  });
+}
+
+/**
+ * make localized dispatch, commit, getters and state
+ * if there is no namespace, just use root ones
+ */
+function makeLocalContext (store, namespace, path) {
+  var noNamespace = namespace === '';
+
+  var local = {
+    dispatch: noNamespace ? store.dispatch : function (_type, _payload, _options) {
+      var args = unifyObjectStyle(_type, _payload, _options);
+      var payload = args.payload;
+      var options = args.options;
+      var type = args.type;
+
+      if (!options || !options.root) {
+        type = namespace + type;
+        if ( true && !store._actions[type]) {
+          console.error(("[vuex] unknown local action type: " + (args.type) + ", global type: " + type));
+          return
+        }
+      }
+
+      return store.dispatch(type, payload)
+    },
+
+    commit: noNamespace ? store.commit : function (_type, _payload, _options) {
+      var args = unifyObjectStyle(_type, _payload, _options);
+      var payload = args.payload;
+      var options = args.options;
+      var type = args.type;
+
+      if (!options || !options.root) {
+        type = namespace + type;
+        if ( true && !store._mutations[type]) {
+          console.error(("[vuex] unknown local mutation type: " + (args.type) + ", global type: " + type));
+          return
+        }
+      }
+
+      store.commit(type, payload, options);
+    }
+  };
+
+  // getters and state object must be gotten lazily
+  // because they will be changed by vm update
+  Object.defineProperties(local, {
+    getters: {
+      get: noNamespace
+        ? function () { return store.getters; }
+        : function () { return makeLocalGetters(store, namespace); }
+    },
+    state: {
+      get: function () { return getNestedState(store.state, path); }
+    }
+  });
+
+  return local
+}
+
+function makeLocalGetters (store, namespace) {
+  var gettersProxy = {};
+
+  var splitPos = namespace.length;
+  Object.keys(store.getters).forEach(function (type) {
+    // skip if the target getter is not match this namespace
+    if (type.slice(0, splitPos) !== namespace) { return }
+
+    // extract local getter type
+    var localType = type.slice(splitPos);
+
+    // Add a port to the getters proxy.
+    // Define as getter property because
+    // we do not want to evaluate the getters in this time.
+    Object.defineProperty(gettersProxy, localType, {
+      get: function () { return store.getters[type]; },
+      enumerable: true
+    });
+  });
+
+  return gettersProxy
+}
+
+function registerMutation (store, type, handler, local) {
+  var entry = store._mutations[type] || (store._mutations[type] = []);
+  entry.push(function wrappedMutationHandler (payload) {
+    handler.call(store, local.state, payload);
+  });
+}
+
+function registerAction (store, type, handler, local) {
+  var entry = store._actions[type] || (store._actions[type] = []);
+  entry.push(function wrappedActionHandler (payload, cb) {
+    var res = handler.call(store, {
+      dispatch: local.dispatch,
+      commit: local.commit,
+      getters: local.getters,
+      state: local.state,
+      rootGetters: store.getters,
+      rootState: store.state
+    }, payload, cb);
+    if (!isPromise(res)) {
+      res = Promise.resolve(res);
+    }
+    if (store._devtoolHook) {
+      return res.catch(function (err) {
+        store._devtoolHook.emit('vuex:error', err);
+        throw err
+      })
+    } else {
+      return res
+    }
+  });
+}
+
+function registerGetter (store, type, rawGetter, local) {
+  if (store._wrappedGetters[type]) {
+    if (true) {
+      console.error(("[vuex] duplicate getter key: " + type));
+    }
+    return
+  }
+  store._wrappedGetters[type] = function wrappedGetter (store) {
+    return rawGetter(
+      local.state, // local state
+      local.getters, // local getters
+      store.state, // root state
+      store.getters // root getters
+    )
+  };
+}
+
+function enableStrictMode (store) {
+  store._vm.$watch(function () { return this._data.$$state }, function () {
+    if (true) {
+      assert(store._committing, "do not mutate vuex store state outside mutation handlers.");
+    }
+  }, { deep: true, sync: true });
+}
+
+function getNestedState (state, path) {
+  return path.length
+    ? path.reduce(function (state, key) { return state[key]; }, state)
+    : state
+}
+
+function unifyObjectStyle (type, payload, options) {
+  if (isObject(type) && type.type) {
+    options = payload;
+    payload = type;
+    type = type.type;
+  }
+
+  if (true) {
+    assert(typeof type === 'string', ("expects string as the type, but found " + (typeof type) + "."));
+  }
+
+  return { type: type, payload: payload, options: options }
+}
+
+function install (_Vue) {
+  if (Vue && _Vue === Vue) {
+    if (true) {
+      console.error(
+        '[vuex] already installed. Vue.use(Vuex) should be called only once.'
+      );
+    }
+    return
+  }
+  Vue = _Vue;
+  applyMixin(Vue);
+}
+
+/**
+ * Reduce the code which written in Vue.js for getting the state.
+ * @param {String} [namespace] - Module's namespace
+ * @param {Object|Array} states # Object's item can be a function which accept state and getters for param, you can do something for state and getters in it.
+ * @param {Object}
+ */
+var mapState = normalizeNamespace(function (namespace, states) {
+  var res = {};
+  normalizeMap(states).forEach(function (ref) {
+    var key = ref.key;
+    var val = ref.val;
+
+    res[key] = function mappedState () {
+      var state = this.$store.state;
+      var getters = this.$store.getters;
+      if (namespace) {
+        var module = getModuleByNamespace(this.$store, 'mapState', namespace);
+        if (!module) {
+          return
+        }
+        state = module.context.state;
+        getters = module.context.getters;
+      }
+      return typeof val === 'function'
+        ? val.call(this, state, getters)
+        : state[val]
+    };
+    // mark vuex getter for devtools
+    res[key].vuex = true;
+  });
+  return res
+});
+
+/**
+ * Reduce the code which written in Vue.js for committing the mutation
+ * @param {String} [namespace] - Module's namespace
+ * @param {Object|Array} mutations # Object's item can be a function which accept `commit` function as the first param, it can accept anthor params. You can commit mutation and do any other things in this function. specially, You need to pass anthor params from the mapped function.
+ * @return {Object}
+ */
+var mapMutations = normalizeNamespace(function (namespace, mutations) {
+  var res = {};
+  normalizeMap(mutations).forEach(function (ref) {
+    var key = ref.key;
+    var val = ref.val;
+
+    res[key] = function mappedMutation () {
+      var args = [], len = arguments.length;
+      while ( len-- ) args[ len ] = arguments[ len ];
+
+      // Get the commit method from store
+      var commit = this.$store.commit;
+      if (namespace) {
+        var module = getModuleByNamespace(this.$store, 'mapMutations', namespace);
+        if (!module) {
+          return
+        }
+        commit = module.context.commit;
+      }
+      return typeof val === 'function'
+        ? val.apply(this, [commit].concat(args))
+        : commit.apply(this.$store, [val].concat(args))
+    };
+  });
+  return res
+});
+
+/**
+ * Reduce the code which written in Vue.js for getting the getters
+ * @param {String} [namespace] - Module's namespace
+ * @param {Object|Array} getters
+ * @return {Object}
+ */
+var mapGetters = normalizeNamespace(function (namespace, getters) {
+  var res = {};
+  normalizeMap(getters).forEach(function (ref) {
+    var key = ref.key;
+    var val = ref.val;
+
+    // The namespace has been mutated by normalizeNamespace
+    val = namespace + val;
+    res[key] = function mappedGetter () {
+      if (namespace && !getModuleByNamespace(this.$store, 'mapGetters', namespace)) {
+        return
+      }
+      if ( true && !(val in this.$store.getters)) {
+        console.error(("[vuex] unknown getter: " + val));
+        return
+      }
+      return this.$store.getters[val]
+    };
+    // mark vuex getter for devtools
+    res[key].vuex = true;
+  });
+  return res
+});
+
+/**
+ * Reduce the code which written in Vue.js for dispatch the action
+ * @param {String} [namespace] - Module's namespace
+ * @param {Object|Array} actions # Object's item can be a function which accept `dispatch` function as the first param, it can accept anthor params. You can dispatch action and do any other things in this function. specially, You need to pass anthor params from the mapped function.
+ * @return {Object}
+ */
+var mapActions = normalizeNamespace(function (namespace, actions) {
+  var res = {};
+  normalizeMap(actions).forEach(function (ref) {
+    var key = ref.key;
+    var val = ref.val;
+
+    res[key] = function mappedAction () {
+      var args = [], len = arguments.length;
+      while ( len-- ) args[ len ] = arguments[ len ];
+
+      // get dispatch function from store
+      var dispatch = this.$store.dispatch;
+      if (namespace) {
+        var module = getModuleByNamespace(this.$store, 'mapActions', namespace);
+        if (!module) {
+          return
+        }
+        dispatch = module.context.dispatch;
+      }
+      return typeof val === 'function'
+        ? val.apply(this, [dispatch].concat(args))
+        : dispatch.apply(this.$store, [val].concat(args))
+    };
+  });
+  return res
+});
+
+/**
+ * Rebinding namespace param for mapXXX function in special scoped, and return them by simple object
+ * @param {String} namespace
+ * @return {Object}
+ */
+var createNamespacedHelpers = function (namespace) { return ({
+  mapState: mapState.bind(null, namespace),
+  mapGetters: mapGetters.bind(null, namespace),
+  mapMutations: mapMutations.bind(null, namespace),
+  mapActions: mapActions.bind(null, namespace)
+}); };
+
+/**
+ * Normalize the map
+ * normalizeMap([1, 2, 3]) => [ { key: 1, val: 1 }, { key: 2, val: 2 }, { key: 3, val: 3 } ]
+ * normalizeMap({a: 1, b: 2, c: 3}) => [ { key: 'a', val: 1 }, { key: 'b', val: 2 }, { key: 'c', val: 3 } ]
+ * @param {Array|Object} map
+ * @return {Object}
+ */
+function normalizeMap (map) {
+  return Array.isArray(map)
+    ? map.map(function (key) { return ({ key: key, val: key }); })
+    : Object.keys(map).map(function (key) { return ({ key: key, val: map[key] }); })
+}
+
+/**
+ * Return a function expect two param contains namespace and map. it will normalize the namespace and then the param's function will handle the new namespace and the map.
+ * @param {Function} fn
+ * @return {Function}
+ */
+function normalizeNamespace (fn) {
+  return function (namespace, map) {
+    if (typeof namespace !== 'string') {
+      map = namespace;
+      namespace = '';
+    } else if (namespace.charAt(namespace.length - 1) !== '/') {
+      namespace += '/';
+    }
+    return fn(namespace, map)
+  }
+}
+
+/**
+ * Search a special module from store by namespace. if module not exist, print error message.
+ * @param {Object} store
+ * @param {String} helper
+ * @param {String} namespace
+ * @return {Object}
+ */
+function getModuleByNamespace (store, helper, namespace) {
+  var module = store._modulesNamespaceMap[namespace];
+  if ( true && !module) {
+    console.error(("[vuex] module namespace not found in " + helper + "(): " + namespace));
+  }
+  return module
+}
+
+var index_esm = {
+  Store: Store,
+  install: install,
+  version: '3.1.1',
+  mapState: mapState,
+  mapMutations: mapMutations,
+  mapGetters: mapGetters,
+  mapActions: mapActions,
+  createNamespacedHelpers: createNamespacedHelpers
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (index_esm);
+
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
 
 /***/ }),
 
@@ -30615,10 +31656,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./routes */ "./resources/js/routes.js");
 /* harmony import */ var _App_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./App.vue */ "./resources/js/App.vue");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./store */ "./resources/js/store/index.js");
 
 
 
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]);
+
 
 
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]({
@@ -30626,12 +31669,13 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]({
 });
 window.nThis = {};
 window.vm = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
-  el: '#app',
+  el: "#app",
   components: {
     App: _App_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
   },
-  template: '<App/>',
-  router: router
+  template: "<App/>",
+  router: router,
+  store: _store__WEBPACK_IMPORTED_MODULE_5__["default"]
 });
 
 /***/ }),
@@ -31243,6 +32287,667 @@ var routes = [{
 
 /***/ }),
 
+/***/ "./resources/js/store/index.js":
+/*!*************************************!*\
+  !*** ./resources/js/store/index.js ***!
+  \*************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _modules_note__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/note */ "./resources/js/store/modules/note.js");
+/* harmony import */ var _modules_toast__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/toast */ "./resources/js/store/modules/toast.js");
+
+
+
+
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
+/* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
+  modules: {
+    note: _modules_note__WEBPACK_IMPORTED_MODULE_2__["default"],
+    toast: _modules_toast__WEBPACK_IMPORTED_MODULE_3__["default"]
+  }
+}));
+
+/***/ }),
+
+/***/ "./resources/js/store/modules/note.js":
+/*!********************************************!*\
+  !*** ./resources/js/store/modules/note.js ***!
+  \********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var state = {
+  noteBaseInfo: {
+    type: "note",
+    path: "",
+    name: "",
+    status: "N",
+    note: {
+      title: "",
+      author: "",
+      content: "暂未打开任何文件，请选择文件。",
+      created_at: "",
+      updated_at: ""
+    }
+  },
+  xknoteOpened: {
+    type: "note",
+    path: "",
+    name: "",
+    status: "N",
+    note: {
+      title: "",
+      author: "",
+      content: "暂未打开任何文件，请选择文件。",
+      created_at: "",
+      updated_at: ""
+    }
+  },
+  // 存储当前开启的文档的位置，当前位置和源位置
+  // curr存储的是位于currList的索引
+  // source存储的分别是源的位置 本地or云端（data-storage） 在其列表中的index（data-index）
+  xknoteOpenedIndex: {
+    curr: "",
+    source: {
+      path: "",
+      storage: ""
+    }
+  },
+  // currList的扩展信息
+  currListSource: {},
+  currList: {},
+  cloudList: {},
+  localList: {},
+  xknoteTab: "cloud",
+  readOpened: {
+    type: "note",
+    path: "",
+    name: "",
+    status: "N",
+    note: {
+      title: "",
+      author: "",
+      content: "暂未打开任何文件，请选择文件。",
+      created_at: "",
+      updated_at: ""
+    }
+  }
+}; // getters
+
+var getters = {}; // actions
+
+var actions = {
+  switchTab: function switchTab(_ref, tabName) {
+    var commit = _ref.commit;
+    commit("switchTab", tabName);
+  },
+  folderOperate: function folderOperate(_ref2, operate) {
+    var _this = this;
+
+    var commit = _ref2.commit;
+    var folderInfo = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+    return new Promise(function (resolve, reject) {
+      if (operate === "readAll") {
+        window.axios.get("/api/folders").then(function (res) {
+          resolve(res.data);
+        })["catch"](function (err) {
+          console.error(err);
+          reject(err);
+        });
+      }
+
+      if (operate === "readFlat") {
+        window.axios.get("/api/folders/flat").then(function (res) {
+          resolve(res.data);
+        })["catch"](function (err) {
+          console.error(err);
+          reject(err);
+        });
+      }
+
+      if (operate === "readOnly") {
+        window.axios.get("/api/folders/only").then(function (res) {
+          resolve(res.data);
+        })["catch"](function (err) {
+          console.error(err);
+          reject(err);
+        });
+      }
+
+      if (operate === "rename") {
+        window.axios.put("/api/folders", {
+          old_path: folderInfo.oldFolder.path,
+          new_path: folderInfo.folder.path
+        }).then(function (res) {
+          console.log(res);
+
+          _this.timeToast("重命名成功！", "success", 1000);
+
+          if (res.data.error == false) {
+            resolve(res);
+          } else {
+            reject(res);
+          }
+        })["catch"](function (err) {
+          console.error(err);
+
+          _this.timeToast("重命名失败！请重试。", "error", 1000);
+
+          reject(err);
+        });
+      }
+
+      if (operate === "create") {
+        window.axios.post("/api/folders", {
+          path: folderInfo.path
+        }).then(function (res) {
+          _this.timeToast("创建文件夹成功！", "success", 1000);
+
+          if (res.data.error == false) {
+            resolve(res);
+          } else {
+            reject(res);
+          }
+        })["catch"](function (err) {
+          console.error(err);
+
+          _this.timeToast("创建文件夹失败！请重试。", "error", 1000);
+
+          reject(err);
+        });
+      }
+
+      if (operate === "delete") {
+        window.axios["delete"]("/api/folders", {
+          params: {
+            path: folderInfo.path
+          }
+        }).then(function (res) {
+          console.log(res);
+
+          _this.timeToast("删除成功！", "success", 1000);
+
+          if (res.data.error == false) {
+            resolve(res);
+          } else {
+            reject(res);
+          }
+        })["catch"](function (err) {
+          console.error(err);
+
+          _this.timeToast("删除失败！请重试。", "error", 1000);
+
+          reject(err);
+        });
+      }
+
+      if (operate === "exist") {
+        window.axios.get("/api/folders/exist", {
+          params: {
+            path: folderInfo.path
+          }
+        }).then(function (res) {
+          resolve(res.data);
+        })["catch"](function (err) {
+          console.error(err);
+          reject(err);
+        });
+      } // TODO: 添加加载时提示
+
+
+      if (operate === "gitPush" || operate === "gitPushForce") {
+        window.axios.put("/api/repo", {
+          path: folderInfo.path,
+          force: operate === "gitPushForce"
+        }).then(function (res) {
+          resolve(res.data);
+        })["catch"](function (err) {
+          console.error(err);
+          reject(err);
+        });
+      }
+
+      if (operate === "gitPull") {
+        window.axios.get("/api/repo", {
+          params: {
+            path: folderInfo.path
+          }
+        }).then(function (res) {
+          resolve(res.data);
+        })["catch"](function (err) {
+          console.error(err);
+          reject(err);
+        });
+      }
+
+      if (operate === "gitInit" || operate === "gitClone") {
+        window.axios.post("/api/repo", _objectSpread({
+          path: folderInfo.path,
+          repo: folderInfo.repo,
+          init_or_clone: operate === "gitInit" ? "init" : "clone"
+        }, folderInfo.git_user)).then(function (res) {
+          resolve(res.data);
+        })["catch"](function (err) {
+          console.error(err);
+          reject(err);
+        });
+      }
+
+      if (operate === "getGitConfig") {
+        window.axios.get("/api/repo/conf", {
+          params: {
+            path: folderInfo.path
+          }
+        }).then(function (res) {
+          resolve(res.data.config);
+        })["catch"](function (err) {
+          console.error(err);
+          reject(err);
+        });
+
+        if (operate === "setGitConfig") {
+          window.axios.put("/api/repo/conf", _objectSpread({}, folderInfo)).then(function (res) {
+            resolve(res.data);
+          })["catch"](function (err) {
+            console.log(err);
+            reject(err);
+          });
+        }
+      }
+    });
+  },
+  noteOperate: function noteOperate(_ref3, operate, storage) {
+    var _this2 = this;
+
+    var commit = _ref3.commit;
+    var noteInfo = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+    return new Promise(function (resolve, reject) {
+      if (operate === "read") {
+        if (storage === "local") {
+          _this2.noteLocalDB("read", noteInfo.path, function (e, data) {
+            resolve(data);
+          });
+        }
+
+        if (storage === "cloud") {
+          window.axios.get("/api/notes", {
+            params: {
+              path: noteInfo.path
+            }
+          }).then(function (res) {
+            resolve(res.data);
+          })["catch"](function (err) {
+            console.error(err);
+
+            _this2.timeToast("加载失败！请重试。", "error", 1000);
+
+            reject(err);
+          });
+        }
+      }
+
+      if (operate === "create") {
+        if (storage === "cloud") {
+          window.axios.post("/api/notes", {
+            path: noteInfo.path,
+            title: noteInfo.note.title,
+            author: noteInfo.note.author,
+            created_at: noteInfo.note.created_at,
+            updated_at: noteInfo.note.updated_at,
+            content: noteInfo.note.content
+          }).then(function (res) {
+            _this2.timeToast("新建笔记成功！", "success", 1000);
+
+            if (res.data.error == false) {
+              resolve(res);
+            } else {
+              reject(res);
+            }
+          })["catch"](function (err) {
+            console.error(err);
+
+            _this2.timeToast("新建笔记失败！请重试。", "error", 1000);
+
+            resolve(err);
+          });
+        }
+      }
+
+      if (operate === "delete") {
+        if (storage === "local") {
+          _this2.noteLocalDB("delete", noteInfo.path, function (e, data) {
+            reject(data);
+          }, reject);
+        }
+
+        if (storage === "cloud") {
+          window.axios["delete"]("/api/notes", {
+            params: {
+              path: noteInfo.path
+            }
+          }).then(function (res) {
+            console.log(res);
+
+            _this2.timeToast("删除成功！", "success", 1000);
+
+            if (res.data.error == false) {
+              resolve(res);
+            } else {
+              reject(res);
+            }
+          })["catch"](function (err) {
+            console.error(err);
+
+            _this2.timeToast("删除失败！请重试。", "error", 1000);
+
+            reject(err);
+          });
+        }
+      }
+
+      if (operate === "save") {
+        if (storage === "local") {
+          _this2.noteLocalDB("delete", noteInfo.path, function () {
+            _this2.timeToast("保存到本地成功！", "success", 1000);
+
+            _this2.noteLocalDB("add", noteInfo, resolve, reject);
+          }, reject);
+        }
+
+        if (storage === "cloud") {
+          window.axios.put("/api/notes", {
+            path: noteInfo.path,
+            title: noteInfo.note.title,
+            author: noteInfo.note.author,
+            created_at: noteInfo.note.created_at,
+            updated_at: noteInfo.note.updated_at,
+            content: noteInfo.note.content
+          }).then(function (res) {
+            _this2.timeToast("保存到云端成功！", "success", 1000);
+
+            if (res.data.error == false) {
+              resolve(res);
+            } else {
+              reject(res);
+            }
+          })["catch"](function (err) {
+            console.error(err);
+
+            _this2.timeToast("保存到云端失败！请重试。", "error", 1000);
+
+            reject(err);
+          });
+        }
+      }
+
+      if (operate === "rename") {
+        if (storage === "local") {
+          _this2.noteLocalDB("delete", noteInfo.oldNote.path);
+
+          _this2.noteLocalDB("add", noteInfo.note);
+
+          resolve();
+        }
+
+        if (storage === "cloud") {
+          window.axios.put("/api/notes/rename", {
+            old_path: noteInfo.oldNote.path,
+            new_path: noteInfo.note.path
+          }).then(function (res) {
+            console.log(res);
+
+            _this2.timeToast("重命名成功！", "success", 1000);
+
+            if (res.data.error == false) {
+              resolve(res);
+            } else {
+              reject(res);
+            }
+          })["catch"](function (err) {
+            console.error(err);
+
+            _this2.timeToast("重命名失败！请重试。", "error", 1000);
+
+            reject(err);
+          });
+        }
+      }
+
+      if (operate === "exist") {
+        if (storage === "cloud") {
+          window.axios.get("/api/notes/exist", {
+            params: {
+              path: noteInfo.path
+            }
+          }).then(function (res) {
+            resolve(res.data);
+          })["catch"](function (err) {
+            console.error(err);
+            reject(err);
+          });
+        }
+
+        if (storage === "local") {
+          var flag = false;
+
+          for (var i = 0; i < _this2.localList.length; i++) {
+            if (_this2.localList[i].path === noteInfo.path) {
+              flag = true;
+            }
+          }
+
+          resolve({
+            exist: flag
+          });
+        }
+      }
+    });
+  },
+  listOperate: function listOperate(_ref4, operate, storage, path) {
+    var commit = _ref4.commit;
+    var noteInfo = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+    commit("listOperate", operate, storage, path, noteInfo);
+  }
+}; // mutations
+
+var mutations = {
+  switchTab: function switchTab(state, tabName) {
+    state.xknoteTab = tabName;
+  },
+  listOperate: function listOperate(state, operate, storage, path) {
+    var noteInfo = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+    var arr = [path];
+    var list = state[storage + "List"];
+
+    if (storage === "cloud") {
+      arr = path.substring(1).split("/");
+
+      for (var i = 0; operate !== "add" && i < arr.length - 1; i++) {
+        list = list[arr[i]].sub;
+      }
+    }
+
+    if (operate === "get") {
+      return list[arr[arr.length - 1]];
+    }
+
+    if (operate === "add") {
+      if (storage === "curr") {
+        var currIndex = this.$set(this.currList, path, noteInfo.note);
+        this.$set(this.currListSource, path, noteInfo.source);
+        return currIndex;
+      }
+
+      if (storage === "local") {
+        return this.$set(this.localList, path, noteInfo);
+      }
+
+      if (storage === "cloud") {
+        var p = "";
+        var len = noteInfo === null ? arr.length : arr.length - 1;
+
+        for (var _i = 0; _i < len; _i++) {
+          p += "/" + arr[_i];
+
+          if (!list[arr[_i]]) {
+            this.$set(list, arr[_i], {
+              type: "folder",
+              path: p,
+              name: arr[_i],
+              sub: {}
+            });
+          }
+
+          list = list[arr[_i]].sub;
+        }
+
+        if (noteInfo !== null) {
+          this.$set(list, arr[arr.length - 1], noteInfo);
+        }
+      }
+    }
+
+    if (operate === "delete") {
+      var noteList = list[arr[arr.length - 1]];
+      this.$delete(list, arr[arr.length - 1]);
+
+      if (storage === "curr") {
+        this.$delete(this.currListSource, arr[arr.length - 1]);
+      }
+
+      return noteList;
+    }
+
+    if (operate === "set") {
+      this.$set(list, arr[arr.length - 1], _objectSpread({}, noteInfo));
+    }
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: state,
+  getters: getters,
+  actions: actions,
+  mutations: mutations
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/modules/toast.js":
+/*!*********************************************!*\
+  !*** ./resources/js/store/modules/toast.js ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var _mutations;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var types = {
+  SHOW: "SHOW",
+  HIDE: "HIDE",
+  SHIFT_LIST: "SHIFT_LIST",
+  PUSH_LIST: "PUSH_LIST"
+};
+var state = {
+  show: false,
+  message: "",
+  status: "",
+  toastList: []
+};
+var getters = {};
+var actions = {
+  showToast: function showToast(_ref, toast) {
+    var commit = _ref.commit,
+        state = _ref.state;
+    commit(types.SHOW, {
+      message: toast.message,
+      status: toast.status
+    });
+  },
+  hideToast: function hideToast(_ref2) {
+    var commit = _ref2.commit,
+        state = _ref2.state;
+    return new Promise(function (resolve, reject) {
+      commit(types.HIDE);
+      resolve();
+    });
+  },
+  popToast: function popToast(_ref3) {
+    var commit = _ref3.commit,
+        state = _ref3.state,
+        dispatch = _ref3.dispatch;
+    return new Promise(function (resolve, reject) {
+      var toast = state.toastList[0];
+      commit(types.SHIFT_LIST);
+      dispatch("showToast", {
+        message: toast.message,
+        status: toast.status
+      });
+      setTimeout(function () {
+        dispatch("hideToast").then(function () {
+          if (state.toastList.length !== 0) {
+            dispatch("popToast").then(function () {
+              resolve();
+            });
+          }
+        });
+      }, toast.delay);
+    });
+  },
+  timeToast: function timeToast(_ref4, toast) {
+    var commit = _ref4.commit,
+        state = _ref4.state,
+        dispatch = _ref4.dispatch;
+    commit(types.PUSH_LIST, {
+      message: toast.message,
+      status: toast.status,
+      delay: toast.delay
+    });
+
+    if (state.toastList.length === 1) {
+      dispatch("popToast");
+    }
+  }
+};
+var mutations = (_mutations = {}, _defineProperty(_mutations, types.SHOW, function (state, toast) {
+  state.message = toast.message;
+  state.status = toast.status;
+  state.show = true;
+}), _defineProperty(_mutations, types.HIDE, function (state) {
+  state.show = false;
+}), _defineProperty(_mutations, types.SHIFT_LIST, function (state) {
+  state.toastList.shift();
+}), _defineProperty(_mutations, types.PUSH_LIST, function (state, toast) {
+  state.toastList.push(toast);
+}), _mutations);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: state,
+  getters: getters,
+  actions: actions,
+  mutations: mutations
+});
+
+/***/ }),
+
 /***/ "./resources/js/utils/dropdownList.js":
 /*!********************************************!*\
   !*** ./resources/js/utils/dropdownList.js ***!
@@ -31419,8 +33124,8 @@ var settingList = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! F:\VSCode-src\Laravel\xknote-2\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! F:\VSCode-src\Laravel\xknote-2\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\VSCode-src\xknote\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\VSCode-src\xknote\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ }),
