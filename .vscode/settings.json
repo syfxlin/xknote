@@ -1,6 +1,6 @@
 {
     "eslint.options": {
-        "configFile": "D:/VSCode-src/xknote/.eslintrc.js",
+        "configFile": "F:/VSCode-src/Laravel/xknote-2/.eslintrc.js",
         "plugins": ["html"]
     },
     "eslint.validate": ["javascript", "javascriptreact", "html", "vue"]

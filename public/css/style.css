@@ -322,6 +322,7 @@ body {
     max-width: 30%;
     opacity: 0;
     transition: opacity 0.5s;
+    visibility: hidden;
 }
 
 .tab .tab-item a {

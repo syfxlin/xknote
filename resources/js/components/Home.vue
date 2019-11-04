@@ -519,6 +519,7 @@
 </template>
 
 <script>
+import { mapState, mapActions, mapGetters } from "vuex";
 import XK_Editor from "xkeditor";
 import onlyFolderItem from "./onlyFolderItem";
 import noteItem from "./noteItem";
@@ -538,15 +539,6 @@ export default {
     modal
   },
   props: [
-    "xknoteTab",
-    "switchTab",
-    "currListSource",
-    "currList",
-    "cloudList",
-    "localList",
-    "xknoteOpened",
-    "xknoteOpenedIndex",
-    "noteBaseInfo",
     "loadFirstNote",
     "listOperate",
     "noteOperate",
@@ -554,7 +546,6 @@ export default {
     "setXknoteOpened",
     "openNote",
     "writeMode",
-    "loadCloudFolders",
     "timeToast",
     "configOperate"
   ],
@@ -594,27 +585,31 @@ export default {
     };
   },
   computed: {
-    // 计算在Tab bar上的计数
-    currBadgeCount() {
-      let count = 0;
-      for (let key in this.currList) {
-        if (this.currList[key].status === "N") {
-          count++;
-        }
-      }
-      return count;
-    },
-    localBadgeCount() {
-      let count = 0;
-      for (let key in this.localList) {
-        if (this.localList[key].status === "N") {
-          count++;
-        }
-      }
-      return count;
-    }
+    ...mapGetters("note", ["currBadgeCount", "localBadgeCount"]),
+    ...mapState("note", [
+      "noteBaseInfo",
+      "xknoteOpened",
+      "xknoteOpenedIndex",
+      "currListSource",
+      "currList",
+      "cloudList",
+      "localList",
+      "xknoteTab",
+      "readOpened"
+    ])
   },
   methods: {
+    ...mapActions("note", [
+      "switchTab",
+      "folderOperateS",
+      "noteOperateS",
+      "listOperateS",
+      "loadCloudFolders",
+      "loadLocalNotes",
+      "setXknoteOpenedA",
+      "setReadOpenedA",
+      "setXknoteOpenedIndexA"
+    ]),
     logout() {
       window.axios.post("/logout").then(function() {
         window.location.href = "/";
@@ -656,23 +651,41 @@ export default {
      * @param {object=} curr 当前操作的item的dom对象
      * @returns void
      */
-    menuOperate(operate, type, storage, path, curr = null) {
+    async menuOperate(operate, type, storage, path, curr = null) {
       this.floatMenu.show = false;
       if (operate === "delete") {
         this.smModal.title = "删除";
         this.smModal.content = "是否删除该文件(文件夹)？(此操作不可逆)";
         this.smModal.show = true;
-        this.smModal.confirm = () => {
+        this.smModal.confirm = async () => {
           this.smModal.show = false;
-          let info = this.listOperate("get", storage, path);
+          let info = await this.listOperateS({
+            operate: "get",
+            storage: storage,
+            path: path
+          });
           if (type === "note") {
-            this.noteOperate(operate, storage, info).then(res => {
-              this.listOperate("delete", storage, path);
+            this.noteOperateS({
+              operate: operate,
+              storage: storage,
+              noteInfo: info
+            }).then(res => {
+              this.listOperateS({
+                operate: "delete",
+                storage: storage,
+                path: path
+              });
             });
           } else {
-            this.folderOperate(operate, info).then(res => {
-              this.listOperate("delete", storage, path);
-            });
+            this.folderOperateS({ operate: operate, noteInfo: info }).then(
+              res => {
+                this.listOperateS({
+                  operate: "delete",
+                  storage: storage,
+                  path: path
+                });
+              }
+            );
           }
         };
         this.smModal.cancel = () => {
@@ -681,7 +694,11 @@ export default {
       }
       if (operate === "rename") {
         // 先获取到旧的Note信息，为了防止对象的变动所以需要克隆对象，利用json转换即可方便克隆对象
-        let info = this.listOperate("get", storage, path);
+        let info = await this.listOperateS({
+          operate: "get",
+          storage: storage,
+          path: path
+        });
         let oldInfo = JSON.parse(JSON.stringify(info));
         // 更改item为输入框
         let input = null;
@@ -698,12 +715,17 @@ export default {
           if (e.key === "Enter") {
             let value = e.target.value;
             let newPath = info.path.replace(new RegExp(info.name + "$"), value);
-            this.listOperate(
-              "add",
-              storage,
-              newPath,
-              this.listOperate("delete", storage, info.path)
-            );
+            this.listOperateS({
+              operate: "add",
+              storage: storage,
+              path: newPath,
+              noteInfo: info
+            });
+            this.listOperateS({
+              operate: "delete",
+              storage: storage,
+              path: info.path
+            });
             info.path = newPath;
             info.name = value;
             input.setAttribute("disabled", "disabled");
@@ -712,9 +734,13 @@ export default {
               if (storage === "curr") {
                 s = this.currListSource[path].storage;
               }
-              this.noteOperate(operate, s, {
-                oldNote: oldInfo,
-                note: info
+              this.noteOperateS({
+                operate: operate,
+                storage: s,
+                noteInfo: {
+                  oldNote: oldInfo,
+                  note: info
+                }
               })
                 .then(res => {
                   curr
@@ -729,9 +755,12 @@ export default {
                   input.removeAttribute("disabled");
                 });
             } else {
-              this.folderOperate(operate, {
-                oldFolder: oldInfo,
-                folder: info
+              this.folderOperateS({
+                operate: operate,
+                folderInfo: {
+                  oldFolder: oldInfo,
+                  folder: info
+                }
               })
                 .then(res => {
                   curr
@@ -753,29 +782,52 @@ export default {
       // noteItem专有操作
       if (type === "note") {
         if (operate === "saveLocal") {
-          let note = this.listOperate("get", storage, path);
+          let note = await this.listOperateS({
+            operate: "get",
+            storage: storage,
+            path: path
+          });
           // Path相同的时候视为同一文档，但保存时并未删除，所以需要调整判断
-          this.listOperate("delete", "local", path);
+          this.listOperateS({
+            operate: "delete",
+            storage: "local",
+            path: path
+          });
           if (storage === "curr") {
             if (note.status != "C") {
               note.status = "L";
             }
             // 保存到本地（实际操作）
-            this.noteOperate("save", "local", note).then(() => {
+            this.noteOperateS({
+              operate: "save",
+              storage: "local",
+              noteInfo: note
+            }).then(async () => {
               if (this.floatMenu.saveAndClose) {
-                note = this.listOperate("delete", "curr", path);
+                note = await this.listOperateS({
+                  operate: "delete",
+                  storage: "curr",
+                  path: path
+                });
                 this.setXknoteOpened(
                   JSON.parse(JSON.stringify(this.noteBaseInfo))
                 );
               }
-              let localIndex = this.listOperate("add", "local", path, note);
+              let localIndex = await this.listOperateS({
+                operate: "add",
+                storage: "local",
+                path: path,
+                noteInfo: note
+              });
               // 若不是从localList中打开的文件就不会有currListSource的信息，如果用户选择不关闭保存，则需要添加source信息，防止后续操作出现问题
               if (!this.floatMenu.saveAndClose) {
-                this.currListSource[path] = {
-                  path: localIndex,
-                  storage: "local"
-                };
-                // this.$emit("update:currListSource", this.currListSource);
+                this.setCurrListSourceA({
+                  path: path,
+                  source: {
+                    path: localIndex,
+                    storage: "local"
+                  }
+                });
               }
             });
           }
