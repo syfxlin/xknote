@@ -21,6 +21,7 @@
         :loadCloudFolders="loadCloudFolders"
         :timeToast="timeToast"
         :configOperate="configOperate"
+        :listOperateS="listOperateS"
         ref="children"
       ></router-view>
     </transition>
@@ -33,7 +34,7 @@
 
 <script>
 import "./assets/style.css";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 export default {
   name: "App",
   created() {
@@ -66,14 +67,14 @@ export default {
     ]),
     ...mapState({
       toast: state => state.toast
-    })
+    }),
+    ...mapGetters("note", ["getReData"])
   },
   methods: {
     ...mapActions("note", [
       "switchTab",
       "folderOperateS",
       "noteOperateS",
-      "listOperateS",
       "loadCloudFolders",
       "loadLocalNotes",
       "setXknoteOpenedA",
@@ -89,6 +90,10 @@ export default {
         path: path,
         noteInfo: noteInfo
       });
+    },
+    listOperateS(data) {
+      this.$store.commit("note/LIST_OPERATE", data, { root: true });
+      return this.getReData;
     },
     noteOperate(operate, storage, noteInfo = null) {
       return new Promise((resolve, reject) => {

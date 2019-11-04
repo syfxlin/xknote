@@ -1,48 +1,48 @@
 const types = {
-  SET_CLOUD: 'SET_CLOUD',
-  ADD_LOCAL: 'ADD_LOCAL',
-  SET_OPENED: 'SET_OPENED',
-  SET_READED: 'SET_READED',
-  SET_OPENED_INDEX: 'SET_OPENED_INDEX',
-  LIST_OPERATE: 'LIST_OPERATE',
-  SET_CURR_LIST_SOURCE: 'SET_CURR_LIST_SOURCE'
+  SET_CLOUD: "SET_CLOUD",
+  ADD_LOCAL: "ADD_LOCAL",
+  SET_OPENED: "SET_OPENED",
+  SET_READED: "SET_READED",
+  SET_OPENED_INDEX: "SET_OPENED_INDEX",
+  LIST_OPERATE: "LIST_OPERATE",
+  SET_CURR_LIST_SOURCE: "SET_CURR_LIST_SOURCE"
 };
 
 const state = {
   noteBaseInfo: {
-    type: 'note',
-    path: '',
-    name: '',
-    status: 'N',
+    type: "note",
+    path: "",
+    name: "",
+    status: "N",
     note: {
-      title: '',
-      author: '',
-      content: '暂未打开任何文件，请选择文件。',
-      created_at: '',
-      updated_at: ''
+      title: "",
+      author: "",
+      content: "暂未打开任何文件，请选择文件。",
+      created_at: "",
+      updated_at: ""
     }
   },
   xknoteOpened: {
-    type: 'note',
-    path: '',
-    name: '',
-    status: 'N',
+    type: "note",
+    path: "",
+    name: "",
+    status: "N",
     note: {
-      title: '',
-      author: '',
-      content: '暂未打开任何文件，请选择文件。',
-      created_at: '',
-      updated_at: ''
+      title: "",
+      author: "",
+      content: "暂未打开任何文件，请选择文件。",
+      created_at: "",
+      updated_at: ""
     }
   },
   // 存储当前开启的文档的位置，当前位置和源位置
   // curr存储的是位于currList的索引
   // source存储的分别是源的位置 本地or云端（data-storage） 在其列表中的index（data-index）
   xknoteOpenedIndex: {
-    curr: '',
+    curr: "",
     source: {
-      path: '',
-      storage: ''
+      path: "",
+      storage: ""
     }
   },
   // currList的扩展信息
@@ -50,24 +50,21 @@ const state = {
   currList: {},
   cloudList: {},
   localList: {},
-  xknoteTab: 'cloud',
+  xknoteTab: "cloud",
   readOpened: {
-    type: 'note',
-    path: '',
-    name: '',
-    status: 'N',
+    type: "note",
+    path: "",
+    name: "",
+    status: "N",
     note: {
-      title: '',
-      author: '',
-      content: '暂未打开任何文件，请选择文件。',
-      created_at: '',
-      updated_at: ''
+      title: "",
+      author: "",
+      content: "暂未打开任何文件，请选择文件。",
+      created_at: "",
+      updated_at: ""
     }
-  }
-};
-
-const innerState = {
-  reData: {}
+  },
+  reData: null
 };
 
 // getters
@@ -75,7 +72,7 @@ const getters = {
   currBadgeCount(state) {
     let count = 0;
     for (let key in state.currList) {
-      if (state.currList[key].status === 'N') {
+      if (state.currList[key].status === "N") {
         count++;
       }
     }
@@ -84,22 +81,25 @@ const getters = {
   localBadgeCount(state) {
     let count = 0;
     for (let key in state.localList) {
-      if (state.localList[key].status === 'N') {
+      if (state.localList[key].status === "N") {
         count++;
       }
     }
     return count;
+  },
+  getReData(state) {
+    return state.reData;
   }
 };
 
 // actions
 const actions = {
   switchTab({ commit }, tabName) {
-    commit('switchTab', tabName);
+    commit("switchTab", tabName);
   },
   async loadCloudFolders({ commit, dispatch }) {
-    let data = await dispatch('folderOperateS', {
-      operate: 'readAll',
+    let data = await dispatch("folderOperateS", {
+      operate: "readAll",
       folderInfo: null
     });
     commit(types.SET_CLOUD, data.folders);
@@ -107,10 +107,10 @@ const actions = {
   },
   loadLocalNotes({ commit, dispatch }) {
     dispatch(
-      'db/noteLocalDB',
+      "db/noteLocalDB",
       {
-        operate: 'readAll',
-        data: ''
+        operate: "readAll",
+        data: ""
       },
       { root: true }
     ).then(list => {
@@ -123,9 +123,9 @@ const actions = {
   },
   folderOperateS({ commit, dispatch }, { operate, folderInfo = null }) {
     return new Promise((resolve, reject) => {
-      if (operate === 'readAll') {
+      if (operate === "readAll") {
         window.axios
-          .get('/api/folders')
+          .get("/api/folders")
           .then(res => {
             resolve(res.data);
           })
@@ -134,9 +134,9 @@ const actions = {
             reject(err);
           });
       }
-      if (operate === 'readFlat') {
+      if (operate === "readFlat") {
         window.axios
-          .get('/api/folders/flat')
+          .get("/api/folders/flat")
           .then(res => {
             resolve(res.data);
           })
@@ -145,9 +145,9 @@ const actions = {
             reject(err);
           });
       }
-      if (operate === 'readOnly') {
+      if (operate === "readOnly") {
         window.axios
-          .get('/api/folders/only')
+          .get("/api/folders/only")
           .then(res => {
             resolve(res.data);
           })
@@ -156,9 +156,9 @@ const actions = {
             reject(err);
           });
       }
-      if (operate === 'rename') {
+      if (operate === "rename") {
         window.axios
-          .put('/api/folders', {
+          .put("/api/folders", {
             old_path: folderInfo.oldFolder.path,
             new_path: folderInfo.folder.path
           })
@@ -177,9 +177,9 @@ const actions = {
             reject(err);
           });
       }
-      if (operate === 'create') {
+      if (operate === "create") {
         window.axios
-          .post('/api/folders', {
+          .post("/api/folders", {
             path: folderInfo.path
           })
           .then(res => {
@@ -196,9 +196,9 @@ const actions = {
             reject(err);
           });
       }
-      if (operate === 'delete') {
+      if (operate === "delete") {
         window.axios
-          .delete('/api/folders', {
+          .delete("/api/folders", {
             params: {
               path: folderInfo.path
             }
@@ -218,9 +218,9 @@ const actions = {
             reject(err);
           });
       }
-      if (operate === 'exist') {
+      if (operate === "exist") {
         window.axios
-          .get('/api/folders/exist', {
+          .get("/api/folders/exist", {
             params: { path: folderInfo.path }
           })
           .then(res => {
@@ -232,11 +232,11 @@ const actions = {
           });
       }
       // TODO: 添加加载时提示
-      if (operate === 'gitPush' || operate === 'gitPushForce') {
+      if (operate === "gitPush" || operate === "gitPushForce") {
         window.axios
-          .put('/api/repo', {
+          .put("/api/repo", {
             path: folderInfo.path,
-            force: operate === 'gitPushForce'
+            force: operate === "gitPushForce"
           })
           .then(res => {
             resolve(res.data);
@@ -246,9 +246,9 @@ const actions = {
             reject(err);
           });
       }
-      if (operate === 'gitPull') {
+      if (operate === "gitPull") {
         window.axios
-          .get('/api/repo', {
+          .get("/api/repo", {
             params: { path: folderInfo.path }
           })
           .then(res => {
@@ -259,12 +259,12 @@ const actions = {
             reject(err);
           });
       }
-      if (operate === 'gitInit' || operate === 'gitClone') {
+      if (operate === "gitInit" || operate === "gitClone") {
         window.axios
-          .post('/api/repo', {
+          .post("/api/repo", {
             path: folderInfo.path,
             repo: folderInfo.repo,
-            init_or_clone: operate === 'gitInit' ? 'init' : 'clone',
+            init_or_clone: operate === "gitInit" ? "init" : "clone",
             ...folderInfo.git_user
           })
           .then(res => {
@@ -275,9 +275,9 @@ const actions = {
             reject(err);
           });
       }
-      if (operate === 'getGitConfig') {
+      if (operate === "getGitConfig") {
         window.axios
-          .get('/api/repo/conf', { params: { path: folderInfo.path } })
+          .get("/api/repo/conf", { params: { path: folderInfo.path } })
           .then(res => {
             resolve(res.data.config);
           })
@@ -285,9 +285,9 @@ const actions = {
             console.error(err);
             reject(err);
           });
-        if (operate === 'setGitConfig') {
+        if (operate === "setGitConfig") {
           window.axios
-            .put('/api/repo/conf', { ...folderInfo })
+            .put("/api/repo/conf", { ...folderInfo })
             .then(res => {
               resolve(res.data);
             })
@@ -301,20 +301,20 @@ const actions = {
   },
   noteOperateS({ commit, dispatch }, { operate, storage, noteInfo = null }) {
     return new Promise((resolve, reject) => {
-      if (operate === 'read') {
-        if (storage === 'local') {
+      if (operate === "read") {
+        if (storage === "local") {
           dispatch(
-            'db/noteLocalDB',
+            "db/noteLocalDB",
             {
-              operate: 'read',
+              operate: "read",
               data: noteInfo.path
             },
             { root: true }
           ).then(resolve);
         }
-        if (storage === 'cloud') {
+        if (storage === "cloud") {
           window.axios
-            .get('/api/notes', {
+            .get("/api/notes", {
               params: {
                 path: noteInfo.path
               }
@@ -329,10 +329,10 @@ const actions = {
             });
         }
       }
-      if (operate === 'create') {
-        if (storage === 'cloud') {
+      if (operate === "create") {
+        if (storage === "cloud") {
           window.axios
-            .post('/api/notes', {
+            .post("/api/notes", {
               path: noteInfo.path,
               title: noteInfo.note.title,
               author: noteInfo.note.author,
@@ -355,12 +355,12 @@ const actions = {
             });
         }
       }
-      if (operate === 'delete') {
-        if (storage === 'local') {
+      if (operate === "delete") {
+        if (storage === "local") {
           dispatch(
-            'db/noteLocalDB',
+            "db/noteLocalDB",
             {
-              operate: 'delete',
+              operate: "delete",
               data: noteInfo.path
             },
             { root: true }
@@ -370,9 +370,9 @@ const actions = {
             })
             .catch(reject);
         }
-        if (storage === 'cloud') {
+        if (storage === "cloud") {
           window.axios
-            .delete('/api/notes', {
+            .delete("/api/notes", {
               params: {
                 path: noteInfo.path
               }
@@ -393,12 +393,12 @@ const actions = {
             });
         }
       }
-      if (operate === 'save') {
-        if (storage === 'local') {
+      if (operate === "save") {
+        if (storage === "local") {
           dispatch(
-            'db/noteLocalDB',
+            "db/noteLocalDB",
             {
-              operate: 'delete',
+              operate: "delete",
               data: noteInfo.path
             },
             { root: true }
@@ -406,9 +406,9 @@ const actions = {
             .then(() => {
               // this.timeToast('保存到本地成功！', 'success', 1000);
               return dispatch(
-                'db/noteLocalDB',
+                "db/noteLocalDB",
                 {
-                  operate: 'add',
+                  operate: "add",
                   data: noteInfo
                 },
                 { root: true }
@@ -416,9 +416,9 @@ const actions = {
             })
             .catch(reject);
         }
-        if (storage === 'cloud') {
+        if (storage === "cloud") {
           window.axios
-            .put('/api/notes', {
+            .put("/api/notes", {
               path: noteInfo.path,
               title: noteInfo.note.title,
               author: noteInfo.note.author,
@@ -441,26 +441,26 @@ const actions = {
             });
         }
       }
-      if (operate === 'rename') {
-        if (storage === 'local') {
+      if (operate === "rename") {
+        if (storage === "local") {
           dispatch(
-            'db/noteLocalDB',
+            "db/noteLocalDB",
             {
-              operate: 'delete',
+              operate: "delete",
               data: noteInfo.oldNote.path
             },
             { root: true }
           );
           dispatch(
-            'db/noteLocalDB',
-            { operate: 'add', data: noteInfo.note },
+            "db/noteLocalDB",
+            { operate: "add", data: noteInfo.note },
             { root: true }
           );
           resolve();
         }
-        if (storage === 'cloud') {
+        if (storage === "cloud") {
           window.axios
-            .put('/api/notes/rename', {
+            .put("/api/notes/rename", {
               old_path: noteInfo.oldNote.path,
               new_path: noteInfo.note.path
             })
@@ -480,10 +480,10 @@ const actions = {
             });
         }
       }
-      if (operate === 'exist') {
-        if (storage === 'cloud') {
+      if (operate === "exist") {
+        if (storage === "cloud") {
           window.axios
-            .get('/api/notes/exist', {
+            .get("/api/notes/exist", {
               params: { path: noteInfo.path }
             })
             .then(res => {
@@ -494,7 +494,7 @@ const actions = {
               reject(err);
             });
         }
-        if (storage === 'local') {
+        if (storage === "local") {
           let flag = false;
           for (let i = 0; i < this.localList.length; i++) {
             if (this.localList[i].path === noteInfo.path) {
@@ -505,10 +505,6 @@ const actions = {
         }
       }
     });
-  },
-  listOperateS({ commit }, data) {
-    commit(types.LIST_OPERATE, data);
-    return innerState.reData;
   },
   setXknoteOpenedA({ commit }, noteInfo) {
     commit(types.SET_OPENED, noteInfo);
@@ -531,34 +527,34 @@ const mutations = {
   },
   [types.LIST_OPERATE](state, { operate, storage, path, noteInfo = null }) {
     let arr = [path];
-    let list = state[storage + 'List'];
-    if (storage === 'cloud') {
-      arr = path.substring(1).split('/');
-      for (let i = 0; operate !== 'add' && i < arr.length - 1; i++) {
+    let list = state[storage + "List"];
+    if (storage === "cloud") {
+      arr = path.substring(1).split("/");
+      for (let i = 0; operate !== "add" && i < arr.length - 1; i++) {
         list = list[arr[i]].sub;
       }
     }
-    if (operate === 'get') {
-      innerState.reData = list[arr[arr.length - 1]];
+    if (operate === "get") {
+      state.reData = list[arr[arr.length - 1]];
     }
-    if (operate === 'add') {
-      if (storage === 'curr') {
+    if (operate === "add") {
+      if (storage === "curr") {
         // let currIndex = this.$set(this.currList, path, noteInfo.note);
         // this.$set(this.currListSource, path, noteInfo.source);
         state.currList[path] = noteInfo.note;
         state.currListSource[path] = noteInfo.source;
-        innerState.reData = path;
+        state.reData = path;
       }
-      if (storage === 'local') {
+      if (storage === "local") {
         // return this.$set(this.localList, path, noteInfo);
         state.localList[path] = noteInfo;
-        innerState.reData = path;
+        state.reData = path;
       }
-      if (storage === 'cloud') {
-        let p = '';
+      if (storage === "cloud") {
+        let p = "";
         let len = noteInfo === null ? arr.length : arr.length - 1;
         for (let i = 0; i < len; i++) {
-          p += '/' + arr[i];
+          p += "/" + arr[i];
           if (!list[arr[i]]) {
             // this.$set(list, arr[i], {
             //   type: 'folder',
@@ -567,7 +563,7 @@ const mutations = {
             //   sub: {}
             // });
             list[arr[i]] = {
-              type: 'folder',
+              type: "folder",
               path: p,
               name: arr[i],
               sub: {}
@@ -581,17 +577,17 @@ const mutations = {
         }
       }
     }
-    if (operate === 'delete') {
+    if (operate === "delete") {
       let noteList = list[arr[arr.length - 1]];
       // this.$delete(list, arr[arr.length - 1]);
       delete list[arr[arr.length - 1]];
-      if (storage === 'curr') {
+      if (storage === "curr") {
         // this.$delete(this.currListSource, arr[arr.length - 1]);
         delete state.currListSource[arr[arr.length - 1]];
       }
-      innerState.reData = noteList;
+      state.reData = noteList;
     }
-    if (operate === 'set') {
+    if (operate === "set") {
       // this.$set(list, arr[arr.length - 1], { ...noteInfo });
       list[arr[arr.length - 1]] = { ...noteInfo };
     }
