@@ -36,4 +36,12 @@ addMethod(mod, 'mapSyncActions', (namespace, map) => {
   return fn;
 });
 
-export default mod.mapSyncActions;
+export const mapSyncActions = mod.mapSyncActions;
+export function dispatchSync(type, payload = null) {
+  let namespace = '';
+  let action = '';
+  [namespace, action] = type.split('/');
+  if (syncActions[namespace]) {
+    return syncActions[namespace][action](payload);
+  }
+}

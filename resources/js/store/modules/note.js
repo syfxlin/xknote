@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { dispatchSync } from '../syncActions';
 
 const types = {
   SET_CLOUD: 'SET_CLOUD',
@@ -604,10 +605,34 @@ const mutations = {
 };
 
 export const syncActions = {
-  listOperate(data) {
-    this.commit('note/LIST_OPERATE', data, { root: true });
-    this.commit('note/CHANGE_COUNT');
-    return this.getters['note/getReData'];
+  listOperate({ commit, state, dispatchSync }, data) {
+    commit(types.LIST_OPERATE, data, { root: true });
+    commit(types.CHANGE_COUNT);
+    return state.reData;
+  },
+  loadPathNote({ commit, state }, { path, mode = 'normal' }) {
+    let info = document.querySelector('.local-tab [data-path="' + path + '"]');
+    if (!info) {
+      info = document.querySelector('.cloud-tab [data-path="' + path + '"]');
+    }
+    if (!info) {
+      return;
+    }
+    let storage = info.getAttribute('data-storage');
+    commit(types.LIST_OPERATE, {
+      operate: 'get',
+      storage: storage,
+      path: path
+    });
+    let item = state.reData;
+    this.openNote(
+      item,
+      {
+        path: path,
+        storage: storage
+      },
+      mode
+    );
   }
 };
 

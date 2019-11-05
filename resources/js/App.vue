@@ -20,7 +20,7 @@
 <script>
 import "./assets/style.css";
 import { mapState, mapActions, mapGetters } from "vuex";
-import mapSyncActions from "./store/mapSyncActions";
+import { mapSyncActions } from "./store/syncActions";
 export default {
   name: "App",
   async created() {

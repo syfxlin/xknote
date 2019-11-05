@@ -11457,7 +11457,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _assets_style_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./assets/style.css */ "./resources/js/assets/style.css");
 /* harmony import */ var _assets_style_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_assets_style_css__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var _store_mapSyncActions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./store/mapSyncActions */ "./resources/js/store/mapSyncActions.js");
+/* harmony import */ var _store_syncActions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./store/syncActions */ "./resources/js/store/syncActions.js");
 
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -11538,7 +11538,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return state.toast;
     }
   }), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])("note", ["getReData"])),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("db", ["optionsDB"]), {}, Object(_store_mapSyncActions__WEBPACK_IMPORTED_MODULE_3__["default"])("note", ["listOperate"]), {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("db", ["optionsDB"]), {}, Object(_store_syncActions__WEBPACK_IMPORTED_MODULE_3__["mapSyncActions"])("note", ["listOperate"]), {
     // TODO: cloud-tab加载过慢导致info为null
     loadPathNote: function loadPathNote(path) {
       var mode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "normal";
@@ -11880,7 +11880,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var _store_mapSyncActions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../store/mapSyncActions */ "./resources/js/store/mapSyncActions.js");
+/* harmony import */ var _store_syncActions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../store/syncActions */ "./resources/js/store/syncActions.js");
 /* harmony import */ var xkeditor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! xkeditor */ "./node_modules/xkeditor/src/index.js");
 /* harmony import */ var _onlyFolderItem__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./onlyFolderItem */ "./resources/js/components/onlyFolderItem.vue");
 /* harmony import */ var _noteItem__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./noteItem */ "./resources/js/components/noteItem.vue");
@@ -12444,7 +12444,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])("note", ["getReData"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])("note", ["noteBaseInfo", "xknoteOpened", "xknoteOpenedIndex", "currListSource", "currList", "cloudList", "localList", "xknoteTab", "readOpened", "currBadgeCount", "localBadgeCount"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])("tools", ["smModal", "lgModal", "floatMenu"])),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["showSmModal", "hideSmModal", "showLgModal", "hideLgModal", "setLgModalData", "delLgModalData"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["showFloatMenu", "hideFloatMenu", "setSaveAndClose"]), {}, Object(_store_mapSyncActions__WEBPACK_IMPORTED_MODULE_1__["default"])("note", ["listOperate"]), {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["showSmModal", "hideSmModal", "showLgModal", "hideLgModal", "setLgModalData", "delLgModalData"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["showFloatMenu", "hideFloatMenu", "setSaveAndClose"]), {}, Object(_store_syncActions__WEBPACK_IMPORTED_MODULE_1__["mapSyncActions"])("note", ["listOperate"]), {
     logout: function logout() {
       window.axios.post("/logout").then(function () {
         window.location.href = "/";
@@ -31775,6 +31775,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_toast__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/toast */ "./resources/js/store/modules/toast.js");
 /* harmony import */ var _modules_db__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/db */ "./resources/js/store/modules/db.js");
 /* harmony import */ var _modules_tools__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/tools */ "./resources/js/store/modules/tools.js");
+/* harmony import */ var _syncActions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./syncActions */ "./resources/js/store/syncActions.js");
+
 
 
 
@@ -31794,82 +31796,64 @@ var syncActions = {
   note: _modules_note__WEBPACK_IMPORTED_MODULE_2__["syncActions"]
 };
 
-for (var mKey in syncActions) {
-  for (var iKey in syncActions[mKey]) {
-    syncActions[mKey][iKey] = syncActions[mKey][iKey].bind(store);
+var _loop = function _loop(nKey) {
+  var getters = {};
+
+  var _loop2 = function _loop2() {
+    var gKey = _Object$keys[_i];
+    var k = gKey.split('/');
+
+    if (k[0] === nKey) {
+      Object.defineProperty(getters, k[1], {
+        get: function get() {
+          return store.getters[gKey];
+        }
+      });
+    }
+  };
+
+  for (var _i = 0, _Object$keys = Object.keys(store.getters); _i < _Object$keys.length; _i++) {
+    _loop2();
   }
+
+  for (var iKey in syncActions[nKey]) {
+    syncActions[nKey][iKey] = syncActions[nKey][iKey].bind(store, {
+      state: store.state[nKey],
+      rootState: store.state,
+      commit: function (type) {
+        var payload = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+        var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+        store.commit(nKey + '/' + type, payload, options);
+      }.bind(store),
+      dispatch: function (type) {
+        var payload = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+        var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {
+          root: false
+        };
+        var t = options.root ? type : nKey + '/' + type;
+        return store.dispatch(t, payload);
+      }.bind(store),
+      dispatchSync: function (type) {
+        var payload = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+        var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {
+          root: false
+        };
+        var t = options.root ? type : nKey + '/' + type;
+        return Object(_syncActions__WEBPACK_IMPORTED_MODULE_6__["dispatchSync"])(t, payload);
+      }.bind(store),
+      rootGetters: store.getters,
+      getters: getters
+    });
+  }
+};
+
+for (var nKey in syncActions) {
+  _loop(nKey);
 }
 
 store.syncActions = syncActions;
+store.dispatchSync = _syncActions__WEBPACK_IMPORTED_MODULE_6__["dispatchSync"];
 /* harmony default export */ __webpack_exports__["default"] = (store);
-
-/***/ }),
-
-/***/ "./resources/js/store/mapSyncActions.js":
-/*!**********************************************!*\
-  !*** ./resources/js/store/mapSyncActions.js ***!
-  \**********************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index */ "./resources/js/store/index.js");
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
-
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-
-
-function addMethod(object, name, fn) {
-  var old = object[name];
-
-  object[name] = function () {
-    if (fn.length === arguments.length) {
-      return fn.apply(this, arguments);
-    } else if (typeof old === 'function') {
-      return old.apply(this, arguments);
-    }
-  };
-}
-
-var mod = {};
-addMethod(mod, 'mapSyncActions', function (map) {
-  var fn = {};
-  var namespace = '';
-  var action = '';
-
-  for (var i = 0; i < map.length; i++) {
-    var _map$i$split = map[i].split('/');
-
-    var _map$i$split2 = _slicedToArray(_map$i$split, 2);
-
-    namespace = _map$i$split2[0];
-    action = _map$i$split2[1];
-
-    if (_index__WEBPACK_IMPORTED_MODULE_0__["syncActions"][namespace]) {
-      fn[action] = _index__WEBPACK_IMPORTED_MODULE_0__["syncActions"][namespace][action];
-    }
-  }
-
-  return fn;
-});
-addMethod(mod, 'mapSyncActions', function (namespace, map) {
-  var fn = {};
-
-  for (var i = 0; i < map.length; i++) {
-    if (_index__WEBPACK_IMPORTED_MODULE_0__["syncActions"][namespace]) {
-      fn[map[i]] = _index__WEBPACK_IMPORTED_MODULE_0__["syncActions"][namespace][map[i]];
-    }
-  }
-
-  return fn;
-});
-/* harmony default export */ __webpack_exports__["default"] = (mod.mapSyncActions);
 
 /***/ }),
 
@@ -32074,6 +32058,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _syncActions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../syncActions */ "./resources/js/store/syncActions.js");
 
 
 var _mutations;
@@ -32087,6 +32072,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 
 
 var types = {
@@ -32722,12 +32708,43 @@ var mutations = (_mutations = {
   }
 }), _mutations);
 var syncActions = {
-  listOperate: function listOperate(data) {
-    this.commit('note/LIST_OPERATE', data, {
+  listOperate: function listOperate(_ref15, data) {
+    var commit = _ref15.commit,
+        state = _ref15.state,
+        dispatchSync = _ref15.dispatchSync;
+    commit(types.LIST_OPERATE, data, {
       root: true
     });
-    this.commit('note/CHANGE_COUNT');
-    return this.getters['note/getReData'];
+    commit(types.CHANGE_COUNT);
+    return state.reData;
+  },
+  loadPathNote: function loadPathNote(_ref16, _ref17) {
+    var commit = _ref16.commit,
+        state = _ref16.state;
+    var path = _ref17.path,
+        _ref17$mode = _ref17.mode,
+        mode = _ref17$mode === void 0 ? 'normal' : _ref17$mode;
+    var info = document.querySelector('.local-tab [data-path="' + path + '"]');
+
+    if (!info) {
+      info = document.querySelector('.cloud-tab [data-path="' + path + '"]');
+    }
+
+    if (!info) {
+      return;
+    }
+
+    var storage = info.getAttribute('data-storage');
+    commit(types.LIST_OPERATE, {
+      operate: 'get',
+      storage: storage,
+      path: path
+    });
+    var item = state.reData;
+    this.openNote(item, {
+      path: path,
+      storage: storage
+    }, mode);
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -32975,6 +32992,92 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, types.SET_SM_MODAL
   actions: actions,
   mutations: mutations
 });
+
+/***/ }),
+
+/***/ "./resources/js/store/syncActions.js":
+/*!*******************************************!*\
+  !*** ./resources/js/store/syncActions.js ***!
+  \*******************************************/
+/*! exports provided: mapSyncActions, dispatchSync */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapSyncActions", function() { return mapSyncActions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dispatchSync", function() { return dispatchSync; });
+/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index */ "./resources/js/store/index.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+function addMethod(object, name, fn) {
+  var old = object[name];
+
+  object[name] = function () {
+    if (fn.length === arguments.length) {
+      return fn.apply(this, arguments);
+    } else if (typeof old === 'function') {
+      return old.apply(this, arguments);
+    }
+  };
+}
+
+var mod = {};
+addMethod(mod, 'mapSyncActions', function (map) {
+  var fn = {};
+  var namespace = '';
+  var action = '';
+
+  for (var i = 0; i < map.length; i++) {
+    var _map$i$split = map[i].split('/');
+
+    var _map$i$split2 = _slicedToArray(_map$i$split, 2);
+
+    namespace = _map$i$split2[0];
+    action = _map$i$split2[1];
+
+    if (_index__WEBPACK_IMPORTED_MODULE_0__["syncActions"][namespace]) {
+      fn[action] = _index__WEBPACK_IMPORTED_MODULE_0__["syncActions"][namespace][action];
+    }
+  }
+
+  return fn;
+});
+addMethod(mod, 'mapSyncActions', function (namespace, map) {
+  var fn = {};
+
+  for (var i = 0; i < map.length; i++) {
+    if (_index__WEBPACK_IMPORTED_MODULE_0__["syncActions"][namespace]) {
+      fn[map[i]] = _index__WEBPACK_IMPORTED_MODULE_0__["syncActions"][namespace][map[i]];
+    }
+  }
+
+  return fn;
+});
+var mapSyncActions = mod.mapSyncActions;
+function dispatchSync(type) {
+  var payload = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  var namespace = '';
+  var action = '';
+
+  var _type$split = type.split('/');
+
+  var _type$split2 = _slicedToArray(_type$split, 2);
+
+  namespace = _type$split2[0];
+  action = _type$split2[1];
+
+  if (_index__WEBPACK_IMPORTED_MODULE_0__["syncActions"][namespace]) {
+    return _index__WEBPACK_IMPORTED_MODULE_0__["syncActions"][namespace][action](payload);
+  }
+}
 
 /***/ }),
 

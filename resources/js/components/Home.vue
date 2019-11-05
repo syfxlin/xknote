@@ -517,7 +517,7 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from "vuex";
-import mapSyncActions from "../store/mapSyncActions";
+import { mapSyncActions } from "../store/syncActions";
 import XK_Editor from "xkeditor";
 import onlyFolderItem from "./onlyFolderItem";
 import noteItem from "./noteItem";
