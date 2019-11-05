@@ -11459,15 +11459,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 //
 //
@@ -11493,12 +11493,35 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "App",
-  created: function created() {
-    // 当打开note中的时候防止更改
-    window.xknoteOpenedChangeFlag = true; // 是否是通过输入URL引发的query变动
+  created: function () {
+    var _created = _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              // 当打开note中的时候防止更改
+              window.xknoteOpenedChangeFlag = true; // 是否是通过输入URL引发的query变动
 
-    window.inputQueryChangeFlag = true;
-  },
+              window.inputQueryChangeFlag = true;
+              _context.next = 4;
+              return this.loadCloudFolders();
+
+            case 4:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this);
+    }));
+
+    function created() {
+      return _created.apply(this, arguments);
+    }
+
+    return created;
+  }(),
   data: function data() {
     return {
       prevRouter: null
@@ -11526,17 +11549,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     loadPathNote: function () {
       var _loadPathNote = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(path) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(path) {
         var mode,
             info,
             storage,
             item,
-            _args = arguments;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+            _args2 = arguments;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                mode = _args.length > 1 && _args[1] !== undefined ? _args[1] : "normal";
+                mode = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : "normal";
                 info = document.querySelector('.local-tab [data-path="' + path + '"]');
 
                 if (!info) {
@@ -11544,15 +11567,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 }
 
                 if (info) {
-                  _context.next = 5;
+                  _context2.next = 5;
                   break;
                 }
 
-                return _context.abrupt("return");
+                return _context2.abrupt("return");
 
               case 5:
                 storage = info.getAttribute("data-storage");
-                _context.next = 8;
+                _context2.next = 8;
                 return this.listOperate({
                   operate: "get",
                   storage: storage,
@@ -11560,7 +11583,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 });
 
               case 8:
-                item = _context.sent;
+                item = _context2.sent;
                 this.openNote(item, {
                   path: path,
                   storage: storage
@@ -11568,10 +11591,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
               case 10:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee, this);
+        }, _callee2, this);
       }));
 
       function loadPathNote(_x) {
@@ -11896,23 +11919,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var xkeditor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! xkeditor */ "./node_modules/xkeditor/src/index.js");
-/* harmony import */ var _onlyFolderItem__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./onlyFolderItem */ "./resources/js/components/onlyFolderItem.vue");
-/* harmony import */ var _noteItem__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./noteItem */ "./resources/js/components/noteItem.vue");
-/* harmony import */ var _folderItem__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./folderItem */ "./resources/js/components/folderItem.vue");
-/* harmony import */ var _dropdown__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./dropdown */ "./resources/js/components/dropdown.vue");
-/* harmony import */ var _modal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modal */ "./resources/js/components/modal.vue");
-/* harmony import */ var _utils_settingList__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../utils/settingList */ "./resources/js/utils/settingList.js");
-/* harmony import */ var _utils_dropdownList__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../utils/dropdownList */ "./resources/js/utils/dropdownList.js");
-
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var xkeditor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! xkeditor */ "./node_modules/xkeditor/src/index.js");
+/* harmony import */ var _onlyFolderItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./onlyFolderItem */ "./resources/js/components/onlyFolderItem.vue");
+/* harmony import */ var _noteItem__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./noteItem */ "./resources/js/components/noteItem.vue");
+/* harmony import */ var _folderItem__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./folderItem */ "./resources/js/components/folderItem.vue");
+/* harmony import */ var _dropdown__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./dropdown */ "./resources/js/components/dropdown.vue");
+/* harmony import */ var _modal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modal */ "./resources/js/components/modal.vue");
+/* harmony import */ var _utils_settingList__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/settingList */ "./resources/js/utils/settingList.js");
+/* harmony import */ var _utils_dropdownList__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../utils/dropdownList */ "./resources/js/utils/dropdownList.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -12451,44 +12466,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "home",
   components: {
-    "xk-editor": xkeditor__WEBPACK_IMPORTED_MODULE_2__["default"],
-    "only-folder-item": _onlyFolderItem__WEBPACK_IMPORTED_MODULE_3__["default"],
-    "note-item": _noteItem__WEBPACK_IMPORTED_MODULE_4__["default"],
-    "folder-item": _folderItem__WEBPACK_IMPORTED_MODULE_5__["default"],
-    dropdown: _dropdown__WEBPACK_IMPORTED_MODULE_6__["default"],
-    modal: _modal__WEBPACK_IMPORTED_MODULE_7__["default"]
+    "xk-editor": xkeditor__WEBPACK_IMPORTED_MODULE_1__["default"],
+    "only-folder-item": _onlyFolderItem__WEBPACK_IMPORTED_MODULE_2__["default"],
+    "note-item": _noteItem__WEBPACK_IMPORTED_MODULE_3__["default"],
+    "folder-item": _folderItem__WEBPACK_IMPORTED_MODULE_4__["default"],
+    dropdown: _dropdown__WEBPACK_IMPORTED_MODULE_5__["default"],
+    modal: _modal__WEBPACK_IMPORTED_MODULE_6__["default"]
   },
   props: ["loadFirstNote", "setXknoteOpened", "openNote", "writeMode", "configOperate", "listOperate"],
   data: function data() {
-    var _this = this;
-
     return {
-      settingList: _utils_settingList__WEBPACK_IMPORTED_MODULE_8__["default"],
-      navBarListC: _utils_dropdownList__WEBPACK_IMPORTED_MODULE_9__["default"].navBarListC,
-      navBarListR: _utils_dropdownList__WEBPACK_IMPORTED_MODULE_9__["default"].navBarListR,
+      settingList: _utils_settingList__WEBPACK_IMPORTED_MODULE_7__["default"],
+      navBarListC: _utils_dropdownList__WEBPACK_IMPORTED_MODULE_8__["default"].navBarListC,
+      navBarListR: _utils_dropdownList__WEBPACK_IMPORTED_MODULE_8__["default"].navBarListR,
       showSidebar: false,
       // 该属性只有在writeMode有用
       loadedEditor: false,
-      smModal: {
-        show: false,
-        title: "",
-        content: "",
-        data: {},
-        confirm: function confirm() {},
-        cancel: function cancel() {
-          _this.smModal.show = false;
-        }
-      },
-      lgModal: {
-        show: false,
-        title: "",
-        content: "",
-        data: {},
-        confirm: function confirm() {},
-        cancel: function cancel() {
-          _this.lgModal.show = false;
-        }
-      },
       floatMenu: {
         show: false,
         items: [],
@@ -12497,8 +12490,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])("note", ["getReData"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])("note", ["noteBaseInfo", "xknoteOpened", "xknoteOpenedIndex", "currListSource", "currList", "cloudList", "localList", "xknoteTab", "readOpened", "currBadgeCount", "localBadgeCount"])),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])("toast", ["timeToast"]), {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])("note", ["getReData"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])("note", ["noteBaseInfo", "xknoteOpened", "xknoteOpenedIndex", "currListSource", "currList", "cloudList", "localList", "xknoteTab", "readOpened", "currBadgeCount", "localBadgeCount"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])("tools", ["smModal", "lgModal"])),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["showSmModal", "hideSmModal", "showLgModal", "hideLgModal", "setLgModalData", "delLgModalData"]), {
     logout: function logout() {
       window.axios.post("/logout").then(function () {
         window.location.href = "/";
@@ -12514,57 +12507,30 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
      * @param {string} e event的名称
      * @returns void
      */
-    editorLoaded: function () {
-      var _editorLoaded = _asyncToGenerator(
-      /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(e) {
-        var _this2 = this;
+    editorLoaded: function editorLoaded(e) {
+      var _this = this;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                if (e === "interfaceLoad") {
-                  window.XKEditor.ace.getSession().on("change", function () {
-                    if (window.xknoteOpenedChangeFlag) {
-                      _this2.xknoteOpened.note.content = window.XKEditor.getMarkdown();
-                    }
-                  });
-                }
-
-                if (!(e === "componentLoad")) {
-                  _context.next = 5;
-                  break;
-                }
-
-                _context.next = 4;
-                return this.loadCloudFolders();
-
-              case 4:
-                this.$nextTick(function () {
-                  _this2.loadFirstNote();
-
-                  _this2.loadedEditor = true;
-
-                  if (_this2.writeMode) {
-                    _this2.switchWriteMode();
-                  }
-                });
-
-              case 5:
-              case "end":
-                return _context.stop();
-            }
+      if (e === "interfaceLoad") {
+        window.XKEditor.ace.getSession().on("change", function () {
+          if (window.xknoteOpenedChangeFlag) {
+            _this.xknoteOpened.note.content = window.XKEditor.getMarkdown();
           }
-        }, _callee, this);
-      }));
-
-      function editorLoaded(_x) {
-        return _editorLoaded.apply(this, arguments);
+        });
       }
 
-      return editorLoaded;
-    }(),
+      if (e === "componentLoad") {
+        // await this.loadCloudFolders();
+        this.$nextTick(function () {
+          _this.loadFirstNote();
+
+          _this.loadedEditor = true;
+
+          if (_this.writeMode) {
+            _this.switchWriteMode();
+          }
+        });
+      }
+    },
 
     /**
      * 操作列表
@@ -12575,78 +12541,77 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
      * @returns void
      */
     menuOperate: function menuOperate(operate, type, storage, path) {
-      var _this3 = this;
+      var _this2 = this;
 
       var curr = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
       this.floatMenu.show = false;
 
       if (operate === "delete") {
-        this.smModal.title = "删除";
-        this.smModal.content = "是否删除该文件(文件夹)？(此操作不可逆)";
-        this.smModal.show = true;
-
-        this.smModal.confirm = function () {
-          _this3.smModal.show = false;
-
-          var info = _this3.listOperate({
-            operate: "get",
-            storage: storage,
-            path: path
-          });
-
-          if (type === "note") {
-            _this3.noteOperate({
-              operate: operate,
+        this.showSmModal({
+          title: "删除",
+          content: "是否删除该文件(文件夹)？(此操作不可逆)",
+          confirm: function confirm() {
+            var info = _this2.listOperate({
+              operate: "get",
               storage: storage,
-              noteInfo: info
-            }).then(function (res) {
-              _this3.listOperate({
-                operate: "delete",
-                storage: storage,
-                path: path
-              });
+              path: path
+            });
 
-              _this3.timeToast({
-                message: "删除成功！",
-                status: "success",
-                delay: 1000
-              });
-            })["catch"](function (err) {
-              _this3.timeToast({
-                message: "删除失败！请重试。",
-                status: "error",
-                delay: 1000
-              });
-            });
-          } else {
-            _this3.folderOperate({
-              operate: operate,
-              noteInfo: info
-            }).then(function (res) {
-              _this3.listOperate({
-                operate: "delete",
+            if (type === "note") {
+              _this2.noteOperate({
+                operate: operate,
                 storage: storage,
-                path: path
+                noteInfo: info
+              }).then(function (res) {
+                _this2.listOperate({
+                  operate: "delete",
+                  storage: storage,
+                  path: path
+                });
+
+                _this2.timeToast({
+                  message: "删除成功！",
+                  status: "success",
+                  delay: 1000
+                });
+              })["catch"](function (err) {
+                _this2.timeToast({
+                  message: "删除失败！请重试。",
+                  status: "error",
+                  delay: 1000
+                });
               });
-            }).then(function () {
-              _this3.timeToast({
-                message: "删除成功！",
-                status: "success",
-                delay: 1000
+            } else {
+              _this2.folderOperate({
+                operate: operate,
+                noteInfo: info
+              }).then(function (res) {
+                _this2.listOperate({
+                  operate: "delete",
+                  storage: storage,
+                  path: path
+                });
+              }).then(function () {
+                _this2.timeToast({
+                  message: "删除成功！",
+                  status: "success",
+                  delay: 1000
+                });
+              })["catch"](function (err) {
+                _this2.timeToast({
+                  message: "删除失败！请重试。",
+                  status: "error",
+                  delay: 1000
+                });
               });
-            })["catch"](function (err) {
-              _this3.timeToast({
-                message: "删除失败！请重试。",
-                status: "error",
-                delay: 1000
-              });
-            });
+            }
+
+            _this2.hideSmModal();
+          },
+          cancel: function cancel() {
+            _this2.hideSmModal();
           }
-        };
-
-        this.smModal.cancel = function () {
-          _this3.smModal.show = false;
-        };
+        });
       }
 
       if (operate === "rename") {
@@ -12673,7 +12638,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             var value = e.target.value;
             var newPath = info.path.replace(new RegExp(info.name + "$"), value);
 
-            _this3.listOperate({
+            _this2.listOperate({
               operate: "add",
               storage: storage,
               path: newPath,
@@ -12681,12 +12646,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 note: info,
                 source: {
                   path: newPath,
-                  storage: _this3.currListSource[info.path].storage
+                  storage: _this2.currListSource[info.path].storage
                 }
               }
             });
 
-            _this3.listOperate({
+            _this2.listOperate({
               operate: "delete",
               storage: storage,
               path: info.path
@@ -12701,10 +12666,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               var s = storage;
 
               if (storage === "curr") {
-                s = _this3.currListSource[newPath].storage;
+                s = _this2.currListSource[newPath].storage;
               }
 
-              _this3.noteOperate({
+              _this2.noteOperate({
                 operate: operate,
                 storage: s,
                 noteInfo: {
@@ -12716,7 +12681,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 input.removeEventListener("keydown", keyEv);
                 input.removeAttribute("disabled");
 
-                _this3.timeToast({
+                _this2.timeToast({
                   message: "重命名成功！",
                   status: "success",
                   delay: 1000
@@ -12726,14 +12691,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 info.name = oldInfo.name;
                 input.removeAttribute("disabled");
 
-                _this3.timeToast({
+                _this2.timeToast({
                   message: "重命名失败！请重试。",
                   status: "error",
                   delay: 1000
                 });
               });
             } else {
-              _this3.folderOperate({
+              _this2.folderOperate({
                 operate: operate,
                 folderInfo: {
                   oldFolder: oldInfo,
@@ -12744,7 +12709,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 input.removeEventListener("keydown", keyEv);
                 input.removeAttribute("disabled");
 
-                _this3.timeToast({
+                _this2.timeToast({
                   message: "重命名成功！",
                   status: "success",
                   delay: 1000
@@ -12754,7 +12719,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 info.name = oldInfo.name;
                 input.removeAttribute("disabled");
 
-                _this3.timeToast({
+                _this2.timeToast({
                   message: "重命名失败！请重试。",
                   status: "error",
                   delay: 1000
@@ -12793,17 +12758,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               storage: "local",
               noteInfo: note
             }).then(function () {
-              if (_this3.floatMenu.saveAndClose) {
-                note = _this3.listOperate({
+              if (_this2.floatMenu.saveAndClose) {
+                note = _this2.listOperate({
                   operate: "delete",
                   storage: "curr",
                   path: path
                 });
 
-                _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
+                _this2.setXknoteOpened(JSON.parse(JSON.stringify(_this2.noteBaseInfo)));
               }
 
-              var localIndex = _this3.listOperate({
+              var localIndex = _this2.listOperate({
                 operate: "add",
                 storage: "local",
                 path: path,
@@ -12811,8 +12776,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               }); // 若不是从localList中打开的文件就不会有currListSource的信息，如果用户选择不关闭保存，则需要添加source信息，防止后续操作出现问题
 
 
-              if (!_this3.floatMenu.saveAndClose) {
-                _this3.setCurrListSourceA({
+              if (!_this2.floatMenu.saveAndClose) {
+                _this2.setCurrListSourceA({
                   path: path,
                   source: {
                     path: localIndex,
@@ -12821,13 +12786,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 });
               }
 
-              _this3.timeToast({
+              _this2.timeToast({
                 message: "保存到本地成功！",
                 status: "success",
                 delay: 1000
               });
             })["catch"](function (err) {
-              _this3.timeToast({
+              _this2.timeToast({
                 message: "保存到本地失败！",
                 status: "error",
                 delay: 1000
@@ -12845,38 +12810,38 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               storage: "cloud",
               noteInfo: note
             }).then(function (data) {
-              _this3.$set(note, "note", data.note);
+              _this2.$set(note, "note", data.note);
 
               note.status = "C";
               btn.querySelector(".loading").style.display = "none";
               icon.style.display = "";
 
-              _this3.noteOperate({
+              _this2.noteOperate({
                 operate: "save",
                 storage: "local",
                 noteInfo: note
               }).then(function () {
-                _this3.listOperate({
+                _this2.listOperate({
                   operate: "add",
                   storage: "local",
                   path: path,
                   noteInfo: note
                 });
 
-                _this3.timeToast({
+                _this2.timeToast({
                   message: "保存到本地成功！",
                   status: "success",
                   delay: 1000
                 });
               })["catch"](function (err) {
-                _this3.timeToast({
+                _this2.timeToast({
                   message: "保存到本地失败！请重试。",
                   status: "error",
                   delay: 1000
                 });
               });
             })["catch"](function (err) {
-              _this3.timeToast({
+              _this2.timeToast({
                 message: "加载失败！请重试。",
                 status: "error",
                 delay: 1000
@@ -12900,40 +12865,40 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             _note.status = "C";
 
             if (storage === "curr") {
-              if (_this3.currListSource[path].storage === "local") {
-                _this3.noteOperate({
+              if (_this2.currListSource[path].storage === "local") {
+                _this2.noteOperate({
                   operate: "save",
                   storage: "local",
                   noteInfo: _note
                 });
               }
 
-              if (_this3.floatMenu.saveAndClose) {
-                _this3.listOperate({
+              if (_this2.floatMenu.saveAndClose) {
+                _this2.listOperate({
                   operate: "delete",
                   storage: "curr",
                   path: path
                 });
 
-                _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
+                _this2.setXknoteOpened(JSON.parse(JSON.stringify(_this2.noteBaseInfo)));
               }
             }
 
             if (storage === "local") {
-              if (_this3.floatMenu.saveAndClose) {
-                _this3.noteOperate({
+              if (_this2.floatMenu.saveAndClose) {
+                _this2.noteOperate({
                   operate: "delete",
                   storage: "local",
                   noteInfo: _note
                 });
 
-                _this3.listOperate({
+                _this2.listOperate({
                   operate: "delete",
                   storage: storage,
                   path: path
                 });
               } else {
-                _this3.noteOperate({
+                _this2.noteOperate({
                   operate: "save",
                   storage: "local",
                   noteInfo: _note
@@ -12941,20 +12906,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               }
             }
 
-            _this3.listOperate({
+            _this2.listOperate({
               operate: "add",
               storage: "cloud",
               path: path,
               noteInfo: _note
             });
 
-            _this3.timeToast({
+            _this2.timeToast({
               message: "保存到云端成功！",
               status: "success",
               delay: 1000
             });
           })["catch"](function (err) {
-            _this3.timeToast({
+            _this2.timeToast({
               message: "保存到云端失败！请重试。",
               status: "error",
               delay: 1000
@@ -12965,11 +12930,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         if (operate === "closeCurr") {
           // 如果笔记在未保存状态关闭则先弹出modal提示是否下关闭
           var closeCurr = function closeCurr() {
-            if (path == _this3.xknoteOpenedIndex.curr) {
-              _this3.setXknoteOpened(JSON.parse(JSON.stringify(_this3.noteBaseInfo)));
+            if (path == _this2.xknoteOpenedIndex.curr) {
+              _this2.setXknoteOpened(JSON.parse(JSON.stringify(_this2.noteBaseInfo)));
             }
 
-            _this3.listOperate({
+            _this2.listOperate({
               operate: "delete",
               storage: "curr",
               path: path
@@ -12981,18 +12946,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             storage: storage,
             path: path
           }).status === "N") {
-            this.smModal.title = "关闭";
-            this.smModal.content = "该文件未保存，是否关闭该文件？(此操作不可逆)";
-            this.smModal.show = true;
+            this.showSmModal({
+              title: "关闭",
+              content: "该文件未保存，是否关闭该文件？(此操作不可逆)",
+              confirm: function confirm() {
+                closeCurr();
 
-            this.smModal.confirm = function () {
-              closeCurr();
-              _this3.smModal.show = false;
-            };
-
-            this.smModal.cancel = function () {
-              _this3.smModal.show = false;
-            };
+                _this2.hideSmModal();
+              },
+              cancel: function cancel() {
+                _this2.hideSmModal();
+              }
+            });
           } else {
             closeCurr();
           }
@@ -13022,20 +12987,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
      * @returns void
      */
     navBarOperate: function navBarOperate(operate) {
-      var _this4 = this;
+      var _this3 = this;
 
       if (operate.indexOf("show") === 0) {
-        this.lgModal.show = true;
-        this.lgModal.content = operate.substring(4);
+        var _modal = {};
+        _modal.content = operate.substring(4);
 
-        if (this.lgModal.content === "CreateNote") {
-          this.lgModal.title = "新建MD笔记";
-          this.folderOperate({
-            operate: "readOnly",
-            folderInfo: null
-          }).then(function (data) {
-            _this4.$set(_this4.lgModal.data, "folders", data.folders);
-          });
+        if (_modal.content === "CreateNote") {
+          _modal.title = "新建MD笔记";
           var wTimeout = null;
 
           var watch = function watch() {
@@ -13044,26 +13003,34 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             }
 
             wTimeout = setTimeout(function () {
-              _this4.$set(_this4.lgModal.data, "status", "loading"); // TODO: 设置格式
+              _this3.setLgModalData(_objectSpread({}, _this3.lgModal.data, {
+                status: "loading"
+              })); // TODO: 设置格式
 
 
-              if (!/\.(md|txt)/gi.test(_this4.lgModal.data.filename)) {
-                _this4.$set(_this4.lgModal.data, "status", "error");
+              if (!/\.(md|txt)/gi.test(_this3.lgModal.data.filename)) {
+                _this3.setLgModalData(_objectSpread({}, _this3.lgModal.data, {
+                  status: "error"
+                }));
 
                 return;
               }
 
-              _this4.noteOperate({
+              _this3.noteOperate({
                 operate: "exist",
-                storage: _this4.lgModal.data.storage,
+                storage: _this3.lgModal.data.storage,
                 noteInfo: {
-                  path: _this4.lgModal.data.select + "/" + _this4.lgModal.data.filename
+                  path: _this3.lgModal.data.select + "/" + _this3.lgModal.data.filename
                 }
               }).then(function (data) {
                 if (data.exist) {
-                  _this4.$set(_this4.lgModal.data, "status", "error");
+                  _this3.setLgModalData(_objectSpread({}, _this3.lgModal.data, {
+                    status: "error"
+                  }));
                 } else {
-                  _this4.$set(_this4.lgModal.data, "status", "");
+                  _this3.setLgModalData(_objectSpread({}, _this3.lgModal.data, {
+                    status: ""
+                  }));
                 }
               });
             }, 500);
@@ -13073,22 +13040,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           var uwTitle = this.$watch("lgModal.data.select", watch);
           var uwStorage = this.$watch("lgModal.data.storage", watch);
 
-          this.lgModal.confirm = function () {
-            if (!_this4.lgModal.data.filename || !_this4.lgModal.data.title || !_this4.lgModal.data.storage || _this4.lgModal.data.status !== "") {
+          _modal.confirm = function () {
+            if (!_this3.lgModal.data.filename || !_this3.lgModal.data.title || !_this3.lgModal.data.storage || _this3.lgModal.data.status !== "") {
               return;
             }
 
             document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
             var d = new Date();
             var date = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-            var path = _this4.lgModal.data.select + "/" + _this4.lgModal.data.filename;
+            var path = _this3.lgModal.data.select + "/" + _this3.lgModal.data.filename;
             var noteInfo = {
               type: "note",
               path: path,
-              name: _this4.lgModal.data.filename,
+              name: _this3.lgModal.data.filename,
               status: "N",
               note: {
-                title: _this4.lgModal.data.title,
+                title: _this3.lgModal.data.title,
                 created_at: date,
                 updated_at: date,
                 author: "",
@@ -13096,42 +13063,44 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               }
             };
 
-            _this4.openNote(noteInfo, {
+            _this3.openNote(noteInfo, {
               path: path,
-              storage: _this4.lgModal.data.storage
+              storage: _this3.lgModal.data.storage
             }, "normal", true);
 
-            _this4.listOperate({
+            _this3.listOperate({
               operate: "add",
-              storage: _this4.lgModal.data.storage,
+              storage: _this3.lgModal.data.storage,
               path: path,
               noteInfo: noteInfo
             });
 
             document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
 
-            _this4.lgModal.cancel();
+            _this3.lgModal.cancel();
           };
 
-          this.lgModal.cancel = function () {
+          _modal.cancel = function () {
             uwFileName();
             uwTitle();
             uwStorage();
 
-            _this4.$set(_this4.lgModal, "data", {});
-
-            _this4.lgModal.show = false;
+            _this3.hideLgModal();
           };
-        }
 
-        if (this.lgModal.content === "CreateFolder") {
-          this.lgModal.title = "新建文件夹";
           this.folderOperate({
             operate: "readOnly",
             folderInfo: null
           }).then(function (data) {
-            _this4.$set(_this4.lgModal.data, "folders", data.folders);
+            _this3.setLgModalData(_objectSpread({}, _this3.lgModal.data, {
+              folders: data.folders
+            }));
           });
+          this.showLgModal(_modal);
+        }
+
+        if (_modal.content === "CreateFolder") {
+          _modal.title = "新建文件夹";
           var _wTimeout = null;
 
           var _watch = function _watch() {
@@ -13140,18 +13109,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             }
 
             _wTimeout = setTimeout(function () {
-              _this4.$set(_this4.lgModal.data, "status", "loading");
+              _this3.setLgModalData(_objectSpread({}, _this3.lgModal.data, {
+                status: "loading"
+              }));
 
-              _this4.folderOperate({
+              _this3.folderOperate({
                 operate: "exist",
                 folderInfo: {
-                  path: _this4.lgModal.data.select + "/" + _this4.lgModal.data.foldername
+                  path: _this3.lgModal.data.select + "/" + _this3.lgModal.data.foldername
                 }
               }).then(function (data) {
                 if (data.exist) {
-                  _this4.$set(_this4.lgModal.data, "status", "error");
+                  _this3.setLgModalData(_objectSpread({}, _this3.lgModal.data, {
+                    status: "error"
+                  }));
                 } else {
-                  _this4.$set(_this4.lgModal.data, "status", "");
+                  _this3.setLgModalData(_objectSpread({}, _this3.lgModal.data, {
+                    status: ""
+                  }));
                 }
               });
             }, 500);
@@ -13161,39 +13136,39 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
           var _uwTitle = this.$watch("lgModal.data.select", _watch);
 
-          this.lgModal.confirm = function () {
-            if (!_this4.lgModal.data.foldername || _this4.lgModal.data.status !== "") {
+          _modal.confirm = function () {
+            if (!_this3.lgModal.data.foldername || _this3.lgModal.data.status !== "") {
               return;
             }
 
             document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
-            var path = _this4.lgModal.data.select + "/" + _this4.lgModal.data.foldername;
+            var path = _this3.lgModal.data.select + "/" + _this3.lgModal.data.foldername;
 
-            _this4.folderOperate({
+            _this3.folderOperate({
               operate: "create",
               folderInfo: {
                 path: path
               }
             }).then(function () {
-              _this4.listOperate({
+              _this3.listOperate({
                 operate: "add",
-                storage: _this4.lgModal.data.storage,
+                storage: _this3.lgModal.data.storage,
                 path: path
               });
 
               document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
 
-              _this4.lgModal.cancel();
+              _this3.lgModal.cancel();
 
-              _this4.loadCloudFolders();
+              _this3.loadCloudFolders();
 
-              _this4.timeToast({
+              _this3.timeToast({
                 message: "创建文件夹成功！",
                 status: "success",
                 delay: 1000
               });
             })["catch"](function (err) {
-              _this4.timeToast({
+              _this3.timeToast({
                 message: "创建文件夹失败！请重试。",
                 status: "error",
                 delay: 1000
@@ -13201,59 +13176,71 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             });
           };
 
-          this.lgModal.cancel = function () {
+          _modal.cancel = function () {
             uwFolderName();
 
             _uwTitle();
 
-            _this4.$set(_this4.lgModal, "data", {});
-
-            _this4.lgModal.show = false;
+            _this3.hideLgModal();
           };
+
+          this.folderOperate({
+            operate: "readOnly",
+            folderInfo: null
+          }).then(function (data) {
+            _this3.setLgModalData(_objectSpread({}, _this3.lgModal.data, {
+              folders: data.folders
+            }));
+          });
+          this.showLgModal(_modal);
         }
 
-        if (this.lgModal.content === "GitConfig") {
-          this.lgModal.title = "Git设置";
-          this.$set(this.lgModal.data, "status", "loading");
+        if (_modal.content === "GitConfig") {
+          _modal.title = "Git设置";
+          this.setLgModalData(_objectSpread({}, this.lgModal.data, {
+            status: "loading"
+          }));
           this.configOperate("getGitConfig", null, function (info) {
-            _this4.$set(_this4.lgModal.data, "git_name", info.git_name);
-
-            _this4.$set(_this4.lgModal.data, "git_email", info.git_email);
-
-            _this4.$set(_this4.lgModal.data, "status", "");
+            _this3.setLgModalData(_objectSpread({}, _this3.lgModal.data, {
+              status: "",
+              git_name: info.git_name,
+              git_email: info.git_email
+            }));
           }, function (error) {
-            _this4.timeToast({
+            _this3.timeToast({
               message: "获取信息失败！",
               status: "error",
               delay: 1000
             });
 
-            _this4.$set(_this4.lgModal.data, "status", "");
+            _this3.setLgModalData(_objectSpread({}, _this3.lgModal.data, {
+              status: ""
+            }));
           });
 
-          this.lgModal.confirm = function () {
-            if (!_this4.lgModal.data.git_name || !_this4.lgModal.data.git_email || !_this4.lgModal.data.git_password || _this4.lgModal.data.status !== "") {
+          _modal.confirm = function () {
+            if (!_this3.lgModal.data.git_name || !_this3.lgModal.data.git_email || !_this3.lgModal.data.git_password || _this3.lgModal.data.status !== "") {
               return;
             }
 
             document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
 
-            _this4.configOperate("setGitConfig", {
-              git_name: _this4.lgModal.data.git_name,
-              git_email: _this4.lgModal.data.git_email,
-              git_password: _this4.lgModal.data.git_password
+            _this3.configOperate("setGitConfig", {
+              git_name: _this3.lgModal.data.git_name,
+              git_email: _this3.lgModal.data.git_email,
+              git_password: _this3.lgModal.data.git_password
             }, function () {
               document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
 
-              _this4.lgModal.cancel();
+              _this3.lgModal.cancel();
 
-              _this4.timeToast({
+              _this3.timeToast({
                 message: "设置成功！",
                 status: "success",
                 delay: 1000
               });
             }, function (error) {
-              _this4.timeToast({
+              _this3.timeToast({
                 message: "设置失败，请重试！",
                 status: "error",
                 delay: 1000
@@ -13261,11 +13248,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             });
           };
 
-          this.lgModal.cancel = function () {
-            _this4.$set(_this4.lgModal, "data", {});
-
-            _this4.lgModal.show = false;
+          _modal.cancel = function () {
+            _this3.hideLgModal();
           };
+
+          this.showLgModal(_modal);
         }
       }
 
@@ -13305,32 +13292,43 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     },
     checkLocalStatus: function checkLocalStatus() {
-      var _this5 = this;
+      var _this4 = this;
 
       document.querySelector(".xknote-check-local").classList.add("loading");
       window.axios.post("/api/notes/check", {
         check_list: Object.keys(this.localList)
       }).then(function (res) {
-        _this5.lgModal.data = [];
+        var data = {};
 
-        for (var key in _this5.localList) {
-          _this5.lgModal.data.push({
-            name: _this5.localList[key].name,
-            path: _this5.localList[key].path,
-            created_at_l: _this5.localList[key].note.created_at,
-            updated_at_l: _this5.localList[key].note.updated_at,
+        for (var key in _this4.localList) {
+          data[_this4.localList[key].path] = {
+            name: _this4.localList[key].name,
+            path: _this4.localList[key].path,
+            created_at_l: _this4.localList[key].note.created_at,
+            updated_at_l: _this4.localList[key].note.updated_at,
             created_at_c: res.data.check_list[key].created_at,
             updated_at_c: res.data.check_list[key].updated_at
-          });
+          };
         }
 
-        _this5.navBarOperate("showCheckLocalStatus");
+        _this4.setLgModalData(data);
+
+        _this4.showLgModal({
+          title: "检查状态",
+          content: "CheckLocalStatus",
+          confirm: function confirm() {
+            _this4.hideLgModal();
+          },
+          cancel: function cancel() {
+            _this4.hideLgModal();
+          }
+        });
 
         document.querySelector(".xknote-check-local").classList.remove("loading");
       });
     },
     checkLocalOperate: function checkLocalOperate(operate, index) {
-      var _this6 = this;
+      var _this5 = this;
 
       var path = this.lgModal.data[index].path;
 
@@ -13342,20 +13340,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             path: path
           }
         }).then(function (data) {
-          _this6.noteOperate({
+          _this5.noteOperate({
             operate: "save",
             storage: "cloud",
             noteInfo: data
           }).then(function () {
-            _this6.localList[path].status = "C"; //TODO: 修改使用action修改
+            _this5.localList[path].status = "C"; //TODO: 修改使用action修改
+            // this.$delete(this.lgModal.data, index);
 
-            _this6.$delete(_this6.lgModal.data, index); // 将更新后的状态保存到本地
+            _this5.delLgModalData(index); // 将更新后的状态保存到本地
 
 
-            _this6.noteOperate({
+            _this5.noteOperate({
               operate: "save",
               storage: "local",
-              noteInfo: _this6.localList[path]
+              noteInfo: _this5.localList[path]
             });
           });
         });
@@ -13369,14 +13368,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             path: path
           }
         }).then(function (data) {
-          _this6.noteOperate({
+          _this5.noteOperate({
             operate: "save",
             storage: "local",
             noteInfo: data
           }).then(function () {
-            _this6.localList[path].status = "C";
+            _this5.localList[path].status = "C"; // this.$delete(this.lgModal.data, index);
 
-            _this6.$delete(_this6.lgModal.data, index);
+            _this5.delLgModalData(index);
           });
         });
       }
@@ -13386,7 +13385,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     },
     gitOperate: function gitOperate(operate, path) {
-      var _this7 = this;
+      var _this6 = this;
 
       if (operate === "gitPull") {
         this.folderOperate({
@@ -13395,13 +13394,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             path: path
           }
         }).then(function () {
-          _this7.timeToast({
+          _this6.timeToast({
             message: "Git Pull成功！",
             status: "success",
             delay: 1000
           });
         })["catch"](function (error) {
-          _this7.timeToast({
+          _this6.timeToast({
             message: "Git Pull失败，请重试！",
             status: "error",
             delay: 1000
@@ -13416,13 +13415,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             path: path
           }
         }).then(function () {
-          _this7.timeToast({
+          _this6.timeToast({
             message: "Git Push成功！",
             status: "success",
             delay: 1000
           });
         })["catch"](function (error) {
-          _this7.timeToast({
+          _this6.timeToast({
             message: "Git Push失败，请重试！",
             status: "error",
             delay: 1000
@@ -13437,13 +13436,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             path: path
           }
         }).then(function () {
-          _this7.timeToast({
+          _this6.timeToast({
             message: "Git Push成功！",
             status: "success",
             delay: 1000
           });
         })["catch"](function (error) {
-          _this7.timeToast({
+          _this6.timeToast({
             message: "Git Push失败，请重试！",
             status: "error",
             delay: 1000
@@ -13452,9 +13451,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       if (operate === "gitInitClone") {
-        this.lgModal.content = "GitInitClone";
-        this.lgModal.title = "Git InitClone";
-        this.lgModal.show = true;
+        var _modal2 = {};
+        _modal2.content = "GitInitClone";
+        _modal2.title = "Git InitClone";
         var wTimeout = null;
 
         var watch = function watch() {
@@ -13463,18 +13462,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           }
 
           wTimeout = setTimeout(function () {
-            _this7.$set(_this7.lgModal.data, "status", "loading");
+            _this6.setLgModalData(_objectSpread({}, _this6.lgModal.data, {
+              status: "loading"
+            }));
 
-            _this7.folderOperate({
+            _this6.folderOperate({
               operate: "exist",
               folderInfo: {
-                path: _this7.lgModal.data.foldername + "/.git"
+                path: _this6.lgModal.data.foldername + "/.git"
               }
             }).then(function (data) {
               if (data.exist) {
-                _this7.$set(_this7.lgModal.data, "status", "error");
+                _this6.setLgModalData(_objectSpread({}, _this6.lgModal.data, {
+                  status: "error"
+                }));
               } else {
-                _this7.$set(_this7.lgModal.data, "status", "");
+                _this6.setLgModalData(_objectSpread({}, _this6.lgModal.data, {
+                  status: ""
+                }));
               }
             });
           }, 500);
@@ -13482,35 +13487,35 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         var uwFolderName = this.$watch("lgModal.data.foldername", watch);
 
-        this.lgModal.confirm = function () {
-          if (!_this7.lgModal.data.foldername || !_this7.lgModal.data.repo || !_this7.lgModal.data.init_or_clone || _this7.lgModal.data.status !== "") {
+        _modal2.confirm = function () {
+          if (!_this6.lgModal.data.foldername || !_this6.lgModal.data.repo || !_this6.lgModal.data.init_or_clone || _this6.lgModal.data.status !== "") {
             return;
           }
 
           document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
           var git_user = {};
 
-          if (_this7.lgModal.data.git_name && _this7.lgModal.data.git_email && _this7.lgModal.data.git_password) {
+          if (_this6.lgModal.data.git_name && _this6.lgModal.data.git_email && _this6.lgModal.data.git_password) {
             git_user = {
-              git_name: _this7.lgModal.data.git_name,
-              git_email: _this7.lgModal.data.git_email,
-              git_password: _this7.lgModal.data.git_password
+              git_name: _this6.lgModal.data.git_name,
+              git_email: _this6.lgModal.data.git_email,
+              git_password: _this6.lgModal.data.git_password
             };
           }
 
-          _this7.folderOperate({
-            operate: _this7.lgModal.data.init_or_clone === "init" ? "gitInit" : "gitClone",
+          _this6.folderOperate({
+            operate: _this6.lgModal.data.init_or_clone === "init" ? "gitInit" : "gitClone",
             folderInfo: {
-              path: _this7.lgModal.data.foldername,
-              repo: _this7.lgModal.data.repo,
+              path: _this6.lgModal.data.foldername,
+              repo: _this6.lgModal.data.repo,
               git_user: git_user
             }
           }).then(function () {
             document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
 
-            _this7.lgModal.cancel();
+            _this6.lgModal.cancel();
 
-            _this7.timeToast({
+            _this6.timeToast({
               message: "Git Init或Clone成功！",
               status: "success",
               delay: 1000
@@ -13518,71 +13523,74 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           });
         };
 
-        this.lgModal.cancel = function () {
+        _modal2.cancel = function () {
           uwFolderName();
 
-          _this7.$set(_this7.lgModal, "data", {});
-
-          _this7.lgModal.show = false;
+          _this6.hideLgModal();
         };
+
+        this.showLgModal(_modal2);
       }
 
       if (operate === "gitConfig") {
-        this.lgModal.title = "Git设置";
-        this.lgModal.content = "GitItemConfig";
-        this.lgModal.show = true;
-        this.$set(this.lgModal.data, "status", "loading");
+        var _modal3 = {};
+        _modal3.title = "Git设置";
+        _modal3.content = "GitItemConfig";
+        this.setLgModalData(_objectSpread({}, this.lgModal.data, {
+          status: "loading"
+        }));
         this.folderOperate({
           operate: "getGitConfig",
           folderInfo: {
             path: path
           }
         }).then(function (info) {
-          _this7.$set(_this7.lgModal.data, "repo", info.repo);
-
-          _this7.$set(_this7.lgModal.data, "git_name", info.git_name);
-
-          _this7.$set(_this7.lgModal.data, "git_email", info.git_email);
-
-          _this7.$set(_this7.lgModal.data, "status", "");
+          _this6.setLgModalData(_objectSpread({}, _this6.lgModal.data, {
+            status: "",
+            repo: info.repo,
+            git_name: info.git_name,
+            git_email: info.git_email
+          }));
         })["catch"](function (error) {
-          _this7.timeToast({
+          _this6.timeToast({
             message: "获取信息失败！",
             status: "error",
             delay: 1000
           });
 
-          _this7.$set(_this7.lgModal.data, "status", "");
+          _this6.setLgModalData(_objectSpread({}, _this6.lgModal.data, {
+            status: ""
+          }));
         });
 
-        this.lgModal.confirm = function () {
-          if (!_this7.lgModal.data.git_name || !_this7.lgModal.data.git_email || !_this7.lgModal.data.git_password || _this7.lgModal.data.status !== "") {
+        _modal3.confirm = function () {
+          if (!_this6.lgModal.data.git_name || !_this6.lgModal.data.git_email || !_this6.lgModal.data.git_password || _this6.lgModal.data.status !== "") {
             return;
           }
 
           document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
 
-          _this7.folderOperate({
+          _this6.folderOperate({
             operate: "setGitConfig",
             folderInfo: {
-              repo: _this7.lgModal.data.repo,
-              git_name: _this7.lgModal.data.git_name,
-              git_email: _this7.lgModal.data.git_email,
-              git_password: _this7.lgModal.data.git_password,
+              repo: _this6.lgModal.data.repo,
+              git_name: _this6.lgModal.data.git_name,
+              git_email: _this6.lgModal.data.git_email,
+              git_password: _this6.lgModal.data.git_password,
               path: path
             }
           }).then(function () {
             document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
 
-            _this7.lgModal.cancel();
+            _this6.lgModal.cancel();
 
-            _this7.timeToast({
+            _this6.timeToast({
               message: "设置成功！",
               status: "success",
               delay: 1000
             });
           })["catch"](function (error) {
-            _this7.timeToast({
+            _this6.timeToast({
               message: "设置失败，请重试！",
               status: "error",
               delay: 1000
@@ -13590,11 +13598,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           });
         };
 
-        this.lgModal.cancel = function () {
-          _this7.$set(_this7.lgModal, "data", {});
-
-          _this7.lgModal.show = false;
+        _modal3.cancel = function () {
+          _this6.hideLgModal();
         };
+
+        this.showLgModal(_modal3);
       }
     }
   }),
@@ -13619,18 +13627,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _noteItem_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./noteItem.vue */ "./resources/js/components/noteItem.vue");
-/* harmony import */ var _folderItem_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./folderItem.vue */ "./resources/js/components/folderItem.vue");
-/* harmony import */ var _node_modules_xkeditor_src_utils_switchContent_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/xkeditor/src/utils/switchContent.js */ "./node_modules/xkeditor/src/utils/switchContent.js");
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
+/* harmony import */ var _noteItem_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./noteItem.vue */ "./resources/js/components/noteItem.vue");
+/* harmony import */ var _folderItem_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./folderItem.vue */ "./resources/js/components/folderItem.vue");
+/* harmony import */ var _node_modules_xkeditor_src_utils_switchContent_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/xkeditor/src/utils/switchContent.js */ "./node_modules/xkeditor/src/utils/switchContent.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -13716,8 +13716,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "read-mode",
   components: {
-    "note-item": _noteItem_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    "folder-item": _folderItem_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+    "note-item": _noteItem_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    "folder-item": _folderItem_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   props: ["openNote", "loadFirstNote"],
   data: function data() {
@@ -13727,8 +13727,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       previewHtml: ""
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_4__["mapState"])("note", ["cloudList", "localList", "readOpened"])),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_4__["mapActions"])("note", ["loadCloudFolders"]), {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_3__["mapState"])("note", ["cloudList", "localList", "readOpened"])),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_3__["mapActions"])("note", ["loadCloudFolders"]), {
     switchTab: function switchTab(tabName) {
       this.xknoteTab = tabName;
     },
@@ -13743,73 +13743,48 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     watchNote: function watchNote() {
       var _this = this;
 
-      this.previewHtml = Object(_node_modules_xkeditor_src_utils_switchContent_js__WEBPACK_IMPORTED_MODULE_3__["toHtml"])(this.readOpened.note.content, true);
-      this.tocHtml = Object(_node_modules_xkeditor_src_utils_switchContent_js__WEBPACK_IMPORTED_MODULE_3__["getTocHtml"])();
+      this.previewHtml = Object(_node_modules_xkeditor_src_utils_switchContent_js__WEBPACK_IMPORTED_MODULE_2__["toHtml"])(this.readOpened.note.content, true);
+      this.tocHtml = Object(_node_modules_xkeditor_src_utils_switchContent_js__WEBPACK_IMPORTED_MODULE_2__["getTocHtml"])();
       this.$nextTick(function () {
         _this.initTocTree();
       });
     }
   }),
-  mounted: function () {
-    var _mounted = _asyncToGenerator(
-    /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-      var _this2 = this;
+  mounted: function mounted() {
+    var _this2 = this;
 
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _context.next = 2;
-              return this.loadCloudFolders();
+    this.$nextTick(function () {
+      _this2.loadFirstNote("read");
 
-            case 2:
-              this.$nextTick(function () {
-                _this2.loadFirstNote("read");
+      _this2.watchNote();
 
-                _this2.watchNote();
+      if (!window.toggleToc) {
+        window.toggleToc = function (ele) {
+          var display = ele.nextElementSibling.nextElementSibling.style.display;
 
-                if (!window.toggleToc) {
-                  window.toggleToc = function (ele) {
-                    var display = ele.nextElementSibling.nextElementSibling.style.display;
-
-                    if (display === "" || display === "block") {
-                      ele.nextElementSibling.nextElementSibling.style.display = "none";
-                      ele.setAttribute("src", "/static/svg/plus-square.svg");
-                    } else {
-                      ele.nextElementSibling.nextElementSibling.style.display = "block";
-                      ele.setAttribute("src", "/static/svg/minus-square.svg");
-                    }
-                  };
-                }
-
-                if (!window.sta) {
-                  window.sta = function (anchorName) {
-                    if (anchorName) {
-                      var anchorElement = document.getElementById(anchorName);
-
-                      if (anchorElement) {
-                        anchorElement.scrollIntoView(true);
-                      }
-                    }
-                  };
-                }
-              });
-
-            case 3:
-            case "end":
-              return _context.stop();
+          if (display === "" || display === "block") {
+            ele.nextElementSibling.nextElementSibling.style.display = "none";
+            ele.setAttribute("src", "/static/svg/plus-square.svg");
+          } else {
+            ele.nextElementSibling.nextElementSibling.style.display = "block";
+            ele.setAttribute("src", "/static/svg/minus-square.svg");
           }
-        }
-      }, _callee, this);
-    }));
+        };
+      }
 
-    function mounted() {
-      return _mounted.apply(this, arguments);
-    }
+      if (!window.sta) {
+        window.sta = function (anchorName) {
+          if (anchorName) {
+            var anchorElement = document.getElementById(anchorName);
 
-    return mounted;
-  }(),
+            if (anchorElement) {
+              anchorElement.scrollIntoView(true);
+            }
+          }
+        };
+      }
+    });
+  },
   watch: {
     readOpened: "watchNote"
   }
@@ -32052,6 +32027,8 @@ var mutations = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);
 
 
 var _mutations;
@@ -32066,51 +32043,52 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+
 var types = {
-  SET_CLOUD: 'SET_CLOUD',
-  ADD_LOCAL: 'ADD_LOCAL',
-  SET_OPENED: 'SET_OPENED',
-  SET_READED: 'SET_READED',
-  SET_OPENED_INDEX: 'SET_OPENED_INDEX',
-  LIST_OPERATE: 'LIST_OPERATE',
-  SET_CURR_LIST_SOURCE: 'SET_CURR_LIST_SOURCE',
-  CHANGE_COUNT: 'CHANGE_COUNT'
+  SET_CLOUD: "SET_CLOUD",
+  ADD_LOCAL: "ADD_LOCAL",
+  SET_OPENED: "SET_OPENED",
+  SET_READED: "SET_READED",
+  SET_OPENED_INDEX: "SET_OPENED_INDEX",
+  LIST_OPERATE: "LIST_OPERATE",
+  SET_CURR_LIST_SOURCE: "SET_CURR_LIST_SOURCE",
+  CHANGE_COUNT: "CHANGE_COUNT"
 };
 var state = {
   noteBaseInfo: {
-    type: 'note',
-    path: '',
-    name: '',
-    status: 'N',
+    type: "note",
+    path: "",
+    name: "",
+    status: "N",
     note: {
-      title: '',
-      author: '',
-      content: '暂未打开任何文件，请选择文件。',
-      created_at: '',
-      updated_at: ''
+      title: "",
+      author: "",
+      content: "暂未打开任何文件，请选择文件。",
+      created_at: "",
+      updated_at: ""
     }
   },
   xknoteOpened: {
-    type: 'note',
-    path: '',
-    name: '',
-    status: 'N',
+    type: "note",
+    path: "",
+    name: "",
+    status: "N",
     note: {
-      title: '',
-      author: '',
-      content: '暂未打开任何文件，请选择文件。',
-      created_at: '',
-      updated_at: ''
+      title: "",
+      author: "",
+      content: "暂未打开任何文件，请选择文件。",
+      created_at: "",
+      updated_at: ""
     }
   },
   // 存储当前开启的文档的位置，当前位置和源位置
   // curr存储的是位于currList的索引
   // source存储的分别是源的位置 本地or云端（data-storage） 在其列表中的index（data-index）
   xknoteOpenedIndex: {
-    curr: '',
+    curr: "",
     source: {
-      path: '',
-      storage: ''
+      path: "",
+      storage: ""
     }
   },
   // currList的扩展信息
@@ -32118,18 +32096,18 @@ var state = {
   currList: {},
   cloudList: {},
   localList: {},
-  xknoteTab: 'cloud',
+  xknoteTab: "cloud",
   readOpened: {
-    type: 'note',
-    path: '',
-    name: '',
-    status: 'N',
+    type: "note",
+    path: "",
+    name: "",
+    status: "N",
     note: {
-      title: '',
-      author: '',
-      content: '暂未打开任何文件，请选择文件。',
-      created_at: '',
-      updated_at: ''
+      title: "",
+      author: "",
+      content: "暂未打开任何文件，请选择文件。",
+      created_at: "",
+      updated_at: ""
     }
   },
   reData: null,
@@ -32146,7 +32124,7 @@ var getters = {
 var actions = {
   switchTab: function switchTab(_ref, tabName) {
     var commit = _ref.commit;
-    commit('switchTab', tabName);
+    commit("switchTab", tabName);
   },
   loadCloudFolders: function () {
     var _loadCloudFolders = _asyncToGenerator(
@@ -32159,8 +32137,8 @@ var actions = {
             case 0:
               commit = _ref2.commit, dispatch = _ref2.dispatch;
               _context.next = 3;
-              return dispatch('folderOperate', {
-                operate: 'readAll',
+              return dispatch("folderOperate", {
+                operate: "readAll",
                 folderInfo: null
               });
 
@@ -32186,9 +32164,9 @@ var actions = {
   loadLocalNotes: function loadLocalNotes(_ref3) {
     var commit = _ref3.commit,
         dispatch = _ref3.dispatch;
-    dispatch('db/noteLocalDB', {
-      operate: 'readAll',
-      data: ''
+    dispatch("db/noteLocalDB", {
+      operate: "readAll",
+      data: ""
     }, {
       root: true
     }).then(function (list) {
@@ -32209,8 +32187,8 @@ var actions = {
         _ref5$folderInfo = _ref5.folderInfo,
         folderInfo = _ref5$folderInfo === void 0 ? null : _ref5$folderInfo;
     return new Promise(function (resolve, reject) {
-      if (operate === 'readAll') {
-        window.axios.get('/api/folders').then(function (res) {
+      if (operate === "readAll") {
+        window.axios.get("/api/folders").then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
           console.error(err);
@@ -32218,8 +32196,8 @@ var actions = {
         });
       }
 
-      if (operate === 'readFlat') {
-        window.axios.get('/api/folders/flat').then(function (res) {
+      if (operate === "readFlat") {
+        window.axios.get("/api/folders/flat").then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
           console.error(err);
@@ -32227,8 +32205,8 @@ var actions = {
         });
       }
 
-      if (operate === 'readOnly') {
-        window.axios.get('/api/folders/only').then(function (res) {
+      if (operate === "readOnly") {
+        window.axios.get("/api/folders/only").then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
           console.error(err);
@@ -32236,8 +32214,8 @@ var actions = {
         });
       }
 
-      if (operate === 'rename') {
-        window.axios.put('/api/folders', {
+      if (operate === "rename") {
+        window.axios.put("/api/folders", {
           old_path: folderInfo.oldFolder.path,
           new_path: folderInfo.folder.path
         }).then(function (res) {
@@ -32254,8 +32232,8 @@ var actions = {
         });
       }
 
-      if (operate === 'create') {
-        window.axios.post('/api/folders', {
+      if (operate === "create") {
+        window.axios.post("/api/folders", {
           path: folderInfo.path
         }).then(function (res) {
           if (res.data.error == false) {
@@ -32269,8 +32247,8 @@ var actions = {
         });
       }
 
-      if (operate === 'delete') {
-        window.axios["delete"]('/api/folders', {
+      if (operate === "delete") {
+        window.axios["delete"]("/api/folders", {
           params: {
             path: folderInfo.path
           }
@@ -32288,8 +32266,8 @@ var actions = {
         });
       }
 
-      if (operate === 'exist') {
-        window.axios.get('/api/folders/exist', {
+      if (operate === "exist") {
+        window.axios.get("/api/folders/exist", {
           params: {
             path: folderInfo.path
           }
@@ -32302,10 +32280,10 @@ var actions = {
       } // TODO: 添加加载时提示
 
 
-      if (operate === 'gitPush' || operate === 'gitPushForce') {
-        window.axios.put('/api/repo', {
+      if (operate === "gitPush" || operate === "gitPushForce") {
+        window.axios.put("/api/repo", {
           path: folderInfo.path,
-          force: operate === 'gitPushForce'
+          force: operate === "gitPushForce"
         }).then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
@@ -32314,8 +32292,8 @@ var actions = {
         });
       }
 
-      if (operate === 'gitPull') {
-        window.axios.get('/api/repo', {
+      if (operate === "gitPull") {
+        window.axios.get("/api/repo", {
           params: {
             path: folderInfo.path
           }
@@ -32327,11 +32305,11 @@ var actions = {
         });
       }
 
-      if (operate === 'gitInit' || operate === 'gitClone') {
-        window.axios.post('/api/repo', _objectSpread({
+      if (operate === "gitInit" || operate === "gitClone") {
+        window.axios.post("/api/repo", _objectSpread({
           path: folderInfo.path,
           repo: folderInfo.repo,
-          init_or_clone: operate === 'gitInit' ? 'init' : 'clone'
+          init_or_clone: operate === "gitInit" ? "init" : "clone"
         }, folderInfo.git_user)).then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
@@ -32340,8 +32318,8 @@ var actions = {
         });
       }
 
-      if (operate === 'getGitConfig') {
-        window.axios.get('/api/repo/conf', {
+      if (operate === "getGitConfig") {
+        window.axios.get("/api/repo/conf", {
           params: {
             path: folderInfo.path
           }
@@ -32352,8 +32330,8 @@ var actions = {
           reject(err);
         });
 
-        if (operate === 'setGitConfig') {
-          window.axios.put('/api/repo/conf', _objectSpread({}, folderInfo)).then(function (res) {
+        if (operate === "setGitConfig") {
+          window.axios.put("/api/repo/conf", _objectSpread({}, folderInfo)).then(function (res) {
             resolve(res.data);
           })["catch"](function (err) {
             console.log(err);
@@ -32373,10 +32351,10 @@ var actions = {
         _ref7$noteInfo = _ref7.noteInfo,
         noteInfo = _ref7$noteInfo === void 0 ? null : _ref7$noteInfo;
     return new Promise(function (resolve, reject) {
-      if (operate === 'read') {
-        if (storage === 'local') {
-          dispatch('db/noteLocalDB', {
-            operate: 'read',
+      if (operate === "read") {
+        if (storage === "local") {
+          dispatch("db/noteLocalDB", {
+            operate: "read",
             data: noteInfo.path
           }, {
             root: true
@@ -32385,8 +32363,8 @@ var actions = {
           });
         }
 
-        if (storage === 'cloud') {
-          window.axios.get('/api/notes', {
+        if (storage === "cloud") {
+          window.axios.get("/api/notes", {
             params: {
               path: noteInfo.path
             }
@@ -32399,9 +32377,9 @@ var actions = {
         }
       }
 
-      if (operate === 'create') {
-        if (storage === 'cloud') {
-          window.axios.post('/api/notes', {
+      if (operate === "create") {
+        if (storage === "cloud") {
+          window.axios.post("/api/notes", {
             path: noteInfo.path,
             title: noteInfo.note.title,
             author: noteInfo.note.author,
@@ -32421,10 +32399,10 @@ var actions = {
         }
       }
 
-      if (operate === 'delete') {
-        if (storage === 'local') {
-          dispatch('db/noteLocalDB', {
-            operate: 'delete',
+      if (operate === "delete") {
+        if (storage === "local") {
+          dispatch("db/noteLocalDB", {
+            operate: "delete",
             data: noteInfo.path
           }, {
             root: true
@@ -32433,8 +32411,8 @@ var actions = {
           })["catch"](reject);
         }
 
-        if (storage === 'cloud') {
-          window.axios["delete"]('/api/notes', {
+        if (storage === "cloud") {
+          window.axios["delete"]("/api/notes", {
             params: {
               path: noteInfo.path
             }
@@ -32453,16 +32431,16 @@ var actions = {
         }
       }
 
-      if (operate === 'save') {
-        if (storage === 'local') {
-          dispatch('db/noteLocalDB', {
-            operate: 'delete',
+      if (operate === "save") {
+        if (storage === "local") {
+          dispatch("db/noteLocalDB", {
+            operate: "delete",
             data: noteInfo.path
           }, {
             root: true
           }).then(function () {
-            dispatch('db/noteLocalDB', {
-              operate: 'add',
+            dispatch("db/noteLocalDB", {
+              operate: "add",
               data: noteInfo
             }, {
               root: true
@@ -32472,8 +32450,8 @@ var actions = {
           })["catch"](reject);
         }
 
-        if (storage === 'cloud') {
-          window.axios.put('/api/notes', {
+        if (storage === "cloud") {
+          window.axios.put("/api/notes", {
             path: noteInfo.path,
             title: noteInfo.note.title,
             author: noteInfo.note.author,
@@ -32493,16 +32471,16 @@ var actions = {
         }
       }
 
-      if (operate === 'rename') {
-        if (storage === 'local') {
-          dispatch('db/noteLocalDB', {
-            operate: 'delete',
+      if (operate === "rename") {
+        if (storage === "local") {
+          dispatch("db/noteLocalDB", {
+            operate: "delete",
             data: noteInfo.oldNote.path
           }, {
             root: true
           });
-          dispatch('db/noteLocalDB', {
-            operate: 'add',
+          dispatch("db/noteLocalDB", {
+            operate: "add",
             data: noteInfo.note
           }, {
             root: true
@@ -32510,8 +32488,8 @@ var actions = {
           resolve();
         }
 
-        if (storage === 'cloud') {
-          window.axios.put('/api/notes/rename', {
+        if (storage === "cloud") {
+          window.axios.put("/api/notes/rename", {
             old_path: noteInfo.oldNote.path,
             new_path: noteInfo.note.path
           }).then(function (res) {
@@ -32529,9 +32507,9 @@ var actions = {
         }
       }
 
-      if (operate === 'exist') {
-        if (storage === 'cloud') {
-          window.axios.get('/api/notes/exist', {
+      if (operate === "exist") {
+        if (storage === "cloud") {
+          window.axios.get("/api/notes/exist", {
             params: {
               path: noteInfo.path
             }
@@ -32543,7 +32521,7 @@ var actions = {
           });
         }
 
-        if (storage === 'local') {
+        if (storage === "local") {
           var flag = false;
 
           for (var i = 0; i < _this.localList.length; i++) {
@@ -32588,22 +32566,22 @@ var mutations = (_mutations = {
       _ref12$noteInfo = _ref12.noteInfo,
       noteInfo = _ref12$noteInfo === void 0 ? null : _ref12$noteInfo;
   var arr = [path];
-  var list = state[storage + 'List'];
+  var list = state[storage + "List"];
 
-  if (storage === 'cloud') {
-    arr = path.substring(1).split('/');
+  if (storage === "cloud") {
+    arr = path.substring(1).split("/");
 
-    for (var i = 0; operate !== 'add' && i < arr.length - 1; i++) {
+    for (var i = 0; operate !== "add" && i < arr.length - 1; i++) {
       list = list[arr[i]].sub;
     }
   }
 
-  if (operate === 'get') {
+  if (operate === "get") {
     state.reData = list[arr[arr.length - 1]];
   }
 
-  if (operate === 'add') {
-    if (storage === 'curr') {
+  if (operate === "add") {
+    if (storage === "curr") {
       // let currIndex = this.$set(this.currList, path, noteInfo.note);
       // this.$set(this.currListSource, path, noteInfo.source);
       state.currList[path] = noteInfo.note;
@@ -32611,18 +32589,18 @@ var mutations = (_mutations = {
       state.reData = path;
     }
 
-    if (storage === 'local') {
+    if (storage === "local") {
       // return this.$set(this.localList, path, noteInfo);
       state.localList[path] = noteInfo;
       state.reData = path;
     }
 
-    if (storage === 'cloud') {
-      var p = '';
+    if (storage === "cloud") {
+      var p = "";
       var len = noteInfo === null ? arr.length : arr.length - 1;
 
       for (var _i = 0; _i < len; _i++) {
-        p += '/' + arr[_i];
+        p += "/" + arr[_i];
 
         if (!list[arr[_i]]) {
           // this.$set(list, arr[i], {
@@ -32632,7 +32610,7 @@ var mutations = (_mutations = {
           //   sub: {}
           // });
           list[arr[_i]] = {
-            type: 'folder',
+            type: "folder",
             path: p,
             name: arr[_i],
             sub: {}
@@ -32649,20 +32627,20 @@ var mutations = (_mutations = {
     }
   }
 
-  if (operate === 'delete') {
-    var noteList = list[arr[arr.length - 1]]; // this.$delete(list, arr[arr.length - 1]);
+  if (operate === "delete") {
+    var noteList = list[arr[arr.length - 1]]; // delete list[arr[arr.length - 1]];
 
-    delete list[arr[arr.length - 1]];
+    vue__WEBPACK_IMPORTED_MODULE_1___default.a["delete"](list, arr[arr.length - 1]);
 
-    if (storage === 'curr') {
-      // this.$delete(this.currListSource, arr[arr.length - 1]);
+    if (storage === "curr") {
       delete state.currListSource[arr[arr.length - 1]];
+      vue__WEBPACK_IMPORTED_MODULE_1___default.a["delete"](state.currListSource, arr[arr.length - 1]);
     }
 
     state.reData = noteList;
   }
 
-  if (operate === 'set') {
+  if (operate === "set") {
     // this.$set(list, arr[arr.length - 1], { ...noteInfo });
     list[arr[arr.length - 1]] = noteInfo;
   }
@@ -32687,13 +32665,13 @@ var mutations = (_mutations = {
   state.localBadgeCount = 0;
 
   for (var key in state.currList) {
-    if (state.currList[key].status === 'N') {
+    if (state.currList[key].status === "N") {
       state.currBadgeCount++;
     }
   }
 
   for (var _key in state.localList) {
-    if (state.localList[_key].status === 'N') {
+    if (state.localList[_key].status === "N") {
       state.localBadgeCount++;
     }
   }
@@ -32818,7 +32796,9 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, types.SHOW, functi
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-var _this = undefined;
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+var _mutations;
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -32826,29 +32806,29 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+
 var types = {
-  SET_SM_MODAL: 'SET_SM_MODAL'
+  SET_SM_MODAL: "SET_SM_MODAL",
+  SET_LG_MODAL: "SET_LG_MODAL",
+  SET_LG_MODAL_DATA: "SET_LG_MODAL_DATA",
+  DEL_LG_MODAL_DATA: "DEL_LG_MODAL_DATA"
 };
 var state = {
   smModal: {
     show: false,
-    title: '',
-    content: '',
+    title: "",
+    content: "",
     data: {},
     confirm: function confirm() {},
-    cancel: function cancel() {
-      _this.smModal.show = false;
-    }
+    cancel: function cancel() {}
   },
   lgModal: {
     show: false,
-    title: '',
-    content: '',
+    title: "",
+    content: "",
     data: {},
     confirm: function confirm() {},
-    cancel: function cancel() {
-      _this.lgModal.show = false;
-    }
+    cancel: function cancel() {}
   },
   floatMenu: {
     show: false,
@@ -32861,31 +32841,57 @@ var getters = {};
 var actions = {
   showSmModal: function showSmModal(_ref, modal) {
     var commit = _ref.commit;
-    commit(_objectSpread({}, modal, {
+    commit(types.SET_SM_MODAL, _objectSpread({}, modal, {
       show: true
     }));
   },
   hideSmModal: function hideSmModal(_ref2) {
-    var _this2 = this;
-
     var commit = _ref2.commit;
-    commit({
+    commit(types.SET_SM_MODAL, {
       show: false,
-      title: '',
-      content: '',
+      title: "",
+      content: "",
       data: {},
       confirm: function confirm() {},
-      cancel: function cancel() {
-        _this2.smModal.show = false;
-      }
+      cancel: function cancel() {}
     });
+  },
+  showLgModal: function showLgModal(_ref3, modal) {
+    var commit = _ref3.commit;
+    commit(types.SET_LG_MODAL, _objectSpread({}, modal, {
+      show: true
+    }));
+  },
+  hideLgModal: function hideLgModal(_ref4) {
+    var commit = _ref4.commit;
+    commit(types.SET_LG_MODAL, {
+      show: false,
+      title: "",
+      content: "",
+      data: {},
+      confirm: function confirm() {},
+      cancel: function cancel() {}
+    });
+  },
+  setLgModalData: function setLgModalData(_ref5, data) {
+    var commit = _ref5.commit;
+    commit(types.SET_LG_MODAL_DATA, data);
+  },
+  delLgModalData: function delLgModalData(_ref6, index) {
+    var commit = _ref6.commit;
+    commit(types.DEL_LG_MODAL_DATA, index);
   }
 };
-
-var mutations = _defineProperty({}, types.SET_SM_MODAL, function (state, modal) {
-  this.smModal = modal;
-});
-
+var mutations = (_mutations = {}, _defineProperty(_mutations, types.SET_SM_MODAL, function (state, modal) {
+  state.smModal = _objectSpread({}, state.smModal, {}, modal);
+}), _defineProperty(_mutations, types.SET_LG_MODAL, function (state, modal) {
+  state.lgModal = _objectSpread({}, state.lgModal, {}, modal);
+}), _defineProperty(_mutations, types.SET_LG_MODAL_DATA, function (state, data) {
+  state.lgModal.data = data;
+}), _defineProperty(_mutations, types.DEL_LG_MODAL_DATA, function (state, index) {
+  // delete state.lgModal.data[index];
+  vue__WEBPACK_IMPORTED_MODULE_0___default.a["delete"](state.lgModal.data, index);
+}), _mutations);
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
   state: state,
@@ -33072,8 +33078,8 @@ var settingList = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! F:\VSCode-src\Laravel\xknote-2\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! F:\VSCode-src\Laravel\xknote-2\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\VSCode-src\xknote\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\VSCode-src\xknote\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ }),

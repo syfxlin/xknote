@@ -553,26 +553,6 @@ export default {
       navBarListR: dropdownList.navBarListR,
       showSidebar: false, // 该属性只有在writeMode有用
       loadedEditor: false,
-      smModal: {
-        show: false,
-        title: "",
-        content: "",
-        data: {},
-        confirm: () => {},
-        cancel: () => {
-          this.smModal.show = false;
-        }
-      },
-      lgModal: {
-        show: false,
-        title: "",
-        content: "",
-        data: {},
-        confirm: () => {},
-        cancel: () => {
-          this.lgModal.show = false;
-        }
-      },
       floatMenu: {
         show: false,
         items: [],
@@ -595,7 +575,8 @@ export default {
       "readOpened",
       "currBadgeCount",
       "localBadgeCount"
-    ])
+    ]),
+    ...mapState("tools", ["smModal", "lgModal"])
   },
   methods: {
     ...mapActions("note", [
@@ -609,6 +590,14 @@ export default {
       "setXknoteOpenedIndexA"
     ]),
     ...mapActions("toast", ["timeToast"]),
+    ...mapActions("tools", [
+      "showSmModal",
+      "hideSmModal",
+      "showLgModal",
+      "hideLgModal",
+      "setLgModalData",
+      "delLgModalData"
+    ]),
     logout() {
       window.axios.post("/logout").then(function() {
         window.location.href = "/";
@@ -623,7 +612,7 @@ export default {
      * @param {string} e event的名称
      * @returns void
      */
-    async editorLoaded(e) {
+    editorLoaded(e) {
       if (e === "interfaceLoad") {
         window.XKEditor.ace.getSession().on("change", () => {
           if (window.xknoteOpenedChangeFlag) {
@@ -632,7 +621,7 @@ export default {
         });
       }
       if (e === "componentLoad") {
-        await this.loadCloudFolders();
+        // await this.loadCloudFolders();
         this.$nextTick(() => {
           this.loadFirstNote();
           this.loadedEditor = true;
@@ -653,69 +642,70 @@ export default {
     menuOperate(operate, type, storage, path, curr = null) {
       this.floatMenu.show = false;
       if (operate === "delete") {
-        this.smModal.title = "删除";
-        this.smModal.content = "是否删除该文件(文件夹)？(此操作不可逆)";
-        this.smModal.show = true;
-        this.smModal.confirm = () => {
-          this.smModal.show = false;
-          let info = this.listOperate({
-            operate: "get",
-            storage: storage,
-            path: path
-          });
-          if (type === "note") {
-            this.noteOperate({
-              operate: operate,
+        this.showSmModal({
+          title: "删除",
+          content: "是否删除该文件(文件夹)？(此操作不可逆)",
+          confirm: () => {
+            let info = this.listOperate({
+              operate: "get",
               storage: storage,
-              noteInfo: info
-            })
-              .then(res => {
-                this.listOperate({
-                  operate: "delete",
-                  storage: storage,
-                  path: path
-                });
-                this.timeToast({
-                  message: "删除成功！",
-                  status: "success",
-                  delay: 1000
-                });
+              path: path
+            });
+            if (type === "note") {
+              this.noteOperate({
+                operate: operate,
+                storage: storage,
+                noteInfo: info
               })
-              .catch(err => {
-                this.timeToast({
-                  message: "删除失败！请重试。",
-                  status: "error",
-                  delay: 1000
+                .then(res => {
+                  this.listOperate({
+                    operate: "delete",
+                    storage: storage,
+                    path: path
+                  });
+                  this.timeToast({
+                    message: "删除成功！",
+                    status: "success",
+                    delay: 1000
+                  });
+                })
+                .catch(err => {
+                  this.timeToast({
+                    message: "删除失败！请重试。",
+                    status: "error",
+                    delay: 1000
+                  });
                 });
-              });
-          } else {
-            this.folderOperate({ operate: operate, noteInfo: info })
-              .then(res => {
-                this.listOperate({
-                  operate: "delete",
-                  storage: storage,
-                  path: path
+            } else {
+              this.folderOperate({ operate: operate, noteInfo: info })
+                .then(res => {
+                  this.listOperate({
+                    operate: "delete",
+                    storage: storage,
+                    path: path
+                  });
+                })
+                .then(() => {
+                  this.timeToast({
+                    message: "删除成功！",
+                    status: "success",
+                    delay: 1000
+                  });
+                })
+                .catch(err => {
+                  this.timeToast({
+                    message: "删除失败！请重试。",
+                    status: "error",
+                    delay: 1000
+                  });
                 });
-              })
-              .then(() => {
-                this.timeToast({
-                  message: "删除成功！",
-                  status: "success",
-                  delay: 1000
-                });
-              })
-              .catch(err => {
-                this.timeToast({
-                  message: "删除失败！请重试。",
-                  status: "error",
-                  delay: 1000
-                });
-              });
+            }
+            this.hideSmModal();
+          },
+          cancel: () => {
+            this.hideSmModal();
           }
-        };
-        this.smModal.cancel = () => {
-          this.smModal.show = false;
-        };
+        });
       }
       if (operate === "rename") {
         // 先获取到旧的Note信息，为了防止对象的变动所以需要克隆对象，利用json转换即可方便克隆对象
@@ -1038,17 +1028,17 @@ export default {
             this.listOperate({ operate: "get", storage: storage, path: path })
               .status === "N"
           ) {
-            this.smModal.title = "关闭";
-            this.smModal.content =
-              "该文件未保存，是否关闭该文件？(此操作不可逆)";
-            this.smModal.show = true;
-            this.smModal.confirm = () => {
-              closeCurr();
-              this.smModal.show = false;
-            };
-            this.smModal.cancel = () => {
-              this.smModal.show = false;
-            };
+            this.showSmModal({
+              title: "关闭",
+              content: "该文件未保存，是否关闭该文件？(此操作不可逆)",
+              confirm: () => {
+                closeCurr();
+                this.hideSmModal();
+              },
+              cancel: () => {
+                this.hideSmModal();
+              }
+            });
           } else {
             closeCurr();
           }
@@ -1082,25 +1072,26 @@ export default {
      */
     navBarOperate(operate) {
       if (operate.indexOf("show") === 0) {
-        this.lgModal.show = true;
-        this.lgModal.content = operate.substring(4);
-        if (this.lgModal.content === "CreateNote") {
-          this.lgModal.title = "新建MD笔记";
-          this.folderOperate({ operate: "readOnly", folderInfo: null }).then(
-            data => {
-              this.$set(this.lgModal.data, "folders", data.folders);
-            }
-          );
+        let modal = {};
+        modal.content = operate.substring(4);
+        if (modal.content === "CreateNote") {
+          modal.title = "新建MD笔记";
           let wTimeout = null;
           let watch = () => {
             if (wTimeout) {
               clearTimeout(wTimeout);
             }
             wTimeout = setTimeout(() => {
-              this.$set(this.lgModal.data, "status", "loading");
+              this.setLgModalData({
+                ...this.lgModal.data,
+                status: "loading"
+              });
               // TODO: 设置格式
               if (!/\.(md|txt)/gi.test(this.lgModal.data.filename)) {
-                this.$set(this.lgModal.data, "status", "error");
+                this.setLgModalData({
+                  ...this.lgModal.data,
+                  status: "error"
+                });
                 return;
               }
               this.noteOperate({
@@ -1112,9 +1103,15 @@ export default {
                 }
               }).then(data => {
                 if (data.exist) {
-                  this.$set(this.lgModal.data, "status", "error");
+                  this.setLgModalData({
+                    ...this.lgModal.data,
+                    status: "error"
+                  });
                 } else {
-                  this.$set(this.lgModal.data, "status", "");
+                  this.setLgModalData({
+                    ...this.lgModal.data,
+                    status: ""
+                  });
                 }
               });
             }, 500);
@@ -1122,7 +1119,7 @@ export default {
           let uwFileName = this.$watch("lgModal.data.filename", watch);
           let uwTitle = this.$watch("lgModal.data.select", watch);
           let uwStorage = this.$watch("lgModal.data.storage", watch);
-          this.lgModal.confirm = () => {
+          modal.confirm = () => {
             if (
               !this.lgModal.data.filename ||
               !this.lgModal.data.title ||
@@ -1182,28 +1179,34 @@ export default {
               .classList.remove("loading");
             this.lgModal.cancel();
           };
-          this.lgModal.cancel = () => {
+          modal.cancel = () => {
             uwFileName();
             uwTitle();
             uwStorage();
-            this.$set(this.lgModal, "data", {});
-            this.lgModal.show = false;
+            this.hideLgModal();
           };
-        }
-        if (this.lgModal.content === "CreateFolder") {
-          this.lgModal.title = "新建文件夹";
           this.folderOperate({ operate: "readOnly", folderInfo: null }).then(
             data => {
-              this.$set(this.lgModal.data, "folders", data.folders);
+              this.setLgModalData({
+                ...this.lgModal.data,
+                folders: data.folders
+              });
             }
           );
+          this.showLgModal(modal);
+        }
+        if (modal.content === "CreateFolder") {
+          modal.title = "新建文件夹";
           let wTimeout = null;
           let watch = () => {
             if (wTimeout) {
               clearTimeout(wTimeout);
             }
             wTimeout = setTimeout(() => {
-              this.$set(this.lgModal.data, "status", "loading");
+              this.setLgModalData({
+                ...this.lgModal.data,
+                status: "loading"
+              });
               this.folderOperate({
                 operate: "exist",
                 folderInfo: {
@@ -1214,16 +1217,22 @@ export default {
                 }
               }).then(data => {
                 if (data.exist) {
-                  this.$set(this.lgModal.data, "status", "error");
+                  this.setLgModalData({
+                    ...this.lgModal.data,
+                    status: "error"
+                  });
                 } else {
-                  this.$set(this.lgModal.data, "status", "");
+                  this.setLgModalData({
+                    ...this.lgModal.data,
+                    status: ""
+                  });
                 }
               });
             }, 500);
           };
           let uwFolderName = this.$watch("lgModal.data.foldername", watch);
           let uwTitle = this.$watch("lgModal.data.select", watch);
-          this.lgModal.confirm = () => {
+          modal.confirm = () => {
             if (
               !this.lgModal.data.foldername ||
               this.lgModal.data.status !== ""
@@ -1266,23 +1275,37 @@ export default {
                 });
               });
           };
-          this.lgModal.cancel = () => {
+          modal.cancel = () => {
             uwFolderName();
             uwTitle();
-            this.$set(this.lgModal, "data", {});
-            this.lgModal.show = false;
+            this.hideLgModal();
           };
+          this.folderOperate({ operate: "readOnly", folderInfo: null }).then(
+            data => {
+              this.setLgModalData({
+                ...this.lgModal.data,
+                folders: data.folders
+              });
+            }
+          );
+          this.showLgModal(modal);
         }
-        if (this.lgModal.content === "GitConfig") {
-          this.lgModal.title = "Git设置";
-          this.$set(this.lgModal.data, "status", "loading");
+        if (modal.content === "GitConfig") {
+          modal.title = "Git设置";
+          this.setLgModalData({
+            ...this.lgModal.data,
+            status: "loading"
+          });
           this.configOperate(
             "getGitConfig",
             null,
             info => {
-              this.$set(this.lgModal.data, "git_name", info.git_name);
-              this.$set(this.lgModal.data, "git_email", info.git_email);
-              this.$set(this.lgModal.data, "status", "");
+              this.setLgModalData({
+                ...this.lgModal.data,
+                status: "",
+                git_name: info.git_name,
+                git_email: info.git_email
+              });
             },
             error => {
               this.timeToast({
@@ -1290,10 +1313,13 @@ export default {
                 status: "error",
                 delay: 1000
               });
-              this.$set(this.lgModal.data, "status", "");
+              this.setLgModalData({
+                ...this.lgModal.data,
+                status: ""
+              });
             }
           );
-          this.lgModal.confirm = () => {
+          modal.confirm = () => {
             if (
               !this.lgModal.data.git_name ||
               !this.lgModal.data.git_email ||
@@ -1332,10 +1358,10 @@ export default {
               }
             );
           };
-          this.lgModal.cancel = () => {
-            this.$set(this.lgModal, "data", {});
-            this.lgModal.show = false;
+          modal.cancel = () => {
+            this.hideLgModal();
           };
+          this.showLgModal(modal);
         }
       }
       if (operate.indexOf("git") === 0) {
@@ -1382,18 +1408,28 @@ export default {
           check_list: Object.keys(this.localList)
         })
         .then(res => {
-          this.lgModal.data = [];
+          let data = {};
           for (let key in this.localList) {
-            this.lgModal.data.push({
+            data[this.localList[key].path] = {
               name: this.localList[key].name,
               path: this.localList[key].path,
               created_at_l: this.localList[key].note.created_at,
               updated_at_l: this.localList[key].note.updated_at,
               created_at_c: res.data.check_list[key].created_at,
               updated_at_c: res.data.check_list[key].updated_at
-            });
+            };
           }
-          this.navBarOperate("showCheckLocalStatus");
+          this.setLgModalData(data);
+          this.showLgModal({
+            title: "检查状态",
+            content: "CheckLocalStatus",
+            confirm: () => {
+              this.hideLgModal();
+            },
+            cancel: () => {
+              this.hideLgModal();
+            }
+          });
           document
             .querySelector(".xknote-check-local")
             .classList.remove("loading");
@@ -1414,7 +1450,8 @@ export default {
           }).then(() => {
             this.localList[path].status = "C";
             //TODO: 修改使用action修改
-            this.$delete(this.lgModal.data, index);
+            // this.$delete(this.lgModal.data, index);
+            this.delLgModalData(index);
             // 将更新后的状态保存到本地
             this.noteOperate({
               operate: "save",
@@ -1436,7 +1473,8 @@ export default {
             noteInfo: data
           }).then(() => {
             this.localList[path].status = "C";
-            this.$delete(this.lgModal.data, index);
+            // this.$delete(this.lgModal.data, index);
+            this.delLgModalData(index);
           });
         });
       }
@@ -1497,16 +1535,19 @@ export default {
           });
       }
       if (operate === "gitInitClone") {
-        this.lgModal.content = "GitInitClone";
-        this.lgModal.title = "Git InitClone";
-        this.lgModal.show = true;
+        let modal = {};
+        modal.content = "GitInitClone";
+        modal.title = "Git InitClone";
         let wTimeout = null;
         let watch = () => {
           if (wTimeout) {
             clearTimeout(wTimeout);
           }
           wTimeout = setTimeout(() => {
-            this.$set(this.lgModal.data, "status", "loading");
+            this.setLgModalData({
+              ...this.lgModal.data,
+              status: "loading"
+            });
             this.folderOperate({
               operate: "exist",
               folderInfo: {
@@ -1514,15 +1555,21 @@ export default {
               }
             }).then(data => {
               if (data.exist) {
-                this.$set(this.lgModal.data, "status", "error");
+                this.setLgModalData({
+                  ...this.lgModal.data,
+                  status: "error"
+                });
               } else {
-                this.$set(this.lgModal.data, "status", "");
+                this.setLgModalData({
+                  ...this.lgModal.data,
+                  status: ""
+                });
               }
             });
           }, 500);
         };
         let uwFolderName = this.$watch("lgModal.data.foldername", watch);
-        this.lgModal.confirm = () => {
+        modal.confirm = () => {
           if (
             !this.lgModal.data.foldername ||
             !this.lgModal.data.repo ||
@@ -1568,26 +1615,32 @@ export default {
             });
           });
         };
-        this.lgModal.cancel = () => {
+        modal.cancel = () => {
           uwFolderName();
-          this.$set(this.lgModal, "data", {});
-          this.lgModal.show = false;
+          this.hideLgModal();
         };
+        this.showLgModal(modal);
       }
       if (operate === "gitConfig") {
-        this.lgModal.title = "Git设置";
-        this.lgModal.content = "GitItemConfig";
-        this.lgModal.show = true;
-        this.$set(this.lgModal.data, "status", "loading");
+        let modal = {};
+        modal.title = "Git设置";
+        modal.content = "GitItemConfig";
+        this.setLgModalData({
+          ...this.lgModal.data,
+          status: "loading"
+        });
         this.folderOperate({
           operate: "getGitConfig",
           folderInfo: { path: path }
         })
           .then(info => {
-            this.$set(this.lgModal.data, "repo", info.repo);
-            this.$set(this.lgModal.data, "git_name", info.git_name);
-            this.$set(this.lgModal.data, "git_email", info.git_email);
-            this.$set(this.lgModal.data, "status", "");
+            this.setLgModalData({
+              ...this.lgModal.data,
+              status: "",
+              repo: info.repo,
+              git_name: info.git_name,
+              git_email: info.git_email
+            });
           })
           .catch(error => {
             this.timeToast({
@@ -1595,9 +1648,12 @@ export default {
               status: "error",
               delay: 1000
             });
-            this.$set(this.lgModal.data, "status", "");
+            this.setLgModalData({
+              ...this.lgModal.data,
+              status: ""
+            });
           });
-        this.lgModal.confirm = () => {
+        modal.confirm = () => {
           if (
             !this.lgModal.data.git_name ||
             !this.lgModal.data.git_email ||
@@ -1638,10 +1694,10 @@ export default {
               });
             });
         };
-        this.lgModal.cancel = () => {
-          this.$set(this.lgModal, "data", {});
-          this.lgModal.show = false;
+        modal.cancel = () => {
+          this.hideLgModal();
         };
+        this.showLgModal(modal);
       }
     }
   },

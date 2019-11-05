@@ -23,11 +23,12 @@ import "./assets/style.css";
 import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   name: "App",
-  created() {
+  async created() {
     // 当打开note中的时候防止更改
     window.xknoteOpenedChangeFlag = true;
     // 是否是通过输入URL引发的query变动
     window.inputQueryChangeFlag = true;
+    await this.loadCloudFolders();
   },
   data() {
     return {

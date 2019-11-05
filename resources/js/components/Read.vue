@@ -123,8 +123,7 @@ export default {
       });
     }
   },
-  async mounted() {
-    await this.loadCloudFolders();
+  mounted() {
     this.$nextTick(() => {
       this.loadFirstNote("read");
       this.watchNote();
