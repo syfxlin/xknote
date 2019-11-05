@@ -101,13 +101,7 @@
               <ul class="menu menu-nav">
                 <li class="menu-item" v-for="item in currList" :key="item.id">
                   <!-- mark data-badge: N为未保存，L为已经保存到本地，若已经保存到云端则不显示badge -->
-                  <note-item
-                    :info="item"
-                    :status="item.status"
-                    :storage="'curr'"
-                    :mode="'normal'"
-                    :openNote="openNote"
-                  />
+                  <note-item :info="item" :status="item.status" :storage="'curr'" :mode="'normal'" />
                 </li>
                 <div class="text-gray text-center" v-if="currList.length===0">这里什么都没有哦（￣︶￣）↗</div>
               </ul>
@@ -119,7 +113,6 @@
                 :info="item"
                 :storage="'cloud'"
                 :mode="'normal'"
-                :openNote="openNote"
               />
               <div class="cloud-tab-loading" v-if="cloudList.length===0">
                 <div class="loading loading-lg"></div>
@@ -135,7 +128,6 @@
                     :status="item.status"
                     :storage="'local'"
                     :mode="'normal'"
-                    :openNote="openNote"
                   />
                 </li>
                 <button
@@ -536,13 +528,7 @@ export default {
     dropdown,
     modal
   },
-  props: [
-    "loadFirstNote",
-    "setXknoteOpened",
-    "openNote",
-    "writeMode",
-    "configOperate"
-  ],
+  props: ["writeMode"],
   data() {
     return {
       settingList: iSettingList,
@@ -565,6 +551,7 @@ export default {
       "xknoteTab",
       "readOpened",
       "currBadgeCount",
+
       "localBadgeCount"
     ]),
     ...mapState("tools", ["smModal", "lgModal", "floatMenu"])
@@ -578,7 +565,10 @@ export default {
       "loadLocalNotes",
       "setXknoteOpenedA",
       "setReadOpenedA",
-      "setXknoteOpenedIndexA"
+      "setXknoteOpenedIndexA",
+      "setXknoteOpened",
+      "loadFirstNote",
+      "openNote"
     ]),
     ...mapActions("toast", ["timeToast"]),
     ...mapActions("tools", [
@@ -594,6 +584,7 @@ export default {
       "hideFloatMenu",
       "setSaveAndClose"
     ]),
+    ...mapActions("conf", ["configOperate"]),
     ...mapSyncActions("note", ["listOperate"]),
     logout() {
       window.axios.post("/logout").then(function() {
@@ -1156,15 +1147,15 @@ export default {
                 content: ""
               }
             };
-            this.openNote(
-              noteInfo,
-              {
+            this.openNote({
+              note: noteInfo,
+              source: {
                 path: path,
                 storage: this.lgModal.data.storage
               },
-              "normal",
-              true
-            );
+              mode: "normal",
+              isNew: true
+            });
             this.listOperate({
               operate: "add",
               storage: this.lgModal.data.storage,
@@ -1293,18 +1284,19 @@ export default {
             ...this.lgModal.data,
             status: "loading"
           });
-          this.configOperate(
-            "getGitConfig",
-            null,
-            info => {
+          this.configOperate({
+            operate: "getGitConfig",
+            config: null
+          })
+            .then(info => {
               this.setLgModalData({
                 ...this.lgModal.data,
                 status: "",
                 git_name: info.git_name,
                 git_email: info.git_email
               });
-            },
-            error => {
+            })
+            .catch(error => {
               this.timeToast({
                 message: "获取信息失败！",
                 status: "error",
@@ -1314,8 +1306,7 @@ export default {
                 ...this.lgModal.data,
                 status: ""
               });
-            }
-          );
+            });
           modal.confirm = () => {
             if (
               !this.lgModal.data.git_name ||
@@ -1328,14 +1319,15 @@ export default {
             document
               .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
               .classList.add("loading");
-            this.configOperate(
-              "setGitConfig",
-              {
+            this.configOperate({
+              operate: "setGitConfig",
+              config: {
                 git_name: this.lgModal.data.git_name,
                 git_email: this.lgModal.data.git_email,
                 git_password: this.lgModal.data.git_password
-              },
-              () => {
+              }
+            })
+              .then(() => {
                 document
                   .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
                   .classList.remove("loading");
@@ -1345,15 +1337,14 @@ export default {
                   status: "success",
                   delay: 1000
                 });
-              },
-              error => {
+              })
+              .catch(error => {
                 this.timeToast({
                   message: "设置失败，请重试！",
                   status: "error",
                   delay: 1000
                 });
-              }
-            );
+              });
           };
           modal.cancel = () => {
             this.hideLgModal();
@@ -1698,9 +1689,7 @@ export default {
       }
     }
   },
-  mounted() {
-    window.timeToast = this.timeToast;
-  },
+  mounted() {},
   watch: {
     writeMode() {
       this.switchWriteMode();

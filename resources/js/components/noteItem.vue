@@ -27,7 +27,7 @@
 import { mapActions } from "vuex";
 export default {
   name: "note-item",
-  props: ["info", "status", "storage", "mode", "openNote"],
+  props: ["info", "status", "storage", "mode"],
   data() {
     return {
       hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path,
@@ -95,6 +95,7 @@ export default {
   },
   methods: {
     ...mapActions("tools", ["showFloatMenu", "hideFloatMenu"]),
+    ...mapActions("note", ["openNote"]),
     showNoteSettings(e) {
       var currEle = e.target.parentElement.parentElement;
       if (e.target.nodeName === "IMG") {
@@ -135,14 +136,14 @@ export default {
       });
     },
     thisOpenNote(e) {
-      this.openNote(
-        this.info,
-        {
+      this.openNote({
+        note: this.info,
+        source: {
           path: this.info.path,
           storage: this.storage
         },
-        this.mode
-      );
+        mode: this.mode
+      });
     }
   }
 };

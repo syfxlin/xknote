@@ -4,6 +4,7 @@ import note, { syncActions as syncNote } from './modules/note';
 import toast from './modules/toast';
 import db from './modules/db';
 import tools from './modules/tools';
+import conf from './modules/conf';
 
 import { dispatchSync } from './syncActions';
 
@@ -14,7 +15,8 @@ const store = new Vuex.Store({
     note,
     toast,
     db,
-    tools
+    tools,
+    conf
   }
 });
 

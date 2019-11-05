@@ -1,7 +1,7 @@
 import Vue from 'vue';
-import { dispatchSync } from '../syncActions';
 
 const types = {
+  SET_XKNOTE_TAB: 'SET_XKNOTE_TAB',
   SET_CLOUD: 'SET_CLOUD',
   ADD_LOCAL: 'ADD_LOCAL',
   SET_OPENED: 'SET_OPENED',
@@ -9,10 +9,12 @@ const types = {
   SET_OPENED_INDEX: 'SET_OPENED_INDEX',
   LIST_OPERATE: 'LIST_OPERATE',
   SET_CURR_LIST_SOURCE: 'SET_CURR_LIST_SOURCE',
-  CHANGE_COUNT: 'CHANGE_COUNT'
+  CHANGE_COUNT: 'CHANGE_COUNT',
+  SET_PREV_ROUTER: 'SET_PREV_ROUTER'
 };
 
 const state = {
+  prevRouter: null,
   noteBaseInfo: {
     type: 'note',
     path: '',
@@ -73,17 +75,15 @@ const state = {
   localBadgeCount: 0
 };
 
-// getters
 const getters = {
   getReData(state) {
     return state.reData;
   }
 };
 
-// actions
 const actions = {
   switchTab({ commit }, tabName) {
-    commit('switchTab', tabName);
+    commit(types.SET_XKNOTE_TAB, tabName);
   },
   async loadCloudFolders({ commit, dispatch }) {
     let data = await dispatch('folderOperate', {
@@ -102,9 +102,7 @@ const actions = {
       },
       { root: true }
     ).then(list => {
-      // this.localList = list;
       list.forEach(item => {
-        // this.$set(this.localList, item.path, item);
         commit(types.ADD_LOCAL, { path: item.path, data: item });
       });
     });
@@ -281,7 +279,10 @@ const actions = {
       }
     });
   },
-  noteOperate({ commit, dispatch }, { operate, storage, noteInfo = null }) {
+  noteOperate(
+    { commit, dispatch, state },
+    { operate, storage, noteInfo = null }
+  ) {
     return new Promise((resolve, reject) => {
       if (operate === 'read') {
         if (storage === 'local') {
@@ -474,8 +475,8 @@ const actions = {
         }
         if (storage === 'local') {
           let flag = false;
-          for (let i = 0; i < this.localList.length; i++) {
-            if (this.localList[i].path === noteInfo.path) {
+          for (let i = 0; i < state.localList.length; i++) {
+            if (state.localList[i].path === noteInfo.path) {
               flag = true;
             }
           }
@@ -493,14 +494,212 @@ const actions = {
   setXknoteOpenedIndexA({ commit }, index) {
     commit(types.SET_OPENED_INDEX, index);
   },
+  setPrevRouter({ commit }, router) {
+    commit(types.SET_PREV_ROUTER, router);
+  },
   setCurrListSourceA({ commit }, data) {
     commit(types.SET_CURR_LIST_SOURCE, data);
+  },
+  loadPathNote({ commit, state, dispatch }, { path, mode = 'normal' }) {
+    let info = document.querySelector('.local-tab [data-path="' + path + '"]');
+    if (!info) {
+      info = document.querySelector('.cloud-tab [data-path="' + path + '"]');
+    }
+    if (!info) {
+      return;
+    }
+    let storage = info.getAttribute('data-storage');
+    commit(types.LIST_OPERATE, {
+      operate: 'get',
+      storage: storage,
+      path: path
+    });
+    let item = state.reData;
+    dispatch('openNote', {
+      note: item,
+      source: {
+        path: path,
+        storage: storage
+      },
+      mode: mode
+    });
+  },
+  openNote(
+    { commit, state, dispatch },
+    { note, source, mode = 'normal', isNew = false }
+  ) {
+    let open = function() {
+      // 更改query
+      window.inputQueryChangeFlag = false;
+      if (
+        !window.vm.$route.query.note ||
+        window.vm.$route.query.note !== note.path
+      ) {
+        window.vm.$router.replace({
+          query: {
+            ...window.vm.$route.query,
+            note: note.path
+          }
+        });
+      }
+      if (mode === 'normal') {
+        for (let key in state.currList) {
+          if (state.currList[key].path === note.path) {
+            source.path = note.path; //TODO: 修改
+            source.storage = 'curr';
+          }
+        }
+        dispatch('setXknoteOpened', note);
+        window.xknoteOpenedChangeFlag = false;
+        // 添加到currList，同时将源数据添加到currListSource
+        let currPath;
+        if (source.storage !== 'curr') {
+          commit(types.LIST_OPERATE, {
+            operate: 'add',
+            storage: 'curr',
+            path: note.path,
+            noteInfo: {
+              note: note,
+              source: source
+            }
+          });
+          currPath = note.path;
+        } else {
+          currPath = source.path;
+        }
+        commit(types.SET_OPENED_INDEX, {
+          curr: currPath,
+          source: source
+        });
+        commit(types.SET_XKNOTE_TAB, 'curr');
+        Vue.nextTick(() => {
+          // 添加当前打开的文件的active效果
+          let ele;
+          ele = document.querySelector(".active[data-storage='curr']");
+          if (ele) {
+            ele.classList.remove('active');
+          }
+          document
+            .querySelector(
+              "[data-storage='curr'][data-path='" + note.path + "']"
+            )
+            .classList.add('active');
+          window.xknoteOpenedChangeFlag = true;
+        });
+      }
+      if (mode === 'read') {
+        commit(types.SET_OPENED_INDEX, JSON.parse(JSON.stringify(note)));
+      }
+    };
+    if (!isNew && source.storage === 'cloud') {
+      let noteEle = document.querySelector(
+        '[data-path="' + note.path + '"][data-storage="cloud"]'
+      );
+      let icon = noteEle.querySelector('.tile-action');
+      icon.style.display = 'unset';
+      let btn = icon.querySelector('.btn');
+      if (mode === 'normal') {
+        btn.querySelector('.icon').style.display = 'none';
+      }
+      btn.querySelector('.loading').style.display = 'block';
+      dispatch('noteOperate', {
+        operate: 'read',
+        storage: 'cloud',
+        noteInfo: note
+      }).then(data => {
+        Vue.set(note, 'note', data.note);
+        note.status = 'C';
+        icon.style.display = '';
+        if (mode === 'normal') {
+          btn.querySelector('.icon').style.display = 'unset';
+        }
+        btn.querySelector('.loading').style.display = 'none';
+        open();
+      });
+    } else {
+      open();
+    }
+  },
+  setXknoteOpened({ commit, state }, noteInfo) {
+    window.xknoteOpenedChangeFlag = false;
+    let noteConEle = document.querySelector('.xknote-header > .navbar-center');
+    if (noteInfo.path === '') {
+      window.XKEditor.ace.setReadOnly(true);
+      if (noteConEle) {
+        noteConEle.classList.add('disabled');
+      }
+    } else {
+      window.XKEditor.ace.setReadOnly(false);
+      if (noteConEle) {
+        noteConEle.classList.remove('disabled');
+      }
+    }
+    commit(types.SET_OPENED, noteInfo);
+    if (window.eThis && window.XKEditor) {
+      if (window.eThis.e.editorMode === 'ace') {
+        window.XKEditor.setMarkdown(state.xknoteOpened.note.content);
+      } else {
+        window.XKEditor.switchEditor();
+        window.XKEditor.setMarkdown(state.xknoteOpened.note.content);
+      }
+    }
+    window.xknoteOpenedChangeFlag = true;
+  },
+  loadFirstNote({ dispatch, state }, mode = 'normal') {
+    // 防止意外加载
+    // TODO: 寻求更好的方案
+    if (mode === 'read' && state.prevRouter) {
+      return;
+    }
+    if (mode !== 'read' && state.xknoteOpened.path) {
+      return;
+    }
+    if (window.vm.$route.query.note) {
+      dispatch('loadPathNote', {
+        path: window.vm.$route.query.note,
+        mode: mode
+      });
+    } else {
+      dispatch(
+        'db/optionsDB',
+        { operate: 'read', data: 'rememberNote' },
+        { root: true }
+      ).then(data => {
+        if (data) {
+          dispatch('loadPathNote', { path: data.path, mode: mode });
+        }
+        dispatch('timedTask', 'saveCurrOpenedNote');
+      });
+    }
+  },
+  timedTask({ dispatch, state }, task) {
+    if (task === 'saveCurrOpenedNote') {
+      // 每10秒中将当前打开的笔记信息保存至本地数据库，用以下次开启做准备
+      setInterval(() => {
+        if (
+          state.xknoteOpened.path !== '' &&
+          window.vm.$route.name === 'Home'
+        ) {
+          dispatch(
+            'db/optionsDB',
+            {
+              operate: 'put',
+              data: {
+                name: 'rememberNote',
+                path: state.xknoteOpened.path
+              }
+            },
+            { root: true }
+          );
+          console.log('remeberNote');
+        }
+      }, 10000);
+    }
   }
 };
 
-// mutations
 const mutations = {
-  switchTab(state, tabName) {
+  [types.SET_XKNOTE_TAB](state, tabName) {
     state.xknoteTab = tabName;
   },
   [types.LIST_OPERATE](state, { operate, storage, path, noteInfo = null }) {
@@ -517,14 +716,11 @@ const mutations = {
     }
     if (operate === 'add') {
       if (storage === 'curr') {
-        // let currIndex = this.$set(this.currList, path, noteInfo.note);
-        // this.$set(this.currListSource, path, noteInfo.source);
         state.currList[path] = noteInfo.note;
         state.currListSource[path] = noteInfo.source;
         state.reData = path;
       }
       if (storage === 'local') {
-        // return this.$set(this.localList, path, noteInfo);
         state.localList[path] = noteInfo;
         state.reData = path;
       }
@@ -534,12 +730,6 @@ const mutations = {
         for (let i = 0; i < len; i++) {
           p += '/' + arr[i];
           if (!list[arr[i]]) {
-            // this.$set(list, arr[i], {
-            //   type: 'folder',
-            //   path: p,
-            //   name: arr[i],
-            //   sub: {}
-            // });
             list[arr[i]] = {
               type: 'folder',
               path: p,
@@ -550,14 +740,12 @@ const mutations = {
           list = list[arr[i]].sub;
         }
         if (noteInfo !== null) {
-          // this.$set(list, arr[arr.length - 1], noteInfo);
           list[arr[arr.length - 1]] = noteInfo;
         }
       }
     }
     if (operate === 'delete') {
       let noteList = list[arr[arr.length - 1]];
-      // delete list[arr[arr.length - 1]];
       Vue.delete(list, arr[arr.length - 1]);
       if (storage === 'curr') {
         delete state.currListSource[arr[arr.length - 1]];
@@ -566,7 +754,6 @@ const mutations = {
       state.reData = noteList;
     }
     if (operate === 'set') {
-      // this.$set(list, arr[arr.length - 1], { ...noteInfo });
       list[arr[arr.length - 1]] = noteInfo;
     }
   },
@@ -601,6 +788,9 @@ const mutations = {
         state.localBadgeCount++;
       }
     }
+  },
+  [types.SET_PREV_ROUTER](state, router) {
+    state.prevRouter = router;
   }
 };
 
@@ -609,30 +799,6 @@ export const syncActions = {
     commit(types.LIST_OPERATE, data, { root: true });
     commit(types.CHANGE_COUNT);
     return state.reData;
-  },
-  loadPathNote({ commit, state }, { path, mode = 'normal' }) {
-    let info = document.querySelector('.local-tab [data-path="' + path + '"]');
-    if (!info) {
-      info = document.querySelector('.cloud-tab [data-path="' + path + '"]');
-    }
-    if (!info) {
-      return;
-    }
-    let storage = info.getAttribute('data-storage');
-    commit(types.LIST_OPERATE, {
-      operate: 'get',
-      storage: storage,
-      path: path
-    });
-    let item = state.reData;
-    this.openNote(
-      item,
-      {
-        path: path,
-        storage: storage
-      },
-      mode
-    );
   }
 };
 

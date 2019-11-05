@@ -11482,13 +11482,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -11524,287 +11517,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     return created;
   }(),
   data: function data() {
-    return {
-      prevRouter: null
-    };
+    return {};
   },
   mounted: function mounted() {
-    this.loadLocalNotes(); // this.loadCloudFolders();
-
+    this.loadLocalNotes();
     window.xknote = {};
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])("note", ["noteBaseInfo", "xknoteOpened", "xknoteOpenedIndex", "currListSource", "currList", "cloudList", "localList", "xknoteTab", "readOpened"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])({
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])("note", ["noteBaseInfo", "xknoteOpened", "xknoteOpenedIndex", "currListSource", "currList", "cloudList", "localList", "xknoteTab", "readOpened", "setXknoteOpened", "prevRouter"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])({
     toast: function toast(state) {
       return state.toast;
     }
   }), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])("note", ["getReData"])),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("db", ["optionsDB"]), {}, Object(_store_syncActions__WEBPACK_IMPORTED_MODULE_3__["mapSyncActions"])("note", ["listOperate"]), {
-    // TODO: cloud-tab加载过慢导致info为null
-    loadPathNote: function loadPathNote(path) {
-      var mode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "normal";
-      var info = document.querySelector('.local-tab [data-path="' + path + '"]');
-
-      if (!info) {
-        info = document.querySelector('.cloud-tab [data-path="' + path + '"]');
-      }
-
-      if (!info) {
-        return;
-      }
-
-      var storage = info.getAttribute("data-storage");
-      var item = this.listOperate({
-        operate: "get",
-        storage: storage,
-        path: path
-      });
-      this.openNote(item, {
-        path: path,
-        storage: storage
-      }, mode);
-    },
-
-    /**
-     * 读取之前开启的笔记
-     * @param void
-     * @returns void
-     */
-    loadFirstNote: function loadFirstNote() {
-      var _this = this;
-
-      var mode = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "normal";
-
-      // 防止意外加载
-      // TODO: 寻求更好的方案
-      if (mode === "read" && this.prevRouter) {
-        return;
-      }
-
-      if (mode !== "read" && this.xknoteOpened.path) {
-        return;
-      }
-
-      if (this.$route.query.note) {
-        this.loadPathNote(this.$route.query.note, mode);
-      } else {
-        this.optionsDB({
-          operate: "read",
-          data: "rememberNote"
-        }).then(function (data) {
-          if (data) {
-            _this.loadPathNote(data.path, mode);
-          }
-
-          _this.timedTask("saveCurrOpenedNote");
-        });
-      }
-    },
-
-    /**
-     * 定时执行任务，包括循环任务
-     * @param {string} task 任务名称
-     * @returns void
-     */
-    timedTask: function timedTask(task) {
-      var _this2 = this;
-
-      if (task === "saveCurrOpenedNote") {
-        // 每10秒中将当前打开的笔记信息保存至本地数据库，用以下次开启做准备
-        setInterval(function () {
-          if (_this2.xknoteOpened.path !== "" && _this2.$route.name === "Home") {
-            _this2.optionsDB({
-              operate: "put",
-              data: {
-                name: "rememberNote",
-                path: _this2.xknoteOpened.path
-              }
-            });
-
-            console.log("remeberNote");
-          }
-        }, 10000);
-      }
-    },
-
-    /**
-     * 设置当前开启的文档
-     * @param {object} noteInfo 笔记信息，结构同this.noteBaseInfo
-     * @returns void
-     */
-    setXknoteOpened: function setXknoteOpened(noteInfo) {
-      window.xknoteOpenedChangeFlag = false;
-      var noteConEle = document.querySelector(".xknote-header > .navbar-center");
-
-      if (noteInfo.path === "") {
-        window.XKEditor.ace.setReadOnly(true);
-
-        if (noteConEle) {
-          noteConEle.classList.add("disabled");
-        }
-      } else {
-        window.XKEditor.ace.setReadOnly(false);
-
-        if (noteConEle) {
-          noteConEle.classList.remove("disabled");
-        }
-      }
-
-      this.setXknoteOpenedA(noteInfo);
-
-      if (window.eThis && window.XKEditor) {
-        if (window.eThis.e.editorMode === "ace") {
-          window.XKEditor.setMarkdown(this.xknoteOpened.note.content);
-        } else {
-          window.XKEditor.switchEditor();
-          window.XKEditor.setMarkdown(this.xknoteOpened.note.content);
-        }
-      }
-
-      window.xknoteOpenedChangeFlag = true;
-    },
-
-    /**
-     * 打开笔记
-     * @param {object} note 笔记信息，结构同this.noteBaseInfo
-     * @param {object} source 笔记的来源
-     *   @param {string} source.path 笔记来源的索引
-     *   @param {string} source.storage 笔记来源的存储位置（local，cloud）
-     * @param {string} mode 当前处于的模式
-     * @returns void
-     */
-    openNote: function openNote(note, source) {
-      var _this3 = this;
-
-      var mode = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "normal";
-      var isNew = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-
-      var open = function open() {
-        // 更改query
-        window.inputQueryChangeFlag = false;
-
-        if (!_this3.$route.query.note || _this3.$route.query.note !== note.path) {
-          _this3.$router.replace({
-            query: _objectSpread({}, _this3.$route.query, {
-              note: note.path
-            })
-          });
-        }
-
-        if (mode === "normal") {
-          for (var key in _this3.currList) {
-            if (_this3.currList[key].path === note.path) {
-              source.path = note.path; //TODO: 修改
-
-              source.storage = "curr";
-            }
-          } // 加载到xknoteOpened，由于XKEditor不能自动修改数据，所以需要手动设置数据
-
-
-          _this3.setXknoteOpened(note);
-
-          window.xknoteOpenedChangeFlag = false; // 添加到currList，同时将源数据添加到currListSource
-
-          var currPath;
-
-          if (source.storage !== "curr") {
-            _this3.listOperate({
-              operate: "add",
-              storage: "curr",
-              path: note.path,
-              noteInfo: {
-                note: note,
-                source: source
-              }
-            });
-
-            currPath = note.path;
-          } else {
-            currPath = source.path;
-          }
-
-          _this3.setXknoteOpenedIndexA({
-            curr: currPath,
-            source: source
-          });
-
-          _this3.switchTab("curr");
-
-          _this3.$nextTick(function () {
-            // 添加当前打开的文件的active效果
-            var ele;
-            ele = document.querySelector(".active[data-storage='curr']");
-
-            if (ele) {
-              ele.classList.remove("active");
-            }
-
-            document.querySelector("[data-storage='curr'][data-path='" + note.path + "']").classList.add("active");
-            window.xknoteOpenedChangeFlag = true;
-          });
-        }
-
-        if (mode === "read") {
-          _this3.setReadOpenedA(JSON.parse(JSON.stringify(note)));
-        }
-      };
-
-      if (!isNew && source.storage === "cloud") {
-        var noteEle = document.querySelector('[data-path="' + note.path + '"][data-storage="cloud"]');
-        var icon = noteEle.querySelector(".tile-action");
-        icon.style.display = "unset";
-        var btn = icon.querySelector(".btn");
-
-        if (mode === "normal") {
-          btn.querySelector(".icon").style.display = "none";
-        }
-
-        btn.querySelector(".loading").style.display = "block";
-        this.noteOperate({
-          operate: "read",
-          storage: "cloud",
-          noteInfo: note
-        }).then(function (data) {
-          // note.note = data.note;
-          _this3.$set(note, "note", data.note);
-
-          note.status = "C";
-          icon.style.display = "";
-
-          if (mode === "normal") {
-            btn.querySelector(".icon").style.display = "unset";
-          }
-
-          btn.querySelector(".loading").style.display = "none";
-          open();
-        });
-      } else {
-        open();
-      }
-    },
-    configOperate: function configOperate(operate) {
-      var config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-      var callS = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function () {};
-      var callE = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : function () {};
-
-      if (operate === "getGitConfig") {
-        window.axios.get("/api/repo/git").then(function (res) {
-          callS(res.data.config);
-        })["catch"](function (err) {
-          console.error(err);
-          callE(err);
-        });
-      }
-
-      if (operate === "setGitConfig") {
-        window.axios.put("/api/repo/git", _objectSpread({}, config)).then(function (res) {
-          callS(res.data);
-        })["catch"](function (err) {
-          console.log(err);
-          callE(err);
-        });
-      }
-    },
-
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA", "openNote", "loadPathNote", "loadFirstNote", "setPrevRouter"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("db", ["optionsDB"]), {}, Object(_store_syncActions__WEBPACK_IMPORTED_MODULE_3__["mapSyncActions"])("note", ["listOperate"]), {
     /**
      * 监听当前打开的笔记改变事件触发的函数
      * @param void
@@ -11834,7 +11558,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     "xknoteOpened.note.content": "watchNote",
     "xknoteOpened.note.title": "watchNote",
     $route: function $route(to, from) {
-      this.prevRouter = from.name;
+      this.setPrevRouter(from.name);
 
       if (window.inputQueryChangeFlag && to.name === "Read") {
         this.setReadOpenedA(JSON.parse(JSON.stringify(this.xknoteOpened)));
@@ -11847,7 +11571,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           mode = "read";
         }
 
-        this.loadPathNote(this.$route.query.note, mode);
+        this.loadPathNote({
+          path: this.$route.query.note,
+          mode: mode
+        });
       }
 
       window.inputQueryChangeFlag = true;
@@ -12404,14 +12131,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -12432,7 +12151,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     dropdown: _dropdown__WEBPACK_IMPORTED_MODULE_6__["default"],
     modal: _modal__WEBPACK_IMPORTED_MODULE_7__["default"]
   },
-  props: ["loadFirstNote", "setXknoteOpened", "openNote", "writeMode", "configOperate"],
+  props: ["writeMode"],
   data: function data() {
     return {
       settingList: _utils_settingList__WEBPACK_IMPORTED_MODULE_8__["default"],
@@ -12444,7 +12163,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])("note", ["getReData"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])("note", ["noteBaseInfo", "xknoteOpened", "xknoteOpenedIndex", "currListSource", "currList", "cloudList", "localList", "xknoteTab", "readOpened", "currBadgeCount", "localBadgeCount"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])("tools", ["smModal", "lgModal", "floatMenu"])),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["showSmModal", "hideSmModal", "showLgModal", "hideLgModal", "setLgModalData", "delLgModalData"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["showFloatMenu", "hideFloatMenu", "setSaveAndClose"]), {}, Object(_store_syncActions__WEBPACK_IMPORTED_MODULE_1__["mapSyncActions"])("note", ["listOperate"]), {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA", "setXknoteOpened", "loadFirstNote", "openNote"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["showSmModal", "hideSmModal", "showLgModal", "hideLgModal", "setLgModalData", "delLgModalData"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["showFloatMenu", "hideFloatMenu", "setSaveAndClose"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("conf", ["configOperate"]), {}, Object(_store_syncActions__WEBPACK_IMPORTED_MODULE_1__["mapSyncActions"])("note", ["listOperate"]), {
     logout: function logout() {
       window.axios.post("/logout").then(function () {
         window.location.href = "/";
@@ -13016,10 +12735,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               }
             };
 
-            _this3.openNote(noteInfo, {
-              path: path,
-              storage: _this3.lgModal.data.storage
-            }, "normal", true);
+            _this3.openNote({
+              note: noteInfo,
+              source: {
+                path: path,
+                storage: _this3.lgModal.data.storage
+              },
+              mode: "normal",
+              isNew: true
+            });
 
             _this3.listOperate({
               operate: "add",
@@ -13153,13 +12877,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           this.setLgModalData(_objectSpread({}, this.lgModal.data, {
             status: "loading"
           }));
-          this.configOperate("getGitConfig", null, function (info) {
+          this.configOperate({
+            operate: "getGitConfig",
+            config: null
+          }).then(function (info) {
             _this3.setLgModalData(_objectSpread({}, _this3.lgModal.data, {
               status: "",
               git_name: info.git_name,
               git_email: info.git_email
             }));
-          }, function (error) {
+          })["catch"](function (error) {
             _this3.timeToast({
               message: "获取信息失败！",
               status: "error",
@@ -13178,11 +12905,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
             document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
 
-            _this3.configOperate("setGitConfig", {
-              git_name: _this3.lgModal.data.git_name,
-              git_email: _this3.lgModal.data.git_email,
-              git_password: _this3.lgModal.data.git_password
-            }, function () {
+            _this3.configOperate({
+              operate: "setGitConfig",
+              config: {
+                git_name: _this3.lgModal.data.git_name,
+                git_email: _this3.lgModal.data.git_email,
+                git_password: _this3.lgModal.data.git_password
+              }
+            }).then(function () {
               document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
 
               _this3.lgModal.cancel();
@@ -13192,7 +12922,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 status: "success",
                 delay: 1000
               });
-            }, function (error) {
+            })["catch"](function (error) {
               _this3.timeToast({
                 message: "设置失败，请重试！",
                 status: "error",
@@ -13559,9 +13289,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     }
   }),
-  mounted: function mounted() {
-    window.timeToast = this.timeToast;
-  },
+  mounted: function mounted() {},
   watch: {
     writeMode: function writeMode() {
       this.switchWriteMode();
@@ -13842,18 +13570,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "folder-item",
-  props: ["info", "storage", "mode", "openNote"],
+  props: ["info", "storage", "mode"],
   data: function data() {
     return {
       idHash: Math.random().toString(36).substring(2, 8),
@@ -14044,7 +13765,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "note-item",
-  props: ["info", "status", "storage", "mode", "openNote"],
+  props: ["info", "status", "storage", "mode"],
   data: function data() {
     return {
       hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path,
@@ -14095,7 +13816,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     };
   },
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["showFloatMenu", "hideFloatMenu"]), {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["showFloatMenu", "hideFloatMenu"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("note", ["openNote"]), {
     showNoteSettings: function showNoteSettings(e) {
       var _this = this;
 
@@ -14138,10 +13859,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     },
     thisOpenNote: function thisOpenNote(e) {
-      this.openNote(this.info, {
-        path: this.info.path,
-        storage: this.storage
-      }, this.mode);
+      this.openNote({
+        note: this.info,
+        source: {
+          path: this.info.path,
+          storage: this.storage
+        },
+        mode: this.mode
+      });
     }
   })
 });
@@ -24236,18 +23961,7 @@ var render = function() {
       _c(
         "transition",
         { attrs: { name: "fade", mode: "out-in" } },
-        [
-          _c("router-view", {
-            ref: "children",
-            attrs: {
-              loadFirstNote: _vm.loadFirstNote,
-              setXknoteOpened: _vm.setXknoteOpened,
-              openNote: _vm.openNote,
-              timeToast: _vm.timeToast,
-              configOperate: _vm.configOperate
-            }
-          })
-        ],
+        [_c("router-view", { ref: "children" })],
         1
       ),
       _vm._v(" "),
@@ -24548,8 +24262,7 @@ var render = function() {
                                   info: item,
                                   status: item.status,
                                   storage: "curr",
-                                  mode: "normal",
-                                  openNote: _vm.openNote
+                                  mode: "normal"
                                 }
                               })
                             ],
@@ -24587,12 +24300,7 @@ var render = function() {
                     _vm._l(_vm.cloudList, function(item) {
                       return _c("folder-item", {
                         key: item.id,
-                        attrs: {
-                          info: item,
-                          storage: "cloud",
-                          mode: "normal",
-                          openNote: _vm.openNote
-                        }
+                        attrs: { info: item, storage: "cloud", mode: "normal" }
                       })
                     }),
                     _vm._v(" "),
@@ -24637,8 +24345,7 @@ var render = function() {
                                   info: item,
                                   status: item.status,
                                   storage: "local",
-                                  mode: "normal",
-                                  openNote: _vm.openNote
+                                  mode: "normal"
                                 }
                               })
                             ],
@@ -26395,8 +26102,7 @@ var render = function() {
                         info: item,
                         status: "C",
                         storage: _vm.storage,
-                        mode: _vm.mode,
-                        openNote: _vm.openNote
+                        mode: _vm.mode
                       }
                     })
                   : _vm._e(),
@@ -26406,8 +26112,7 @@ var render = function() {
                       attrs: {
                         info: item,
                         storage: _vm.storage,
-                        mode: _vm.mode,
-                        openNote: _vm.openNote
+                        mode: _vm.mode
                       }
                     })
                   : _vm._e()
@@ -31775,7 +31480,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_toast__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/toast */ "./resources/js/store/modules/toast.js");
 /* harmony import */ var _modules_db__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/db */ "./resources/js/store/modules/db.js");
 /* harmony import */ var _modules_tools__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/tools */ "./resources/js/store/modules/tools.js");
-/* harmony import */ var _syncActions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./syncActions */ "./resources/js/store/syncActions.js");
+/* harmony import */ var _modules_conf__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/conf */ "./resources/js/store/modules/conf.js");
+/* harmony import */ var _syncActions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./syncActions */ "./resources/js/store/syncActions.js");
+
 
 
 
@@ -31789,7 +31496,8 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     note: _modules_note__WEBPACK_IMPORTED_MODULE_2__["default"],
     toast: _modules_toast__WEBPACK_IMPORTED_MODULE_3__["default"],
     db: _modules_db__WEBPACK_IMPORTED_MODULE_4__["default"],
-    tools: _modules_tools__WEBPACK_IMPORTED_MODULE_5__["default"]
+    tools: _modules_tools__WEBPACK_IMPORTED_MODULE_5__["default"],
+    conf: _modules_conf__WEBPACK_IMPORTED_MODULE_6__["default"]
   }
 });
 var syncActions = {
@@ -31839,7 +31547,7 @@ var _loop = function _loop(nKey) {
           root: false
         };
         var t = options.root ? type : nKey + '/' + type;
-        return Object(_syncActions__WEBPACK_IMPORTED_MODULE_6__["dispatchSync"])(t, payload);
+        return Object(_syncActions__WEBPACK_IMPORTED_MODULE_7__["dispatchSync"])(t, payload);
       }.bind(store),
       rootGetters: store.getters,
       getters: getters
@@ -31852,8 +31560,63 @@ for (var nKey in syncActions) {
 }
 
 store.syncActions = syncActions;
-store.dispatchSync = _syncActions__WEBPACK_IMPORTED_MODULE_6__["dispatchSync"];
+store.dispatchSync = _syncActions__WEBPACK_IMPORTED_MODULE_7__["dispatchSync"];
 /* harmony default export */ __webpack_exports__["default"] = (store);
+
+/***/ }),
+
+/***/ "./resources/js/store/modules/conf.js":
+/*!********************************************!*\
+  !*** ./resources/js/store/modules/conf.js ***!
+  \********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var state = {};
+var getters = {};
+var actions = {
+  configOperate: function configOperate(_ref, _ref2) {
+    var state = _ref.state;
+    var operate = _ref2.operate,
+        _ref2$config = _ref2.config,
+        config = _ref2$config === void 0 ? null : _ref2$config;
+    return new Promise(function (resolve, reject) {
+      if (operate === 'getGitConfig') {
+        window.axios.get('/api/repo/git').then(function (res) {
+          resolve(res.data.config);
+        })["catch"](function (err) {
+          console.error(err);
+          reject(err);
+        });
+      }
+
+      if (operate === 'setGitConfig') {
+        window.axios.put('/api/repo/git', _objectSpread({}, config)).then(function (res) {
+          resolve(res.data);
+        })["catch"](function (err) {
+          console.log(err);
+          reject(err);
+        });
+      }
+    });
+  }
+};
+var mutations = {};
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: state,
+  getters: getters,
+  actions: actions,
+  mutations: mutations
+});
 
 /***/ }),
 
@@ -32058,7 +31821,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _syncActions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../syncActions */ "./resources/js/store/syncActions.js");
 
 
 var _mutations;
@@ -32074,8 +31836,8 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 
-
 var types = {
+  SET_XKNOTE_TAB: 'SET_XKNOTE_TAB',
   SET_CLOUD: 'SET_CLOUD',
   ADD_LOCAL: 'ADD_LOCAL',
   SET_OPENED: 'SET_OPENED',
@@ -32083,9 +31845,11 @@ var types = {
   SET_OPENED_INDEX: 'SET_OPENED_INDEX',
   LIST_OPERATE: 'LIST_OPERATE',
   SET_CURR_LIST_SOURCE: 'SET_CURR_LIST_SOURCE',
-  CHANGE_COUNT: 'CHANGE_COUNT'
+  CHANGE_COUNT: 'CHANGE_COUNT',
+  SET_PREV_ROUTER: 'SET_PREV_ROUTER'
 };
 var state = {
+  prevRouter: null,
   noteBaseInfo: {
     type: 'note',
     path: '',
@@ -32144,18 +31908,16 @@ var state = {
   reData: null,
   currBadgeCount: 0,
   localBadgeCount: 0
-}; // getters
-
+};
 var getters = {
   getReData: function getReData(state) {
     return state.reData;
   }
-}; // actions
-
+};
 var actions = {
   switchTab: function switchTab(_ref, tabName) {
     var commit = _ref.commit;
-    commit('switchTab', tabName);
+    commit(types.SET_XKNOTE_TAB, tabName);
   },
   loadCloudFolders: function () {
     var _loadCloudFolders = _asyncToGenerator(
@@ -32201,9 +31963,7 @@ var actions = {
     }, {
       root: true
     }).then(function (list) {
-      // this.localList = list;
       list.forEach(function (item) {
-        // this.$set(this.localList, item.path, item);
         commit(types.ADD_LOCAL, {
           path: item.path,
           data: item
@@ -32373,10 +32133,9 @@ var actions = {
     });
   },
   noteOperate: function noteOperate(_ref6, _ref7) {
-    var _this = this;
-
     var commit = _ref6.commit,
-        dispatch = _ref6.dispatch;
+        dispatch = _ref6.dispatch,
+        state = _ref6.state;
     var operate = _ref7.operate,
         storage = _ref7.storage,
         _ref7$noteInfo = _ref7.noteInfo,
@@ -32555,8 +32314,8 @@ var actions = {
         if (storage === 'local') {
           var flag = false;
 
-          for (var i = 0; i < _this.localList.length; i++) {
-            if (_this.localList[i].path === noteInfo.path) {
+          for (var i = 0; i < state.localList.length; i++) {
+            if (state.localList[i].path === noteInfo.path) {
               flag = true;
             }
           }
@@ -32580,150 +32339,21 @@ var actions = {
     var commit = _ref10.commit;
     commit(types.SET_OPENED_INDEX, index);
   },
-  setCurrListSourceA: function setCurrListSourceA(_ref11, data) {
+  setPrevRouter: function setPrevRouter(_ref11, router) {
     var commit = _ref11.commit;
-    commit(types.SET_CURR_LIST_SOURCE, data);
-  }
-}; // mutations
-
-var mutations = (_mutations = {
-  switchTab: function switchTab(state, tabName) {
-    state.xknoteTab = tabName;
-  }
-}, _defineProperty(_mutations, types.LIST_OPERATE, function (state, _ref12) {
-  var operate = _ref12.operate,
-      storage = _ref12.storage,
-      path = _ref12.path,
-      _ref12$noteInfo = _ref12.noteInfo,
-      noteInfo = _ref12$noteInfo === void 0 ? null : _ref12$noteInfo;
-  var arr = [path];
-  var list = state[storage + 'List'];
-
-  if (storage === 'cloud') {
-    arr = path.substring(1).split('/');
-
-    for (var i = 0; operate !== 'add' && i < arr.length - 1; i++) {
-      list = list[arr[i]].sub;
-    }
-  }
-
-  if (operate === 'get') {
-    state.reData = list[arr[arr.length - 1]];
-  }
-
-  if (operate === 'add') {
-    if (storage === 'curr') {
-      // let currIndex = this.$set(this.currList, path, noteInfo.note);
-      // this.$set(this.currListSource, path, noteInfo.source);
-      state.currList[path] = noteInfo.note;
-      state.currListSource[path] = noteInfo.source;
-      state.reData = path;
-    }
-
-    if (storage === 'local') {
-      // return this.$set(this.localList, path, noteInfo);
-      state.localList[path] = noteInfo;
-      state.reData = path;
-    }
-
-    if (storage === 'cloud') {
-      var p = '';
-      var len = noteInfo === null ? arr.length : arr.length - 1;
-
-      for (var _i = 0; _i < len; _i++) {
-        p += '/' + arr[_i];
-
-        if (!list[arr[_i]]) {
-          // this.$set(list, arr[i], {
-          //   type: 'folder',
-          //   path: p,
-          //   name: arr[i],
-          //   sub: {}
-          // });
-          list[arr[_i]] = {
-            type: 'folder',
-            path: p,
-            name: arr[_i],
-            sub: {}
-          };
-        }
-
-        list = list[arr[_i]].sub;
-      }
-
-      if (noteInfo !== null) {
-        // this.$set(list, arr[arr.length - 1], noteInfo);
-        list[arr[arr.length - 1]] = noteInfo;
-      }
-    }
-  }
-
-  if (operate === 'delete') {
-    var noteList = list[arr[arr.length - 1]]; // delete list[arr[arr.length - 1]];
-
-    vue__WEBPACK_IMPORTED_MODULE_1___default.a["delete"](list, arr[arr.length - 1]);
-
-    if (storage === 'curr') {
-      delete state.currListSource[arr[arr.length - 1]];
-      vue__WEBPACK_IMPORTED_MODULE_1___default.a["delete"](state.currListSource, arr[arr.length - 1]);
-    }
-
-    state.reData = noteList;
-  }
-
-  if (operate === 'set') {
-    // this.$set(list, arr[arr.length - 1], { ...noteInfo });
-    list[arr[arr.length - 1]] = noteInfo;
-  }
-}), _defineProperty(_mutations, types.SET_CLOUD, function (state, cloudList) {
-  state.cloudList = cloudList;
-}), _defineProperty(_mutations, types.ADD_LOCAL, function (state, _ref13) {
-  var path = _ref13.path,
-      data = _ref13.data;
-  state.localList[path] = data;
-}), _defineProperty(_mutations, types.SET_OPENED, function (state, noteInfo) {
-  state.xknoteOpened = noteInfo;
-}), _defineProperty(_mutations, types.SET_READED, function (state, noteInfo) {
-  state.readOpened = noteInfo;
-}), _defineProperty(_mutations, types.SET_OPENED_INDEX, function (state, index) {
-  state.xknoteOpenedIndex = index;
-}), _defineProperty(_mutations, types.SET_CURR_LIST_SOURCE, function (state, _ref14) {
-  var path = _ref14.path,
-      source = _ref14.source;
-  state.currListSource[path] = source;
-}), _defineProperty(_mutations, types.CHANGE_COUNT, function (state) {
-  state.currBadgeCount = 0;
-  state.localBadgeCount = 0;
-
-  for (var key in state.currList) {
-    if (state.currList[key].status === 'N') {
-      state.currBadgeCount++;
-    }
-  }
-
-  for (var _key in state.localList) {
-    if (state.localList[_key].status === 'N') {
-      state.localBadgeCount++;
-    }
-  }
-}), _mutations);
-var syncActions = {
-  listOperate: function listOperate(_ref15, data) {
-    var commit = _ref15.commit,
-        state = _ref15.state,
-        dispatchSync = _ref15.dispatchSync;
-    commit(types.LIST_OPERATE, data, {
-      root: true
-    });
-    commit(types.CHANGE_COUNT);
-    return state.reData;
+    commit(types.SET_PREV_ROUTER, router);
   },
-  loadPathNote: function loadPathNote(_ref16, _ref17) {
-    var commit = _ref16.commit,
-        state = _ref16.state;
-    var path = _ref17.path,
-        _ref17$mode = _ref17.mode,
-        mode = _ref17$mode === void 0 ? 'normal' : _ref17$mode;
+  setCurrListSourceA: function setCurrListSourceA(_ref12, data) {
+    var commit = _ref12.commit;
+    commit(types.SET_CURR_LIST_SOURCE, data);
+  },
+  loadPathNote: function loadPathNote(_ref13, _ref14) {
+    var commit = _ref13.commit,
+        state = _ref13.state,
+        dispatch = _ref13.dispatch;
+    var path = _ref14.path,
+        _ref14$mode = _ref14.mode,
+        mode = _ref14$mode === void 0 ? 'normal' : _ref14$mode;
     var info = document.querySelector('.local-tab [data-path="' + path + '"]');
 
     if (!info) {
@@ -32741,10 +32371,335 @@ var syncActions = {
       path: path
     });
     var item = state.reData;
-    this.openNote(item, {
-      path: path,
-      storage: storage
-    }, mode);
+    dispatch('openNote', {
+      note: item,
+      source: {
+        path: path,
+        storage: storage
+      },
+      mode: mode
+    });
+  },
+  openNote: function openNote(_ref15, _ref16) {
+    var commit = _ref15.commit,
+        state = _ref15.state,
+        dispatch = _ref15.dispatch;
+    var note = _ref16.note,
+        source = _ref16.source,
+        _ref16$mode = _ref16.mode,
+        mode = _ref16$mode === void 0 ? 'normal' : _ref16$mode,
+        _ref16$isNew = _ref16.isNew,
+        isNew = _ref16$isNew === void 0 ? false : _ref16$isNew;
+
+    var open = function open() {
+      // 更改query
+      window.inputQueryChangeFlag = false;
+
+      if (!window.vm.$route.query.note || window.vm.$route.query.note !== note.path) {
+        window.vm.$router.replace({
+          query: _objectSpread({}, window.vm.$route.query, {
+            note: note.path
+          })
+        });
+      }
+
+      if (mode === 'normal') {
+        for (var key in state.currList) {
+          if (state.currList[key].path === note.path) {
+            source.path = note.path; //TODO: 修改
+
+            source.storage = 'curr';
+          }
+        }
+
+        dispatch('setXknoteOpened', note);
+        window.xknoteOpenedChangeFlag = false; // 添加到currList，同时将源数据添加到currListSource
+
+        var currPath;
+
+        if (source.storage !== 'curr') {
+          commit(types.LIST_OPERATE, {
+            operate: 'add',
+            storage: 'curr',
+            path: note.path,
+            noteInfo: {
+              note: note,
+              source: source
+            }
+          });
+          currPath = note.path;
+        } else {
+          currPath = source.path;
+        }
+
+        commit(types.SET_OPENED_INDEX, {
+          curr: currPath,
+          source: source
+        });
+        commit(types.SET_XKNOTE_TAB, 'curr');
+        vue__WEBPACK_IMPORTED_MODULE_1___default.a.nextTick(function () {
+          // 添加当前打开的文件的active效果
+          var ele;
+          ele = document.querySelector(".active[data-storage='curr']");
+
+          if (ele) {
+            ele.classList.remove('active');
+          }
+
+          document.querySelector("[data-storage='curr'][data-path='" + note.path + "']").classList.add('active');
+          window.xknoteOpenedChangeFlag = true;
+        });
+      }
+
+      if (mode === 'read') {
+        commit(types.SET_OPENED_INDEX, JSON.parse(JSON.stringify(note)));
+      }
+    };
+
+    if (!isNew && source.storage === 'cloud') {
+      var noteEle = document.querySelector('[data-path="' + note.path + '"][data-storage="cloud"]');
+      var icon = noteEle.querySelector('.tile-action');
+      icon.style.display = 'unset';
+      var btn = icon.querySelector('.btn');
+
+      if (mode === 'normal') {
+        btn.querySelector('.icon').style.display = 'none';
+      }
+
+      btn.querySelector('.loading').style.display = 'block';
+      dispatch('noteOperate', {
+        operate: 'read',
+        storage: 'cloud',
+        noteInfo: note
+      }).then(function (data) {
+        vue__WEBPACK_IMPORTED_MODULE_1___default.a.set(note, 'note', data.note);
+        note.status = 'C';
+        icon.style.display = '';
+
+        if (mode === 'normal') {
+          btn.querySelector('.icon').style.display = 'unset';
+        }
+
+        btn.querySelector('.loading').style.display = 'none';
+        open();
+      });
+    } else {
+      open();
+    }
+  },
+  setXknoteOpened: function setXknoteOpened(_ref17, noteInfo) {
+    var commit = _ref17.commit,
+        state = _ref17.state;
+    window.xknoteOpenedChangeFlag = false;
+    var noteConEle = document.querySelector('.xknote-header > .navbar-center');
+
+    if (noteInfo.path === '') {
+      window.XKEditor.ace.setReadOnly(true);
+
+      if (noteConEle) {
+        noteConEle.classList.add('disabled');
+      }
+    } else {
+      window.XKEditor.ace.setReadOnly(false);
+
+      if (noteConEle) {
+        noteConEle.classList.remove('disabled');
+      }
+    }
+
+    commit(types.SET_OPENED, noteInfo);
+
+    if (window.eThis && window.XKEditor) {
+      if (window.eThis.e.editorMode === 'ace') {
+        window.XKEditor.setMarkdown(state.xknoteOpened.note.content);
+      } else {
+        window.XKEditor.switchEditor();
+        window.XKEditor.setMarkdown(state.xknoteOpened.note.content);
+      }
+    }
+
+    window.xknoteOpenedChangeFlag = true;
+  },
+  loadFirstNote: function loadFirstNote(_ref18) {
+    var dispatch = _ref18.dispatch,
+        state = _ref18.state;
+    var mode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'normal';
+
+    // 防止意外加载
+    // TODO: 寻求更好的方案
+    if (mode === 'read' && state.prevRouter) {
+      return;
+    }
+
+    if (mode !== 'read' && state.xknoteOpened.path) {
+      return;
+    }
+
+    if (window.vm.$route.query.note) {
+      dispatch('loadPathNote', {
+        path: window.vm.$route.query.note,
+        mode: mode
+      });
+    } else {
+      dispatch('db/optionsDB', {
+        operate: 'read',
+        data: 'rememberNote'
+      }, {
+        root: true
+      }).then(function (data) {
+        if (data) {
+          dispatch('loadPathNote', {
+            path: data.path,
+            mode: mode
+          });
+        }
+
+        dispatch('timedTask', 'saveCurrOpenedNote');
+      });
+    }
+  },
+  timedTask: function timedTask(_ref19, task) {
+    var dispatch = _ref19.dispatch,
+        state = _ref19.state;
+
+    if (task === 'saveCurrOpenedNote') {
+      // 每10秒中将当前打开的笔记信息保存至本地数据库，用以下次开启做准备
+      setInterval(function () {
+        if (state.xknoteOpened.path !== '' && window.vm.$route.name === 'Home') {
+          dispatch('db/optionsDB', {
+            operate: 'put',
+            data: {
+              name: 'rememberNote',
+              path: state.xknoteOpened.path
+            }
+          }, {
+            root: true
+          });
+          console.log('remeberNote');
+        }
+      }, 10000);
+    }
+  }
+};
+var mutations = (_mutations = {}, _defineProperty(_mutations, types.SET_XKNOTE_TAB, function (state, tabName) {
+  state.xknoteTab = tabName;
+}), _defineProperty(_mutations, types.LIST_OPERATE, function (state, _ref20) {
+  var operate = _ref20.operate,
+      storage = _ref20.storage,
+      path = _ref20.path,
+      _ref20$noteInfo = _ref20.noteInfo,
+      noteInfo = _ref20$noteInfo === void 0 ? null : _ref20$noteInfo;
+  var arr = [path];
+  var list = state[storage + 'List'];
+
+  if (storage === 'cloud') {
+    arr = path.substring(1).split('/');
+
+    for (var i = 0; operate !== 'add' && i < arr.length - 1; i++) {
+      list = list[arr[i]].sub;
+    }
+  }
+
+  if (operate === 'get') {
+    state.reData = list[arr[arr.length - 1]];
+  }
+
+  if (operate === 'add') {
+    if (storage === 'curr') {
+      state.currList[path] = noteInfo.note;
+      state.currListSource[path] = noteInfo.source;
+      state.reData = path;
+    }
+
+    if (storage === 'local') {
+      state.localList[path] = noteInfo;
+      state.reData = path;
+    }
+
+    if (storage === 'cloud') {
+      var p = '';
+      var len = noteInfo === null ? arr.length : arr.length - 1;
+
+      for (var _i = 0; _i < len; _i++) {
+        p += '/' + arr[_i];
+
+        if (!list[arr[_i]]) {
+          list[arr[_i]] = {
+            type: 'folder',
+            path: p,
+            name: arr[_i],
+            sub: {}
+          };
+        }
+
+        list = list[arr[_i]].sub;
+      }
+
+      if (noteInfo !== null) {
+        list[arr[arr.length - 1]] = noteInfo;
+      }
+    }
+  }
+
+  if (operate === 'delete') {
+    var noteList = list[arr[arr.length - 1]];
+    vue__WEBPACK_IMPORTED_MODULE_1___default.a["delete"](list, arr[arr.length - 1]);
+
+    if (storage === 'curr') {
+      delete state.currListSource[arr[arr.length - 1]];
+      vue__WEBPACK_IMPORTED_MODULE_1___default.a["delete"](state.currListSource, arr[arr.length - 1]);
+    }
+
+    state.reData = noteList;
+  }
+
+  if (operate === 'set') {
+    list[arr[arr.length - 1]] = noteInfo;
+  }
+}), _defineProperty(_mutations, types.SET_CLOUD, function (state, cloudList) {
+  state.cloudList = cloudList;
+}), _defineProperty(_mutations, types.ADD_LOCAL, function (state, _ref21) {
+  var path = _ref21.path,
+      data = _ref21.data;
+  state.localList[path] = data;
+}), _defineProperty(_mutations, types.SET_OPENED, function (state, noteInfo) {
+  state.xknoteOpened = noteInfo;
+}), _defineProperty(_mutations, types.SET_READED, function (state, noteInfo) {
+  state.readOpened = noteInfo;
+}), _defineProperty(_mutations, types.SET_OPENED_INDEX, function (state, index) {
+  state.xknoteOpenedIndex = index;
+}), _defineProperty(_mutations, types.SET_CURR_LIST_SOURCE, function (state, _ref22) {
+  var path = _ref22.path,
+      source = _ref22.source;
+  state.currListSource[path] = source;
+}), _defineProperty(_mutations, types.CHANGE_COUNT, function (state) {
+  state.currBadgeCount = 0;
+  state.localBadgeCount = 0;
+
+  for (var key in state.currList) {
+    if (state.currList[key].status === 'N') {
+      state.currBadgeCount++;
+    }
+  }
+
+  for (var _key in state.localList) {
+    if (state.localList[_key].status === 'N') {
+      state.localBadgeCount++;
+    }
+  }
+}), _defineProperty(_mutations, types.SET_PREV_ROUTER, function (state, router) {
+  state.prevRouter = router;
+}), _mutations);
+var syncActions = {
+  listOperate: function listOperate(_ref23, data) {
+    var commit = _ref23.commit,
+        state = _ref23.state,
+        dispatchSync = _ref23.dispatchSync;
+    commit(types.LIST_OPERATE, data, {
+      root: true
+    });
+    commit(types.CHANGE_COUNT);
+    return state.reData;
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = ({

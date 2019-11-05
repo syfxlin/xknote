@@ -24,15 +24,8 @@
             :status="'C'"
             :storage="storage"
             :mode="mode"
-            :openNote="openNote"
           />
-          <folder-item
-            v-if="item.type==='folder'"
-            :info="item"
-            :storage="storage"
-            :mode="mode"
-            :openNote="openNote"
-          />
+          <folder-item v-if="item.type==='folder'" :info="item" :storage="storage" :mode="mode" />
         </li>
       </ul>
     </div>
@@ -44,7 +37,7 @@ import noteItem from "./noteItem.vue";
 import { mapActions } from "vuex";
 export default {
   name: "folder-item",
-  props: ["info", "storage", "mode", "openNote"],
+  props: ["info", "storage", "mode"],
   data() {
     return {
       idHash: Math.random()
