@@ -7,7 +7,6 @@
         :openNote="openNote"
         :timeToast="timeToast"
         :configOperate="configOperate"
-        :listOperate="listOperate"
         ref="children"
       ></router-view>
     </transition>
@@ -21,6 +20,7 @@
 <script>
 import "./assets/style.css";
 import { mapState, mapActions, mapGetters } from "vuex";
+import mapSyncActions from "./store/mapSyncActions";
 export default {
   name: "App",
   async created() {
@@ -70,13 +70,9 @@ export default {
     ]),
     ...mapActions("toast", ["timeToast"]),
     ...mapActions("db", ["optionsDB"]),
-    listOperate(data) {
-      this.$store.commit("note/LIST_OPERATE", data, { root: true });
-      this.$store.commit("note/CHANGE_COUNT");
-      return this.getReData;
-    },
+    ...mapSyncActions("note", ["listOperate"]),
     // TODO: cloud-tab加载过慢导致info为null
-    async loadPathNote(path, mode = "normal") {
+    loadPathNote(path, mode = "normal") {
       let info = document.querySelector(
         '.local-tab [data-path="' + path + '"]'
       );
@@ -87,7 +83,7 @@ export default {
         return;
       }
       let storage = info.getAttribute("data-storage");
-      let item = await this.listOperate({
+      let item = this.listOperate({
         operate: "get",
         storage: storage,
         path: path

@@ -107,7 +107,6 @@
                     :storage="'curr'"
                     :mode="'normal'"
                     :openNote="openNote"
-                    :floatMenu="floatMenu"
                   />
                 </li>
                 <div class="text-gray text-center" v-if="currList.length===0">这里什么都没有哦（￣︶￣）↗</div>
@@ -121,7 +120,6 @@
                 :storage="'cloud'"
                 :mode="'normal'"
                 :openNote="openNote"
-                :floatMenu="floatMenu"
               />
               <div class="cloud-tab-loading" v-if="cloudList.length===0">
                 <div class="loading loading-lg"></div>
@@ -138,7 +136,6 @@
                     :storage="'local'"
                     :mode="'normal'"
                     :openNote="openNote"
-                    :floatMenu="floatMenu"
                   />
                 </li>
                 <button
@@ -520,6 +517,7 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from "vuex";
+import mapSyncActions from "../store/mapSyncActions";
 import XK_Editor from "xkeditor";
 import onlyFolderItem from "./onlyFolderItem";
 import noteItem from "./noteItem";
@@ -543,8 +541,7 @@ export default {
     "setXknoteOpened",
     "openNote",
     "writeMode",
-    "configOperate",
-    "listOperate"
+    "configOperate"
   ],
   data() {
     return {
@@ -552,13 +549,7 @@ export default {
       navBarListC: dropdownList.navBarListC,
       navBarListR: dropdownList.navBarListR,
       showSidebar: false, // 该属性只有在writeMode有用
-      loadedEditor: false,
-      floatMenu: {
-        show: false,
-        items: [],
-        data: {},
-        saveAndClose: true
-      }
+      loadedEditor: false
     };
   },
   computed: {
@@ -576,7 +567,7 @@ export default {
       "currBadgeCount",
       "localBadgeCount"
     ]),
-    ...mapState("tools", ["smModal", "lgModal"])
+    ...mapState("tools", ["smModal", "lgModal", "floatMenu"])
   },
   methods: {
     ...mapActions("note", [
@@ -598,6 +589,12 @@ export default {
       "setLgModalData",
       "delLgModalData"
     ]),
+    ...mapActions("tools", [
+      "showFloatMenu",
+      "hideFloatMenu",
+      "setSaveAndClose"
+    ]),
+    ...mapSyncActions("note", ["listOperate"]),
     logout() {
       window.axios.post("/logout").then(function() {
         window.location.href = "/";
@@ -640,7 +637,7 @@ export default {
      * @returns void
      */
     menuOperate(operate, type, storage, path, curr = null) {
-      this.floatMenu.show = false;
+      this.hideFloatMenu();
       if (operate === "delete") {
         this.showSmModal({
           title: "删除",
@@ -1369,11 +1366,11 @@ export default {
         this.gitOperate(operate, path.substring(0, path.indexOf("/", 1)));
       }
       if (operate === "saveLocal" || operate === "saveCloud") {
-        this.floatMenu.saveAndClose = false;
+        this.setSaveAndClose(false);
         this.menuOperate(operate, "note", "curr", this.xknoteOpenedIndex.curr);
       }
       if (operate === "saveAllLocal" || operate === "saveAllCloud") {
-        this.floatMenu.saveAndClose = false;
+        this.setSaveAndClose(false);
         for (let key in this.currList) {
           this.menuOperate(operate.replace("All", ""), "note", "curr", key);
         }
@@ -1479,7 +1476,7 @@ export default {
         });
       }
       if (operate === "notOpe") {
-        this.$delete(this.lgModal.data, index);
+        this.delLgModalData(index);
       }
     },
     gitOperate(operate, path) {

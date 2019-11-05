@@ -24,9 +24,10 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   name: "note-item",
-  props: ["info", "status", "storage", "mode", "openNote", "floatMenu"],
+  props: ["info", "status", "storage", "mode", "openNote"],
   data() {
     return {
       hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path,
@@ -93,6 +94,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions("tools", ["showFloatMenu", "hideFloatMenu"]),
     showNoteSettings(e) {
       var currEle = e.target.parentElement.parentElement;
       if (e.target.nodeName === "IMG") {
@@ -101,14 +103,15 @@ export default {
       var n = document.getElementsByClassName("float-menu")[0];
       n.style.top = e.clientY + "px";
       n.style.left = e.clientX + "px";
-      this.floatMenu.show = true;
-      this.floatMenu.items = this.floatMenuItems[this.storage];
-      this.floatMenu.data = {
-        storage: this.storage,
-        path: this.info.path,
-        type: "note",
-        currEle: currEle
-      };
+      this.showFloatMenu({
+        items: this.floatMenuItems[this.storage],
+        data: {
+          storage: this.storage,
+          path: this.info.path,
+          type: "note",
+          currEle: currEle
+        }
+      });
       this.$nextTick(() => {
         var offset = {
           xS: e.clientX,
@@ -124,7 +127,7 @@ export default {
             ev.clientY < offset.yS ||
             ev.clientY > offset.yE
           ) {
-            this.floatMenu.show = false;
+            this.hideFolatMenu();
           }
           document.removeEventListener("click", closeN);
         };

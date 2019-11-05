@@ -25,7 +25,6 @@
             :storage="storage"
             :mode="mode"
             :openNote="openNote"
-            :floatMenu="floatMenu"
           />
           <folder-item
             v-if="item.type==='folder'"
@@ -33,7 +32,6 @@
             :storage="storage"
             :mode="mode"
             :openNote="openNote"
-            :floatMenu="floatMenu"
           />
         </li>
       </ul>
@@ -43,9 +41,10 @@
 
 <script>
 import noteItem from "./noteItem.vue";
+import { mapActions } from "vuex";
 export default {
   name: "folder-item",
-  props: ["info", "storage", "mode", "openNote", "floatMenu"],
+  props: ["info", "storage", "mode", "openNote"],
   data() {
     return {
       idHash: Math.random()
@@ -124,6 +123,7 @@ export default {
     "note-item": noteItem
   },
   methods: {
+    ...mapActions("tools", ["showFloatMenu", "hideFloatMenu"]),
     showFolderSetting(e) {
       var currEle = e.target.parentElement.parentElement;
       if (e.target.nodeName === "IMG") {
@@ -132,14 +132,15 @@ export default {
       var f = document.getElementsByClassName("float-menu")[0];
       f.style.top = e.clientY + "px";
       f.style.left = e.clientX + "px";
-      this.floatMenu.show = true;
-      this.floatMenu.items = this.floatMenuItems[this.selectMenuItem];
-      this.floatMenu.data = {
-        storage: this.storage,
-        path: this.info.path,
-        type: "folder",
-        currEle: currEle
-      };
+      this.showFloatMenu({
+        items: this.floatMenuItems[this.selectMenuItem],
+        data: {
+          storage: this.storage,
+          path: this.info.path,
+          type: "folder",
+          currEle: currEle
+        }
+      });
       var offset = {
         xS: e.clientX,
         yS: e.clientY,
@@ -154,7 +155,7 @@ export default {
           ev.clientY < offset.yS ||
           ev.clientY > offset.yE
         ) {
-          this.floatMenu.show = false;
+          this.hideFloatMenu();
         }
         document.removeEventListener("click", closeF);
       };

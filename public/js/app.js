@@ -11457,6 +11457,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _assets_style_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./assets/style.css */ "./resources/js/assets/style.css");
 /* harmony import */ var _assets_style_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_assets_style_css__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _store_mapSyncActions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./store/mapSyncActions */ "./resources/js/store/mapSyncActions.js");
 
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -11488,7 +11489,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -11537,72 +11538,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return state.toast;
     }
   }), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])("note", ["getReData"])),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("db", ["optionsDB"]), {
-    listOperate: function listOperate(data) {
-      this.$store.commit("note/LIST_OPERATE", data, {
-        root: true
-      });
-      this.$store.commit("note/CHANGE_COUNT");
-      return this.getReData;
-    },
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("db", ["optionsDB"]), {}, Object(_store_mapSyncActions__WEBPACK_IMPORTED_MODULE_3__["default"])("note", ["listOperate"]), {
     // TODO: cloud-tab加载过慢导致info为null
-    loadPathNote: function () {
-      var _loadPathNote = _asyncToGenerator(
-      /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(path) {
-        var mode,
-            info,
-            storage,
-            item,
-            _args2 = arguments;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                mode = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : "normal";
-                info = document.querySelector('.local-tab [data-path="' + path + '"]');
+    loadPathNote: function loadPathNote(path) {
+      var mode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "normal";
+      var info = document.querySelector('.local-tab [data-path="' + path + '"]');
 
-                if (!info) {
-                  info = document.querySelector('.cloud-tab [data-path="' + path + '"]');
-                }
-
-                if (info) {
-                  _context2.next = 5;
-                  break;
-                }
-
-                return _context2.abrupt("return");
-
-              case 5:
-                storage = info.getAttribute("data-storage");
-                _context2.next = 8;
-                return this.listOperate({
-                  operate: "get",
-                  storage: storage,
-                  path: path
-                });
-
-              case 8:
-                item = _context2.sent;
-                this.openNote(item, {
-                  path: path,
-                  storage: storage
-                }, mode);
-
-              case 10:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
-
-      function loadPathNote(_x) {
-        return _loadPathNote.apply(this, arguments);
+      if (!info) {
+        info = document.querySelector('.cloud-tab [data-path="' + path + '"]');
       }
 
-      return loadPathNote;
-    }(),
+      if (!info) {
+        return;
+      }
+
+      var storage = info.getAttribute("data-storage");
+      var item = this.listOperate({
+        operate: "get",
+        storage: storage,
+        path: path
+      });
+      this.openNote(item, {
+        path: path,
+        storage: storage
+      }, mode);
+    },
 
     /**
      * 读取之前开启的笔记
@@ -11920,14 +11880,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var xkeditor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! xkeditor */ "./node_modules/xkeditor/src/index.js");
-/* harmony import */ var _onlyFolderItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./onlyFolderItem */ "./resources/js/components/onlyFolderItem.vue");
-/* harmony import */ var _noteItem__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./noteItem */ "./resources/js/components/noteItem.vue");
-/* harmony import */ var _folderItem__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./folderItem */ "./resources/js/components/folderItem.vue");
-/* harmony import */ var _dropdown__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./dropdown */ "./resources/js/components/dropdown.vue");
-/* harmony import */ var _modal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modal */ "./resources/js/components/modal.vue");
-/* harmony import */ var _utils_settingList__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/settingList */ "./resources/js/utils/settingList.js");
-/* harmony import */ var _utils_dropdownList__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../utils/dropdownList */ "./resources/js/utils/dropdownList.js");
+/* harmony import */ var _store_mapSyncActions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../store/mapSyncActions */ "./resources/js/store/mapSyncActions.js");
+/* harmony import */ var xkeditor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! xkeditor */ "./node_modules/xkeditor/src/index.js");
+/* harmony import */ var _onlyFolderItem__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./onlyFolderItem */ "./resources/js/components/onlyFolderItem.vue");
+/* harmony import */ var _noteItem__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./noteItem */ "./resources/js/components/noteItem.vue");
+/* harmony import */ var _folderItem__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./folderItem */ "./resources/js/components/folderItem.vue");
+/* harmony import */ var _dropdown__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./dropdown */ "./resources/js/components/dropdown.vue");
+/* harmony import */ var _modal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modal */ "./resources/js/components/modal.vue");
+/* harmony import */ var _utils_settingList__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../utils/settingList */ "./resources/js/utils/settingList.js");
+/* harmony import */ var _utils_dropdownList__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../utils/dropdownList */ "./resources/js/utils/dropdownList.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -12451,9 +12412,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
+
 
 
 
@@ -12466,32 +12425,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "home",
   components: {
-    "xk-editor": xkeditor__WEBPACK_IMPORTED_MODULE_1__["default"],
-    "only-folder-item": _onlyFolderItem__WEBPACK_IMPORTED_MODULE_2__["default"],
-    "note-item": _noteItem__WEBPACK_IMPORTED_MODULE_3__["default"],
-    "folder-item": _folderItem__WEBPACK_IMPORTED_MODULE_4__["default"],
-    dropdown: _dropdown__WEBPACK_IMPORTED_MODULE_5__["default"],
-    modal: _modal__WEBPACK_IMPORTED_MODULE_6__["default"]
+    "xk-editor": xkeditor__WEBPACK_IMPORTED_MODULE_2__["default"],
+    "only-folder-item": _onlyFolderItem__WEBPACK_IMPORTED_MODULE_3__["default"],
+    "note-item": _noteItem__WEBPACK_IMPORTED_MODULE_4__["default"],
+    "folder-item": _folderItem__WEBPACK_IMPORTED_MODULE_5__["default"],
+    dropdown: _dropdown__WEBPACK_IMPORTED_MODULE_6__["default"],
+    modal: _modal__WEBPACK_IMPORTED_MODULE_7__["default"]
   },
-  props: ["loadFirstNote", "setXknoteOpened", "openNote", "writeMode", "configOperate", "listOperate"],
+  props: ["loadFirstNote", "setXknoteOpened", "openNote", "writeMode", "configOperate"],
   data: function data() {
     return {
-      settingList: _utils_settingList__WEBPACK_IMPORTED_MODULE_7__["default"],
-      navBarListC: _utils_dropdownList__WEBPACK_IMPORTED_MODULE_8__["default"].navBarListC,
-      navBarListR: _utils_dropdownList__WEBPACK_IMPORTED_MODULE_8__["default"].navBarListR,
+      settingList: _utils_settingList__WEBPACK_IMPORTED_MODULE_8__["default"],
+      navBarListC: _utils_dropdownList__WEBPACK_IMPORTED_MODULE_9__["default"].navBarListC,
+      navBarListR: _utils_dropdownList__WEBPACK_IMPORTED_MODULE_9__["default"].navBarListR,
       showSidebar: false,
       // 该属性只有在writeMode有用
-      loadedEditor: false,
-      floatMenu: {
-        show: false,
-        items: [],
-        data: {},
-        saveAndClose: true
-      }
+      loadedEditor: false
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])("note", ["getReData"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])("note", ["noteBaseInfo", "xknoteOpened", "xknoteOpenedIndex", "currListSource", "currList", "cloudList", "localList", "xknoteTab", "readOpened", "currBadgeCount", "localBadgeCount"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])("tools", ["smModal", "lgModal"])),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["showSmModal", "hideSmModal", "showLgModal", "hideLgModal", "setLgModalData", "delLgModalData"]), {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])("note", ["getReData"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])("note", ["noteBaseInfo", "xknoteOpened", "xknoteOpenedIndex", "currListSource", "currList", "cloudList", "localList", "xknoteTab", "readOpened", "currBadgeCount", "localBadgeCount"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])("tools", ["smModal", "lgModal", "floatMenu"])),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["showSmModal", "hideSmModal", "showLgModal", "hideLgModal", "setLgModalData", "delLgModalData"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["showFloatMenu", "hideFloatMenu", "setSaveAndClose"]), {}, Object(_store_mapSyncActions__WEBPACK_IMPORTED_MODULE_1__["default"])("note", ["listOperate"]), {
     logout: function logout() {
       window.axios.post("/logout").then(function () {
         window.location.href = "/";
@@ -12544,7 +12497,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this2 = this;
 
       var curr = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
-      this.floatMenu.show = false;
+      this.hideFloatMenu();
 
       if (operate === "delete") {
         this.showSmModal({
@@ -13262,12 +13215,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       if (operate === "saveLocal" || operate === "saveCloud") {
-        this.floatMenu.saveAndClose = false;
+        this.setSaveAndClose(false);
         this.menuOperate(operate, "note", "curr", this.xknoteOpenedIndex.curr);
       }
 
       if (operate === "saveAllLocal" || operate === "saveAllCloud") {
-        this.floatMenu.saveAndClose = false;
+        this.setSaveAndClose(false);
 
         for (var key in this.currList) {
           this.menuOperate(operate.replace("All", ""), "note", "curr", key);
@@ -13381,7 +13334,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       if (operate === "notOpe") {
-        this.$delete(this.lgModal.data, index);
+        this.delLgModalData(index);
       }
     },
     gitOperate: function gitOperate(operate, path) {
@@ -13848,8 +13801,13 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _noteItem_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./noteItem.vue */ "./resources/js/components/noteItem.vue");
-//
-//
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -13892,9 +13850,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "folder-item",
-  props: ["info", "storage", "mode", "openNote", "floatMenu"],
+  props: ["info", "storage", "mode", "openNote"],
   data: function data() {
     return {
       idHash: Math.random().toString(36).substring(2, 8),
@@ -13958,7 +13917,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     "note-item": _noteItem_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  methods: {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])("tools", ["showFloatMenu", "hideFloatMenu"]), {
     showFolderSetting: function showFolderSetting(e) {
       var _this = this;
 
@@ -13971,14 +13930,15 @@ __webpack_require__.r(__webpack_exports__);
       var f = document.getElementsByClassName("float-menu")[0];
       f.style.top = e.clientY + "px";
       f.style.left = e.clientX + "px";
-      this.floatMenu.show = true;
-      this.floatMenu.items = this.floatMenuItems[this.selectMenuItem];
-      this.floatMenu.data = {
-        storage: this.storage,
-        path: this.info.path,
-        type: "folder",
-        currEle: currEle
-      };
+      this.showFloatMenu({
+        items: this.floatMenuItems[this.selectMenuItem],
+        data: {
+          storage: this.storage,
+          path: this.info.path,
+          type: "folder",
+          currEle: currEle
+        }
+      });
       var offset = {
         xS: e.clientX,
         yS: e.clientY,
@@ -13989,7 +13949,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var closeF = function closeF(ev) {
         if (ev.clientX < offset.xS || ev.clientX > offset.xE || ev.clientY < offset.yS || ev.clientY > offset.yE) {
-          _this.floatMenu.show = false;
+          _this.hideFloatMenu();
         }
 
         document.removeEventListener("click", closeF);
@@ -13997,7 +13957,7 @@ __webpack_require__.r(__webpack_exports__);
 
       document.addEventListener("click", closeF);
     }
-  }
+  })
 });
 
 /***/ }),
@@ -14049,6 +14009,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -14074,9 +14041,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "note-item",
-  props: ["info", "status", "storage", "mode", "openNote", "floatMenu"],
+  props: ["info", "status", "storage", "mode", "openNote"],
   data: function data() {
     return {
       hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path,
@@ -14127,7 +14095,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
   },
-  methods: {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["showFloatMenu", "hideFloatMenu"]), {
     showNoteSettings: function showNoteSettings(e) {
       var _this = this;
 
@@ -14140,14 +14108,15 @@ __webpack_require__.r(__webpack_exports__);
       var n = document.getElementsByClassName("float-menu")[0];
       n.style.top = e.clientY + "px";
       n.style.left = e.clientX + "px";
-      this.floatMenu.show = true;
-      this.floatMenu.items = this.floatMenuItems[this.storage];
-      this.floatMenu.data = {
-        storage: this.storage,
-        path: this.info.path,
-        type: "note",
-        currEle: currEle
-      };
+      this.showFloatMenu({
+        items: this.floatMenuItems[this.storage],
+        data: {
+          storage: this.storage,
+          path: this.info.path,
+          type: "note",
+          currEle: currEle
+        }
+      });
       this.$nextTick(function () {
         var offset = {
           xS: e.clientX,
@@ -14159,7 +14128,7 @@ __webpack_require__.r(__webpack_exports__);
 
         var closeN = function closeN(ev) {
           if (ev.clientX < offset.xS || ev.clientX > offset.xE || ev.clientY < offset.yS || ev.clientY > offset.yE) {
-            _this.floatMenu.show = false;
+            _this.hideFolatMenu();
           }
 
           document.removeEventListener("click", closeN);
@@ -14174,7 +14143,7 @@ __webpack_require__.r(__webpack_exports__);
         storage: this.storage
       }, this.mode);
     }
-  }
+  })
 });
 
 /***/ }),
@@ -14380,7 +14349,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.read-toc li img {\n  width: 1.05em;\n  display: inline-block;\n  vertical-align: middle;\n  margin-right: 0.4em;\n  padding-top: 0.1em;\n}\n.read-toc li a {\n  font-size: 1.05em;\n  vertical-align: middle;\n}\n.hero-body p {\n  margin: 0;\n}\n.read-sidebar {\n  top: 0;\n  right: 0;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n}\n.read-sidebar .xknote-tab-content {\n  margin: 0.8rem 0 0.8rem 1.6rem;\n}\n.read-container {\n  display: flex;\n  flex-direction: column;\n  min-height: 100vh;\n  border-right: 1px solid #ddd;\n}\n.read-header .hero-body {\n  padding: 0.4rem 3rem;\n}\n.read-content {\n  flex: 1;\n  padding: 2rem 3rem;\n}\n.read-footer {\n  padding: 1.5em 0 !important;\n}\n.to-normal-btn {\n  bottom: 1rem;\n  right: 1rem;\n  position: fixed;\n}\n", ""]);
+exports.push([module.i, "\n.read-toc li img {\r\n  width: 1.05em;\r\n  display: inline-block;\r\n  vertical-align: middle;\r\n  margin-right: 0.4em;\r\n  padding-top: 0.1em;\n}\n.read-toc li a {\r\n  font-size: 1.05em;\r\n  vertical-align: middle;\n}\n.hero-body p {\r\n  margin: 0;\n}\n.read-sidebar {\r\n  top: 0;\r\n  right: 0;\r\n  height: 100%;\r\n  display: flex;\r\n  flex-direction: column;\n}\n.read-sidebar .xknote-tab-content {\r\n  margin: 0.8rem 0 0.8rem 1.6rem;\n}\n.read-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  min-height: 100vh;\r\n  border-right: 1px solid #ddd;\n}\n.read-header .hero-body {\r\n  padding: 0.4rem 3rem;\n}\n.read-content {\r\n  flex: 1;\r\n  padding: 2rem 3rem;\n}\n.read-footer {\r\n  padding: 1.5em 0 !important;\n}\n.to-normal-btn {\r\n  bottom: 1rem;\r\n  right: 1rem;\r\n  position: fixed;\n}\r\n", ""]);
 
 // exports
 
@@ -24275,8 +24244,7 @@ var render = function() {
               setXknoteOpened: _vm.setXknoteOpened,
               openNote: _vm.openNote,
               timeToast: _vm.timeToast,
-              configOperate: _vm.configOperate,
-              listOperate: _vm.listOperate
+              configOperate: _vm.configOperate
             }
           })
         ],
@@ -24581,8 +24549,7 @@ var render = function() {
                                   status: item.status,
                                   storage: "curr",
                                   mode: "normal",
-                                  openNote: _vm.openNote,
-                                  floatMenu: _vm.floatMenu
+                                  openNote: _vm.openNote
                                 }
                               })
                             ],
@@ -24624,8 +24591,7 @@ var render = function() {
                           info: item,
                           storage: "cloud",
                           mode: "normal",
-                          openNote: _vm.openNote,
-                          floatMenu: _vm.floatMenu
+                          openNote: _vm.openNote
                         }
                       })
                     }),
@@ -24672,8 +24638,7 @@ var render = function() {
                                   status: item.status,
                                   storage: "local",
                                   mode: "normal",
-                                  openNote: _vm.openNote,
-                                  floatMenu: _vm.floatMenu
+                                  openNote: _vm.openNote
                                 }
                               })
                             ],
@@ -26431,8 +26396,7 @@ var render = function() {
                         status: "C",
                         storage: _vm.storage,
                         mode: _vm.mode,
-                        openNote: _vm.openNote,
-                        floatMenu: _vm.floatMenu
+                        openNote: _vm.openNote
                       }
                     })
                   : _vm._e(),
@@ -26443,8 +26407,7 @@ var render = function() {
                         info: item,
                         storage: _vm.storage,
                         mode: _vm.mode,
-                        openNote: _vm.openNote,
-                        floatMenu: _vm.floatMenu
+                        openNote: _vm.openNote
                       }
                     })
                   : _vm._e()
@@ -31799,11 +31762,12 @@ var routes = [{
 /*!*************************************!*\
   !*** ./resources/js/store/index.js ***!
   \*************************************/
-/*! exports provided: default */
+/*! exports provided: syncActions, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "syncActions", function() { return syncActions; });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
@@ -31818,14 +31782,94 @@ __webpack_require__.r(__webpack_exports__);
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
-/* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
+var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   modules: {
     note: _modules_note__WEBPACK_IMPORTED_MODULE_2__["default"],
     toast: _modules_toast__WEBPACK_IMPORTED_MODULE_3__["default"],
     db: _modules_db__WEBPACK_IMPORTED_MODULE_4__["default"],
     tools: _modules_tools__WEBPACK_IMPORTED_MODULE_5__["default"]
   }
-}));
+});
+var syncActions = {
+  note: _modules_note__WEBPACK_IMPORTED_MODULE_2__["syncActions"]
+};
+
+for (var mKey in syncActions) {
+  for (var iKey in syncActions[mKey]) {
+    syncActions[mKey][iKey] = syncActions[mKey][iKey].bind(store);
+  }
+}
+
+store.syncActions = syncActions;
+/* harmony default export */ __webpack_exports__["default"] = (store);
+
+/***/ }),
+
+/***/ "./resources/js/store/mapSyncActions.js":
+/*!**********************************************!*\
+  !*** ./resources/js/store/mapSyncActions.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index */ "./resources/js/store/index.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+function addMethod(object, name, fn) {
+  var old = object[name];
+
+  object[name] = function () {
+    if (fn.length === arguments.length) {
+      return fn.apply(this, arguments);
+    } else if (typeof old === 'function') {
+      return old.apply(this, arguments);
+    }
+  };
+}
+
+var mod = {};
+addMethod(mod, 'mapSyncActions', function (map) {
+  var fn = {};
+  var namespace = '';
+  var action = '';
+
+  for (var i = 0; i < map.length; i++) {
+    var _map$i$split = map[i].split('/');
+
+    var _map$i$split2 = _slicedToArray(_map$i$split, 2);
+
+    namespace = _map$i$split2[0];
+    action = _map$i$split2[1];
+
+    if (_index__WEBPACK_IMPORTED_MODULE_0__["syncActions"][namespace]) {
+      fn[action] = _index__WEBPACK_IMPORTED_MODULE_0__["syncActions"][namespace][action];
+    }
+  }
+
+  return fn;
+});
+addMethod(mod, 'mapSyncActions', function (namespace, map) {
+  var fn = {};
+
+  for (var i = 0; i < map.length; i++) {
+    if (_index__WEBPACK_IMPORTED_MODULE_0__["syncActions"][namespace]) {
+      fn[map[i]] = _index__WEBPACK_IMPORTED_MODULE_0__["syncActions"][namespace][map[i]];
+    }
+  }
+
+  return fn;
+});
+/* harmony default export */ __webpack_exports__["default"] = (mod.mapSyncActions);
 
 /***/ }),
 
@@ -32020,11 +32064,12 @@ var mutations = {};
 /*!********************************************!*\
   !*** ./resources/js/store/modules/note.js ***!
   \********************************************/
-/*! exports provided: default */
+/*! exports provided: syncActions, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "syncActions", function() { return syncActions; });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
@@ -32045,50 +32090,50 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 var types = {
-  SET_CLOUD: "SET_CLOUD",
-  ADD_LOCAL: "ADD_LOCAL",
-  SET_OPENED: "SET_OPENED",
-  SET_READED: "SET_READED",
-  SET_OPENED_INDEX: "SET_OPENED_INDEX",
-  LIST_OPERATE: "LIST_OPERATE",
-  SET_CURR_LIST_SOURCE: "SET_CURR_LIST_SOURCE",
-  CHANGE_COUNT: "CHANGE_COUNT"
+  SET_CLOUD: 'SET_CLOUD',
+  ADD_LOCAL: 'ADD_LOCAL',
+  SET_OPENED: 'SET_OPENED',
+  SET_READED: 'SET_READED',
+  SET_OPENED_INDEX: 'SET_OPENED_INDEX',
+  LIST_OPERATE: 'LIST_OPERATE',
+  SET_CURR_LIST_SOURCE: 'SET_CURR_LIST_SOURCE',
+  CHANGE_COUNT: 'CHANGE_COUNT'
 };
 var state = {
   noteBaseInfo: {
-    type: "note",
-    path: "",
-    name: "",
-    status: "N",
+    type: 'note',
+    path: '',
+    name: '',
+    status: 'N',
     note: {
-      title: "",
-      author: "",
-      content: "暂未打开任何文件，请选择文件。",
-      created_at: "",
-      updated_at: ""
+      title: '',
+      author: '',
+      content: '暂未打开任何文件，请选择文件。',
+      created_at: '',
+      updated_at: ''
     }
   },
   xknoteOpened: {
-    type: "note",
-    path: "",
-    name: "",
-    status: "N",
+    type: 'note',
+    path: '',
+    name: '',
+    status: 'N',
     note: {
-      title: "",
-      author: "",
-      content: "暂未打开任何文件，请选择文件。",
-      created_at: "",
-      updated_at: ""
+      title: '',
+      author: '',
+      content: '暂未打开任何文件，请选择文件。',
+      created_at: '',
+      updated_at: ''
     }
   },
   // 存储当前开启的文档的位置，当前位置和源位置
   // curr存储的是位于currList的索引
   // source存储的分别是源的位置 本地or云端（data-storage） 在其列表中的index（data-index）
   xknoteOpenedIndex: {
-    curr: "",
+    curr: '',
     source: {
-      path: "",
-      storage: ""
+      path: '',
+      storage: ''
     }
   },
   // currList的扩展信息
@@ -32096,18 +32141,18 @@ var state = {
   currList: {},
   cloudList: {},
   localList: {},
-  xknoteTab: "cloud",
+  xknoteTab: 'cloud',
   readOpened: {
-    type: "note",
-    path: "",
-    name: "",
-    status: "N",
+    type: 'note',
+    path: '',
+    name: '',
+    status: 'N',
     note: {
-      title: "",
-      author: "",
-      content: "暂未打开任何文件，请选择文件。",
-      created_at: "",
-      updated_at: ""
+      title: '',
+      author: '',
+      content: '暂未打开任何文件，请选择文件。',
+      created_at: '',
+      updated_at: ''
     }
   },
   reData: null,
@@ -32124,7 +32169,7 @@ var getters = {
 var actions = {
   switchTab: function switchTab(_ref, tabName) {
     var commit = _ref.commit;
-    commit("switchTab", tabName);
+    commit('switchTab', tabName);
   },
   loadCloudFolders: function () {
     var _loadCloudFolders = _asyncToGenerator(
@@ -32137,8 +32182,8 @@ var actions = {
             case 0:
               commit = _ref2.commit, dispatch = _ref2.dispatch;
               _context.next = 3;
-              return dispatch("folderOperate", {
-                operate: "readAll",
+              return dispatch('folderOperate', {
+                operate: 'readAll',
                 folderInfo: null
               });
 
@@ -32164,9 +32209,9 @@ var actions = {
   loadLocalNotes: function loadLocalNotes(_ref3) {
     var commit = _ref3.commit,
         dispatch = _ref3.dispatch;
-    dispatch("db/noteLocalDB", {
-      operate: "readAll",
-      data: ""
+    dispatch('db/noteLocalDB', {
+      operate: 'readAll',
+      data: ''
     }, {
       root: true
     }).then(function (list) {
@@ -32187,8 +32232,8 @@ var actions = {
         _ref5$folderInfo = _ref5.folderInfo,
         folderInfo = _ref5$folderInfo === void 0 ? null : _ref5$folderInfo;
     return new Promise(function (resolve, reject) {
-      if (operate === "readAll") {
-        window.axios.get("/api/folders").then(function (res) {
+      if (operate === 'readAll') {
+        window.axios.get('/api/folders').then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
           console.error(err);
@@ -32196,8 +32241,8 @@ var actions = {
         });
       }
 
-      if (operate === "readFlat") {
-        window.axios.get("/api/folders/flat").then(function (res) {
+      if (operate === 'readFlat') {
+        window.axios.get('/api/folders/flat').then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
           console.error(err);
@@ -32205,8 +32250,8 @@ var actions = {
         });
       }
 
-      if (operate === "readOnly") {
-        window.axios.get("/api/folders/only").then(function (res) {
+      if (operate === 'readOnly') {
+        window.axios.get('/api/folders/only').then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
           console.error(err);
@@ -32214,8 +32259,8 @@ var actions = {
         });
       }
 
-      if (operate === "rename") {
-        window.axios.put("/api/folders", {
+      if (operate === 'rename') {
+        window.axios.put('/api/folders', {
           old_path: folderInfo.oldFolder.path,
           new_path: folderInfo.folder.path
         }).then(function (res) {
@@ -32232,8 +32277,8 @@ var actions = {
         });
       }
 
-      if (operate === "create") {
-        window.axios.post("/api/folders", {
+      if (operate === 'create') {
+        window.axios.post('/api/folders', {
           path: folderInfo.path
         }).then(function (res) {
           if (res.data.error == false) {
@@ -32247,8 +32292,8 @@ var actions = {
         });
       }
 
-      if (operate === "delete") {
-        window.axios["delete"]("/api/folders", {
+      if (operate === 'delete') {
+        window.axios["delete"]('/api/folders', {
           params: {
             path: folderInfo.path
           }
@@ -32266,8 +32311,8 @@ var actions = {
         });
       }
 
-      if (operate === "exist") {
-        window.axios.get("/api/folders/exist", {
+      if (operate === 'exist') {
+        window.axios.get('/api/folders/exist', {
           params: {
             path: folderInfo.path
           }
@@ -32280,10 +32325,10 @@ var actions = {
       } // TODO: 添加加载时提示
 
 
-      if (operate === "gitPush" || operate === "gitPushForce") {
-        window.axios.put("/api/repo", {
+      if (operate === 'gitPush' || operate === 'gitPushForce') {
+        window.axios.put('/api/repo', {
           path: folderInfo.path,
-          force: operate === "gitPushForce"
+          force: operate === 'gitPushForce'
         }).then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
@@ -32292,8 +32337,8 @@ var actions = {
         });
       }
 
-      if (operate === "gitPull") {
-        window.axios.get("/api/repo", {
+      if (operate === 'gitPull') {
+        window.axios.get('/api/repo', {
           params: {
             path: folderInfo.path
           }
@@ -32305,11 +32350,11 @@ var actions = {
         });
       }
 
-      if (operate === "gitInit" || operate === "gitClone") {
-        window.axios.post("/api/repo", _objectSpread({
+      if (operate === 'gitInit' || operate === 'gitClone') {
+        window.axios.post('/api/repo', _objectSpread({
           path: folderInfo.path,
           repo: folderInfo.repo,
-          init_or_clone: operate === "gitInit" ? "init" : "clone"
+          init_or_clone: operate === 'gitInit' ? 'init' : 'clone'
         }, folderInfo.git_user)).then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
@@ -32318,8 +32363,8 @@ var actions = {
         });
       }
 
-      if (operate === "getGitConfig") {
-        window.axios.get("/api/repo/conf", {
+      if (operate === 'getGitConfig') {
+        window.axios.get('/api/repo/conf', {
           params: {
             path: folderInfo.path
           }
@@ -32330,8 +32375,8 @@ var actions = {
           reject(err);
         });
 
-        if (operate === "setGitConfig") {
-          window.axios.put("/api/repo/conf", _objectSpread({}, folderInfo)).then(function (res) {
+        if (operate === 'setGitConfig') {
+          window.axios.put('/api/repo/conf', _objectSpread({}, folderInfo)).then(function (res) {
             resolve(res.data);
           })["catch"](function (err) {
             console.log(err);
@@ -32351,10 +32396,10 @@ var actions = {
         _ref7$noteInfo = _ref7.noteInfo,
         noteInfo = _ref7$noteInfo === void 0 ? null : _ref7$noteInfo;
     return new Promise(function (resolve, reject) {
-      if (operate === "read") {
-        if (storage === "local") {
-          dispatch("db/noteLocalDB", {
-            operate: "read",
+      if (operate === 'read') {
+        if (storage === 'local') {
+          dispatch('db/noteLocalDB', {
+            operate: 'read',
             data: noteInfo.path
           }, {
             root: true
@@ -32363,8 +32408,8 @@ var actions = {
           });
         }
 
-        if (storage === "cloud") {
-          window.axios.get("/api/notes", {
+        if (storage === 'cloud') {
+          window.axios.get('/api/notes', {
             params: {
               path: noteInfo.path
             }
@@ -32377,9 +32422,9 @@ var actions = {
         }
       }
 
-      if (operate === "create") {
-        if (storage === "cloud") {
-          window.axios.post("/api/notes", {
+      if (operate === 'create') {
+        if (storage === 'cloud') {
+          window.axios.post('/api/notes', {
             path: noteInfo.path,
             title: noteInfo.note.title,
             author: noteInfo.note.author,
@@ -32399,10 +32444,10 @@ var actions = {
         }
       }
 
-      if (operate === "delete") {
-        if (storage === "local") {
-          dispatch("db/noteLocalDB", {
-            operate: "delete",
+      if (operate === 'delete') {
+        if (storage === 'local') {
+          dispatch('db/noteLocalDB', {
+            operate: 'delete',
             data: noteInfo.path
           }, {
             root: true
@@ -32411,8 +32456,8 @@ var actions = {
           })["catch"](reject);
         }
 
-        if (storage === "cloud") {
-          window.axios["delete"]("/api/notes", {
+        if (storage === 'cloud') {
+          window.axios["delete"]('/api/notes', {
             params: {
               path: noteInfo.path
             }
@@ -32431,16 +32476,16 @@ var actions = {
         }
       }
 
-      if (operate === "save") {
-        if (storage === "local") {
-          dispatch("db/noteLocalDB", {
-            operate: "delete",
+      if (operate === 'save') {
+        if (storage === 'local') {
+          dispatch('db/noteLocalDB', {
+            operate: 'delete',
             data: noteInfo.path
           }, {
             root: true
           }).then(function () {
-            dispatch("db/noteLocalDB", {
-              operate: "add",
+            dispatch('db/noteLocalDB', {
+              operate: 'add',
               data: noteInfo
             }, {
               root: true
@@ -32450,8 +32495,8 @@ var actions = {
           })["catch"](reject);
         }
 
-        if (storage === "cloud") {
-          window.axios.put("/api/notes", {
+        if (storage === 'cloud') {
+          window.axios.put('/api/notes', {
             path: noteInfo.path,
             title: noteInfo.note.title,
             author: noteInfo.note.author,
@@ -32471,16 +32516,16 @@ var actions = {
         }
       }
 
-      if (operate === "rename") {
-        if (storage === "local") {
-          dispatch("db/noteLocalDB", {
-            operate: "delete",
+      if (operate === 'rename') {
+        if (storage === 'local') {
+          dispatch('db/noteLocalDB', {
+            operate: 'delete',
             data: noteInfo.oldNote.path
           }, {
             root: true
           });
-          dispatch("db/noteLocalDB", {
-            operate: "add",
+          dispatch('db/noteLocalDB', {
+            operate: 'add',
             data: noteInfo.note
           }, {
             root: true
@@ -32488,8 +32533,8 @@ var actions = {
           resolve();
         }
 
-        if (storage === "cloud") {
-          window.axios.put("/api/notes/rename", {
+        if (storage === 'cloud') {
+          window.axios.put('/api/notes/rename', {
             old_path: noteInfo.oldNote.path,
             new_path: noteInfo.note.path
           }).then(function (res) {
@@ -32507,9 +32552,9 @@ var actions = {
         }
       }
 
-      if (operate === "exist") {
-        if (storage === "cloud") {
-          window.axios.get("/api/notes/exist", {
+      if (operate === 'exist') {
+        if (storage === 'cloud') {
+          window.axios.get('/api/notes/exist', {
             params: {
               path: noteInfo.path
             }
@@ -32521,7 +32566,7 @@ var actions = {
           });
         }
 
-        if (storage === "local") {
+        if (storage === 'local') {
           var flag = false;
 
           for (var i = 0; i < _this.localList.length; i++) {
@@ -32566,22 +32611,22 @@ var mutations = (_mutations = {
       _ref12$noteInfo = _ref12.noteInfo,
       noteInfo = _ref12$noteInfo === void 0 ? null : _ref12$noteInfo;
   var arr = [path];
-  var list = state[storage + "List"];
+  var list = state[storage + 'List'];
 
-  if (storage === "cloud") {
-    arr = path.substring(1).split("/");
+  if (storage === 'cloud') {
+    arr = path.substring(1).split('/');
 
-    for (var i = 0; operate !== "add" && i < arr.length - 1; i++) {
+    for (var i = 0; operate !== 'add' && i < arr.length - 1; i++) {
       list = list[arr[i]].sub;
     }
   }
 
-  if (operate === "get") {
+  if (operate === 'get') {
     state.reData = list[arr[arr.length - 1]];
   }
 
-  if (operate === "add") {
-    if (storage === "curr") {
+  if (operate === 'add') {
+    if (storage === 'curr') {
       // let currIndex = this.$set(this.currList, path, noteInfo.note);
       // this.$set(this.currListSource, path, noteInfo.source);
       state.currList[path] = noteInfo.note;
@@ -32589,18 +32634,18 @@ var mutations = (_mutations = {
       state.reData = path;
     }
 
-    if (storage === "local") {
+    if (storage === 'local') {
       // return this.$set(this.localList, path, noteInfo);
       state.localList[path] = noteInfo;
       state.reData = path;
     }
 
-    if (storage === "cloud") {
-      var p = "";
+    if (storage === 'cloud') {
+      var p = '';
       var len = noteInfo === null ? arr.length : arr.length - 1;
 
       for (var _i = 0; _i < len; _i++) {
-        p += "/" + arr[_i];
+        p += '/' + arr[_i];
 
         if (!list[arr[_i]]) {
           // this.$set(list, arr[i], {
@@ -32610,7 +32655,7 @@ var mutations = (_mutations = {
           //   sub: {}
           // });
           list[arr[_i]] = {
-            type: "folder",
+            type: 'folder',
             path: p,
             name: arr[_i],
             sub: {}
@@ -32627,12 +32672,12 @@ var mutations = (_mutations = {
     }
   }
 
-  if (operate === "delete") {
+  if (operate === 'delete') {
     var noteList = list[arr[arr.length - 1]]; // delete list[arr[arr.length - 1]];
 
     vue__WEBPACK_IMPORTED_MODULE_1___default.a["delete"](list, arr[arr.length - 1]);
 
-    if (storage === "curr") {
+    if (storage === 'curr') {
       delete state.currListSource[arr[arr.length - 1]];
       vue__WEBPACK_IMPORTED_MODULE_1___default.a["delete"](state.currListSource, arr[arr.length - 1]);
     }
@@ -32640,7 +32685,7 @@ var mutations = (_mutations = {
     state.reData = noteList;
   }
 
-  if (operate === "set") {
+  if (operate === 'set') {
     // this.$set(list, arr[arr.length - 1], { ...noteInfo });
     list[arr[arr.length - 1]] = noteInfo;
   }
@@ -32665,17 +32710,26 @@ var mutations = (_mutations = {
   state.localBadgeCount = 0;
 
   for (var key in state.currList) {
-    if (state.currList[key].status === "N") {
+    if (state.currList[key].status === 'N') {
       state.currBadgeCount++;
     }
   }
 
   for (var _key in state.localList) {
-    if (state.localList[_key].status === "N") {
+    if (state.localList[_key].status === 'N') {
       state.localBadgeCount++;
     }
   }
 }), _mutations);
+var syncActions = {
+  listOperate: function listOperate(data) {
+    this.commit('note/LIST_OPERATE', data, {
+      root: true
+    });
+    this.commit('note/CHANGE_COUNT');
+    return this.getters['note/getReData'];
+  }
+};
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
   state: state,
@@ -32808,24 +32862,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 var types = {
-  SET_SM_MODAL: "SET_SM_MODAL",
-  SET_LG_MODAL: "SET_LG_MODAL",
-  SET_LG_MODAL_DATA: "SET_LG_MODAL_DATA",
-  DEL_LG_MODAL_DATA: "DEL_LG_MODAL_DATA"
+  SET_SM_MODAL: 'SET_SM_MODAL',
+  SET_LG_MODAL: 'SET_LG_MODAL',
+  SET_LG_MODAL_DATA: 'SET_LG_MODAL_DATA',
+  DEL_LG_MODAL_DATA: 'DEL_LG_MODAL_DATA',
+  SET_FLOAT_MENU: 'SET_FLOAT_MENU',
+  SET_SAVE_AND_CLOSE: 'SET_SAVE_AND_CLOSE'
 };
 var state = {
   smModal: {
     show: false,
-    title: "",
-    content: "",
+    title: '',
+    content: '',
     data: {},
     confirm: function confirm() {},
     cancel: function cancel() {}
   },
   lgModal: {
     show: false,
-    title: "",
-    content: "",
+    title: '',
+    content: '',
     data: {},
     confirm: function confirm() {},
     cancel: function cancel() {}
@@ -32849,8 +32905,8 @@ var actions = {
     var commit = _ref2.commit;
     commit(types.SET_SM_MODAL, {
       show: false,
-      title: "",
-      content: "",
+      title: '',
+      content: '',
       data: {},
       confirm: function confirm() {},
       cancel: function cancel() {}
@@ -32866,8 +32922,8 @@ var actions = {
     var commit = _ref4.commit;
     commit(types.SET_LG_MODAL, {
       show: false,
-      title: "",
-      content: "",
+      title: '',
+      content: '',
       data: {},
       confirm: function confirm() {},
       cancel: function cancel() {}
@@ -32880,6 +32936,22 @@ var actions = {
   delLgModalData: function delLgModalData(_ref6, index) {
     var commit = _ref6.commit;
     commit(types.DEL_LG_MODAL_DATA, index);
+  },
+  showFloatMenu: function showFloatMenu(_ref7, menu) {
+    var commit = _ref7.commit;
+    commit(types.SET_FLOAT_MENU, _objectSpread({}, menu, {
+      show: true
+    }));
+  },
+  hideFloatMenu: function hideFloatMenu(_ref8) {
+    var commit = _ref8.commit;
+    commit(types.SET_FLOAT_MENU, {
+      show: false
+    });
+  },
+  setSaveAndClose: function setSaveAndClose(_ref9, saveAndClose) {
+    var commit = _ref9.commit;
+    commit(types.SET_SAVE_AND_CLOSE, saveAndClose);
   }
 };
 var mutations = (_mutations = {}, _defineProperty(_mutations, types.SET_SM_MODAL, function (state, modal) {
@@ -32891,6 +32963,10 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, types.SET_SM_MODAL
 }), _defineProperty(_mutations, types.DEL_LG_MODAL_DATA, function (state, index) {
   // delete state.lgModal.data[index];
   vue__WEBPACK_IMPORTED_MODULE_0___default.a["delete"](state.lgModal.data, index);
+}), _defineProperty(_mutations, types.SET_FLOAT_MENU, function (state, menu) {
+  state.floatMenu = _objectSpread({}, state.floatMenu, {}, menu);
+}), _defineProperty(_mutations, types.SET_SAVE_AND_CLOSE, function (state, saveAndClose) {
+  state.floatMenu.saveAndClose = saveAndClose;
 }), _mutations);
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
@@ -33078,8 +33154,8 @@ var settingList = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\VSCode-src\xknote\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\VSCode-src\xknote\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! F:\VSCode-src\Laravel\xknote-2\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! F:\VSCode-src\Laravel\xknote-2\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ }),
