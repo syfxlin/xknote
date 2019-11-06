@@ -11452,28 +11452,16 @@ module.exports = function isBuffer (obj) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _assets_style_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./assets/style.css */ "./resources/js/assets/style.css");
-/* harmony import */ var _assets_style_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_assets_style_css__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var _store_syncActions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./store/syncActions */ "./resources/js/store/syncActions.js");
-
-
+/* harmony import */ var _assets_style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./assets/style.css */ "./resources/js/assets/style.css");
+/* harmony import */ var _assets_style_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_assets_style_css__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _store_syncActions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./store/syncActions */ "./resources/js/store/syncActions.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-//
-//
-//
-//
 //
 //
 //
@@ -11487,48 +11475,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "App",
-  created: function () {
-    var _created = _asyncToGenerator(
-    /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              // 当打开note中的时候防止更改
-              window.xknoteOpenedChangeFlag = true; // 是否是通过输入URL引发的query变动
+  created: function created() {
+    // 当打开note中的时候防止更改
+    window.xknoteOpenedChangeFlag = true; // 是否是通过输入URL引发的query变动
 
-              window.inputQueryChangeFlag = true;
-              _context.next = 4;
-              return this.loadCloudFolders();
-
-            case 4:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee, this);
-    }));
-
-    function created() {
-      return _created.apply(this, arguments);
-    }
-
-    return created;
-  }(),
+    window.inputQueryChangeFlag = true;
+  },
   data: function data() {
     return {};
   },
   mounted: function mounted() {
-    this.loadLocalNotes();
     window.xknote = {};
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])("note", ["noteBaseInfo", "xknoteOpened", "xknoteOpenedIndex", "currListSource", "currList", "cloudList", "localList", "xknoteTab", "readOpened", "setXknoteOpened", "prevRouter"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapState"])({
-    toast: function toast(state) {
-      return state.toast;
-    }
-  }), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])("note", ["getReData"])),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA", "openNote", "loadPathNote", "loadFirstNote", "setPrevRouter"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapActions"])("db", ["optionsDB"]), {}, Object(_store_syncActions__WEBPACK_IMPORTED_MODULE_3__["mapSyncActions"])("note", ["listOperate"]), {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])("note", ["noteBaseInfo", "xknoteOpened", "xknoteOpenedIndex", "currListSource", "currList", "cloudList", "localList", "xknoteTab", "readOpened", "setXknoteOpened", "prevRouter"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])("note", ["getReData"])),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA", "openNote", "loadPathNote", "loadFirstNote", "setPrevRouter"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])("db", ["optionsDB"]), {}, Object(_store_syncActions__WEBPACK_IMPORTED_MODULE_2__["mapSyncActions"])("note", ["listOperate"]), {
     /**
      * 监听当前打开的笔记改变事件触发的函数
      * @param void
@@ -11578,19 +11538,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       window.inputQueryChangeFlag = true;
-    },
-    "toast.show": function toastShow(val) {
-      var toast = document.querySelector(".toast");
-
-      if (val) {
-        toast.style.visibility = "visible";
-        toast.style.opacity = "1";
-      } else {
-        setTimeout(function () {
-          toast.style.visibility = "hidden";
-        }, 500);
-        toast.style.opacity = "0";
-      }
     }
   }
 });
@@ -12131,6 +12078,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -12162,8 +12122,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       loadedEditor: false
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])("note", ["getReData"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])("note", ["noteBaseInfo", "xknoteOpened", "xknoteOpenedIndex", "currListSource", "currList", "cloudList", "localList", "xknoteTab", "readOpened", "currBadgeCount", "localBadgeCount"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])("tools", ["smModal", "lgModal", "floatMenu"])),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA", "setXknoteOpened", "loadFirstNote", "openNote"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["showSmModal", "hideSmModal", "showLgModal", "hideLgModal", "setLgModalData", "delLgModalData"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["showFloatMenu", "hideFloatMenu", "setSaveAndClose"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("conf", ["configOperate"]), {}, Object(_store_syncActions__WEBPACK_IMPORTED_MODULE_1__["mapSyncActions"])("note", ["listOperate"]), {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])("note", ["getReData"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])("note", ["noteBaseInfo", "xknoteOpened", "xknoteOpenedIndex", "currListSource", "currList", "cloudList", "localList", "xknoteTab", "readOpened", "currBadgeCount", "localBadgeCount"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])("tools", ["smModal", "lgModal", "floatMenu"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
+    toast: function toast(state) {
+      return state.toast;
+    }
+  })),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("note", ["switchTab", "folderOperate", "noteOperate", "loadCloudFolders", "loadLocalNotes", "setXknoteOpenedA", "setReadOpenedA", "setXknoteOpenedIndexA", "setXknoteOpened", "loadFirstNote", "openNote"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["showSmModal", "hideSmModal", "showLgModal", "hideLgModal", "setLgModalData", "delLgModalData"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["showFloatMenu", "hideFloatMenu", "setSaveAndClose"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("conf", ["configOperate"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("other", ["gitOperate", "checkLocalOperate", "checkLocalStatus"]), {}, Object(_store_syncActions__WEBPACK_IMPORTED_MODULE_1__["mapSyncActions"])("note", ["listOperate"]), {
     logout: function logout() {
       window.axios.post("/logout").then(function () {
         window.location.href = "/";
@@ -12639,7 +12603,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (type === "folder") {
         if (operate.indexOf("git") === 0) {
-          this.gitOperate(operate, path);
+          this.gitOperate({
+            operate: operate,
+            path: path
+          });
         }
       }
     },
@@ -12941,7 +12908,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (operate.indexOf("git") === 0) {
         var path = this.xknoteOpened.path;
-        this.gitOperate(operate, path.substring(0, path.indexOf("/", 1)));
+        this.gitOperate({
+          operate: operate,
+          path: path.substring(0, path.indexOf("/", 1))
+        });
       }
 
       if (operate === "saveLocal" || operate === "saveCloud") {
@@ -12973,320 +12943,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (operate === "logout") {
         this.logout();
       }
-    },
-    checkLocalStatus: function checkLocalStatus() {
-      var _this4 = this;
-
-      document.querySelector(".xknote-check-local").classList.add("loading");
-      window.axios.post("/api/notes/check", {
-        check_list: Object.keys(this.localList)
-      }).then(function (res) {
-        var data = {};
-
-        for (var key in _this4.localList) {
-          data[_this4.localList[key].path] = {
-            name: _this4.localList[key].name,
-            path: _this4.localList[key].path,
-            created_at_l: _this4.localList[key].note.created_at,
-            updated_at_l: _this4.localList[key].note.updated_at,
-            created_at_c: res.data.check_list[key].created_at,
-            updated_at_c: res.data.check_list[key].updated_at
-          };
-        }
-
-        _this4.setLgModalData(data);
-
-        _this4.showLgModal({
-          title: "检查状态",
-          content: "CheckLocalStatus",
-          confirm: function confirm() {
-            _this4.hideLgModal();
-          },
-          cancel: function cancel() {
-            _this4.hideLgModal();
-          }
-        });
-
-        document.querySelector(".xknote-check-local").classList.remove("loading");
-      });
-    },
-    checkLocalOperate: function checkLocalOperate(operate, index) {
-      var _this5 = this;
-
-      var path = this.lgModal.data[index].path;
-
-      if (operate === "keepLocal") {
-        this.noteOperate({
-          operate: "read",
-          storage: "local",
-          noteInfo: {
-            path: path
-          }
-        }).then(function (data) {
-          _this5.noteOperate({
-            operate: "save",
-            storage: "cloud",
-            noteInfo: data
-          }).then(function () {
-            _this5.localList[path].status = "C"; //TODO: 修改使用action修改
-            // this.$delete(this.lgModal.data, index);
-
-            _this5.delLgModalData(index); // 将更新后的状态保存到本地
-
-
-            _this5.noteOperate({
-              operate: "save",
-              storage: "local",
-              noteInfo: _this5.localList[path]
-            });
-          });
-        });
-      }
-
-      if (operate === "keepCloud") {
-        this.noteOperate({
-          operate: "read",
-          storage: "cloud",
-          noteInfo: {
-            path: path
-          }
-        }).then(function (data) {
-          _this5.noteOperate({
-            operate: "save",
-            storage: "local",
-            noteInfo: data
-          }).then(function () {
-            _this5.localList[path].status = "C"; // this.$delete(this.lgModal.data, index);
-
-            _this5.delLgModalData(index);
-          });
-        });
-      }
-
-      if (operate === "notOpe") {
-        this.delLgModalData(index);
-      }
-    },
-    gitOperate: function gitOperate(operate, path) {
-      var _this6 = this;
-
-      if (operate === "gitPull") {
-        this.folderOperate({
-          operate: operate,
-          folderInfo: {
-            path: path
-          }
-        }).then(function () {
-          _this6.timeToast({
-            message: "Git Pull成功！",
-            status: "success",
-            delay: 1000
-          });
-        })["catch"](function (error) {
-          _this6.timeToast({
-            message: "Git Pull失败，请重试！",
-            status: "error",
-            delay: 1000
-          });
-        });
-      }
-
-      if (operate === "gitPush") {
-        this.folderOperate({
-          operate: operate,
-          folderInfo: {
-            path: path
-          }
-        }).then(function () {
-          _this6.timeToast({
-            message: "Git Push成功！",
-            status: "success",
-            delay: 1000
-          });
-        })["catch"](function (error) {
-          _this6.timeToast({
-            message: "Git Push失败，请重试！",
-            status: "error",
-            delay: 1000
-          });
-        });
-      }
-
-      if (operate === "gitPushForce") {
-        this.folderOperate({
-          operate: operate,
-          folderInfo: {
-            path: path
-          }
-        }).then(function () {
-          _this6.timeToast({
-            message: "Git Push成功！",
-            status: "success",
-            delay: 1000
-          });
-        })["catch"](function (error) {
-          _this6.timeToast({
-            message: "Git Push失败，请重试！",
-            status: "error",
-            delay: 1000
-          });
-        });
-      }
-
-      if (operate === "gitInitClone") {
-        var _modal2 = {};
-        _modal2.content = "GitInitClone";
-        _modal2.title = "Git InitClone";
-        var wTimeout = null;
-
-        var watch = function watch() {
-          if (wTimeout) {
-            clearTimeout(wTimeout);
-          }
-
-          wTimeout = setTimeout(function () {
-            _this6.setLgModalData(_objectSpread({}, _this6.lgModal.data, {
-              status: "loading"
-            }));
-
-            _this6.folderOperate({
-              operate: "exist",
-              folderInfo: {
-                path: _this6.lgModal.data.foldername + "/.git"
-              }
-            }).then(function (data) {
-              if (data.exist) {
-                _this6.setLgModalData(_objectSpread({}, _this6.lgModal.data, {
-                  status: "error"
-                }));
-              } else {
-                _this6.setLgModalData(_objectSpread({}, _this6.lgModal.data, {
-                  status: ""
-                }));
-              }
-            });
-          }, 500);
-        };
-
-        var uwFolderName = this.$watch("lgModal.data.foldername", watch);
-
-        _modal2.confirm = function () {
-          if (!_this6.lgModal.data.foldername || !_this6.lgModal.data.repo || !_this6.lgModal.data.init_or_clone || _this6.lgModal.data.status !== "") {
-            return;
-          }
-
-          document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
-          var git_user = {};
-
-          if (_this6.lgModal.data.git_name && _this6.lgModal.data.git_email && _this6.lgModal.data.git_password) {
-            git_user = {
-              git_name: _this6.lgModal.data.git_name,
-              git_email: _this6.lgModal.data.git_email,
-              git_password: _this6.lgModal.data.git_password
-            };
-          }
-
-          _this6.folderOperate({
-            operate: _this6.lgModal.data.init_or_clone === "init" ? "gitInit" : "gitClone",
-            folderInfo: {
-              path: _this6.lgModal.data.foldername,
-              repo: _this6.lgModal.data.repo,
-              git_user: git_user
-            }
-          }).then(function () {
-            document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
-
-            _this6.lgModal.cancel();
-
-            _this6.timeToast({
-              message: "Git Init或Clone成功！",
-              status: "success",
-              delay: 1000
-            });
-          });
-        };
-
-        _modal2.cancel = function () {
-          uwFolderName();
-
-          _this6.hideLgModal();
-        };
-
-        this.showLgModal(_modal2);
-      }
-
-      if (operate === "gitConfig") {
-        var _modal3 = {};
-        _modal3.title = "Git设置";
-        _modal3.content = "GitItemConfig";
-        this.setLgModalData(_objectSpread({}, this.lgModal.data, {
-          status: "loading"
-        }));
-        this.folderOperate({
-          operate: "getGitConfig",
-          folderInfo: {
-            path: path
-          }
-        }).then(function (info) {
-          _this6.setLgModalData(_objectSpread({}, _this6.lgModal.data, {
-            status: "",
-            repo: info.repo,
-            git_name: info.git_name,
-            git_email: info.git_email
-          }));
-        })["catch"](function (error) {
-          _this6.timeToast({
-            message: "获取信息失败！",
-            status: "error",
-            delay: 1000
-          });
-
-          _this6.setLgModalData(_objectSpread({}, _this6.lgModal.data, {
-            status: ""
-          }));
-        });
-
-        _modal3.confirm = function () {
-          if (!_this6.lgModal.data.git_name || !_this6.lgModal.data.git_email || !_this6.lgModal.data.git_password || _this6.lgModal.data.status !== "") {
-            return;
-          }
-
-          document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
-
-          _this6.folderOperate({
-            operate: "setGitConfig",
-            folderInfo: {
-              repo: _this6.lgModal.data.repo,
-              git_name: _this6.lgModal.data.git_name,
-              git_email: _this6.lgModal.data.git_email,
-              git_password: _this6.lgModal.data.git_password,
-              path: path
-            }
-          }).then(function () {
-            document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
-
-            _this6.lgModal.cancel();
-
-            _this6.timeToast({
-              message: "设置成功！",
-              status: "success",
-              delay: 1000
-            });
-          })["catch"](function (error) {
-            _this6.timeToast({
-              message: "设置失败，请重试！",
-              status: "error",
-              delay: 1000
-            });
-          });
-        };
-
-        _modal3.cancel = function () {
-          _this6.hideLgModal();
-        };
-
-        this.showLgModal(_modal3);
-      }
     }
   }),
   mounted: function mounted() {},
@@ -13308,23 +12964,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _noteItem_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./noteItem.vue */ "./resources/js/components/noteItem.vue");
-/* harmony import */ var _folderItem_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./folderItem.vue */ "./resources/js/components/folderItem.vue");
-/* harmony import */ var _node_modules_xkeditor_src_utils_switchContent_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/xkeditor/src/utils/switchContent.js */ "./node_modules/xkeditor/src/utils/switchContent.js");
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _noteItem_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./noteItem.vue */ "./resources/js/components/noteItem.vue");
+/* harmony import */ var _folderItem_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./folderItem.vue */ "./resources/js/components/folderItem.vue");
+/* harmony import */ var _node_modules_xkeditor_src_utils_switchContent_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/xkeditor/src/utils/switchContent.js */ "./node_modules/xkeditor/src/utils/switchContent.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -13397,10 +13054,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "read-mode",
   components: {
-    "note-item": _noteItem_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
-    "folder-item": _folderItem_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
+    "note-item": _noteItem_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    "folder-item": _folderItem_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
-  props: ["openNote", "loadFirstNote"],
+  props: [],
   data: function data() {
     return {
       xknoteTab: "toc",
@@ -13408,8 +13065,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       previewHtml: ""
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_3__["mapState"])("note", ["cloudList", "localList", "readOpened"])),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_3__["mapActions"])("note", ["loadCloudFolders"]), {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_4__["mapState"])("note", ["cloudList", "localList", "readOpened"])),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_4__["mapActions"])("note", ["loadCloudFolders", "loadFirstNote"]), {
     switchTab: function switchTab(tabName) {
       this.xknoteTab = tabName;
     },
@@ -13424,8 +13081,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     watchNote: function watchNote() {
       var _this = this;
 
-      this.previewHtml = Object(_node_modules_xkeditor_src_utils_switchContent_js__WEBPACK_IMPORTED_MODULE_2__["toHtml"])(this.readOpened.note.content, true);
-      this.tocHtml = Object(_node_modules_xkeditor_src_utils_switchContent_js__WEBPACK_IMPORTED_MODULE_2__["getTocHtml"])();
+      this.previewHtml = Object(_node_modules_xkeditor_src_utils_switchContent_js__WEBPACK_IMPORTED_MODULE_3__["toHtml"])(this.readOpened.note.content, true);
+      this.tocHtml = Object(_node_modules_xkeditor_src_utils_switchContent_js__WEBPACK_IMPORTED_MODULE_3__["getTocHtml"])();
       this.$nextTick(function () {
         _this.initTocTree();
       });
@@ -13434,37 +13091,56 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   mounted: function mounted() {
     var _this2 = this;
 
-    this.$nextTick(function () {
-      _this2.loadFirstNote("read");
+    this.$nextTick(
+    /*#__PURE__*/
+    _asyncToGenerator(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return _this2.loadFirstNote("read");
 
-      _this2.watchNote();
+            case 2:
+              _context.next = 4;
+              return _this2.watchNote();
 
-      if (!window.toggleToc) {
-        window.toggleToc = function (ele) {
-          var display = ele.nextElementSibling.nextElementSibling.style.display;
+            case 4:
+              if (!window.toggleToc) {
+                window.toggleToc = function (ele) {
+                  var display = ele.nextElementSibling.nextElementSibling.style.display;
 
-          if (display === "" || display === "block") {
-            ele.nextElementSibling.nextElementSibling.style.display = "none";
-            ele.setAttribute("src", "/static/svg/plus-square.svg");
-          } else {
-            ele.nextElementSibling.nextElementSibling.style.display = "block";
-            ele.setAttribute("src", "/static/svg/minus-square.svg");
+                  if (display === "" || display === "block") {
+                    ele.nextElementSibling.nextElementSibling.style.display = "none";
+                    ele.setAttribute("src", "/static/svg/plus-square.svg");
+                  } else {
+                    ele.nextElementSibling.nextElementSibling.style.display = "block";
+                    ele.setAttribute("src", "/static/svg/minus-square.svg");
+                  }
+                };
+              }
+
+              if (!window.sta) {
+                window.sta = function (anchorName) {
+                  if (anchorName) {
+                    var anchorElement = document.getElementById(anchorName);
+
+                    if (anchorElement) {
+                      anchorElement.scrollIntoView(true);
+                    }
+                  }
+                };
+              }
+
+            case 6:
+            case "end":
+              return _context.stop();
           }
-        };
-      }
-
-      if (!window.sta) {
-        window.sta = function (anchorName) {
-          if (anchorName) {
-            var anchorElement = document.getElementById(anchorName);
-
-            if (anchorElement) {
-              anchorElement.scrollIntoView(true);
-            }
-          }
-        };
-      }
-    });
+        }
+      }, _callee);
+    })));
   },
   watch: {
     readOpened: "watchNote"
@@ -14074,7 +13750,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.read-toc li img {\r\n  width: 1.05em;\r\n  display: inline-block;\r\n  vertical-align: middle;\r\n  margin-right: 0.4em;\r\n  padding-top: 0.1em;\n}\n.read-toc li a {\r\n  font-size: 1.05em;\r\n  vertical-align: middle;\n}\n.hero-body p {\r\n  margin: 0;\n}\n.read-sidebar {\r\n  top: 0;\r\n  right: 0;\r\n  height: 100%;\r\n  display: flex;\r\n  flex-direction: column;\n}\n.read-sidebar .xknote-tab-content {\r\n  margin: 0.8rem 0 0.8rem 1.6rem;\n}\n.read-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  min-height: 100vh;\r\n  border-right: 1px solid #ddd;\n}\n.read-header .hero-body {\r\n  padding: 0.4rem 3rem;\n}\n.read-content {\r\n  flex: 1;\r\n  padding: 2rem 3rem;\n}\n.read-footer {\r\n  padding: 1.5em 0 !important;\n}\n.to-normal-btn {\r\n  bottom: 1rem;\r\n  right: 1rem;\r\n  position: fixed;\n}\r\n", ""]);
+exports.push([module.i, "\n.read-toc li img {\n  width: 1.05em;\n  display: inline-block;\n  vertical-align: middle;\n  margin-right: 0.4em;\n  padding-top: 0.1em;\n}\n.read-toc li a {\n  font-size: 1.05em;\n  vertical-align: middle;\n}\n.hero-body p {\n  margin: 0;\n}\n.read-sidebar {\n  top: 0;\n  right: 0;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n}\n.read-sidebar .xknote-tab-content {\n  margin: 0.8rem 0 0.8rem 1.6rem;\n}\n.read-container {\n  display: flex;\n  flex-direction: column;\n  min-height: 100vh;\n  border-right: 1px solid #ddd;\n}\n.read-header .hero-body {\n  padding: 0.4rem 3rem;\n}\n.read-content {\n  flex: 1;\n  padding: 2rem 3rem;\n}\n.read-footer {\n  padding: 1.5em 0 !important;\n}\n.to-normal-btn {\n  bottom: 1rem;\n  right: 1rem;\n  position: fixed;\n}\n", ""]);
 
 // exports
 
@@ -23963,13 +23639,7 @@ var render = function() {
         { attrs: { name: "fade", mode: "out-in" } },
         [_c("router-view", { ref: "children" })],
         1
-      ),
-      _vm._v(" "),
-      _c("div", { class: "toast toast-" + _vm.toast.status }, [
-        _c("button", { staticClass: "btn btn-clear float-right" }),
-        _vm._v(" "),
-        _c("p", [_vm._v(_vm._s(_vm.toast.message))])
-      ])
+      )
     ],
     1
   )
@@ -24360,7 +24030,11 @@ var render = function() {
                             attrs: {
                               title: "对比本地笔记和云端笔记的时间差别"
                             },
-                            on: { click: _vm.checkLocalStatus }
+                            on: {
+                              click: function($event) {
+                                return _vm.checkLocalStatus()
+                              }
+                            }
                           },
                           [_vm._v("检查状态")]
                         ),
@@ -25152,10 +24826,10 @@ var render = function() {
                                     staticClass: "btn",
                                     on: {
                                       click: function($event) {
-                                        return _vm.checkLocalOperate(
-                                          "keepLocal",
-                                          index
-                                        )
+                                        return _vm.checkLocalOperate({
+                                          operate: "keepLocal",
+                                          index: index
+                                        })
                                       }
                                     }
                                   },
@@ -25168,10 +24842,10 @@ var render = function() {
                                     staticClass: "btn",
                                     on: {
                                       click: function($event) {
-                                        return _vm.checkLocalOperate(
-                                          "keepCloud",
-                                          index
-                                        )
+                                        return _vm.checkLocalOperate({
+                                          operate: "keepCloud",
+                                          index: index
+                                        })
                                       }
                                     }
                                   },
@@ -25184,10 +24858,10 @@ var render = function() {
                                     staticClass: "btn",
                                     on: {
                                       click: function($event) {
-                                        return _vm.checkLocalOperate(
-                                          "notOpe",
-                                          index
-                                        )
+                                        return _vm.checkLocalOperate({
+                                          operate: "notOpe",
+                                          index: index
+                                        })
                                       }
                                     }
                                   },
@@ -25656,7 +25330,13 @@ var render = function() {
               : _vm._e()
           ],
           2
-        )
+        ),
+        _vm._v(" "),
+        _c("div", { class: "toast toast-" + _vm.toast.status }, [
+          _c("button", { staticClass: "btn btn-clear float-right" }),
+          _vm._v(" "),
+          _c("p", [_vm._v(_vm._s(_vm.toast.message))])
+        ])
       ],
       1
     )
@@ -25799,12 +25479,7 @@ var render = function() {
               _vm._l(_vm.cloudList, function(item) {
                 return _c("folder-item", {
                   key: item.id,
-                  attrs: {
-                    info: item,
-                    storage: "cloud",
-                    mode: "read",
-                    openNote: _vm.openNote
-                  }
+                  attrs: { info: item, storage: "cloud", mode: "read" }
                 })
               }),
               _vm._v(" "),
@@ -25849,8 +25524,7 @@ var render = function() {
                             info: item,
                             status: item.status,
                             storage: "local",
-                            mode: "read",
-                            openNote: _vm.openNote
+                            mode: "read"
                           }
                         })
                       ],
@@ -30825,34 +30499,75 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
-/* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_bootstrap__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
-/* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./routes */ "./resources/js/routes.js");
-/* harmony import */ var _App_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./App.vue */ "./resources/js/App.vue");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./store */ "./resources/js/store/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
+/* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_bootstrap__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
+/* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./routes */ "./resources/js/routes.js");
+/* harmony import */ var _App_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./App.vue */ "./resources/js/App.vue");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./store */ "./resources/js/store/index.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 
 
-vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]);
+
+vue__WEBPACK_IMPORTED_MODULE_2___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_3__["default"]);
 
 
 
-var router = new vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]({
-  routes: _routes__WEBPACK_IMPORTED_MODULE_3__["default"]
+var router = new vue_router__WEBPACK_IMPORTED_MODULE_3__["default"]({
+  routes: _routes__WEBPACK_IMPORTED_MODULE_4__["default"]
 });
-window.nThis = {};
-window.vm = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
-  el: "#app",
-  components: {
-    App: _App_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
-  },
-  template: "<App/>",
-  router: router,
-  store: _store__WEBPACK_IMPORTED_MODULE_5__["default"]
-});
+
+var init =
+/*#__PURE__*/
+function () {
+  var _ref = _asyncToGenerator(
+  /*#__PURE__*/
+  _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return _store__WEBPACK_IMPORTED_MODULE_6__["default"].dispatch("note/loadCloudFolders");
+
+          case 2:
+            _context.next = 4;
+            return _store__WEBPACK_IMPORTED_MODULE_6__["default"].dispatch("note/loadLocalNotes");
+
+          case 4:
+            window.vm = new vue__WEBPACK_IMPORTED_MODULE_2___default.a({
+              el: "#app",
+              components: {
+                App: _App_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
+              },
+              template: "<App/>",
+              router: router,
+              store: _store__WEBPACK_IMPORTED_MODULE_6__["default"]
+            });
+
+          case 5:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function init() {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+init();
 
 /***/ }),
 
@@ -31481,7 +31196,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_db__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/db */ "./resources/js/store/modules/db.js");
 /* harmony import */ var _modules_tools__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/tools */ "./resources/js/store/modules/tools.js");
 /* harmony import */ var _modules_conf__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/conf */ "./resources/js/store/modules/conf.js");
-/* harmony import */ var _syncActions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./syncActions */ "./resources/js/store/syncActions.js");
+/* harmony import */ var _modules_other__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modules/other */ "./resources/js/store/modules/other.js");
+/* harmony import */ var _syncActions__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./syncActions */ "./resources/js/store/syncActions.js");
+
 
 
 
@@ -31497,7 +31214,8 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     toast: _modules_toast__WEBPACK_IMPORTED_MODULE_3__["default"],
     db: _modules_db__WEBPACK_IMPORTED_MODULE_4__["default"],
     tools: _modules_tools__WEBPACK_IMPORTED_MODULE_5__["default"],
-    conf: _modules_conf__WEBPACK_IMPORTED_MODULE_6__["default"]
+    conf: _modules_conf__WEBPACK_IMPORTED_MODULE_6__["default"],
+    other: _modules_other__WEBPACK_IMPORTED_MODULE_7__["default"]
   }
 });
 var syncActions = {
@@ -31509,7 +31227,7 @@ var _loop = function _loop(nKey) {
 
   var _loop2 = function _loop2() {
     var gKey = _Object$keys[_i];
-    var k = gKey.split('/');
+    var k = gKey.split("/");
 
     if (k[0] === nKey) {
       Object.defineProperty(getters, k[1], {
@@ -31531,14 +31249,14 @@ var _loop = function _loop(nKey) {
       commit: function (type) {
         var payload = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
         var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-        store.commit(nKey + '/' + type, payload, options);
+        store.commit(nKey + "/" + type, payload, options);
       }.bind(store),
       dispatch: function (type) {
         var payload = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
         var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {
           root: false
         };
-        var t = options.root ? type : nKey + '/' + type;
+        var t = options.root ? type : nKey + "/" + type;
         return store.dispatch(t, payload);
       }.bind(store),
       dispatchSync: function (type) {
@@ -31546,8 +31264,8 @@ var _loop = function _loop(nKey) {
         var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {
           root: false
         };
-        var t = options.root ? type : nKey + '/' + type;
-        return Object(_syncActions__WEBPACK_IMPORTED_MODULE_7__["dispatchSync"])(t, payload);
+        var t = options.root ? type : nKey + "/" + type;
+        return Object(_syncActions__WEBPACK_IMPORTED_MODULE_8__["dispatchSync"])(t, payload);
       }.bind(store),
       rootGetters: store.getters,
       getters: getters
@@ -31560,7 +31278,7 @@ for (var nKey in syncActions) {
 }
 
 store.syncActions = syncActions;
-store.dispatchSync = _syncActions__WEBPACK_IMPORTED_MODULE_7__["dispatchSync"];
+store.dispatchSync = _syncActions__WEBPACK_IMPORTED_MODULE_8__["dispatchSync"];
 /* harmony default export */ __webpack_exports__["default"] = (store);
 
 /***/ }),
@@ -31837,53 +31555,53 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 var types = {
-  SET_XKNOTE_TAB: 'SET_XKNOTE_TAB',
-  SET_CLOUD: 'SET_CLOUD',
-  ADD_LOCAL: 'ADD_LOCAL',
-  SET_OPENED: 'SET_OPENED',
-  SET_READED: 'SET_READED',
-  SET_OPENED_INDEX: 'SET_OPENED_INDEX',
-  LIST_OPERATE: 'LIST_OPERATE',
-  SET_CURR_LIST_SOURCE: 'SET_CURR_LIST_SOURCE',
-  CHANGE_COUNT: 'CHANGE_COUNT',
-  SET_PREV_ROUTER: 'SET_PREV_ROUTER'
+  SET_XKNOTE_TAB: "SET_XKNOTE_TAB",
+  SET_CLOUD: "SET_CLOUD",
+  ADD_LOCAL: "ADD_LOCAL",
+  SET_OPENED: "SET_OPENED",
+  SET_READED: "SET_READED",
+  SET_OPENED_INDEX: "SET_OPENED_INDEX",
+  LIST_OPERATE: "LIST_OPERATE",
+  SET_CURR_LIST_SOURCE: "SET_CURR_LIST_SOURCE",
+  CHANGE_COUNT: "CHANGE_COUNT",
+  SET_PREV_ROUTER: "SET_PREV_ROUTER"
 };
 var state = {
   prevRouter: null,
   noteBaseInfo: {
-    type: 'note',
-    path: '',
-    name: '',
-    status: 'N',
+    type: "note",
+    path: "",
+    name: "",
+    status: "N",
     note: {
-      title: '',
-      author: '',
-      content: '暂未打开任何文件，请选择文件。',
-      created_at: '',
-      updated_at: ''
+      title: "",
+      author: "",
+      content: "暂未打开任何文件，请选择文件。",
+      created_at: "",
+      updated_at: ""
     }
   },
   xknoteOpened: {
-    type: 'note',
-    path: '',
-    name: '',
-    status: 'N',
+    type: "note",
+    path: "",
+    name: "",
+    status: "N",
     note: {
-      title: '',
-      author: '',
-      content: '暂未打开任何文件，请选择文件。',
-      created_at: '',
-      updated_at: ''
+      title: "",
+      author: "",
+      content: "暂未打开任何文件，请选择文件。",
+      created_at: "",
+      updated_at: ""
     }
   },
   // 存储当前开启的文档的位置，当前位置和源位置
   // curr存储的是位于currList的索引
   // source存储的分别是源的位置 本地or云端（data-storage） 在其列表中的index（data-index）
   xknoteOpenedIndex: {
-    curr: '',
+    curr: "",
     source: {
-      path: '',
-      storage: ''
+      path: "",
+      storage: ""
     }
   },
   // currList的扩展信息
@@ -31891,18 +31609,18 @@ var state = {
   currList: {},
   cloudList: {},
   localList: {},
-  xknoteTab: 'cloud',
+  xknoteTab: "cloud",
   readOpened: {
-    type: 'note',
-    path: '',
-    name: '',
-    status: 'N',
+    type: "note",
+    path: "",
+    name: "",
+    status: "N",
     note: {
-      title: '',
-      author: '',
-      content: '暂未打开任何文件，请选择文件。',
-      created_at: '',
-      updated_at: ''
+      title: "",
+      author: "",
+      content: "暂未打开任何文件，请选择文件。",
+      created_at: "",
+      updated_at: ""
     }
   },
   reData: null,
@@ -31930,8 +31648,8 @@ var actions = {
             case 0:
               commit = _ref2.commit, dispatch = _ref2.dispatch;
               _context.next = 3;
-              return dispatch('folderOperate', {
-                operate: 'readAll',
+              return dispatch("folderOperate", {
+                operate: "readAll",
                 folderInfo: null
               });
 
@@ -31957,9 +31675,9 @@ var actions = {
   loadLocalNotes: function loadLocalNotes(_ref3) {
     var commit = _ref3.commit,
         dispatch = _ref3.dispatch;
-    dispatch('db/noteLocalDB', {
-      operate: 'readAll',
-      data: ''
+    dispatch("db/noteLocalDB", {
+      operate: "readAll",
+      data: ""
     }, {
       root: true
     }).then(function (list) {
@@ -31978,8 +31696,8 @@ var actions = {
         _ref5$folderInfo = _ref5.folderInfo,
         folderInfo = _ref5$folderInfo === void 0 ? null : _ref5$folderInfo;
     return new Promise(function (resolve, reject) {
-      if (operate === 'readAll') {
-        window.axios.get('/api/folders').then(function (res) {
+      if (operate === "readAll") {
+        window.axios.get("/api/folders").then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
           console.error(err);
@@ -31987,8 +31705,8 @@ var actions = {
         });
       }
 
-      if (operate === 'readFlat') {
-        window.axios.get('/api/folders/flat').then(function (res) {
+      if (operate === "readFlat") {
+        window.axios.get("/api/folders/flat").then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
           console.error(err);
@@ -31996,8 +31714,8 @@ var actions = {
         });
       }
 
-      if (operate === 'readOnly') {
-        window.axios.get('/api/folders/only').then(function (res) {
+      if (operate === "readOnly") {
+        window.axios.get("/api/folders/only").then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
           console.error(err);
@@ -32005,8 +31723,8 @@ var actions = {
         });
       }
 
-      if (operate === 'rename') {
-        window.axios.put('/api/folders', {
+      if (operate === "rename") {
+        window.axios.put("/api/folders", {
           old_path: folderInfo.oldFolder.path,
           new_path: folderInfo.folder.path
         }).then(function (res) {
@@ -32023,8 +31741,8 @@ var actions = {
         });
       }
 
-      if (operate === 'create') {
-        window.axios.post('/api/folders', {
+      if (operate === "create") {
+        window.axios.post("/api/folders", {
           path: folderInfo.path
         }).then(function (res) {
           if (res.data.error == false) {
@@ -32038,8 +31756,8 @@ var actions = {
         });
       }
 
-      if (operate === 'delete') {
-        window.axios["delete"]('/api/folders', {
+      if (operate === "delete") {
+        window.axios["delete"]("/api/folders", {
           params: {
             path: folderInfo.path
           }
@@ -32057,8 +31775,8 @@ var actions = {
         });
       }
 
-      if (operate === 'exist') {
-        window.axios.get('/api/folders/exist', {
+      if (operate === "exist") {
+        window.axios.get("/api/folders/exist", {
           params: {
             path: folderInfo.path
           }
@@ -32071,10 +31789,10 @@ var actions = {
       } // TODO: 添加加载时提示
 
 
-      if (operate === 'gitPush' || operate === 'gitPushForce') {
-        window.axios.put('/api/repo', {
+      if (operate === "gitPush" || operate === "gitPushForce") {
+        window.axios.put("/api/repo", {
           path: folderInfo.path,
-          force: operate === 'gitPushForce'
+          force: operate === "gitPushForce"
         }).then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
@@ -32083,8 +31801,8 @@ var actions = {
         });
       }
 
-      if (operate === 'gitPull') {
-        window.axios.get('/api/repo', {
+      if (operate === "gitPull") {
+        window.axios.get("/api/repo", {
           params: {
             path: folderInfo.path
           }
@@ -32096,11 +31814,11 @@ var actions = {
         });
       }
 
-      if (operate === 'gitInit' || operate === 'gitClone') {
-        window.axios.post('/api/repo', _objectSpread({
+      if (operate === "gitInit" || operate === "gitClone") {
+        window.axios.post("/api/repo", _objectSpread({
           path: folderInfo.path,
           repo: folderInfo.repo,
-          init_or_clone: operate === 'gitInit' ? 'init' : 'clone'
+          init_or_clone: operate === "gitInit" ? "init" : "clone"
         }, folderInfo.git_user)).then(function (res) {
           resolve(res.data);
         })["catch"](function (err) {
@@ -32109,8 +31827,8 @@ var actions = {
         });
       }
 
-      if (operate === 'getGitConfig') {
-        window.axios.get('/api/repo/conf', {
+      if (operate === "getGitConfig") {
+        window.axios.get("/api/repo/conf", {
           params: {
             path: folderInfo.path
           }
@@ -32121,8 +31839,8 @@ var actions = {
           reject(err);
         });
 
-        if (operate === 'setGitConfig') {
-          window.axios.put('/api/repo/conf', _objectSpread({}, folderInfo)).then(function (res) {
+        if (operate === "setGitConfig") {
+          window.axios.put("/api/repo/conf", _objectSpread({}, folderInfo)).then(function (res) {
             resolve(res.data);
           })["catch"](function (err) {
             console.log(err);
@@ -32141,10 +31859,10 @@ var actions = {
         _ref7$noteInfo = _ref7.noteInfo,
         noteInfo = _ref7$noteInfo === void 0 ? null : _ref7$noteInfo;
     return new Promise(function (resolve, reject) {
-      if (operate === 'read') {
-        if (storage === 'local') {
-          dispatch('db/noteLocalDB', {
-            operate: 'read',
+      if (operate === "read") {
+        if (storage === "local") {
+          dispatch("db/noteLocalDB", {
+            operate: "read",
             data: noteInfo.path
           }, {
             root: true
@@ -32153,8 +31871,8 @@ var actions = {
           });
         }
 
-        if (storage === 'cloud') {
-          window.axios.get('/api/notes', {
+        if (storage === "cloud") {
+          window.axios.get("/api/notes", {
             params: {
               path: noteInfo.path
             }
@@ -32167,9 +31885,9 @@ var actions = {
         }
       }
 
-      if (operate === 'create') {
-        if (storage === 'cloud') {
-          window.axios.post('/api/notes', {
+      if (operate === "create") {
+        if (storage === "cloud") {
+          window.axios.post("/api/notes", {
             path: noteInfo.path,
             title: noteInfo.note.title,
             author: noteInfo.note.author,
@@ -32189,10 +31907,10 @@ var actions = {
         }
       }
 
-      if (operate === 'delete') {
-        if (storage === 'local') {
-          dispatch('db/noteLocalDB', {
-            operate: 'delete',
+      if (operate === "delete") {
+        if (storage === "local") {
+          dispatch("db/noteLocalDB", {
+            operate: "delete",
             data: noteInfo.path
           }, {
             root: true
@@ -32201,8 +31919,8 @@ var actions = {
           })["catch"](reject);
         }
 
-        if (storage === 'cloud') {
-          window.axios["delete"]('/api/notes', {
+        if (storage === "cloud") {
+          window.axios["delete"]("/api/notes", {
             params: {
               path: noteInfo.path
             }
@@ -32221,16 +31939,16 @@ var actions = {
         }
       }
 
-      if (operate === 'save') {
-        if (storage === 'local') {
-          dispatch('db/noteLocalDB', {
-            operate: 'delete',
+      if (operate === "save") {
+        if (storage === "local") {
+          dispatch("db/noteLocalDB", {
+            operate: "delete",
             data: noteInfo.path
           }, {
             root: true
           }).then(function () {
-            dispatch('db/noteLocalDB', {
-              operate: 'add',
+            dispatch("db/noteLocalDB", {
+              operate: "add",
               data: noteInfo
             }, {
               root: true
@@ -32240,8 +31958,8 @@ var actions = {
           })["catch"](reject);
         }
 
-        if (storage === 'cloud') {
-          window.axios.put('/api/notes', {
+        if (storage === "cloud") {
+          window.axios.put("/api/notes", {
             path: noteInfo.path,
             title: noteInfo.note.title,
             author: noteInfo.note.author,
@@ -32261,16 +31979,16 @@ var actions = {
         }
       }
 
-      if (operate === 'rename') {
-        if (storage === 'local') {
-          dispatch('db/noteLocalDB', {
-            operate: 'delete',
+      if (operate === "rename") {
+        if (storage === "local") {
+          dispatch("db/noteLocalDB", {
+            operate: "delete",
             data: noteInfo.oldNote.path
           }, {
             root: true
           });
-          dispatch('db/noteLocalDB', {
-            operate: 'add',
+          dispatch("db/noteLocalDB", {
+            operate: "add",
             data: noteInfo.note
           }, {
             root: true
@@ -32278,8 +31996,8 @@ var actions = {
           resolve();
         }
 
-        if (storage === 'cloud') {
-          window.axios.put('/api/notes/rename', {
+        if (storage === "cloud") {
+          window.axios.put("/api/notes/rename", {
             old_path: noteInfo.oldNote.path,
             new_path: noteInfo.note.path
           }).then(function (res) {
@@ -32297,9 +32015,9 @@ var actions = {
         }
       }
 
-      if (operate === 'exist') {
-        if (storage === 'cloud') {
-          window.axios.get('/api/notes/exist', {
+      if (operate === "exist") {
+        if (storage === "cloud") {
+          window.axios.get("/api/notes/exist", {
             params: {
               path: noteInfo.path
             }
@@ -32311,7 +32029,7 @@ var actions = {
           });
         }
 
-        if (storage === 'local') {
+        if (storage === "local") {
           var flag = false;
 
           for (var i = 0; i < state.localList.length; i++) {
@@ -32353,7 +32071,7 @@ var actions = {
         dispatch = _ref13.dispatch;
     var path = _ref14.path,
         _ref14$mode = _ref14.mode,
-        mode = _ref14$mode === void 0 ? 'normal' : _ref14$mode;
+        mode = _ref14$mode === void 0 ? "normal" : _ref14$mode;
     var info = document.querySelector('.local-tab [data-path="' + path + '"]');
 
     if (!info) {
@@ -32364,14 +32082,14 @@ var actions = {
       return;
     }
 
-    var storage = info.getAttribute('data-storage');
+    var storage = info.getAttribute("data-storage");
     commit(types.LIST_OPERATE, {
-      operate: 'get',
+      operate: "get",
       storage: storage,
       path: path
     });
     var item = state.reData;
-    dispatch('openNote', {
+    dispatch("openNote", {
       note: item,
       source: {
         path: path,
@@ -32387,7 +32105,7 @@ var actions = {
     var note = _ref16.note,
         source = _ref16.source,
         _ref16$mode = _ref16.mode,
-        mode = _ref16$mode === void 0 ? 'normal' : _ref16$mode,
+        mode = _ref16$mode === void 0 ? "normal" : _ref16$mode,
         _ref16$isNew = _ref16.isNew,
         isNew = _ref16$isNew === void 0 ? false : _ref16$isNew;
 
@@ -32403,24 +32121,24 @@ var actions = {
         });
       }
 
-      if (mode === 'normal') {
+      if (mode === "normal") {
         for (var key in state.currList) {
           if (state.currList[key].path === note.path) {
             source.path = note.path; //TODO: 修改
 
-            source.storage = 'curr';
+            source.storage = "curr";
           }
         }
 
-        dispatch('setXknoteOpened', note);
+        dispatch("setXknoteOpened", note);
         window.xknoteOpenedChangeFlag = false; // 添加到currList，同时将源数据添加到currListSource
 
         var currPath;
 
-        if (source.storage !== 'curr') {
+        if (source.storage !== "curr") {
           commit(types.LIST_OPERATE, {
-            operate: 'add',
-            storage: 'curr',
+            operate: "add",
+            storage: "curr",
             path: note.path,
             noteInfo: {
               note: note,
@@ -32436,51 +32154,51 @@ var actions = {
           curr: currPath,
           source: source
         });
-        commit(types.SET_XKNOTE_TAB, 'curr');
+        commit(types.SET_XKNOTE_TAB, "curr");
         vue__WEBPACK_IMPORTED_MODULE_1___default.a.nextTick(function () {
           // 添加当前打开的文件的active效果
           var ele;
           ele = document.querySelector(".active[data-storage='curr']");
 
           if (ele) {
-            ele.classList.remove('active');
+            ele.classList.remove("active");
           }
 
-          document.querySelector("[data-storage='curr'][data-path='" + note.path + "']").classList.add('active');
+          document.querySelector("[data-storage='curr'][data-path='" + note.path + "']").classList.add("active");
           window.xknoteOpenedChangeFlag = true;
         });
       }
 
-      if (mode === 'read') {
-        commit(types.SET_OPENED_INDEX, JSON.parse(JSON.stringify(note)));
+      if (mode === "read") {
+        commit(types.SET_READED, JSON.parse(JSON.stringify(note)));
       }
     };
 
-    if (!isNew && source.storage === 'cloud') {
+    if (!isNew && source.storage === "cloud") {
       var noteEle = document.querySelector('[data-path="' + note.path + '"][data-storage="cloud"]');
-      var icon = noteEle.querySelector('.tile-action');
-      icon.style.display = 'unset';
-      var btn = icon.querySelector('.btn');
+      var icon = noteEle.querySelector(".tile-action");
+      icon.style.display = "unset";
+      var btn = icon.querySelector(".btn");
 
-      if (mode === 'normal') {
-        btn.querySelector('.icon').style.display = 'none';
+      if (mode === "normal") {
+        btn.querySelector(".icon").style.display = "none";
       }
 
-      btn.querySelector('.loading').style.display = 'block';
-      dispatch('noteOperate', {
-        operate: 'read',
-        storage: 'cloud',
+      btn.querySelector(".loading").style.display = "block";
+      dispatch("noteOperate", {
+        operate: "read",
+        storage: "cloud",
         noteInfo: note
       }).then(function (data) {
-        vue__WEBPACK_IMPORTED_MODULE_1___default.a.set(note, 'note', data.note);
-        note.status = 'C';
-        icon.style.display = '';
+        vue__WEBPACK_IMPORTED_MODULE_1___default.a.set(note, "note", data.note);
+        note.status = "C";
+        icon.style.display = "";
 
-        if (mode === 'normal') {
-          btn.querySelector('.icon').style.display = 'unset';
+        if (mode === "normal") {
+          btn.querySelector(".icon").style.display = "unset";
         }
 
-        btn.querySelector('.loading').style.display = 'none';
+        btn.querySelector(".loading").style.display = "none";
         open();
       });
     } else {
@@ -32491,26 +32209,26 @@ var actions = {
     var commit = _ref17.commit,
         state = _ref17.state;
     window.xknoteOpenedChangeFlag = false;
-    var noteConEle = document.querySelector('.xknote-header > .navbar-center');
+    var noteConEle = document.querySelector(".xknote-header > .navbar-center");
 
-    if (noteInfo.path === '') {
+    if (noteInfo.path === "") {
       window.XKEditor.ace.setReadOnly(true);
 
       if (noteConEle) {
-        noteConEle.classList.add('disabled');
+        noteConEle.classList.add("disabled");
       }
     } else {
       window.XKEditor.ace.setReadOnly(false);
 
       if (noteConEle) {
-        noteConEle.classList.remove('disabled');
+        noteConEle.classList.remove("disabled");
       }
     }
 
     commit(types.SET_OPENED, noteInfo);
 
     if (window.eThis && window.XKEditor) {
-      if (window.eThis.e.editorMode === 'ace') {
+      if (window.eThis.e.editorMode === "ace") {
         window.XKEditor.setMarkdown(state.xknoteOpened.note.content);
       } else {
         window.XKEditor.switchEditor();
@@ -32523,38 +32241,38 @@ var actions = {
   loadFirstNote: function loadFirstNote(_ref18) {
     var dispatch = _ref18.dispatch,
         state = _ref18.state;
-    var mode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'normal';
+    var mode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "normal";
 
     // 防止意外加载
     // TODO: 寻求更好的方案
-    if (mode === 'read' && state.prevRouter) {
+    if (mode === "read" && state.prevRouter) {
       return;
     }
 
-    if (mode !== 'read' && state.xknoteOpened.path) {
+    if (mode !== "read" && state.xknoteOpened.path) {
       return;
     }
 
     if (window.vm.$route.query.note) {
-      dispatch('loadPathNote', {
+      dispatch("loadPathNote", {
         path: window.vm.$route.query.note,
         mode: mode
       });
     } else {
-      dispatch('db/optionsDB', {
-        operate: 'read',
-        data: 'rememberNote'
+      dispatch("db/optionsDB", {
+        operate: "read",
+        data: "rememberNote"
       }, {
         root: true
       }).then(function (data) {
         if (data) {
-          dispatch('loadPathNote', {
+          dispatch("loadPathNote", {
             path: data.path,
             mode: mode
           });
         }
 
-        dispatch('timedTask', 'saveCurrOpenedNote');
+        dispatch("timedTask", "saveCurrOpenedNote");
       });
     }
   },
@@ -32562,20 +32280,20 @@ var actions = {
     var dispatch = _ref19.dispatch,
         state = _ref19.state;
 
-    if (task === 'saveCurrOpenedNote') {
+    if (task === "saveCurrOpenedNote") {
       // 每10秒中将当前打开的笔记信息保存至本地数据库，用以下次开启做准备
       setInterval(function () {
-        if (state.xknoteOpened.path !== '' && window.vm.$route.name === 'Home') {
-          dispatch('db/optionsDB', {
-            operate: 'put',
+        if (state.xknoteOpened.path !== "" && window.vm.$route.name === "Home") {
+          dispatch("db/optionsDB", {
+            operate: "put",
             data: {
-              name: 'rememberNote',
+              name: "rememberNote",
               path: state.xknoteOpened.path
             }
           }, {
             root: true
           });
-          console.log('remeberNote');
+          console.log("remeberNote");
         }
       }, 10000);
     }
@@ -32590,42 +32308,42 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, types.SET_XKNOTE_T
       _ref20$noteInfo = _ref20.noteInfo,
       noteInfo = _ref20$noteInfo === void 0 ? null : _ref20$noteInfo;
   var arr = [path];
-  var list = state[storage + 'List'];
+  var list = state[storage + "List"];
 
-  if (storage === 'cloud') {
-    arr = path.substring(1).split('/');
+  if (storage === "cloud") {
+    arr = path.substring(1).split("/");
 
-    for (var i = 0; operate !== 'add' && i < arr.length - 1; i++) {
+    for (var i = 0; operate !== "add" && i < arr.length - 1; i++) {
       list = list[arr[i]].sub;
     }
   }
 
-  if (operate === 'get') {
+  if (operate === "get") {
     state.reData = list[arr[arr.length - 1]];
   }
 
-  if (operate === 'add') {
-    if (storage === 'curr') {
+  if (operate === "add") {
+    if (storage === "curr") {
       state.currList[path] = noteInfo.note;
       state.currListSource[path] = noteInfo.source;
       state.reData = path;
     }
 
-    if (storage === 'local') {
+    if (storage === "local") {
       state.localList[path] = noteInfo;
       state.reData = path;
     }
 
-    if (storage === 'cloud') {
-      var p = '';
+    if (storage === "cloud") {
+      var p = "";
       var len = noteInfo === null ? arr.length : arr.length - 1;
 
       for (var _i = 0; _i < len; _i++) {
-        p += '/' + arr[_i];
+        p += "/" + arr[_i];
 
         if (!list[arr[_i]]) {
           list[arr[_i]] = {
-            type: 'folder',
+            type: "folder",
             path: p,
             name: arr[_i],
             sub: {}
@@ -32641,11 +32359,11 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, types.SET_XKNOTE_T
     }
   }
 
-  if (operate === 'delete') {
+  if (operate === "delete") {
     var noteList = list[arr[arr.length - 1]];
     vue__WEBPACK_IMPORTED_MODULE_1___default.a["delete"](list, arr[arr.length - 1]);
 
-    if (storage === 'curr') {
+    if (storage === "curr") {
       delete state.currListSource[arr[arr.length - 1]];
       vue__WEBPACK_IMPORTED_MODULE_1___default.a["delete"](state.currListSource, arr[arr.length - 1]);
     }
@@ -32653,7 +32371,7 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, types.SET_XKNOTE_T
     state.reData = noteList;
   }
 
-  if (operate === 'set') {
+  if (operate === "set") {
     list[arr[arr.length - 1]] = noteInfo;
   }
 }), _defineProperty(_mutations, types.SET_CLOUD, function (state, cloudList) {
@@ -32677,13 +32395,13 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, types.SET_XKNOTE_T
   state.localBadgeCount = 0;
 
   for (var key in state.currList) {
-    if (state.currList[key].status === 'N') {
+    if (state.currList[key].status === "N") {
       state.currBadgeCount++;
     }
   }
 
   for (var _key in state.localList) {
-    if (state.localList[_key].status === 'N') {
+    if (state.localList[_key].status === "N") {
       state.localBadgeCount++;
     }
   }
@@ -32702,6 +32420,424 @@ var syncActions = {
     return state.reData;
   }
 };
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: state,
+  getters: getters,
+  actions: actions,
+  mutations: mutations
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/modules/other.js":
+/*!*********************************************!*\
+  !*** ./resources/js/store/modules/other.js ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var state = {};
+var getters = {};
+var actions = {
+  gitOperate: function gitOperate(_ref, _ref2) {
+    var dispatch = _ref.dispatch,
+        rootState = _ref.rootState;
+    var operate = _ref2.operate,
+        path = _ref2.path;
+
+    if (operate === "gitPull") {
+      dispatch("note/folderOperate", {
+        operate: operate,
+        folderInfo: {
+          path: path
+        }
+      }, {
+        root: true
+      }).then(function () {
+        dispatch("toast/timeToast", {
+          message: "Git Pull成功！",
+          status: "success",
+          delay: 1000
+        }, {
+          root: true
+        });
+      })["catch"](function (error) {
+        dispatch("toast/timeToast", {
+          message: "Git Pull失败，请重试！",
+          status: "error",
+          delay: 1000
+        }, {
+          root: true
+        });
+      });
+    }
+
+    if (operate === "gitPush") {
+      dispatch("note/folderOperate", {
+        operate: operate,
+        folderInfo: {
+          path: path
+        }
+      }, {
+        root: true
+      }).then(function () {
+        dispatch("toast/timeToast", {
+          message: "Git Push成功！",
+          status: "success",
+          delay: 1000
+        }, {
+          root: true
+        });
+      })["catch"](function (error) {
+        dispatch("toast/timeToast", {
+          message: "Git Push失败，请重试！",
+          status: "error",
+          delay: 1000
+        }, {
+          root: true
+        });
+      });
+    }
+
+    if (operate === "gitPushForce") {
+      dispatch("note/folderOperate", {
+        operate: operate,
+        folderInfo: {
+          path: path
+        }
+      }, {
+        root: true
+      }).then(function () {
+        dispatch("toast/timeToast", {
+          message: "Git Push成功！",
+          status: "success",
+          delay: 1000
+        }, {
+          root: true
+        });
+      })["catch"](function (error) {
+        dispatch("toast/timeToast", {
+          message: "Git Push失败，请重试！",
+          status: "error",
+          delay: 1000
+        }, {
+          root: true
+        });
+      });
+    }
+
+    if (operate === "gitInitClone") {
+      var modal = {};
+      modal.content = "GitInitClone";
+      modal.title = "Git InitClone";
+      var wTimeout = null;
+
+      var watch = function watch() {
+        if (wTimeout) {
+          clearTimeout(wTimeout);
+        }
+
+        wTimeout = setTimeout(function () {
+          dispatch("tools/setLgModalData", _objectSpread({}, rootState.tools.lgModal.data, {
+            status: "loading"
+          }), {
+            root: true
+          });
+          dispatch("note/folderOperate", {
+            operate: "exist",
+            folderInfo: {
+              path: rootState.tools.lgModal.data.foldername + "/.git"
+            }
+          }, {
+            root: true
+          }).then(function (data) {
+            if (data.exist) {
+              dispatch("tools/setLgModalData", _objectSpread({}, rootState.tools.lgModal.data, {
+                status: "error"
+              }), {
+                root: true
+              });
+            } else {
+              dispatch("tools/setLgModalData", _objectSpread({}, rootState.tools.lgModal.data, {
+                status: ""
+              }), {
+                root: true
+              });
+            }
+          });
+        }, 500);
+      };
+
+      var uwFolderName = this.watch(function (state) {
+        state.tools.lgModal.data.foldername;
+      }, watch);
+
+      modal.confirm = function () {
+        if (!rootState.tools.lgModal.data.foldername || !rootState.tools.lgModal.data.repo || !rootState.tools.lgModal.data.init_or_clone || rootState.tools.lgModal.data.status !== "") {
+          return;
+        }
+
+        document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
+        var git_user = {};
+
+        if (rootState.tools.lgModal.data.git_name && rootState.tools.lgModal.data.git_email && rootState.tools.lgModal.data.git_password) {
+          git_user = {
+            git_name: rootState.tools.lgModal.data.git_name,
+            git_email: rootState.tools.lgModal.data.git_email,
+            git_password: rootState.tools.lgModal.data.git_password
+          };
+        }
+
+        dispatch("note/folderOperate", {
+          operate: rootState.tools.lgModal.data.init_or_clone === "init" ? "gitInit" : "gitClone",
+          folderInfo: {
+            path: rootState.tools.lgModal.data.foldername,
+            repo: rootState.tools.lgModal.data.repo,
+            git_user: git_user
+          }
+        }, {
+          root: true
+        }).then(function () {
+          document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
+          rootState.tools.lgModal.cancel();
+          dispatch("toast/timeToast", {
+            message: "Git Init或Clone成功！",
+            status: "success",
+            delay: 1000
+          }, {
+            root: true
+          });
+        });
+      };
+
+      modal.cancel = function () {
+        uwFolderName();
+        dispatch("tools/hideLgModal", null, {
+          root: true
+        });
+      };
+
+      dispatch("tools/showLgModal", modal, {
+        root: true
+      });
+    }
+
+    if (operate === "gitConfig") {
+      var _modal = {};
+      _modal.title = "Git设置";
+      _modal.content = "GitItemConfig";
+      dispatch("tools/setLgModalData", _objectSpread({}, rootState.tools.lgModal.data, {
+        status: "loading"
+      }), {
+        root: true
+      });
+      dispatch("note/folderOperate", {
+        operate: "getGitConfig",
+        folderInfo: {
+          path: path
+        }
+      }, {
+        root: true
+      }).then(function (info) {
+        dispatch("tools/setLgModalData", _objectSpread({}, rootState.tools.lgModal.data, {
+          status: "",
+          repo: info.repo,
+          git_name: info.git_name,
+          git_email: info.git_email
+        }), {
+          root: true
+        });
+      })["catch"](function (error) {
+        dispatch("toast/timeToast", {
+          message: "获取信息失败！",
+          status: "error",
+          delay: 1000
+        }, {
+          root: true
+        });
+        dispatch("tools/setLgModalData", _objectSpread({}, rootState.tools.lgModal.data, {
+          status: ""
+        }), {
+          root: true
+        });
+      });
+
+      _modal.confirm = function () {
+        if (!rootState.tools.lgModal.data.git_name || !rootState.tools.lgModal.data.git_email || !rootState.tools.lgModal.data.git_password || rootState.tools.lgModal.data.status !== "") {
+          return;
+        }
+
+        document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
+        dispatch("note/folderOperate", {
+          operate: "setGitConfig",
+          folderInfo: {
+            repo: rootState.tools.lgModal.data.repo,
+            git_name: rootState.tools.lgModal.data.git_name,
+            git_email: rootState.tools.lgModal.data.git_email,
+            git_password: rootState.tools.lgModal.data.git_password,
+            path: path
+          }
+        }, {
+          root: true
+        }).then(function () {
+          document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
+          rootState.tools.lgModal.cancel();
+          dispatch("toast/timeToast", {
+            message: "设置成功！",
+            status: "success",
+            delay: 1000
+          }, {
+            root: true
+          });
+        })["catch"](function (error) {
+          dispatch("toast/timeToast", {
+            message: "设置失败，请重试！",
+            status: "error",
+            delay: 1000
+          }, {
+            root: true
+          });
+        });
+      };
+
+      _modal.cancel = function () {
+        dispatch("tools/hideLgModal", null, {
+          root: true
+        });
+      };
+
+      dispatch("tools/showLgModal", _modal, {
+        root: true
+      });
+    }
+  },
+  checkLocalOperate: function checkLocalOperate(_ref3, _ref4) {
+    var dispatch = _ref3.dispatch,
+        rootState = _ref3.rootState;
+    var operate = _ref4.operate,
+        index = _ref4.index;
+    var path = rootState.tools.lgModal.data[index].path;
+
+    if (operate === "keepLocal") {
+      dispatch("note/noteOperate", {
+        operate: "read",
+        storage: "local",
+        noteInfo: {
+          path: path
+        }
+      }, {
+        root: true
+      }).then(function (data) {
+        dispatch("note/noteOperate", {
+          operate: "save",
+          storage: "cloud",
+          noteInfo: data
+        }, {
+          root: true
+        }).then(function () {
+          rootState.note.localList[path].status = "C"; //TODO: 修改使用action修改
+          // this.$delete(this.lgModal.data, index);
+
+          dispatch("tools/delLgModalData", index, {
+            root: true
+          }); // 将更新后的状态保存到本地
+
+          dispatch("note/noteOperate", {
+            operate: "save",
+            storage: "local",
+            noteInfo: rootState.note.localList[path]
+          }, {
+            root: true
+          });
+        });
+      });
+    }
+
+    if (operate === "keepCloud") {
+      dispatch("note/noteOperate", {
+        operate: "read",
+        storage: "cloud",
+        noteInfo: {
+          path: path
+        }
+      }, {
+        root: true
+      }).then(function (data) {
+        dispatch("note/noteOperate", {
+          operate: "save",
+          storage: "local",
+          noteInfo: data
+        }, {
+          root: true
+        }).then(function () {
+          rootState.note.localList[path].status = "C"; // this.$delete(this.lgModal.data, index);
+
+          dispatch("tools/delLgModalData", index, {
+            root: true
+          });
+        });
+      });
+    }
+
+    if (operate === "notOpe") {
+      dispatch("tools/delLgModalData", index, {
+        root: true
+      });
+    }
+  },
+  checkLocalStatus: function checkLocalStatus(_ref5) {
+    var dispatch = _ref5.dispatch,
+        rootState = _ref5.rootState;
+    document.querySelector(".xknote-check-local").classList.add("loading");
+    window.axios.post("/api/notes/check", {
+      check_list: Object.keys(rootState.note.localList)
+    }).then(function (res) {
+      var data = {};
+
+      for (var key in rootState.note.localList) {
+        data[rootState.note.localList[key].path] = {
+          name: rootState.note.localList[key].name,
+          path: rootState.note.localList[key].path,
+          created_at_l: rootState.note.localList[key].note.created_at,
+          updated_at_l: rootState.note.localList[key].note.updated_at,
+          created_at_c: res.data.check_list[key].created_at,
+          updated_at_c: res.data.check_list[key].updated_at
+        };
+      }
+
+      dispatch("tools/setLgModalData", data, {
+        root: true
+      });
+      dispatch("tools/showLgModal", {
+        title: "检查状态",
+        content: "CheckLocalStatus",
+        confirm: function confirm() {
+          dispatch("tools/hideLgModal", null, {
+            root: true
+          });
+        },
+        cancel: function cancel() {
+          dispatch("tools/hideLgModal", null, {
+            root: true
+          });
+        }
+      }, {
+        root: true
+      });
+      document.querySelector(".xknote-check-local").classList.remove("loading");
+    });
+  }
+};
+var mutations = {};
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
   state: state,
@@ -32742,6 +32878,9 @@ var actions = {
   showToast: function showToast(_ref, toast) {
     var commit = _ref.commit,
         state = _ref.state;
+    var t = document.querySelector(".toast");
+    t.style.visibility = "visible";
+    t.style.opacity = "1";
     commit(types.SHOW, {
       message: toast.message,
       status: toast.status
@@ -32751,6 +32890,11 @@ var actions = {
     var commit = _ref2.commit,
         state = _ref2.state;
     return new Promise(function (resolve, reject) {
+      var t = document.querySelector(".toast");
+      setTimeout(function () {
+        t.style.visibility = "hidden";
+      }, 500);
+      t.style.opacity = "0";
       commit(types.HIDE);
       resolve();
     });
@@ -33212,8 +33356,8 @@ var settingList = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! F:\VSCode-src\Laravel\xknote-2\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! F:\VSCode-src\Laravel\xknote-2\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\VSCode-src\xknote\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\VSCode-src\xknote\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ }),

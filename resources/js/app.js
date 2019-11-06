@@ -10,14 +10,18 @@ const router = new VueRouter({
   routes
 });
 
-window.nThis = {};
+const init = async () => {
+  await store.dispatch("note/loadCloudFolders");
+  await store.dispatch("note/loadLocalNotes");
+  window.vm = new Vue({
+    el: "#app",
+    components: {
+      App
+    },
+    template: "<App/>",
+    router,
+    store
+  });
+};
 
-window.vm = new Vue({
-  el: "#app",
-  components: {
-    App
-  },
-  template: "<App/>",
-  router,
-  store
-});
+init();

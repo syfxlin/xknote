@@ -16,10 +16,18 @@ const getters = {};
 
 const actions = {
   showToast({ commit, state }, toast) {
+    let t = document.querySelector(".toast");
+    t.style.visibility = "visible";
+    t.style.opacity = "1";
     commit(types.SHOW, { message: toast.message, status: toast.status });
   },
   hideToast({ commit, state }) {
     return new Promise((resolve, reject) => {
+      let t = document.querySelector(".toast");
+      setTimeout(() => {
+        t.style.visibility = "hidden";
+      }, 500);
+      t.style.opacity = "0";
       commit(types.HIDE);
       resolve();
     });

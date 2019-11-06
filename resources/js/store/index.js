@@ -1,12 +1,13 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import note, { syncActions as syncNote } from './modules/note';
-import toast from './modules/toast';
-import db from './modules/db';
-import tools from './modules/tools';
-import conf from './modules/conf';
+import Vue from "vue";
+import Vuex from "vuex";
+import note, { syncActions as syncNote } from "./modules/note";
+import toast from "./modules/toast";
+import db from "./modules/db";
+import tools from "./modules/tools";
+import conf from "./modules/conf";
+import other from "./modules/other";
 
-import { dispatchSync } from './syncActions';
+import { dispatchSync } from "./syncActions";
 
 Vue.use(Vuex);
 
@@ -16,7 +17,8 @@ const store = new Vuex.Store({
     toast,
     db,
     tools,
-    conf
+    conf,
+    other
   }
 });
 
@@ -27,7 +29,7 @@ export const syncActions = {
 for (const nKey in syncActions) {
   let getters = {};
   for (const gKey of Object.keys(store.getters)) {
-    let k = gKey.split('/');
+    let k = gKey.split("/");
     if (k[0] === nKey) {
       Object.defineProperty(getters, k[1], {
         get() {
@@ -41,14 +43,14 @@ for (const nKey in syncActions) {
       state: store.state[nKey],
       rootState: store.state,
       commit: function(type, payload = null, options = null) {
-        store.commit(nKey + '/' + type, payload, options);
+        store.commit(nKey + "/" + type, payload, options);
       }.bind(store),
       dispatch: function(type, payload = null, options = { root: false }) {
-        let t = options.root ? type : nKey + '/' + type;
+        let t = options.root ? type : nKey + "/" + type;
         return store.dispatch(t, payload);
       }.bind(store),
       dispatchSync: function(type, payload = null, options = { root: false }) {
-        let t = options.root ? type : nKey + '/' + type;
+        let t = options.root ? type : nKey + "/" + type;
         return dispatchSync(t, payload);
       }.bind(store),
       rootGetters: store.getters,

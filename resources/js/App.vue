@@ -3,10 +3,6 @@
     <transition name="fade" mode="out-in">
       <router-view ref="children"></router-view>
     </transition>
-    <div :class="'toast toast-' + toast.status">
-      <button class="btn btn-clear float-right"></button>
-      <p>{{ toast.message }}</p>
-    </div>
   </main>
 </template>
 
@@ -16,18 +12,16 @@ import { mapState, mapActions, mapGetters } from "vuex";
 import { mapSyncActions } from "./store/syncActions";
 export default {
   name: "App",
-  async created() {
+  created() {
     // 当打开note中的时候防止更改
     window.xknoteOpenedChangeFlag = true;
     // 是否是通过输入URL引发的query变动
     window.inputQueryChangeFlag = true;
-    await this.loadCloudFolders();
   },
   data() {
     return {};
   },
   mounted() {
-    this.loadLocalNotes();
     window.xknote = {};
   },
   computed: {
@@ -44,9 +38,6 @@ export default {
       "setXknoteOpened",
       "prevRouter"
     ]),
-    ...mapState({
-      toast: state => state.toast
-    }),
     ...mapGetters("note", ["getReData"])
   },
   methods: {
@@ -120,18 +111,6 @@ export default {
         this.loadPathNote({ path: this.$route.query.note, mode: mode });
       }
       window.inputQueryChangeFlag = true;
-    },
-    "toast.show": function(val) {
-      let toast = document.querySelector(".toast");
-      if (val) {
-        toast.style.visibility = "visible";
-        toast.style.opacity = "1";
-      } else {
-        setTimeout(() => {
-          toast.style.visibility = "hidden";
-        }, 500);
-        toast.style.opacity = "0";
-      }
     }
   }
 };

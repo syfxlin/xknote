@@ -40,7 +40,6 @@
               :info="item"
               :storage="'cloud'"
               :mode="'read'"
-              :openNote="openNote"
             />
             <template v-if="cloudList.length===0">
               <div class="loading loading-lg"></div>
@@ -50,13 +49,7 @@
           <li v-show="xknoteTab==='local'" class="local-tab">
             <ul class="menu menu-nav">
               <li class="menu-item" v-for="item in localList" :key="item.id">
-                <note-item
-                  :info="item"
-                  :status="item.status"
-                  :storage="'local'"
-                  :mode="'read'"
-                  :openNote="openNote"
-                />
+                <note-item :info="item" :status="item.status" :storage="'local'" :mode="'read'" />
               </li>
               <div class="text-gray text-center" v-if="localList.length===0">这里什么都没有哦（￣︶￣）↗</div>
             </ul>
@@ -84,7 +77,7 @@ export default {
     "note-item": noteItem,
     "folder-item": folderItem
   },
-  props: ["openNote", "loadFirstNote"],
+  props: [],
   data() {
     return {
       xknoteTab: "toc",
@@ -96,7 +89,7 @@ export default {
     ...mapState("note", ["cloudList", "localList", "readOpened"])
   },
   methods: {
-    ...mapActions("note", ["loadCloudFolders"]),
+    ...mapActions("note", ["loadCloudFolders", "loadFirstNote"]),
     switchTab(tabName) {
       this.xknoteTab = tabName;
     },
@@ -124,9 +117,9 @@ export default {
     }
   },
   mounted() {
-    this.$nextTick(() => {
-      this.loadFirstNote("read");
-      this.watchNote();
+    this.$nextTick(async () => {
+      await this.loadFirstNote("read");
+      await this.watchNote();
       if (!window.toggleToc) {
         window.toggleToc = ele => {
           var display = ele.nextElementSibling.nextElementSibling.style.display;

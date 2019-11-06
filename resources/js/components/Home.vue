@@ -131,7 +131,7 @@
                   />
                 </li>
                 <button
-                  @click="checkLocalStatus"
+                  @click="checkLocalStatus()"
                   class="btn xknote-check-local"
                   title="对比本地笔记和云端笔记的时间差别"
                 >检查状态</button>
@@ -365,9 +365,18 @@
                 <td>{{ item.updated_at_c }}</td>
                 <td>
                   <div class="btn-group btn-group-block">
-                    <button class="btn" @click="checkLocalOperate('keepLocal', index)">保留本地</button>
-                    <button class="btn" @click="checkLocalOperate('keepCloud', index)">保留云端</button>
-                    <button class="btn" @click="checkLocalOperate('notOpe', index)">不操作</button>
+                    <button
+                      class="btn"
+                      @click="checkLocalOperate({operate: 'keepLocal', index: index})"
+                    >保留本地</button>
+                    <button
+                      class="btn"
+                      @click="checkLocalOperate({operate: 'keepCloud', index: index})"
+                    >保留云端</button>
+                    <button
+                      class="btn"
+                      @click="checkLocalOperate({operate: 'notOpe', index: index})"
+                    >不操作</button>
                   </div>
                 </td>
               </tr>
@@ -503,6 +512,10 @@
           </div>
         </template>
       </modal>
+      <div :class="'toast toast-' + toast.status">
+        <button class="btn btn-clear float-right"></button>
+        <p>{{ toast.message }}</p>
+      </div>
     </div>
   </main>
 </template>
@@ -551,10 +564,12 @@ export default {
       "xknoteTab",
       "readOpened",
       "currBadgeCount",
-
       "localBadgeCount"
     ]),
-    ...mapState("tools", ["smModal", "lgModal", "floatMenu"])
+    ...mapState("tools", ["smModal", "lgModal", "floatMenu"]),
+    ...mapState({
+      toast: state => state.toast
+    })
   },
   methods: {
     ...mapActions("note", [
@@ -585,6 +600,11 @@ export default {
       "setSaveAndClose"
     ]),
     ...mapActions("conf", ["configOperate"]),
+    ...mapActions("other", [
+      "gitOperate",
+      "checkLocalOperate",
+      "checkLocalStatus"
+    ]),
     ...mapSyncActions("note", ["listOperate"]),
     logout() {
       window.axios.post("/logout").then(function() {
@@ -1035,7 +1055,7 @@ export default {
       // folderItem专有操作
       if (type === "folder") {
         if (operate.indexOf("git") === 0) {
-          this.gitOperate(operate, path);
+          this.gitOperate({ operate: operate, path: path });
         }
       }
     },
@@ -1354,7 +1374,10 @@ export default {
       }
       if (operate.indexOf("git") === 0) {
         let path = this.xknoteOpened.path;
-        this.gitOperate(operate, path.substring(0, path.indexOf("/", 1)));
+        this.gitOperate({
+          operate: operate,
+          path: path.substring(0, path.indexOf("/", 1))
+        });
       }
       if (operate === "saveLocal" || operate === "saveCloud") {
         this.setSaveAndClose(false);
@@ -1387,305 +1410,6 @@ export default {
       // TODO: 导出阅读模式的HTML
       if (operate === "logout") {
         this.logout();
-      }
-    },
-    checkLocalStatus() {
-      document.querySelector(".xknote-check-local").classList.add("loading");
-      window.axios
-        .post("/api/notes/check", {
-          check_list: Object.keys(this.localList)
-        })
-        .then(res => {
-          let data = {};
-          for (let key in this.localList) {
-            data[this.localList[key].path] = {
-              name: this.localList[key].name,
-              path: this.localList[key].path,
-              created_at_l: this.localList[key].note.created_at,
-              updated_at_l: this.localList[key].note.updated_at,
-              created_at_c: res.data.check_list[key].created_at,
-              updated_at_c: res.data.check_list[key].updated_at
-            };
-          }
-          this.setLgModalData(data);
-          this.showLgModal({
-            title: "检查状态",
-            content: "CheckLocalStatus",
-            confirm: () => {
-              this.hideLgModal();
-            },
-            cancel: () => {
-              this.hideLgModal();
-            }
-          });
-          document
-            .querySelector(".xknote-check-local")
-            .classList.remove("loading");
-        });
-    },
-    checkLocalOperate(operate, index) {
-      let path = this.lgModal.data[index].path;
-      if (operate === "keepLocal") {
-        this.noteOperate({
-          operate: "read",
-          storage: "local",
-          noteInfo: { path: path }
-        }).then(data => {
-          this.noteOperate({
-            operate: "save",
-            storage: "cloud",
-            noteInfo: data
-          }).then(() => {
-            this.localList[path].status = "C";
-            //TODO: 修改使用action修改
-            // this.$delete(this.lgModal.data, index);
-            this.delLgModalData(index);
-            // 将更新后的状态保存到本地
-            this.noteOperate({
-              operate: "save",
-              storage: "local",
-              noteInfo: this.localList[path]
-            });
-          });
-        });
-      }
-      if (operate === "keepCloud") {
-        this.noteOperate({
-          operate: "read",
-          storage: "cloud",
-          noteInfo: { path: path }
-        }).then(data => {
-          this.noteOperate({
-            operate: "save",
-            storage: "local",
-            noteInfo: data
-          }).then(() => {
-            this.localList[path].status = "C";
-            // this.$delete(this.lgModal.data, index);
-            this.delLgModalData(index);
-          });
-        });
-      }
-      if (operate === "notOpe") {
-        this.delLgModalData(index);
-      }
-    },
-    gitOperate(operate, path) {
-      if (operate === "gitPull") {
-        this.folderOperate({ operate: operate, folderInfo: { path: path } })
-          .then(() => {
-            this.timeToast({
-              message: "Git Pull成功！",
-              status: "success",
-              delay: 1000
-            });
-          })
-          .catch(error => {
-            this.timeToast({
-              message: "Git Pull失败，请重试！",
-              status: "error",
-              delay: 1000
-            });
-          });
-      }
-      if (operate === "gitPush") {
-        this.folderOperate({ operate: operate, folderInfo: { path: path } })
-          .then(() => {
-            this.timeToast({
-              message: "Git Push成功！",
-              status: "success",
-              delay: 1000
-            });
-          })
-          .catch(error => {
-            this.timeToast({
-              message: "Git Push失败，请重试！",
-              status: "error",
-              delay: 1000
-            });
-          });
-      }
-      if (operate === "gitPushForce") {
-        this.folderOperate({ operate: operate, folderInfo: { path: path } })
-          .then(() => {
-            this.timeToast({
-              message: "Git Push成功！",
-              status: "success",
-              delay: 1000
-            });
-          })
-          .catch(error => {
-            this.timeToast({
-              message: "Git Push失败，请重试！",
-              status: "error",
-              delay: 1000
-            });
-          });
-      }
-      if (operate === "gitInitClone") {
-        let modal = {};
-        modal.content = "GitInitClone";
-        modal.title = "Git InitClone";
-        let wTimeout = null;
-        let watch = () => {
-          if (wTimeout) {
-            clearTimeout(wTimeout);
-          }
-          wTimeout = setTimeout(() => {
-            this.setLgModalData({
-              ...this.lgModal.data,
-              status: "loading"
-            });
-            this.folderOperate({
-              operate: "exist",
-              folderInfo: {
-                path: this.lgModal.data.foldername + "/.git"
-              }
-            }).then(data => {
-              if (data.exist) {
-                this.setLgModalData({
-                  ...this.lgModal.data,
-                  status: "error"
-                });
-              } else {
-                this.setLgModalData({
-                  ...this.lgModal.data,
-                  status: ""
-                });
-              }
-            });
-          }, 500);
-        };
-        let uwFolderName = this.$watch("lgModal.data.foldername", watch);
-        modal.confirm = () => {
-          if (
-            !this.lgModal.data.foldername ||
-            !this.lgModal.data.repo ||
-            !this.lgModal.data.init_or_clone ||
-            this.lgModal.data.status !== ""
-          ) {
-            return;
-          }
-          document
-            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-            .classList.add("loading");
-          let git_user = {};
-          if (
-            this.lgModal.data.git_name &&
-            this.lgModal.data.git_email &&
-            this.lgModal.data.git_password
-          ) {
-            git_user = {
-              git_name: this.lgModal.data.git_name,
-              git_email: this.lgModal.data.git_email,
-              git_password: this.lgModal.data.git_password
-            };
-          }
-          this.folderOperate({
-            operate:
-              this.lgModal.data.init_or_clone === "init"
-                ? "gitInit"
-                : "gitClone",
-            folderInfo: {
-              path: this.lgModal.data.foldername,
-              repo: this.lgModal.data.repo,
-              git_user: git_user
-            }
-          }).then(() => {
-            document
-              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-              .classList.remove("loading");
-            this.lgModal.cancel();
-            this.timeToast({
-              message: "Git Init或Clone成功！",
-              status: "success",
-              delay: 1000
-            });
-          });
-        };
-        modal.cancel = () => {
-          uwFolderName();
-          this.hideLgModal();
-        };
-        this.showLgModal(modal);
-      }
-      if (operate === "gitConfig") {
-        let modal = {};
-        modal.title = "Git设置";
-        modal.content = "GitItemConfig";
-        this.setLgModalData({
-          ...this.lgModal.data,
-          status: "loading"
-        });
-        this.folderOperate({
-          operate: "getGitConfig",
-          folderInfo: { path: path }
-        })
-          .then(info => {
-            this.setLgModalData({
-              ...this.lgModal.data,
-              status: "",
-              repo: info.repo,
-              git_name: info.git_name,
-              git_email: info.git_email
-            });
-          })
-          .catch(error => {
-            this.timeToast({
-              message: "获取信息失败！",
-              status: "error",
-              delay: 1000
-            });
-            this.setLgModalData({
-              ...this.lgModal.data,
-              status: ""
-            });
-          });
-        modal.confirm = () => {
-          if (
-            !this.lgModal.data.git_name ||
-            !this.lgModal.data.git_email ||
-            !this.lgModal.data.git_password ||
-            this.lgModal.data.status !== ""
-          ) {
-            return;
-          }
-          document
-            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-            .classList.add("loading");
-          this.folderOperate({
-            operate: "setGitConfig",
-            folderInfo: {
-              repo: this.lgModal.data.repo,
-              git_name: this.lgModal.data.git_name,
-              git_email: this.lgModal.data.git_email,
-              git_password: this.lgModal.data.git_password,
-              path: path
-            }
-          })
-            .then(() => {
-              document
-                .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-                .classList.remove("loading");
-              this.lgModal.cancel();
-              this.timeToast({
-                message: "设置成功！",
-                status: "success",
-                delay: 1000
-              });
-            })
-            .catch(error => {
-              this.timeToast({
-                message: "设置失败，请重试！",
-                status: "error",
-                delay: 1000
-              });
-            });
-        };
-        modal.cancel = () => {
-          this.hideLgModal();
-        };
-        this.showLgModal(modal);
       }
     }
   },
