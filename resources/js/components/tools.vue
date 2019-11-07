@@ -17,322 +17,15 @@
     </ul>
     <modal :data="smModal" :size="'sm'">{{ smModal.content }}</modal>
     <modal :data="lgModal" :size="'lg'">
-      <template v-if="lgModal.content==='CreateNote'">
-        <div class="form-horizontal">
-          <div class="form-group">
-            <div class="col-3 col-sm-12">
-              <label class="form-label">文档名</label>
-            </div>
-            <div class="col-9 col-sm-12 has-icon-right">
-              <input
-                :class="'form-input' + (lgModal.data.status === 'error' ? ' is-error' : '')"
-                type="text"
-                v-model="lgModal.data.filename"
-                required
-              />
-              <i :class="'form-icon icon' + (lgModal.data.status === 'loading' ? ' loading' : '')"></i>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-3 col-sm-12">
-              <label class="form-label">标题</label>
-            </div>
-            <div class="col-9 col-sm-12">
-              <input class="form-input" type="text" v-model="lgModal.data.title" required />
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-3 col-sm-12">
-              <label class="form-label">云端/本地</label>
-            </div>
-            <div class="col-9 col-sm-12">
-              <select class="form-select" v-model="lgModal.data.storage" required>
-                <option value="cloud">云端</option>
-                <option value="local">本地</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-3 col-sm-12">
-              <label class="form-label">存放的文件夹</label>
-            </div>
-            <div class="col-9 col-sm-12">
-              <input class="form-input" type="text" v-model="lgModal.data.select" required />
-              <div v-if="!lgModal.data.folders">
-                <div class="loading"></div>
-                <div class="text-gray text-center">正在加载，客官莫急。</div>
-              </div>
-              <template v-else>
-                <hr />
-                <only-folder-item
-                  v-for="item in lgModal.data.folders"
-                  :key="item.id"
-                  :info="item"
-                  :lgModal="lgModal"
-                />
-              </template>
-            </div>
-          </div>
-        </div>
-      </template>
-      <template v-if="lgModal.content==='CreateFolder'">
-        <div class="form-horizontal">
-          <div class="form-group">
-            <div class="col-3 col-sm-12">
-              <label class="form-label">文件夹名</label>
-            </div>
-            <div class="col-9 col-sm-12 has-icon-right">
-              <input
-                :class="'form-input' + (lgModal.data.status === 'error' ? ' is-error' : '')"
-                type="text"
-                v-model="lgModal.data.foldername"
-                required
-              />
-              <i :class="'form-icon icon' + (lgModal.data.status === 'loading' ? ' loading' : '')"></i>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-3 col-sm-12">
-              <label class="form-label">存放的文件夹</label>
-            </div>
-            <div class="col-9 col-sm-12">
-              <input class="form-input" type="text" v-model="lgModal.data.select" required />
-              <div v-if="!lgModal.data.folders">
-                <div class="loading"></div>
-                <div class="text-gray text-center">正在加载，客官莫急。</div>
-              </div>
-              <template v-else>
-                <hr />
-                <only-folder-item
-                  v-for="item in lgModal.data.folders"
-                  :key="item.id"
-                  :info="item"
-                  :lgModal="lgModal"
-                />
-              </template>
-            </div>
-          </div>
-        </div>
-      </template>
+      <create-note v-if="lgModal.content==='CreateNote'"></create-note>
+      <create-folder v-if="lgModal.content==='CreateFolder'"></create-folder>
       <template v-if="lgModal.content==='PersonalCenter'">personalCenter</template>
-      <template v-if="lgModal.content==='UserConfig'">
-        <div class="form-horizontal">
-          <div
-            class="form-group"
-            v-for="(value, key) in $refs.xkeditor.setting.aceSetting"
-            :key="key"
-          >
-            <div class="col-3 col-sm-12">
-              <!-- TODO: 重命名 -->
-              <label class="form-label">{{ settingList[key] }}</label>
-            </div>
-            <div class="col-9 col-sm-12 has-icon-right">
-              <input
-                class="form-input"
-                type="text"
-                v-model="$refs.xkeditor.setting.aceSetting[key]"
-              />
-            </div>
-          </div>
-        </div>
-      </template>
-      <template v-if="lgModal.content==='GitConfig'">
-        <div class="form-horizontal">
-          <div class="form-group">
-            <div class="col-3 col-sm-12">
-              <label class="form-label">Git用户名</label>
-            </div>
-            <div class="col-9 col-sm-12 has-icon-right">
-              <input class="form-input" type="text" v-model="lgModal.data.git_name" required />
-              <i :class="'form-icon icon' + (lgModal.data.status === 'loading' ? ' loading' : '')"></i>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-3 col-sm-12">
-              <label class="form-label">Git邮箱</label>
-            </div>
-            <div class="col-9 col-sm-12 has-icon-right">
-              <input class="form-input" type="email" v-model="lgModal.data.git_email" required />
-              <i :class="'form-icon icon' + (lgModal.data.status === 'loading' ? ' loading' : '')"></i>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-3 col-sm-12">
-              <label class="form-label">Git密码</label>
-            </div>
-            <div class="col-9 col-sm-12">
-              <input
-                class="form-input"
-                type="password"
-                v-model="lgModal.data.git_password"
-                required
-              />
-            </div>
-          </div>
-        </div>
-      </template>
+      <user-config v-if="lgModal.content==='UserConfig'"></user-config>
+      <git-config v-if="lgModal.content==='GitConfig'"></git-config>
       <template v-if="lgModal.content==='SystemSetting'">systemSetting</template>
-      <template v-if="lgModal.content==='CheckLocalStatus'">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>文件名</th>
-              <th>路径</th>
-              <th>创建时间(本地)</th>
-              <th>更新时间(本地))</th>
-              <th>创建时间(云端)</th>
-              <th>更新时间(云端)</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item, index) in lgModal.data" :key="index">
-              <td>{{ item.name }}</td>
-              <td>{{ item.path }}</td>
-              <td>{{ item.created_at_l }}</td>
-              <td>{{ item.updated_at_l }}</td>
-              <td>{{ item.created_at_c }}</td>
-              <td>{{ item.updated_at_c }}</td>
-              <td>
-                <div class="btn-group btn-group-block">
-                  <button
-                    class="btn"
-                    @click="checkLocalOperate({operate: 'keepLocal', index: index})"
-                  >保留本地</button>
-                  <button
-                    class="btn"
-                    @click="checkLocalOperate({operate: 'keepCloud', index: index})"
-                  >保留云端</button>
-                  <button
-                    class="btn"
-                    @click="checkLocalOperate({operate: 'notOpe', index: index})"
-                  >不操作</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </template>
-      <template v-if="lgModal.content==='GitInitClone'">
-        <div class="form-horizontal">
-          <div class="form-group">
-            <div class="col-3 col-sm-12">
-              <label class="form-label">Repo地址</label>
-            </div>
-            <div class="col-9 col-sm-12">
-              <input class="form-input" type="url" v-model="lgModal.data.repo" required />
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-3 col-sm-12">
-              <label class="form-label">文件夹名</label>
-            </div>
-            <div class="col-9 col-sm-12 has-icon-right">
-              <input
-                :class="'form-input' + (lgModal.data.status === 'error' ? ' is-error' : '')"
-                type="text"
-                v-model="lgModal.data.foldername"
-                required
-              />
-              <i :class="'form-icon icon' + (lgModal.data.status === 'loading' ? ' loading' : '')"></i>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-3 col-sm-12">
-              <label class="form-label">Init/Clone</label>
-            </div>
-            <div class="col-9 col-sm-12">
-              <select class="form-select" v-model="lgModal.data.init_or_clone" required>
-                <option value="init">Init</option>
-                <option value="clone">Clone</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-3 col-sm-12">
-              <label class="form-label">Git用户名</label>
-            </div>
-            <div class="col-9 col-sm-12">
-              <input
-                class="form-input"
-                type="text"
-                v-model="lgModal.data.git_name"
-                placeholder="若不填写则使用全局默认的配置"
-              />
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-3 col-sm-12">
-              <label class="form-label">Git邮箱</label>
-            </div>
-            <div class="col-9 col-sm-12">
-              <input
-                class="form-input"
-                type="email"
-                v-model="lgModal.data.git_email"
-                placeholder="若不填写则使用全局默认的配置"
-              />
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-3 col-sm-12">
-              <label class="form-label">Git密码</label>
-            </div>
-            <div class="col-9 col-sm-12">
-              <input
-                class="form-input"
-                type="password"
-                v-model="lgModal.data.git_password"
-                placeholder="若不填写则使用全局默认的配置"
-              />
-            </div>
-          </div>
-        </div>
-      </template>
-      <template v-if="lgModal.content==='GitItemConfig'">
-        <div class="form-horizontal">
-          <div class="form-group">
-            <div class="col-3 col-sm-12">
-              <label class="form-label">Repo地址</label>
-            </div>
-            <div class="col-9 col-sm-12 has-icon-right">
-              <input class="form-input" type="url" v-model="lgModal.data.repo" required />
-              <i :class="'form-icon icon' + (lgModal.data.status === 'loading' ? ' loading' : '')"></i>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-3 col-sm-12">
-              <label class="form-label">Git用户名</label>
-            </div>
-            <div class="col-9 col-sm-12 has-icon-right">
-              <input class="form-input" type="text" v-model="lgModal.data.git_name" required />
-              <i :class="'form-icon icon' + (lgModal.data.status === 'loading' ? ' loading' : '')"></i>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-3 col-sm-12">
-              <label class="form-label">Git邮箱</label>
-            </div>
-            <div class="col-9 col-sm-12 has-icon-right">
-              <input class="form-input" type="email" v-model="lgModal.data.git_email" required />
-              <i :class="'form-icon icon' + (lgModal.data.status === 'loading' ? ' loading' : '')"></i>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-3 col-sm-12">
-              <label class="form-label">Git密码</label>
-            </div>
-            <div class="col-9 col-sm-12">
-              <input
-                class="form-input"
-                type="password"
-                v-model="lgModal.data.git_password"
-                required
-              />
-            </div>
-          </div>
-        </div>
-      </template>
+      <check-local-status v-if="lgModal.content==='CheckLocalStatus'"></check-local-status>
+      <git-init-clone v-if="lgModal.content==='GitInitClone'"></git-init-clone>
+      <git-item-config v-if="lgModal.content==='GitItemConfig'"></git-item-config>
     </modal>
     <div :class="'toast toast-' + toast.status">
       <button class="btn btn-clear float-right"></button>
@@ -342,14 +35,26 @@
 </template>
 
 <script>
-import onlyFolderItem from "./onlyFolderItem";
-import modal from "./modal";
+import CreateNote from "./modal/CreateNote";
+import CreateFolder from "./modal/CreateFolder";
+import UserConfig from "./modal/UserConfig";
+import GitConfig from "./modal/GitConfig";
+import CheckLocalStatus from "./modal/CheckLocalStatus";
+import GitInitClone from "./modal/GitInitClone";
+import GitItemConfig from "./modal/GitItemConfig";
+import Modal from "./Modal";
 import { mapState, mapActions } from "vuex";
 export default {
   name: "tools",
   components: {
-    "only-folder-item": onlyFolderItem,
-    modal
+    "create-note": CreateNote,
+    "create-folder": CreateFolder,
+    "user-config": UserConfig,
+    "git-config": GitConfig,
+    "check-local-status": CheckLocalStatus,
+    "git-init-clone": GitInitClone,
+    "git-item-config": GitItemConfig,
+    modal: Modal
   },
   computed: {
     ...mapState("tools", ["smModal", "lgModal", "floatMenu"]),
@@ -358,8 +63,7 @@ export default {
     })
   },
   methods: {
-    ...mapActions("menu", ["floatMenuOperate"]),
-    ...mapActions("other", ["checkLocalOperate"])
+    ...mapActions("menu", ["floatMenuOperate"])
   }
 };
 </script>

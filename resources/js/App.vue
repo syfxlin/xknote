@@ -8,14 +8,14 @@
 </template>
 
 <script>
-import tools from "./components/tools";
+import Tools from "./components/Tools";
 import "./assets/style.css";
 import { mapState, mapActions } from "vuex";
 import { mapSyncActions } from "./store/syncActions";
 export default {
   name: "App",
   components: {
-    tools
+    tools: Tools
   },
   created() {
     // 当打开note中的时候防止更改

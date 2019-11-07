@@ -64,8 +64,8 @@
 </template>
 
 <script>
-import noteItem from "./noteItem.vue";
-import folderItem from "./folderItem.vue";
+import NoteItem from "./NoteItem";
+import FolderItem from "./FolderItem";
 import {
   toHtml,
   getTocHtml
@@ -74,8 +74,8 @@ import { mapState, mapActions } from "vuex";
 export default {
   name: "read-mode",
   components: {
-    "note-item": noteItem,
-    "folder-item": folderItem
+    "note-item": NoteItem,
+    "folder-item": FolderItem
   },
   props: [],
   data() {

@@ -70,9 +70,7 @@
       </section>
     </header>
     <div class="columns">
-      <transition name="fade" mode="out-in">
-        <sidebar></sidebar>
-      </transition>
+      <sidebar></sidebar>
       <section :class="'column ' + (!writeMode ? 'col-10' : 'col-12')" id="xknote-editor">
         <xk-editor
           :settingProps="userSetting"
@@ -94,16 +92,16 @@
 <script>
 import { mapState, mapActions, mapGetters } from "vuex";
 import XK_Editor from "xkeditor";
-import dropdown from "./dropdown";
-import sidebar from "./sidebar";
+import Dropdown from "./Dropdown";
+import Sidebar from "./Sidebar";
 import iSettingList from "../utils/settingList";
 import dropdownList from "../utils/dropdownList";
 export default {
   name: "home",
   components: {
     "xk-editor": XK_Editor,
-    dropdown,
-    sidebar
+    dropdown: Dropdown,
+    sidebar: Sidebar
   },
   props: [],
   data() {

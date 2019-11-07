@@ -33,11 +33,14 @@
 </template>
 
 <script>
-import noteItem from "./noteItem.vue";
+import NoteItem from "./NoteItem";
 import { mapActions } from "vuex";
 export default {
   name: "folder-item",
   props: ["info", "storage", "mode"],
+  components: {
+    "note-item": NoteItem
+  },
   data() {
     return {
       idHash: Math.random()
@@ -112,9 +115,7 @@ export default {
       }
     }
   },
-  components: {
-    "note-item": noteItem
-  },
+
   methods: {
     ...mapActions("tools", ["showFloatMenu", "hideFloatMenu"]),
     showFolderSetting(e) {
