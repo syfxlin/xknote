@@ -3,6 +3,11 @@ const state = {};
 const getters = {};
 
 const actions = {
+  logout() {
+    window.axios.post("/logout").then(function() {
+      window.location.href = "/";
+    });
+  },
   gitOperate({ dispatch, rootState }, { operate, path }) {
     if (operate === "gitPull") {
       dispatch(
@@ -145,7 +150,7 @@ const actions = {
         }, 500);
       };
       let uwFolderName = this.watch(state => {
-        state.tools.lgModal.data.foldername;
+        return state.tools.lgModal.data.foldername;
       }, watch);
       modal.confirm = () => {
         if (
