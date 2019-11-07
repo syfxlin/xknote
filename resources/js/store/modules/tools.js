@@ -6,7 +6,9 @@ const types = {
   SET_LG_MODAL_DATA: 'SET_LG_MODAL_DATA',
   DEL_LG_MODAL_DATA: 'DEL_LG_MODAL_DATA',
   SET_FLOAT_MENU: 'SET_FLOAT_MENU',
-  SET_SAVE_AND_CLOSE: 'SET_SAVE_AND_CLOSE'
+  SET_SAVE_AND_CLOSE: 'SET_SAVE_AND_CLOSE',
+  SET_WRITE_MODE: 'SET_WRITE_MODE',
+  SET_SHOW_SIDEBAR: 'SET_SHOW_SIDEBAR'
 };
 
 const state = {
@@ -31,7 +33,9 @@ const state = {
     items: [],
     data: {},
     saveAndClose: true
-  }
+  },
+  writeMode: false,
+  showSidebar: false
 };
 
 const getters = {};
@@ -83,6 +87,18 @@ const actions = {
   },
   setSaveAndClose({ commit }, saveAndClose) {
     commit(types.SET_SAVE_AND_CLOSE, saveAndClose);
+  },
+  switchWriteMode({ commit, state }, writeMode = null) {
+    if (writeMode === state.writeMode) return;
+    commit(
+      types.SET_WRITE_MODE,
+      writeMode === null ? !state.writeMode : writeMode
+    );
+    window.XKEditor.switchTypewriter();
+    window.XKEditor.switchPreview();
+  },
+  switchShowSidebar({ commit, state }, show = null) {
+    commit(types.SET_SHOW_SIDEBAR, show === null ? !state.showSidebar : show);
   }
 };
 
@@ -105,6 +121,12 @@ const mutations = {
   },
   [types.SET_SAVE_AND_CLOSE](state, saveAndClose) {
     state.floatMenu.saveAndClose = saveAndClose;
+  },
+  [types.SET_WRITE_MODE](state, mode) {
+    state.writeMode = mode;
+  },
+  [types.SET_SHOW_SIDEBAR](state, show) {
+    state.showSidebar = show;
   }
 };
 

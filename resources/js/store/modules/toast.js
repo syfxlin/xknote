@@ -1,14 +1,14 @@
 const types = {
-  SHOW: "SHOW",
-  HIDE: "HIDE",
-  SHIFT_LIST: "SHIFT_LIST",
-  PUSH_LIST: "PUSH_LIST"
+  SHOW: 'SHOW',
+  HIDE: 'HIDE',
+  SHIFT_LIST: 'SHIFT_LIST',
+  PUSH_LIST: 'PUSH_LIST'
 };
 
 const state = {
   show: false,
-  message: "",
-  status: "",
+  message: '',
+  status: '',
   toastList: []
 };
 
@@ -16,18 +16,18 @@ const getters = {};
 
 const actions = {
   showToast({ commit, state }, toast) {
-    let t = document.querySelector(".toast");
-    t.style.visibility = "visible";
-    t.style.opacity = "1";
+    let t = document.querySelector('.toast');
+    t.style.visibility = 'visible';
+    t.style.opacity = '1';
     commit(types.SHOW, { message: toast.message, status: toast.status });
   },
   hideToast({ commit, state }) {
     return new Promise((resolve, reject) => {
-      let t = document.querySelector(".toast");
+      let t = document.querySelector('.toast');
       setTimeout(() => {
-        t.style.visibility = "hidden";
+        t.style.visibility = 'hidden';
       }, 500);
-      t.style.opacity = "0";
+      t.style.opacity = '0';
       commit(types.HIDE);
       resolve();
     });
@@ -36,11 +36,11 @@ const actions = {
     return new Promise((resolve, reject) => {
       let toast = state.toastList[0];
       commit(types.SHIFT_LIST);
-      dispatch("showToast", { message: toast.message, status: toast.status });
+      dispatch('showToast', { message: toast.message, status: toast.status });
       setTimeout(() => {
-        dispatch("hideToast").then(() => {
+        dispatch('hideToast').then(() => {
           if (state.toastList.length !== 0) {
-            dispatch("popToast").then(() => {
+            dispatch('popToast').then(() => {
               resolve();
             });
           }
@@ -55,7 +55,7 @@ const actions = {
       delay: toast.delay
     });
     if (state.toastList.length === 1) {
-      dispatch("popToast");
+      dispatch('popToast');
     }
   }
 };

@@ -1,4 +1,4 @@
-let settingList = {
+const settingList = {
   theme: '主题',
   keyboardHandler: '快捷键绑定',
   fontSize: '字体大小',

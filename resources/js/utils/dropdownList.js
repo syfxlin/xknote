@@ -1,4 +1,4 @@
-var navBarListC = [
+const navBarListC = [
   {
     mainItem: {
       name: '云端保存',

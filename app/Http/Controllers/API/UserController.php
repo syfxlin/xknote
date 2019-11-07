@@ -89,7 +89,8 @@ class UserController extends Controller
 
     public function getConfig(Request $request)
     {
-        return UserModel::getConfig($request->user()->id);
+        $id = $request->user()->id;
+        return ['error' => false, 'config' => UserModel::getConfig($id)];
     }
 
     public function setConfig(Request $request)

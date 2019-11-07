@@ -89,7 +89,7 @@ export default {
     ...mapState("note", ["cloudList", "localList", "readOpened"])
   },
   methods: {
-    ...mapActions("note", ["loadCloudFolders", "loadFirstNote"]),
+    ...mapActions("note", ["loadFirstNote"]),
     switchTab(tabName) {
       this.xknoteTab = tabName;
     },
