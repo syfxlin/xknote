@@ -94,7 +94,6 @@ import { mapState, mapActions, mapGetters } from "vuex";
 import XK_Editor from "xkeditor";
 import Dropdown from "./Dropdown";
 import Sidebar from "./Sidebar";
-import iSettingList from "../utils/settingList";
 import dropdownList from "../utils/dropdownList";
 export default {
   name: "home",
@@ -106,7 +105,6 @@ export default {
   props: [],
   data() {
     return {
-      settingList: iSettingList,
       navBarListC: dropdownList.navBarListC,
       navBarListR: dropdownList.navBarListR,
       loadedEditor: false

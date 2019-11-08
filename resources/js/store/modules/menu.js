@@ -782,7 +782,6 @@ const actions = {
             { root: true }
           );
         });
-        dispatch('tools/showLgModal', modal, { root: true });
       }
       if (modal.content === 'CreateFolder') {
         modal.title = '新建文件夹';
@@ -917,7 +916,6 @@ const actions = {
             { root: true }
           );
         });
-        dispatch('tools/showLgModal', modal, { root: true });
       }
       if (modal.content === 'GitConfig') {
         modal.title = 'Git设置';
@@ -1022,8 +1020,24 @@ const actions = {
         modal.cancel = () => {
           dispatch('tools/hideLgModal', null, { root: true });
         };
-        dispatch('tools/showLgModal', modal, { root: true });
       }
+      if (modal.content === 'UserConfig') {
+        modal.title = '用户设置';
+        modal.confirm = () => {
+          dispatch(
+            'conf/configOperate',
+            {
+              operate: 'setUserConfig',
+              config: rootState.conf.userConfig
+            },
+            { root: true }
+          );
+        };
+        modal.cancel = () => {
+          dispatch('tools/hideLgModal', null, { root: true });
+        };
+      }
+      dispatch('tools/showLgModal', modal, { root: true });
     }
     if (operate.indexOf('git') === 0) {
       let path = rootState.note.xknoteOpened.path;

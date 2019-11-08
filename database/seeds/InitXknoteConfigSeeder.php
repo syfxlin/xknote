@@ -25,12 +25,5 @@ class InitXknoteConfigSeeder extends Seeder
                 'config_value' => $value
             ]);
         }
-        $user_config_ex = json_decode(Storage::get('other_setting.json'), true);
-        DB::table('user_config')->insert([
-            'uid' => -1,
-            'tinymce_setting' => json_encode($user_config_ex['tinymceSetting']),
-            'ace_setting' => json_encode($user_config_ex['aceSetting']),
-            'xk_setting' => json_encode($user_config_ex['xkSetting'])
-        ]);
     }
 }

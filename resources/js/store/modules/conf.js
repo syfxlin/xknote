@@ -11,18 +11,18 @@ const state = {
 const getters = {
   userSetting(state) {
     return {
-      tinymceSetting: Object.assign(
-        state.userConfig.tinymceSetting,
-        otherConfig.tinymceSetting
-      ),
-      aceSetting: Object.assign(
-        state.userConfig.aceSetting,
-        otherConfig.aceSetting
-      ),
-      xkSetting: Object.assign(
-        state.userConfig.xkSetting,
-        otherConfig.xkSetting
-      )
+      tinymceSetting: {
+        ...state.userConfig.tinymceSetting,
+        ...otherConfig.tinymceSetting
+      },
+      aceSetting: {
+        ...state.userConfig.aceSetting,
+        ...otherConfig.aceSetting
+      },
+      xkSetting: {
+        ...state.userConfig.xkSetting,
+        ...otherConfig.xkSetting
+      }
     };
   }
 };
@@ -48,6 +48,17 @@ const actions = {
           })
           .catch(err => {
             console.error(err);
+            reject(err);
+          });
+      }
+      if (operate === 'setUserConfig') {
+        window.axios
+          .put('/api/user/conf', { ...config })
+          .then(res => {
+            resolve(res.data);
+          })
+          .catch(err => {
+            console.log(err);
             reject(err);
           });
       }

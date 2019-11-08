@@ -11774,8 +11774,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var xkeditor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! xkeditor */ "./node_modules/xkeditor/src/index.js");
 /* harmony import */ var _Dropdown__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Dropdown */ "./resources/js/components/Dropdown.vue");
 /* harmony import */ var _Sidebar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Sidebar */ "./resources/js/components/Sidebar.vue");
-/* harmony import */ var _utils_settingList__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/settingList */ "./resources/js/utils/settingList.js");
-/* harmony import */ var _utils_dropdownList__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/dropdownList */ "./resources/js/utils/dropdownList.js");
+/* harmony import */ var _utils_dropdownList__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/dropdownList */ "./resources/js/utils/dropdownList.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -11878,7 +11877,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
-
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "home",
   components: {
@@ -11889,9 +11887,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   props: [],
   data: function data() {
     return {
-      settingList: _utils_settingList__WEBPACK_IMPORTED_MODULE_4__["default"],
-      navBarListC: _utils_dropdownList__WEBPACK_IMPORTED_MODULE_5__["default"].navBarListC,
-      navBarListR: _utils_dropdownList__WEBPACK_IMPORTED_MODULE_5__["default"].navBarListR,
+      navBarListC: _utils_dropdownList__WEBPACK_IMPORTED_MODULE_4__["default"].navBarListC,
+      navBarListR: _utils_dropdownList__WEBPACK_IMPORTED_MODULE_4__["default"].navBarListR,
       loadedEditor: false
     };
   },
@@ -13031,6 +13028,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _utils_settingList__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/settingList */ "./resources/js/utils/settingList.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -13045,8 +13050,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "user-config"
+  label: "user-config",
+  data: function data() {
+    return {
+      settingList: _utils_settingList__WEBPACK_IMPORTED_MODULE_1__["default"]
+    };
+  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])("conf", ["userConfig"]))
 });
 
 /***/ }),
@@ -13158,7 +13194,7 @@ exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader
 
 
 // module
-exports.push([module.i, "\n#app-main {\n  height: 100%;\n}\n", ""]);
+exports.push([module.i, "\n#app-main {\r\n  height: 100%;\n}\r\n", ""]);
 
 // exports
 
@@ -13196,7 +13232,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.read-toc li img {\n  width: 1.05em;\n  display: inline-block;\n  vertical-align: middle;\n  margin-right: 0.4em;\n  padding-top: 0.1em;\n}\n.read-toc li a {\n  font-size: 1.05em;\n  vertical-align: middle;\n}\n.hero-body p {\n  margin: 0;\n}\n.read-sidebar {\n  top: 0;\n  right: 0;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n}\n.read-sidebar .xknote-tab-content {\n  margin: 0.8rem 0 0.8rem 1.6rem;\n}\n.read-container {\n  display: flex;\n  flex-direction: column;\n  min-height: 100vh;\n  border-right: 1px solid #ddd;\n}\n.read-header .hero-body {\n  padding: 0.4rem 3rem;\n}\n.read-content {\n  flex: 1;\n  padding: 2rem 3rem;\n}\n.read-footer {\n  padding: 1.5em 0 !important;\n}\n.to-normal-btn {\n  bottom: 1rem;\n  right: 1rem;\n  position: fixed;\n}\n", ""]);
+exports.push([module.i, "\n.read-toc li img {\r\n  width: 1.05em;\r\n  display: inline-block;\r\n  vertical-align: middle;\r\n  margin-right: 0.4em;\r\n  padding-top: 0.1em;\n}\n.read-toc li a {\r\n  font-size: 1.05em;\r\n  vertical-align: middle;\n}\n.hero-body p {\r\n  margin: 0;\n}\n.read-sidebar {\r\n  top: 0;\r\n  right: 0;\r\n  height: 100%;\r\n  display: flex;\r\n  flex-direction: column;\n}\n.read-sidebar .xknote-tab-content {\r\n  margin: 0.8rem 0 0.8rem 1.6rem;\n}\n.read-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  min-height: 100vh;\r\n  border-right: 1px solid #ddd;\n}\n.read-header .hero-body {\r\n  padding: 0.4rem 3rem;\n}\n.read-content {\r\n  flex: 1;\r\n  padding: 2rem 3rem;\n}\n.read-footer {\r\n  padding: 1.5em 0 !important;\n}\n.to-normal-btn {\r\n  bottom: 1rem;\r\n  right: 1rem;\r\n  position: fixed;\n}\r\n", ""]);
 
 // exports
 
@@ -25553,44 +25589,241 @@ var render = function() {
   return _c(
     "div",
     { staticClass: "form-horizontal" },
-    _vm._l(_vm.$refs.xkeditor.setting.aceSetting, function(value, key) {
-      return _c("div", { key: key, staticClass: "form-group" }, [
-        _c("div", { staticClass: "col-3 col-sm-12" }, [
-          _c("label", { staticClass: "form-label" }, [
-            _vm._v(_vm._s(_vm.settingList[key]))
+    [
+      _vm._l(_vm.userConfig, function(config) {
+        return _vm._l(config, function(value, key) {
+          return _c("div", { key: key, staticClass: "form-group" }, [
+            _c("div", { staticClass: "col-3 col-sm-12" }, [
+              _c("label", { staticClass: "form-label" }, [
+                _vm._v(_vm._s(_vm.settingList[key].label))
+              ])
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "col-9 col-sm-12 has-icon-right" },
+              [
+                _vm.settingList[key].type === "select"
+                  ? _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: config[key],
+                            expression: "config[key]"
+                          }
+                        ],
+                        staticClass: "form-select",
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              config,
+                              key,
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          }
+                        }
+                      },
+                      _vm._l(_vm.settingList[key].options, function(item) {
+                        return _c(
+                          "option",
+                          { key: item.id, domProps: { value: item.value } },
+                          [_vm._v(_vm._s(item.label))]
+                        )
+                      }),
+                      0
+                    )
+                  : _vm.settingList[key].type === "radio"
+                  ? _vm._l(_vm.settingList[key].options, function(item) {
+                      return _c(
+                        "label",
+                        { key: item.id, staticClass: "form-radio form-inline" },
+                        [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: config[key],
+                                expression: "config[key]"
+                              }
+                            ],
+                            attrs: { type: "radio", name: key },
+                            domProps: {
+                              value: item.value,
+                              checked: _vm._q(config[key], item.value)
+                            },
+                            on: {
+                              change: function($event) {
+                                return _vm.$set(config, key, item.value)
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("i", { staticClass: "form-icon" }),
+                          _vm._v(
+                            "\n            " +
+                              _vm._s(item.label) +
+                              "\n          "
+                          )
+                        ]
+                      )
+                    })
+                  : _vm.settingList[key].type === "switch"
+                  ? _c("label", { staticClass: "form-switch" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.userConfig.tinymceSetting[key],
+                            expression: "userConfig.tinymceSetting[key]"
+                          }
+                        ],
+                        attrs: { type: "checkbox" },
+                        domProps: {
+                          checked: Array.isArray(
+                            _vm.userConfig.tinymceSetting[key]
+                          )
+                            ? _vm._i(_vm.userConfig.tinymceSetting[key], null) >
+                              -1
+                            : _vm.userConfig.tinymceSetting[key]
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.userConfig.tinymceSetting[key],
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = null,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 &&
+                                  _vm.$set(
+                                    _vm.userConfig.tinymceSetting,
+                                    key,
+                                    $$a.concat([$$v])
+                                  )
+                              } else {
+                                $$i > -1 &&
+                                  _vm.$set(
+                                    _vm.userConfig.tinymceSetting,
+                                    key,
+                                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                  )
+                              }
+                            } else {
+                              _vm.$set(_vm.userConfig.tinymceSetting, key, $$c)
+                            }
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("i", { staticClass: "form-icon" }),
+                      _vm._v(" 开启/关闭\n        ")
+                    ])
+                  : _vm.settingList[key].type === "checkbox"
+                  ? _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: config[key],
+                          expression: "config[key]"
+                        }
+                      ],
+                      staticClass: "form-input",
+                      attrs: { type: "checkbox" },
+                      domProps: {
+                        checked: Array.isArray(config[key])
+                          ? _vm._i(config[key], null) > -1
+                          : config[key]
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = config[key],
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = null,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                _vm.$set(config, key, $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                _vm.$set(
+                                  config,
+                                  key,
+                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                )
+                            }
+                          } else {
+                            _vm.$set(config, key, $$c)
+                          }
+                        }
+                      }
+                    })
+                  : _vm.settingList[key].type === "radio"
+                  ? _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: config[key],
+                          expression: "config[key]"
+                        }
+                      ],
+                      staticClass: "form-input",
+                      attrs: { type: "radio" },
+                      domProps: { checked: _vm._q(config[key], null) },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(config, key, null)
+                        }
+                      }
+                    })
+                  : _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: config[key],
+                          expression: "config[key]"
+                        }
+                      ],
+                      staticClass: "form-input",
+                      attrs: { type: _vm.settingList[key].type },
+                      domProps: { value: config[key] },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(config, key, $event.target.value)
+                        }
+                      }
+                    })
+              ],
+              2
+            )
           ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-9 col-sm-12 has-icon-right" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.$refs.xkeditor.setting.aceSetting[key],
-                expression: "$refs.xkeditor.setting.aceSetting[key]"
-              }
-            ],
-            staticClass: "form-input",
-            attrs: { type: "text" },
-            domProps: { value: _vm.$refs.xkeditor.setting.aceSetting[key] },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(
-                  _vm.$refs.xkeditor.setting.aceSetting,
-                  key,
-                  $event.target.value
-                )
-              }
-            }
-          })
-        ])
-      ])
-    }),
-    0
+        })
+      })
+    ],
+    2
   )
 }
 var staticRenderFns = []
@@ -31458,9 +31691,9 @@ var state = {
 var getters = {
   userSetting: function userSetting(state) {
     return {
-      tinymceSetting: Object.assign(state.userConfig.tinymceSetting, _utils_otherConfig__WEBPACK_IMPORTED_MODULE_0__["default"].tinymceSetting),
-      aceSetting: Object.assign(state.userConfig.aceSetting, _utils_otherConfig__WEBPACK_IMPORTED_MODULE_0__["default"].aceSetting),
-      xkSetting: Object.assign(state.userConfig.xkSetting, _utils_otherConfig__WEBPACK_IMPORTED_MODULE_0__["default"].xkSetting)
+      tinymceSetting: _objectSpread({}, state.userConfig.tinymceSetting, {}, _utils_otherConfig__WEBPACK_IMPORTED_MODULE_0__["default"].tinymceSetting),
+      aceSetting: _objectSpread({}, state.userConfig.aceSetting, {}, _utils_otherConfig__WEBPACK_IMPORTED_MODULE_0__["default"].aceSetting),
+      xkSetting: _objectSpread({}, state.userConfig.xkSetting, {}, _utils_otherConfig__WEBPACK_IMPORTED_MODULE_0__["default"].xkSetting)
     };
   }
 };
@@ -31488,6 +31721,15 @@ var actions = {
           resolve(res.data.config);
         })["catch"](function (err) {
           console.error(err);
+          reject(err);
+        });
+      }
+
+      if (operate === 'setUserConfig') {
+        window.axios.put('/api/user/conf', _objectSpread({}, config)).then(function (res) {
+          resolve(res.data);
+        })["catch"](function (err) {
+          console.log(err);
           reject(err);
         });
       }
@@ -32394,9 +32636,6 @@ var actions = {
             root: true
           });
         });
-        dispatch('tools/showLgModal', modal, {
-          root: true
-        });
       }
 
       if (modal.content === 'CreateFolder') {
@@ -32512,9 +32751,6 @@ var actions = {
             root: true
           });
         });
-        dispatch('tools/showLgModal', modal, {
-          root: true
-        });
       }
 
       if (modal.content === 'GitConfig') {
@@ -32593,11 +32829,30 @@ var actions = {
             root: true
           });
         };
-
-        dispatch('tools/showLgModal', modal, {
-          root: true
-        });
       }
+
+      if (modal.content === 'UserConfig') {
+        modal.title = '用户设置';
+
+        modal.confirm = function () {
+          dispatch('conf/configOperate', {
+            operate: 'setUserConfig',
+            config: rootState.conf.userConfig
+          }, {
+            root: true
+          });
+        };
+
+        modal.cancel = function () {
+          dispatch('tools/hideLgModal', null, {
+            root: true
+          });
+        };
+      }
+
+      dispatch('tools/showLgModal', modal, {
+        root: true
+      });
     }
 
     if (operate.indexOf('git') === 0) {
@@ -34509,42 +34764,334 @@ var otherConfig = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 var settingList = {
-  theme: '主题',
-  keyboardHandler: '快捷键绑定',
-  fontSize: '字体大小',
-  wrap: '换行模式',
-  cursorStyle: '光标样式',
-  foldStyle: '折叠',
-  useSoftTabs: '空格缩进',
-  tabSize: '缩进大小',
-  scrollPastEnd: '过度滚动',
-  behavioursEnabled: '启用快捷键',
-  selectionStyle: '点击行号选择一行',
-  highlightActiveLine: '高亮当前行',
-  showInvisibles: '显示不可见字符',
-  displayIndentGuides: '显示缩进导航',
-  hScrollBarAlwaysVisible: '永久显示滚动条h',
-  vScrollBarAlwaysVisible: '永久显示滚动条v',
-  animatedScroll: '滚动动画',
-  showGutter: '显示行号栏',
-  showLineNumbers: '显示行号',
-  fixedWidthGutter: '固定行号栏宽度',
-  highlightSelectedWord: '高亮选中字符',
-  readOnly: '只读模式',
-  copyWithEmptySelection: '不选择复制',
-  enableLiveAutocompletion: '自动补全(实时)',
-  enableSnippets: '自动补全(snippets)',
-  enableBasicAutocompletion: '自动补全(基础)',
-  skin_url: 'TinyMCE皮肤',
-  body_class: 'TinyMCE样式class',
-  content_css: 'TinyMCE样式表地址',
-  previewCss: '预览样式表地址',
-  previewClass: '预览样式class',
-  delayToHtml: '延迟渲染',
-  scrollBind: '滚动绑定',
-  pasteFormat: '粘贴格式化',
-  pasteImageUpload: '粘贴图片上传',
-  enableTinyMCE: '开启TinyMCE编辑器'
+  theme: {
+    label: '主题',
+    type: 'select',
+    options: [{
+      label: 'Chrome',
+      value: 'ace/theme/chrome'
+    }, {
+      label: 'Clouds',
+      value: 'ace/theme/clouds'
+    }, {
+      label: 'Crimson Editor',
+      value: 'ace/theme/crimson_editor'
+    }, {
+      label: 'Dawn',
+      value: 'ace/theme/dawn'
+    }, {
+      label: 'Dreamweaver',
+      value: 'ace/theme/dreamweaver'
+    }, {
+      label: 'Eclipse',
+      value: 'ace/theme/eclipse'
+    }, {
+      label: 'GitHub',
+      value: 'ace/theme/github'
+    }, {
+      label: 'IPlastic',
+      value: 'ace/theme/iplastic'
+    }, {
+      label: 'Solarized Light',
+      value: 'ace/theme/solarized_light'
+    }, {
+      label: 'TextMate',
+      value: 'ace/theme/textmate'
+    }, {
+      label: 'Tomorrow',
+      value: 'ace/theme/tomorrow'
+    }, {
+      label: 'XCode',
+      value: 'ace/theme/xcode'
+    }, {
+      label: 'Kuroir',
+      value: 'ace/theme/kuroir'
+    }, {
+      label: 'KatzenMilch',
+      value: 'ace/theme/katzenmilch'
+    }, {
+      label: 'SQL Server',
+      value: 'ace/theme/sqlserver'
+    }, {
+      label: 'Ambiance',
+      value: 'ace/theme/ambiance'
+    }, {
+      label: 'Chaos',
+      value: 'ace/theme/chaos'
+    }, {
+      label: 'Clouds Midnight',
+      value: 'ace/theme/clouds_midnight'
+    }, {
+      label: 'Dracula',
+      value: 'ace/theme/dracula'
+    }, {
+      label: 'Cobalt',
+      value: 'ace/theme/cobalt'
+    }, {
+      label: 'Gruvbox',
+      value: 'ace/theme/gruvbox'
+    }, {
+      label: 'Green on Black',
+      value: 'ace/theme/gob'
+    }, {
+      label: 'idle Fingers',
+      value: 'ace/theme/idle_fingers'
+    }, {
+      label: 'krTheme',
+      value: 'ace/theme/kr_theme'
+    }, {
+      label: 'Merbivore',
+      value: 'ace/theme/merbivore'
+    }, {
+      label: 'Merbivore Soft',
+      value: 'ace/theme/merbivore_soft'
+    }, {
+      label: 'Mono Industrial',
+      value: 'ace/theme/mono_industrial'
+    }, {
+      label: 'Monokai',
+      value: 'ace/theme/monokai'
+    }, {
+      label: 'Pastel on dark',
+      value: 'ace/theme/pastel_on_dark'
+    }, {
+      label: 'Solarized Dark',
+      value: 'ace/theme/solarized_dark'
+    }, {
+      label: 'Terminal',
+      value: 'ace/theme/terminal'
+    }, {
+      label: 'Tomorrow Night',
+      value: 'ace/theme/tomorrow_night'
+    }, {
+      label: 'Tomorrow Night Blue',
+      value: 'ace/theme/tomorrow_night_blue'
+    }, {
+      label: 'Tomorrow Night Bright',
+      value: 'ace/theme/tomorrow_night_bright'
+    }, {
+      label: 'Tomorrow Night 80s',
+      value: 'ace/theme/tomorrow_night_eighties'
+    }, {
+      label: 'Twilight',
+      value: 'ace/theme/twilight'
+    }, {
+      label: 'Vibrant Ink',
+      value: 'ace/theme/vibrant_ink'
+    }]
+  },
+  keyboardHandler: {
+    label: '快捷键绑定',
+    type: 'radio',
+    options: [{
+      label: 'Ace',
+      value: 'null'
+    }, {
+      label: 'Vim',
+      value: 'ace/keyboard/vim'
+    }, {
+      label: 'Emacs',
+      value: 'ace/keyboard/emacs'
+    }, {
+      label: 'Sublime',
+      value: 'ace/keyboard/sublime'
+    }]
+  },
+  fontSize: {
+    label: '字体大小',
+    type: 'text'
+  },
+  wrap: {
+    label: '换行模式',
+    type: 'radio',
+    options: [{
+      label: 'Off',
+      value: 'off'
+    }, {
+      label: 'View',
+      value: 'free'
+    }, {
+      label: 'Margin',
+      value: 'printMargin'
+    }, {
+      label: '40',
+      value: '40'
+    }]
+  },
+  cursorStyle: {
+    label: '光标样式',
+    type: 'select',
+    options: [{
+      label: 'Ace',
+      value: 'ace'
+    }, {
+      label: 'Slim',
+      value: 'slim'
+    }, {
+      label: 'Smooth',
+      value: 'smooth'
+    }, {
+      label: 'Smooth Slim',
+      value: 'smooth slim'
+    }, {
+      label: 'Wide',
+      value: 'wide'
+    }]
+  },
+  foldStyle: {
+    label: '折叠',
+    type: 'select',
+    options: [{
+      label: 'Manual',
+      value: 'manual'
+    }, {
+      label: 'Mark begin',
+      value: 'markbegin'
+    }, {
+      label: 'Mark begin and end',
+      value: 'markbeginend'
+    }]
+  },
+  useSoftTabs: {
+    label: '空格缩进',
+    type: 'switch'
+  },
+  tabSize: {
+    label: '缩进大小',
+    type: 'number'
+  },
+  scrollPastEnd: {
+    label: '过度滚动',
+    type: 'radio',
+    options: [{
+      label: 'None',
+      value: '0'
+    }, {
+      label: 'Half',
+      value: '0.5'
+    }, {
+      label: 'Full',
+      value: '1'
+    }]
+  },
+  behavioursEnabled: {
+    label: '启用快捷键',
+    type: 'switch'
+  },
+  selectionStyle: {
+    label: '点击行号选择一行',
+    type: 'switch'
+  },
+  highlightActiveLine: {
+    label: '高亮当前行',
+    type: 'switch'
+  },
+  showInvisibles: {
+    label: '显示不可见字符',
+    type: 'switch'
+  },
+  displayIndentGuides: {
+    label: '显示缩进导航',
+    type: 'switch'
+  },
+  hScrollBarAlwaysVisible: {
+    label: '永久显示滚动条h',
+    type: 'switch'
+  },
+  vScrollBarAlwaysVisible: {
+    label: '永久显示滚动条v',
+    type: 'switch'
+  },
+  animatedScroll: {
+    label: '滚动动画',
+    type: 'switch'
+  },
+  showGutter: {
+    label: '显示行号栏',
+    type: 'switch'
+  },
+  showLineNumbers: {
+    label: '显示行号',
+    type: 'switch'
+  },
+  fixedWidthGutter: {
+    label: '固定行号栏宽度',
+    type: 'switch'
+  },
+  highlightSelectedWord: {
+    label: '高亮选中字符',
+    type: 'switch'
+  },
+  readOnly: {
+    label: '只读模式',
+    type: 'switch'
+  },
+  copyWithEmptySelection: {
+    label: '不选择复制',
+    type: 'switch'
+  },
+  enableLiveAutocompletion: {
+    label: '自动补全(实时)',
+    type: 'switch'
+  },
+  enableSnippets: {
+    label: '自动补全(snippets)',
+    type: 'switch'
+  },
+  enableBasicAutocompletion: {
+    label: '自动补全(基础)',
+    type: 'switch'
+  },
+  skin_url: {
+    label: 'TinyMCE皮肤',
+    type: 'text'
+  },
+  body_class: {
+    label: 'TinyMCE样式class',
+    type: 'text'
+  },
+  content_css: {
+    label: 'TinyMCE样式表地址',
+    type: 'text'
+  },
+  previewCss: {
+    label: '预览样式表地址',
+    type: 'text'
+  },
+  previewClass: {
+    label: '预览样式class',
+    type: 'text'
+  },
+  delayToHtml: {
+    label: '延迟渲染',
+    type: 'number'
+  },
+  scrollBind: {
+    label: '滚动绑定',
+    type: 'radio',
+    options: [{
+      label: 'Both',
+      value: 'both'
+    }, {
+      label: 'Left',
+      value: 'left'
+    }, {
+      label: 'Right',
+      value: 'right'
+    }]
+  },
+  pasteFormat: {
+    label: '粘贴格式化',
+    type: 'switch'
+  },
+  pasteImageUpload: {
+    label: '粘贴图片上传',
+    type: 'switch'
+  },
+  enableTinyMCE: {
+    label: '开启TinyMCE编辑器',
+    type: 'switch'
+  }
 };
 /* harmony default export */ __webpack_exports__["default"] = (settingList);
 
@@ -34568,8 +35115,8 @@ var settingList = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! F:\VSCode-src\Laravel\xknote-2\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! F:\VSCode-src\Laravel\xknote-2\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\VSCode-src\xknote\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\VSCode-src\xknote\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ }),
