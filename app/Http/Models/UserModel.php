@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Storage;
 class UserModel extends Model
 {
     protected $table = 'user_config';
+    protected $fillable = ['tinymce_setting', 'ace_setting', 'xk_setting'];
+    public $timestamps = false;
 
     public static function getDefaultConfig()
     {
@@ -28,5 +30,20 @@ class UserModel extends Model
             'aceSetting' => $config['ace_setting'],
             'xkSetting' => $config['xk_setting']
         ];
+    }
+
+    public static function setConfig($id, $config)
+    {
+        $user_config_m = self::where('uid', $id)->get()[0];
+        $config = [
+            'tinymce_setting' => json_encode($config['tinymceSetting']),
+            'ace_setting' => json_encode($config['aceSetting']),
+            'xk_setting' => json_encode($config['xkSetting'])
+        ];
+        if ($user_config_m->count() <= 0) {
+            self::create($config);
+        } else {
+            $user_config_m->update($config);
+        }
     }
 }

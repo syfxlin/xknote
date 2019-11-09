@@ -13194,7 +13194,7 @@ exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader
 
 
 // module
-exports.push([module.i, "\n#app-main {\r\n  height: 100%;\n}\r\n", ""]);
+exports.push([module.i, "\n#app-main {\n  height: 100%;\n}\n", ""]);
 
 // exports
 
@@ -13213,7 +13213,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.active {\n  color: #585858;\n}\n#toc li img {\n  width: 1.05em;\n}\n", ""]);
+exports.push([module.i, "\n.active {\r\n  color: #585858;\n}\n#toc li img {\r\n  width: 1.05em;\n}\r\n", ""]);
 
 // exports
 
@@ -13232,7 +13232,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.read-toc li img {\r\n  width: 1.05em;\r\n  display: inline-block;\r\n  vertical-align: middle;\r\n  margin-right: 0.4em;\r\n  padding-top: 0.1em;\n}\n.read-toc li a {\r\n  font-size: 1.05em;\r\n  vertical-align: middle;\n}\n.hero-body p {\r\n  margin: 0;\n}\n.read-sidebar {\r\n  top: 0;\r\n  right: 0;\r\n  height: 100%;\r\n  display: flex;\r\n  flex-direction: column;\n}\n.read-sidebar .xknote-tab-content {\r\n  margin: 0.8rem 0 0.8rem 1.6rem;\n}\n.read-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  min-height: 100vh;\r\n  border-right: 1px solid #ddd;\n}\n.read-header .hero-body {\r\n  padding: 0.4rem 3rem;\n}\n.read-content {\r\n  flex: 1;\r\n  padding: 2rem 3rem;\n}\n.read-footer {\r\n  padding: 1.5em 0 !important;\n}\n.to-normal-btn {\r\n  bottom: 1rem;\r\n  right: 1rem;\r\n  position: fixed;\n}\r\n", ""]);
+exports.push([module.i, "\n.read-toc li img {\n  width: 1.05em;\n  display: inline-block;\n  vertical-align: middle;\n  margin-right: 0.4em;\n  padding-top: 0.1em;\n}\n.read-toc li a {\n  font-size: 1.05em;\n  vertical-align: middle;\n}\n.hero-body p {\n  margin: 0;\n}\n.read-sidebar {\n  top: 0;\n  right: 0;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n}\n.read-sidebar .xknote-tab-content {\n  margin: 0.8rem 0 0.8rem 1.6rem;\n}\n.read-container {\n  display: flex;\n  flex-direction: column;\n  min-height: 100vh;\n  border-right: 1px solid #ddd;\n}\n.read-header .hero-body {\n  padding: 0.4rem 3rem;\n}\n.read-content {\n  flex: 1;\n  padding: 2rem 3rem;\n}\n.read-footer {\n  padding: 1.5em 0 !important;\n}\n.to-normal-btn {\n  bottom: 1rem;\n  right: 1rem;\n  position: fixed;\n}\n", ""]);
 
 // exports
 
@@ -32835,11 +32835,30 @@ var actions = {
         modal.title = '用户设置';
 
         modal.confirm = function () {
+          document.querySelector('.xknote-lg-modal .modal-footer .btn-primary').classList.add('loading');
           dispatch('conf/configOperate', {
             operate: 'setUserConfig',
             config: rootState.conf.userConfig
           }, {
             root: true
+          }).then(function (data) {
+            document.querySelector('.xknote-lg-modal .modal-footer .btn-primary').classList.remove('loading');
+            rootState.tools.lgModal.cancel();
+            dispatch('toast/timeToast', {
+              message: '设置成功！',
+              status: 'success',
+              delay: 1000
+            }, {
+              root: true
+            });
+          })["catch"](function (err) {
+            dispatch('toast/timeToast', {
+              message: '设置遇到问题',
+              status: 'error',
+              delay: 1000
+            }, {
+              root: true
+            });
           });
         };
 
@@ -35115,8 +35134,8 @@ var settingList = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\VSCode-src\xknote\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\VSCode-src\xknote\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! F:\VSCode-src\Laravel\xknote-2\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! F:\VSCode-src\Laravel\xknote-2\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ }),

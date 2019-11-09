@@ -1024,6 +1024,9 @@ const actions = {
       if (modal.content === 'UserConfig') {
         modal.title = '用户设置';
         modal.confirm = () => {
+          document
+            .querySelector('.xknote-lg-modal .modal-footer .btn-primary')
+            .classList.add('loading');
           dispatch(
             'conf/configOperate',
             {
@@ -1031,7 +1034,33 @@ const actions = {
               config: rootState.conf.userConfig
             },
             { root: true }
-          );
+          )
+            .then(data => {
+              document
+                .querySelector('.xknote-lg-modal .modal-footer .btn-primary')
+                .classList.remove('loading');
+              rootState.tools.lgModal.cancel();
+              dispatch(
+                'toast/timeToast',
+                {
+                  message: '设置成功！',
+                  status: 'success',
+                  delay: 1000
+                },
+                { root: true }
+              );
+            })
+            .catch(err => {
+              dispatch(
+                'toast/timeToast',
+                {
+                  message: '设置遇到问题',
+                  status: 'error',
+                  delay: 1000
+                },
+                { root: true }
+              );
+            });
         };
         modal.cancel = () => {
           dispatch('tools/hideLgModal', null, { root: true });

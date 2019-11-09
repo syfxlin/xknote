@@ -95,6 +95,9 @@ class UserController extends Controller
 
     public function setConfig(Request $request)
     {
-        //TODO: 未完成
+        $id = $request->user()->id;
+        $config = $request->all();
+        UserModel::setConfig($id, $config);
+        return ['error' => false];
     }
 }
