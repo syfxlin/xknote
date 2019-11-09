@@ -28,6 +28,9 @@ const getters = {
 };
 
 const actions = {
+  setUserConfig({ commit }, config) {
+    commit(types.SET_USER_CONFIG, config);
+  },
   loadUserConfig({ dispatch, commit }) {
     return new Promise((resolve, reject) => {
       dispatch('configOperate', { operate: 'getUserConfig' })
@@ -76,6 +79,28 @@ const actions = {
       if (operate === 'setGitConfig') {
         window.axios
           .put('/api/repo/git', { ...config })
+          .then(res => {
+            resolve(res.data);
+          })
+          .catch(err => {
+            console.log(err);
+            reject(err);
+          });
+      }
+      if (operate === 'getSystemConfig') {
+        window.axios
+          .get('/api/admin/conf')
+          .then(res => {
+            resolve(res.data.config);
+          })
+          .catch(err => {
+            console.error(err);
+            reject(err);
+          });
+      }
+      if (operate === 'setSystemConfig') {
+        window.axios
+          .put('/api/admin/conf', { ...config })
           .then(res => {
             resolve(res.data);
           })

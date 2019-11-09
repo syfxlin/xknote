@@ -48,6 +48,8 @@ Route::prefix('api')
                     '/users/{id}/notes',
                     'AdminController@deleteUserNote'
                 );
+                Route::get('/conf', 'AdminController@getConfig');
+                Route::put('/conf', 'AdminController@setConfig');
             });
 
         Route::get('/folders', 'FolderController@get');

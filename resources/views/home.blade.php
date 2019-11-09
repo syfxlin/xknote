@@ -10,6 +10,7 @@
         <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
         <title>XK-Note</title>
+        <meta name="user-id" content="{{ $user_id }}">
     </head>
     <body>
         <div id="app">

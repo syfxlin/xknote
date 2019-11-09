@@ -75,7 +75,7 @@ const navBarListC = [
   }
 ];
 
-var navBarListR = [
+const navBarListR = [
   {
     mainItem: {
       name: '新建MD笔记',
@@ -109,7 +109,7 @@ var navBarListR = [
       },
       {
         name: '系统管理',
-        operate: 'showSystemSetting'
+        operate: 'showSystemConfig'
       },
       {
         name: 'divider',
@@ -123,6 +123,14 @@ var navBarListR = [
   }
 ];
 
+if (document.querySelector('[name=user-id]').content !== '1') {
+  navBarListR[1].items.splice(
+    navBarListR[1].items.findIndex(item => {
+      return item.operate === 'showSystemConfig';
+    }),
+    1
+  );
+}
 export default {
   navBarListC: navBarListC,
   navBarListR: navBarListR

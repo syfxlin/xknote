@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Models\ConfigModel;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -134,6 +135,33 @@ class AdminController extends Controller
     {
         $folder_m = new FolderModel();
         $folder_m->delete('uid_' . $id);
+        return ['error' => false];
+    }
+
+    public function getConfig(Request $request)
+    {
+        $config_m = ConfigModel::get();
+        $config = [];
+        foreach ($config_m as $value) {
+            $config[$value->config_name] = $value->config_value;
+        }
+        return ['error' => false, 'config' => $config];
+    }
+
+    public function setConfig(Request $request)
+    {
+        $enable_register = $request->enable_register;
+        $xknote_name = $request->xknote_name;
+        $upload_limit = $request->upload_limit;
+        ConfigModel::where('config_name', 'enable_register')->update([
+            'config_value' => $enable_register
+        ]);
+        ConfigModel::where('config_name', 'xknote_name')->update([
+            'config_value' => $xknote_name
+        ]);
+        ConfigModel::where('config_name', 'upload_limit')->update([
+            'config_value' => $upload_limit
+        ]);
         return ['error' => false];
     }
 }

@@ -22,7 +22,7 @@
       <template v-if="lgModal.content==='PersonalCenter'">personalCenter</template>
       <user-config v-if="lgModal.content==='UserConfig'"></user-config>
       <git-config v-if="lgModal.content==='GitConfig'"></git-config>
-      <template v-if="lgModal.content==='SystemSetting'">systemSetting</template>
+      <system-config v-if="lgModal.content==='SystemConfig'"></system-config>
       <check-local-status v-if="lgModal.content==='CheckLocalStatus'"></check-local-status>
       <git-init-clone v-if="lgModal.content==='GitInitClone'"></git-init-clone>
       <git-item-config v-if="lgModal.content==='GitItemConfig'"></git-item-config>
@@ -42,6 +42,7 @@ import GitConfig from "./modal/GitConfig";
 import CheckLocalStatus from "./modal/CheckLocalStatus";
 import GitInitClone from "./modal/GitInitClone";
 import GitItemConfig from "./modal/GitItemConfig";
+import SystemConfig from "./modal/SystemConfig";
 import Modal from "./Modal";
 import { mapState, mapActions } from "vuex";
 export default {
@@ -54,6 +55,7 @@ export default {
     "check-local-status": CheckLocalStatus,
     "git-init-clone": GitInitClone,
     "git-item-config": GitItemConfig,
+    "system-config": SystemConfig,
     modal: Modal
   },
   computed: {

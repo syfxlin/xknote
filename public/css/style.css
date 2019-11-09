@@ -325,8 +325,8 @@ body {
     visibility: hidden;
 }
 
-.UserConfig .form-switch > .form-icon,
-.UserConfig .form-radio.form-inline > .form-icon {
+.form-switch > .form-icon,
+.form-radio.form-inline > .form-icon {
     top: 50%;
     transform: translateY(-50%);
 }
