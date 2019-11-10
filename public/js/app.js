@@ -11664,10 +11664,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           name: "重命名",
           operate: "rename"
         }, {
-          name: "移动",
-          // TODO: 未完成
-          operate: "move"
-        }, {
           name: "删除",
           operate: "delete"
         }, {
@@ -11696,6 +11692,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         children: [{
           name: "重命名",
           operate: "rename"
+        }, {
+          name: "移动",
+          // TODO: 未完成
+          operate: "move"
         }, {
           name: "删除",
           operate: "delete"
@@ -12533,8 +12533,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modal_GitItemConfig__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modal/GitItemConfig */ "./resources/js/components/modal/GitItemConfig.vue");
 /* harmony import */ var _modal_SystemConfig__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modal/SystemConfig */ "./resources/js/components/modal/SystemConfig.vue");
 /* harmony import */ var _modal_PersonalCenter__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./modal/PersonalCenter */ "./resources/js/components/modal/PersonalCenter.vue");
-/* harmony import */ var _Modal__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Modal */ "./resources/js/components/Modal.vue");
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _modal_MoveItem__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./modal/MoveItem */ "./resources/js/components/modal/MoveItem.vue");
+/* harmony import */ var _Modal__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Modal */ "./resources/js/components/Modal.vue");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -12581,6 +12582,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+
 
 
 
@@ -12604,10 +12607,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     "git-item-config": _modal_GitItemConfig__WEBPACK_IMPORTED_MODULE_6__["default"],
     "system-config": _modal_SystemConfig__WEBPACK_IMPORTED_MODULE_7__["default"],
     "personal-center": _modal_PersonalCenter__WEBPACK_IMPORTED_MODULE_8__["default"],
-    modal: _Modal__WEBPACK_IMPORTED_MODULE_9__["default"]
+    "move-item": _modal_MoveItem__WEBPACK_IMPORTED_MODULE_9__["default"],
+    modal: _Modal__WEBPACK_IMPORTED_MODULE_10__["default"]
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_10__["mapState"])("tools", ["smModal", "lgModal", "floatMenu"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_10__["mapState"])("toast", ["toast", "loadToast"])),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_10__["mapActions"])("menu", ["floatMenuOperate"]))
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_11__["mapState"])("tools", ["smModal", "lgModal", "floatMenu"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_11__["mapState"])("toast", ["toast", "loadToast"])),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_11__["mapActions"])("menu", ["floatMenuOperate"]))
 });
 
 /***/ }),
@@ -12808,7 +12812,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
 
-        _this.modal.cancel();
+        _this.modal.cancel(); // TODO: 加载时提示
+
 
         _this.loadCloudFolders();
 
@@ -13340,6 +13345,193 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return state.tools.lgModal.data;
     }
   }))
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modal/MoveItem.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/modal/MoveItem.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _OnlyFolderItem__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../OnlyFolderItem */ "./resources/js/components/OnlyFolderItem.vue");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "move-item",
+  components: {
+    "only-folder-item": _OnlyFolderItem__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
+    data: function data(state) {
+      return state.tools.lgModal.data;
+    },
+    modal: function modal(state) {
+      return state.tools.lgModal;
+    }
+  })),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["setLgModalData", "hideLgModal"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("note", ["noteOperate", "folderOperate", "listOperate", "loadCloudFolders"])),
+  created: function created() {
+    var _this = this;
+
+    var type = this.data.type;
+    var oldPath = this.data.path;
+    var name = oldPath.substring(oldPath.lastIndexOf("/") + 1);
+    this.modal.title = "移动" + (type === "note" ? "笔记" : "文件夹") + "到";
+    var wTimeout = null;
+
+    var watch = function watch() {
+      if (wTimeout) {
+        clearTimeout(wTimeout);
+      }
+
+      wTimeout = setTimeout(function () {
+        _this.setLgModalData(_objectSpread({}, _this.data, {
+          status: "loading"
+        }));
+
+        var operatePro;
+
+        if (type === "note") {
+          operatePro = _this.noteOperate({
+            operate: "exist",
+            storage: _this.data.storage,
+            noteInfo: {
+              path: _this.data.select + "/" + name
+            }
+          });
+        } else {
+          operatePro = _this.folderOperate({
+            operate: "exist",
+            folderInfo: {
+              path: _this.data.select + "/" + name
+            }
+          });
+        }
+
+        operatePro.then(function (data) {
+          if (data.exist) {
+            _this.setLgModalData(_objectSpread({}, _this.data, {
+              status: "error"
+            }));
+          } else {
+            _this.setLgModalData(_objectSpread({}, _this.data, {
+              status: ""
+            }));
+          }
+        });
+      }, 500);
+    };
+
+    var uwFolder = this.$watch("data.select", watch);
+
+    this.modal.confirm = function () {
+      if (!_this.data.select || _this.data.status !== "") {
+        return;
+      }
+
+      document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
+      var operatePro;
+
+      if (type === "note") {
+        operatePro = _this.noteOperate({
+          operate: "move",
+          storage: _this.data.storage,
+          noteInfo: {
+            oldPath: oldPath,
+            newPath: _this.data.select + "/" + name
+          }
+        });
+      } else {
+        operatePro = _this.folderOperate({
+          operate: "move",
+          folderInfo: {
+            oldPath: oldPath,
+            newPath: _this.data.select + "/" + name
+          }
+        });
+      }
+
+      operatePro.then(function () {
+        document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
+
+        _this.modal.cancel(); // TODO: 加载时提示
+
+
+        _this.loadCloudFolders();
+
+        _this.timeToast({
+          message: "移动成功！",
+          status: "success",
+          delay: 1000
+        });
+      })["catch"](function (err) {
+        _this.timeToast({
+          message: "移动失败！请重试。",
+          status: "error",
+          delay: 1000
+        });
+      });
+    };
+
+    this.modal.cancel = function () {
+      uwFolder();
+
+      _this.hideLgModal();
+    };
+
+    this.folderOperate({
+      operate: "readOnly",
+      folderInfo: null
+    }).then(function (data) {
+      _this.setLgModalData(_objectSpread({}, _this.data, {
+        folders: data.folders
+      }));
+    });
+  }
 });
 
 /***/ }),
@@ -25431,7 +25623,9 @@ var render = function() {
           _vm._v(" "),
           _vm.lgModal.content === "GitItemConfig"
             ? _c("git-item-config")
-            : _vm._e()
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.lgModal.content === "MoveItem" ? _c("move-item") : _vm._e()
         ],
         1
       ),
@@ -26509,6 +26703,103 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-3 col-sm-12" }, [
       _c("label", { staticClass: "form-label" }, [_vm._v("Git密码")])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modal/MoveItem.vue?vue&type=template&id=384a985e&":
+/*!*****************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/modal/MoveItem.vue?vue&type=template&id=384a985e& ***!
+  \*****************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "form-horizontal" }, [
+    _c("div", { staticClass: "form-group" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-9 col-sm-12 has-icon-right" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.data.select,
+              expression: "data.select"
+            }
+          ],
+          class:
+            "form-input" + (_vm.data.status === "error" ? " is-error" : ""),
+          attrs: { type: "text", required: "" },
+          domProps: { value: _vm.data.select },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.data, "select", $event.target.value)
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c("i", {
+          class:
+            "form-icon icon" + (_vm.data.status === "loading" ? " loading" : "")
+        })
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c("div", { staticClass: "col-3 col-sm-12" }),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "col-9 col-sm-12 has-icon-right" },
+        [
+          !_vm.data.folders
+            ? _c("div", [
+                _c("div", { staticClass: "loading" }),
+                _vm._v(" "),
+                _c("div", { staticClass: "text-gray text-center" }, [
+                  _vm._v("正在加载，客官莫急。")
+                ])
+              ])
+            : [
+                _c("hr"),
+                _vm._v(" "),
+                _vm._l(_vm.data.folders, function(item) {
+                  return _c("only-folder-item", {
+                    key: item.id,
+                    attrs: { info: item }
+                  })
+                })
+              ]
+        ],
+        2
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-3 col-sm-12" }, [
+      _c("label", { staticClass: "form-label" }, [_vm._v("移动到文件夹")])
     ])
   }
 ]
@@ -32740,6 +33031,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/modal/MoveItem.vue":
+/*!****************************************************!*\
+  !*** ./resources/js/components/modal/MoveItem.vue ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _MoveItem_vue_vue_type_template_id_384a985e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MoveItem.vue?vue&type=template&id=384a985e& */ "./resources/js/components/modal/MoveItem.vue?vue&type=template&id=384a985e&");
+/* harmony import */ var _MoveItem_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MoveItem.vue?vue&type=script&lang=js& */ "./resources/js/components/modal/MoveItem.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _MoveItem_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _MoveItem_vue_vue_type_template_id_384a985e___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _MoveItem_vue_vue_type_template_id_384a985e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/modal/MoveItem.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/modal/MoveItem.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/modal/MoveItem.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_MoveItem_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./MoveItem.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modal/MoveItem.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_MoveItem_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/modal/MoveItem.vue?vue&type=template&id=384a985e&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/modal/MoveItem.vue?vue&type=template&id=384a985e& ***!
+  \***********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MoveItem_vue_vue_type_template_id_384a985e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./MoveItem.vue?vue&type=template&id=384a985e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modal/MoveItem.vue?vue&type=template&id=384a985e&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MoveItem_vue_vue_type_template_id_384a985e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MoveItem_vue_vue_type_template_id_384a985e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/modal/PersonalCenter.vue":
 /*!**********************************************************!*\
   !*** ./resources/js/components/modal/PersonalCenter.vue ***!
@@ -33551,36 +33911,38 @@ var actions = {
         if (e.key === 'Enter') {
           var value = e.target.value;
           var newPath = info.path.replace(new RegExp(info.name + '$'), value);
-          Object(_syncActions__WEBPACK_IMPORTED_MODULE_1__["dispatchSync"])('note/listOperate', {
-            operate: 'add',
-            storage: storage,
-            path: newPath,
-            noteInfo: {
-              note: info,
-              source: {
-                path: newPath,
-                storage: rootState.note.currListSource[info.path].storage
-              }
-            } // { root: true }
+          var oldPath = info.path;
+          var s = storage;
 
-          });
-          Object(_syncActions__WEBPACK_IMPORTED_MODULE_1__["dispatchSync"])('note/listOperate', {
-            operate: 'delete',
-            storage: storage,
-            path: info.path // { root: true }
+          if (type === 'note' && storage === 'curr') {
+            s = rootState.note.currListSource[oldPath].storage;
+          }
 
-          });
+          var opList = function opList() {
+            Object(_syncActions__WEBPACK_IMPORTED_MODULE_1__["dispatchSync"])('note/listOperate', {
+              operate: 'add',
+              storage: storage,
+              path: newPath,
+              noteInfo: storage === 'curr' ? {
+                note: info,
+                source: {
+                  path: newPath,
+                  storage: s
+                }
+              } : info
+            });
+            Object(_syncActions__WEBPACK_IMPORTED_MODULE_1__["dispatchSync"])('note/listOperate', {
+              operate: 'delete',
+              storage: storage,
+              path: oldPath
+            });
+          };
+
           info.path = newPath;
           info.name = value;
           input.setAttribute('disabled', 'disabled');
 
           if (type === 'note') {
-            var s = storage;
-
-            if (storage === 'curr') {
-              s = rootState.note.currListSource[newPath].storage;
-            }
-
             dispatch('note/noteOperate', {
               operate: operate,
               storage: s,
@@ -33594,6 +33956,7 @@ var actions = {
               curr.querySelector('.tile-content').removeAttribute('children');
               input.removeEventListener('keydown', keyEv);
               input.removeAttribute('disabled');
+              opList();
               dispatch('toast/timeToast', {
                 message: '重命名成功！',
                 status: 'success',
@@ -33626,6 +33989,9 @@ var actions = {
               curr.querySelector('.accordion-header').removeAttribute('children');
               input.removeEventListener('keydown', keyEv);
               input.removeAttribute('disabled');
+              dispatch('note/loadCloudFolders', null, {
+                root: true
+              });
               dispatch('toast/timeToast', {
                 message: '重命名成功！',
                 status: 'success',
@@ -33650,6 +34016,19 @@ var actions = {
       };
 
       input.addEventListener('keydown', keyEv);
+    }
+
+    if (operate === 'move') {
+      dispatch('tools/showLgModal', {
+        content: 'MoveItem',
+        data: {
+          type: type,
+          path: path,
+          storage: storage
+        }
+      }, {
+        root: true
+      });
     } // noteItem专有操作
 
 
@@ -34247,6 +34626,24 @@ var actions = {
         });
       }
 
+      if (operate === 'move') {
+        window.axios.put('/api/folders/move', {
+          old_path: folderInfo.oldPath,
+          new_path: folderInfo.newPath
+        }).then(function (res) {
+          console.log(res);
+
+          if (res.data.error == false) {
+            resolve(res);
+          } else {
+            reject(res);
+          }
+        })["catch"](function (err) {
+          console.error(err);
+          reject(err);
+        });
+      }
+
       if (operate === 'create') {
         window.axios.post('/api/folders', {
           path: folderInfo.path
@@ -34519,6 +34916,24 @@ var actions = {
             reject(err);
           });
         }
+      }
+
+      if (operate === 'move') {
+        window.axios.put('/api/notes/move', {
+          old_path: noteInfo.oldPath,
+          new_path: noteInfo.newPath
+        }).then(function (res) {
+          console.log(res);
+
+          if (res.data.error == false) {
+            resolve(res);
+          } else {
+            reject(res);
+          }
+        })["catch"](function (err) {
+          console.error(err);
+          reject(err);
+        });
       }
 
       if (operate === 'exist') {
@@ -34831,12 +35246,12 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, types.SET_XKNOTE_T
     if (storage === 'curr') {
       state.currList[path] = noteInfo.note;
       state.currListSource[path] = noteInfo.source;
-      state.reData = path;
+      state.reData = noteInfo.note;
     }
 
     if (storage === 'local') {
       state.localList[path] = noteInfo;
-      state.reData = path;
+      state.reData = noteInfo;
     }
 
     if (storage === 'cloud') {
@@ -34861,6 +35276,8 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, types.SET_XKNOTE_T
       if (noteInfo !== null) {
         list[arr[arr.length - 1]] = noteInfo;
       }
+
+      state.reData = noteInfo;
     }
   }
 

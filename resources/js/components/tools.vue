@@ -26,6 +26,7 @@
       <check-local-status v-if="lgModal.content==='CheckLocalStatus'"></check-local-status>
       <git-init-clone v-if="lgModal.content==='GitInitClone'"></git-init-clone>
       <git-item-config v-if="lgModal.content==='GitItemConfig'"></git-item-config>
+      <move-item v-if="lgModal.content==='MoveItem'"></move-item>
     </modal>
     <div :class="'toast toast-' + toast.status">
       <button class="btn btn-clear float-right"></button>
@@ -48,6 +49,7 @@ import GitInitClone from "./modal/GitInitClone";
 import GitItemConfig from "./modal/GitItemConfig";
 import SystemConfig from "./modal/SystemConfig";
 import PersonalCenter from "./modal/PersonalCenter";
+import MoveItem from "./modal/MoveItem";
 import Modal from "./Modal";
 import { mapState, mapActions } from "vuex";
 export default {
@@ -62,6 +64,7 @@ export default {
     "git-item-config": GitItemConfig,
     "system-config": SystemConfig,
     "personal-center": PersonalCenter,
+    "move-item": MoveItem,
     modal: Modal
   },
   computed: {

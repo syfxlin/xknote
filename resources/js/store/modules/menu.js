@@ -144,39 +144,37 @@ const actions = {
         if (e.key === 'Enter') {
           let value = e.target.value;
           let newPath = info.path.replace(new RegExp(info.name + '$'), value);
-          dispatchSync(
-            'note/listOperate',
-            {
+          let oldPath = info.path;
+          let s = storage;
+          if (type === 'note' && storage === 'curr') {
+            s = rootState.note.currListSource[oldPath].storage;
+          }
+          let opList = () => {
+            dispatchSync('note/listOperate', {
               operate: 'add',
               storage: storage,
               path: newPath,
-              noteInfo: {
-                note: info,
-                source: {
-                  path: newPath,
-                  storage: rootState.note.currListSource[info.path].storage
-                }
-              }
-            }
-            // { root: true }
-          );
-          dispatchSync(
-            'note/listOperate',
-            {
+              noteInfo:
+                storage === 'curr'
+                  ? {
+                      note: info,
+                      source: {
+                        path: newPath,
+                        storage: s
+                      }
+                    }
+                  : info
+            });
+            dispatchSync('note/listOperate', {
               operate: 'delete',
               storage: storage,
-              path: info.path
-            }
-            // { root: true }
-          );
+              path: oldPath
+            });
+          };
           info.path = newPath;
           info.name = value;
           input.setAttribute('disabled', 'disabled');
           if (type === 'note') {
-            let s = storage;
-            if (storage === 'curr') {
-              s = rootState.note.currListSource[newPath].storage;
-            }
             dispatch(
               'note/noteOperate',
               {
@@ -193,6 +191,7 @@ const actions = {
                 curr.querySelector('.tile-content').removeAttribute('children');
                 input.removeEventListener('keydown', keyEv);
                 input.removeAttribute('disabled');
+                opList();
                 dispatch(
                   'toast/timeToast',
                   {
@@ -235,6 +234,7 @@ const actions = {
                   .removeAttribute('children');
                 input.removeEventListener('keydown', keyEv);
                 input.removeAttribute('disabled');
+                dispatch('note/loadCloudFolders', null, { root: true });
                 dispatch(
                   'toast/timeToast',
                   {
@@ -263,6 +263,20 @@ const actions = {
         }
       };
       input.addEventListener('keydown', keyEv);
+    }
+    if (operate === 'move') {
+      dispatch(
+        'tools/showLgModal',
+        {
+          content: 'MoveItem',
+          data: {
+            type: type,
+            path: path,
+            storage: storage
+          }
+        },
+        { root: true }
+      );
     }
     // noteItem专有操作
     if (type === 'note') {

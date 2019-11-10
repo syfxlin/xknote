@@ -161,6 +161,25 @@ const actions = {
             reject(err);
           });
       }
+      if (operate === 'move') {
+        window.axios
+          .put('/api/folders/move', {
+            old_path: folderInfo.oldPath,
+            new_path: folderInfo.newPath
+          })
+          .then(res => {
+            console.log(res);
+            if (res.data.error == false) {
+              resolve(res);
+            } else {
+              reject(res);
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            reject(err);
+          });
+      }
       if (operate === 'create') {
         window.axios
           .post('/api/folders', {
@@ -459,6 +478,25 @@ const actions = {
             });
         }
       }
+      if (operate === 'move') {
+        window.axios
+          .put('/api/notes/move', {
+            old_path: noteInfo.oldPath,
+            new_path: noteInfo.newPath
+          })
+          .then(res => {
+            console.log(res);
+            if (res.data.error == false) {
+              resolve(res);
+            } else {
+              reject(res);
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            reject(err);
+          });
+      }
       if (operate === 'exist') {
         if (storage === 'cloud') {
           window.axios
@@ -718,11 +756,11 @@ const mutations = {
       if (storage === 'curr') {
         state.currList[path] = noteInfo.note;
         state.currListSource[path] = noteInfo.source;
-        state.reData = path;
+        state.reData = noteInfo.note;
       }
       if (storage === 'local') {
         state.localList[path] = noteInfo;
-        state.reData = path;
+        state.reData = noteInfo;
       }
       if (storage === 'cloud') {
         let p = '';
@@ -742,6 +780,7 @@ const mutations = {
         if (noteInfo !== null) {
           list[arr[arr.length - 1]] = noteInfo;
         }
+        state.reData = noteInfo;
       }
     }
     if (operate === 'delete') {

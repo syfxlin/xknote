@@ -53,10 +53,6 @@ export default {
             operate: "rename"
           },
           {
-            name: "移动", // TODO: 未完成
-            operate: "move"
-          },
-          {
             name: "删除",
             operate: "delete"
           },
@@ -93,6 +89,10 @@ export default {
           {
             name: "重命名",
             operate: "rename"
+          },
+          {
+            name: "移动", // TODO: 未完成
+            operate: "move"
           },
           {
             name: "删除",

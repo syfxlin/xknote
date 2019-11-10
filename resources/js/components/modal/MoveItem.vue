@@ -2,24 +2,21 @@
   <div class="form-horizontal">
     <div class="form-group">
       <div class="col-3 col-sm-12">
-        <label class="form-label">文件夹名</label>
+        <label class="form-label">移动到文件夹</label>
       </div>
       <div class="col-9 col-sm-12 has-icon-right">
         <input
           :class="'form-input' + (data.status === 'error' ? ' is-error' : '')"
           type="text"
-          v-model="data.foldername"
+          v-model="data.select"
           required
         />
         <i :class="'form-icon icon' + (data.status === 'loading' ? ' loading' : '')"></i>
       </div>
     </div>
     <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">存放的文件夹</label>
-      </div>
-      <div class="col-9 col-sm-12">
-        <input class="form-input" type="text" v-model="data.select" required />
+      <div class="col-3 col-sm-12"></div>
+      <div class="col-9 col-sm-12 has-icon-right">
         <div v-if="!data.folders">
           <div class="loading"></div>
           <div class="text-gray text-center">正在加载，客官莫急。</div>
@@ -34,10 +31,10 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 import OnlyFolderItem from "../OnlyFolderItem";
 export default {
-  name: "create-folder",
+  name: "move-item",
   components: {
     "only-folder-item": OnlyFolderItem
   },
@@ -50,10 +47,18 @@ export default {
   methods: {
     ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
     ...mapActions("toast", ["timeToast"]),
-    ...mapActions("note", ["folderOperate", "listOperate", "loadCloudFolders"])
+    ...mapActions("note", [
+      "noteOperate",
+      "folderOperate",
+      "listOperate",
+      "loadCloudFolders"
+    ])
   },
   created() {
-    this.modal.title = "新建文件夹";
+    let type = this.data.type;
+    let oldPath = this.data.path;
+    let name = oldPath.substring(oldPath.lastIndexOf("/") + 1);
+    this.modal.title = "移动" + (type === "note" ? "笔记" : "文件夹") + "到";
     let wTimeout = null;
     let watch = () => {
       if (wTimeout) {
@@ -64,12 +69,24 @@ export default {
           ...this.data,
           status: "loading"
         });
-        this.folderOperate({
-          operate: "exist",
-          folderInfo: {
-            path: this.data.select + "/" + this.data.foldername
-          }
-        }).then(data => {
+        let operatePro;
+        if (type === "note") {
+          operatePro = this.noteOperate({
+            operate: "exist",
+            storage: this.data.storage,
+            noteInfo: {
+              path: this.data.select + "/" + name
+            }
+          });
+        } else {
+          operatePro = this.folderOperate({
+            operate: "exist",
+            folderInfo: {
+              path: this.data.select + "/" + name
+            }
+          });
+        }
+        operatePro.then(data => {
           if (data.exist) {
             this.setLgModalData({
               ...this.data,
@@ -84,28 +101,35 @@ export default {
         });
       }, 500);
     };
-    let uwFolderName = this.$watch("data.foldername", watch);
-    let uwTitle = this.$watch("data.select", watch);
+    let uwFolder = this.$watch("data.select", watch);
     this.modal.confirm = () => {
-      if (!this.data.foldername || this.data.status !== "") {
+      if (!this.data.select || this.data.status !== "") {
         return;
       }
       document
         .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
         .classList.add("loading");
-      let path = this.data.select + "/" + this.data.foldername;
-      this.folderOperate({
-        operate: "create",
-        folderInfo: {
-          path: path
-        }
-      })
+      let operatePro;
+      if (type === "note") {
+        operatePro = this.noteOperate({
+          operate: "move",
+          storage: this.data.storage,
+          noteInfo: {
+            oldPath: oldPath,
+            newPath: this.data.select + "/" + name
+          }
+        });
+      } else {
+        operatePro = this.folderOperate({
+          operate: "move",
+          folderInfo: {
+            oldPath: oldPath,
+            newPath: this.data.select + "/" + name
+          }
+        });
+      }
+      operatePro
         .then(() => {
-          this.listOperate({
-            operate: "add",
-            storage: this.data.storage,
-            path: path
-          });
           document
             .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
             .classList.remove("loading");
@@ -113,22 +137,21 @@ export default {
           // TODO: 加载时提示
           this.loadCloudFolders();
           this.timeToast({
-            message: "创建文件夹成功！",
+            message: "移动成功！",
             status: "success",
             delay: 1000
           });
         })
         .catch(err => {
           this.timeToast({
-            message: "创建文件夹失败！请重试。",
+            message: "移动失败！请重试。",
             status: "error",
             delay: 1000
           });
         });
     };
     this.modal.cancel = () => {
-      uwFolderName();
-      uwTitle();
+      uwFolder();
       this.hideLgModal();
     };
     this.folderOperate({ operate: "readOnly", folderInfo: null }).then(data => {
