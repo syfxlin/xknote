@@ -325,6 +325,41 @@ body {
     visibility: hidden;
 }
 
+.toast-progress {
+    position: fixed;
+    right: 0;
+    bottom: 2rem;
+    width: 9rem;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0rem 0.5rem 0.5rem;
+    border-radius: 2rem 0rem 0 2rem;
+    background-color: rgba(87, 85, 217, 0.85);
+    box-shadow: 0 1px 20px -6px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    transform: translate3d(100%, 0, 0);
+    transition: transform 0.5s;
+}
+
+.toast-progress.active {
+    transform: translate3d(0, 0, 0);
+}
+
+.toast-progress .loading {
+    width: 2rem;
+    height: 1.5rem;
+}
+
+.toast-progress .loading::after {
+    border-bottom-color: #fff;
+    border-left-color: #fff;
+}
+
+.toast-progress p {
+    margin: 0;
+    color: #fff;
+}
+
 .form-switch > .form-icon,
 .form-radio.form-inline > .form-icon {
     top: 50%;

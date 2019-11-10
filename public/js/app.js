@@ -12577,6 +12577,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -12602,11 +12606,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     "personal-center": _modal_PersonalCenter__WEBPACK_IMPORTED_MODULE_8__["default"],
     modal: _Modal__WEBPACK_IMPORTED_MODULE_9__["default"]
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_10__["mapState"])("tools", ["smModal", "lgModal", "floatMenu"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_10__["mapState"])({
-    toast: function toast(state) {
-      return state.toast;
-    }
-  })),
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_10__["mapState"])("tools", ["smModal", "lgModal", "floatMenu"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_10__["mapState"])("toast", ["toast", "loadToast"])),
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_10__["mapActions"])("menu", ["floatMenuOperate"]))
 });
 
@@ -25440,7 +25440,17 @@ var render = function() {
         _c("button", { staticClass: "btn btn-clear float-right" }),
         _vm._v(" "),
         _c("p", [_vm._v(_vm._s(_vm.toast.message))])
-      ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { class: "toast-progress " + (_vm.loadToast.show ? "active" : "") },
+        [
+          _c("div", { staticClass: "loading" }),
+          _vm._v(" "),
+          _c("p", [_vm._v(_vm._s(_vm.loadToast.message))])
+        ]
+      )
     ],
     1
   )
@@ -33559,8 +33569,7 @@ var actions = {
             storage: storage,
             path: info.path // { root: true }
 
-          }); // TODO: 修复
-
+          });
           info.path = newPath;
           info.name = value;
           input.setAttribute('disabled', 'disabled');
@@ -34621,8 +34630,7 @@ var actions = {
       if (mode === 'normal') {
         for (var key in state.currList) {
           if (state.currList[key].path === note.path) {
-            source.path = note.path; //TODO: 修改
-
+            source.path = note.path;
             source.storage = 'curr';
           }
         }
@@ -35246,9 +35254,7 @@ var actions = {
         }, {
           root: true
         }).then(function () {
-          rootState.note.localList[path].status = 'C'; //TODO: 修改使用action修改
-          // this.$delete(this.lgModal.data, index);
-
+          rootState.note.localList[path].status = 'C';
           dispatch('tools/delLgModalData', index, {
             root: true
           }); // 将更新后的状态保存到本地
@@ -35364,16 +35370,24 @@ var _mutations;
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var types = {
-  SHOW: 'SHOW',
-  HIDE: 'HIDE',
-  SHIFT_LIST: 'SHIFT_LIST',
-  PUSH_LIST: 'PUSH_LIST'
+  SHOW_TOAST: 'SHOW_TOAST',
+  HIDE_TOAST: 'HIDE_TOAST',
+  SHIFT_TOAST_LIST: 'SHIFT_TOAST_LIST',
+  PUSH_TOAST_LIST: 'PUSH_TOAST_LIST',
+  SHOW_LOAD_TOAST: 'SHOW_LOAD_TOAST',
+  HIDE_LOAD_TOAST: 'HIDE_LOAD_TOAST'
 };
 var state = {
-  show: false,
-  message: '',
-  status: '',
-  toastList: []
+  toast: {
+    show: false,
+    message: '',
+    status: '',
+    toastList: []
+  },
+  loadToast: {
+    show: false,
+    message: ''
+  }
 };
 var getters = {};
 var actions = {
@@ -35383,7 +35397,7 @@ var actions = {
     var t = document.querySelector('.toast');
     t.style.visibility = 'visible';
     t.style.opacity = '1';
-    commit(types.SHOW, {
+    commit(types.SHOW_TOAST, {
       message: toast.message,
       status: toast.status
     });
@@ -35397,7 +35411,7 @@ var actions = {
         t.style.visibility = 'hidden';
       }, 500);
       t.style.opacity = '0';
-      commit(types.HIDE);
+      commit(types.HIDE_TOAST);
       resolve();
     });
   },
@@ -35406,15 +35420,15 @@ var actions = {
         state = _ref3.state,
         dispatch = _ref3.dispatch;
     return new Promise(function (resolve, reject) {
-      var toast = state.toastList[0];
-      commit(types.SHIFT_LIST);
+      var toast = state.toast.toastList[0];
+      commit(types.SHIFT_TOAST_LIST);
       dispatch('showToast', {
         message: toast.message,
         status: toast.status
       });
       setTimeout(function () {
         dispatch('hideToast').then(function () {
-          if (state.toastList.length !== 0) {
+          if (state.toast.toastList.length !== 0) {
             dispatch('popToast').then(function () {
               resolve();
             });
@@ -35427,27 +35441,40 @@ var actions = {
     var commit = _ref4.commit,
         state = _ref4.state,
         dispatch = _ref4.dispatch;
-    commit(types.PUSH_LIST, {
+    commit(types.PUSH_TOAST_LIST, {
       message: toast.message,
       status: toast.status,
       delay: toast.delay
     });
 
-    if (state.toastList.length === 1) {
+    if (state.toast.toastList.length === 1) {
       dispatch('popToast');
     }
+  },
+  showLoadToast: function showLoadToast(_ref5, toast) {
+    var commit = _ref5.commit;
+    commit(types.SHOW_LOAD_TOAST, toast);
+  },
+  hideLoadToast: function hideLoadToast(_ref6) {
+    var commit = _ref6.commit;
+    commit(types.HIDE_LOAD_TOAST);
   }
 };
-var mutations = (_mutations = {}, _defineProperty(_mutations, types.SHOW, function (state, toast) {
-  state.message = toast.message;
-  state.status = toast.status;
-  state.show = true;
-}), _defineProperty(_mutations, types.HIDE, function (state) {
-  state.show = false;
-}), _defineProperty(_mutations, types.SHIFT_LIST, function (state) {
-  state.toastList.shift();
-}), _defineProperty(_mutations, types.PUSH_LIST, function (state, toast) {
-  state.toastList.push(toast);
+var mutations = (_mutations = {}, _defineProperty(_mutations, types.SHOW_TOAST, function (state, toast) {
+  state.toast.message = toast.message;
+  state.toast.status = toast.status;
+  state.toast.show = true;
+}), _defineProperty(_mutations, types.HIDE_TOAST, function (state) {
+  state.toast.show = false;
+}), _defineProperty(_mutations, types.SHIFT_TOAST_LIST, function (state) {
+  state.toast.toastList.shift();
+}), _defineProperty(_mutations, types.PUSH_TOAST_LIST, function (state, toast) {
+  state.toast.toastList.push(toast);
+}), _defineProperty(_mutations, types.SHOW_LOAD_TOAST, function (state, toast) {
+  state.loadToast.show = true;
+  state.loadToast.message = toast.message;
+}), _defineProperty(_mutations, types.HIDE_LOAD_TOAST, function (state) {
+  state.loadToast.show = false;
 }), _mutations);
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,

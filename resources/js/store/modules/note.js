@@ -545,7 +545,7 @@ const actions = {
       if (mode === 'normal') {
         for (let key in state.currList) {
           if (state.currList[key].path === note.path) {
-            source.path = note.path; //TODO: 修改
+            source.path = note.path;
             source.storage = 'curr';
           }
         }

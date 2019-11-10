@@ -169,7 +169,6 @@ const actions = {
             }
             // { root: true }
           );
-          // TODO: 修复
           info.path = newPath;
           info.name = value;
           input.setAttribute('disabled', 'disabled');

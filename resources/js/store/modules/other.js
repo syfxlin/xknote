@@ -345,8 +345,6 @@ const actions = {
           { root: true }
         ).then(() => {
           rootState.note.localList[path].status = 'C';
-          //TODO: 修改使用action修改
-          // this.$delete(this.lgModal.data, index);
           dispatch('tools/delLgModalData', index, { root: true });
           // 将更新后的状态保存到本地
           dispatch(

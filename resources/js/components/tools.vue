@@ -31,6 +31,10 @@
       <button class="btn btn-clear float-right"></button>
       <p>{{ toast.message }}</p>
     </div>
+    <div :class="'toast-progress ' + (loadToast.show ? 'active' : '')">
+      <div class="loading"></div>
+      <p>{{ loadToast.message }}</p>
+    </div>
   </div>
 </template>
 
@@ -62,9 +66,7 @@ export default {
   },
   computed: {
     ...mapState("tools", ["smModal", "lgModal", "floatMenu"]),
-    ...mapState({
-      toast: state => state.toast
-    })
+    ...mapState("toast", ["toast", "loadToast"])
   },
   methods: {
     ...mapActions("menu", ["floatMenuOperate"])
