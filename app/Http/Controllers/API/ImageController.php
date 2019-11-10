@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Models\ImageModel;
+use Illuminate\Support\Facades\DB;
 
 class ImageController extends Controller
 {
@@ -41,8 +42,10 @@ class ImageController extends Controller
                 ];
             }
             $ext = $file->getClientOriginalExtension();
-            // TODO: 设置图片格式
-            if (in_array($ext, ['jpg', 'jpeg', 'gif', 'png', 'bmp', 'webp'])) {
+            $image_ext = DB::table('config')
+                ->where('config_name', 'image_ext')
+                ->get()[0]->config_value;
+            if (in_array($ext, explode('|', $image_ext))) {
                 if ($file->isValid()) {
                     $url = $this->model->save($file, $request->user()->id);
                     return ['error' => false, 'path' => $url];

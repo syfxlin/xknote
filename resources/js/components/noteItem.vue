@@ -128,7 +128,7 @@ export default {
             ev.clientY < offset.yS ||
             ev.clientY > offset.yE
           ) {
-            this.hideFolatMenu();
+            this.hideFloatMenu();
           }
           document.removeEventListener("click", closeN);
         };

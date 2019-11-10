@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Models\NoteModel;
+use Illuminate\Support\Facades\DB;
 
 class NoteController extends Controller
 {
@@ -52,7 +53,6 @@ class NoteController extends Controller
         return ['error' => false, 'note' => $res];
     }
 
-    // TODO: 设置文本格式
     public function create(Request $request)
     {
         $id = $request->user()->id;
@@ -60,6 +60,13 @@ class NoteController extends Controller
             return response(['error' => 'Parameter not found. (path)'], 400);
         }
         $path = 'uid_' . $id . $request->path;
+        $document_ext = DB::table('config')
+            ->where('config_name', 'document_ext')
+            ->get()[0]->config_value;
+        $document_ext_preg = str_replace('|', '|.', '.' . $document_ext);
+        if (!preg_match('/(' . $document_ext_preg . ')$/i', $path)) {
+            return response(['error' => 'Parameter error. (path)'], 400);
+        }
         $info = [
             'title' => $request->title,
             'author' => $request->author,
@@ -97,6 +104,13 @@ class NoteController extends Controller
             return response(['error' => 'Parameter not found. (path)'], 400);
         }
         $path = 'uid_' . $id . $request->path;
+        $document_ext = DB::table('config')
+            ->where('config_name', 'document_ext')
+            ->get()[0]->config_value;
+        $document_ext_preg = str_replace('|', '|.', '.' . $document_ext);
+        if (!preg_match('/(' . $document_ext_preg . ')$/i', $path)) {
+            return response(['error' => 'Parameter error. (path)'], 400);
+        }
         $info = [
             'title' => $request->title,
             'author' => $request->author,
@@ -126,6 +140,13 @@ class NoteController extends Controller
                 ],
                 400
             );
+        }
+        $document_ext = DB::table('config')
+            ->where('config_name', 'document_ext')
+            ->get()[0]->config_value;
+        $document_ext_preg = str_replace('|', '|.', '.' . $document_ext);
+        if (!preg_match('/(' . $document_ext_preg . ')$/i', $new_path)) {
+            return response(['error' => 'Parameter error. (path)'], 400);
         }
         $code = $this->model->move($new_path, $old_path);
         if ($code === 404) {

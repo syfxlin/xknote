@@ -484,7 +484,8 @@ const actions = {
                 );
                 dispatch(
                   'note/setXknoteOpened',
-                  JSON.parse(JSON.stringify(rootState.note.noteBaseInfo))
+                  JSON.parse(JSON.stringify(rootState.note.noteBaseInfo)),
+                  { root: true }
                 );
               }
             }

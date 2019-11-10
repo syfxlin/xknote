@@ -12126,7 +12126,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         var closeN = function closeN(ev) {
           if (ev.clientX < offset.xS || ev.clientX > offset.xE || ev.clientY < offset.yS || ev.clientY > offset.yE) {
-            _this.hideFolatMenu();
+            _this.hideFloatMenu();
           }
 
           document.removeEventListener("click", closeN);
@@ -33816,7 +33816,9 @@ var actions = {
                 path: path // { root: true }
 
               });
-              dispatch('note/setXknoteOpened', JSON.parse(JSON.stringify(rootState.note.noteBaseInfo)));
+              dispatch('note/setXknoteOpened', JSON.parse(JSON.stringify(rootState.note.noteBaseInfo)), {
+                root: true
+              });
             }
           }
 

@@ -33,10 +33,18 @@ class GitRepoController extends Controller
                 400
             );
         }
-        // TODO: 判断path中没有多余的/
         $id = $request->user()->id;
         $path = $request->path;
         $repo = $request->repo;
+        if (strripos($path, '/') !== 0) {
+            return response(
+                [
+                    'error' => true,
+                    'message' => 'Parameter error. (path)'
+                ],
+                400
+            );
+        }
         if ($this->model->check($path, $id)) {
             return response(
                 [

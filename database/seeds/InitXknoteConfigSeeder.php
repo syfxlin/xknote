@@ -17,7 +17,9 @@ class InitXknoteConfigSeeder extends Seeder
         $config = [
             'enable_register' => 'true',
             'xknote_name' => 'XK-Note',
-            'upload_limit' => 2
+            'upload_limit' => 2,
+            'image_ext' => 'jpg|jpeg|gif|png|bmp|webp',
+            'document_ext' => 'md|txt'
         ];
         foreach ($config as $name => $value) {
             DB::table('config')->insert([

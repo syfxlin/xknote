@@ -4,6 +4,7 @@ namespace App\Http\Models;
 
 use Illuminate\Support\Facades\Storage;
 use Chumper\Zipper\Zipper;
+use Illuminate\Support\Facades\DB;
 
 class FolderModel
 {
@@ -30,9 +31,15 @@ class FolderModel
             }
         }
         if ($mode === 'all') {
+            $document_ext = DB::table('config')
+                ->where('config_name', 'document_ext')
+                ->get()[0]->config_value;
+            $document_ext_preg = str_replace('|', '|.', '.' . $document_ext);
             $files = Storage::files($dir);
             foreach ($files as $file_name) {
-                if (preg_match("/(.md$|.txt)/i", $file_name)) {
+                if (
+                    preg_match('/(' . $document_ext_preg . ')$/i', $file_name)
+                ) {
                     $name = str_replace($dir . '/', '', $file_name);
                     $re[$name] = [
                         'type' => 'note',
