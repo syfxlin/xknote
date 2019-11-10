@@ -41,6 +41,7 @@ class ImageController extends Controller
                 ];
             }
             $ext = $file->getClientOriginalExtension();
+            // TODO: 设置图片格式
             if (in_array($ext, ['jpg', 'jpeg', 'gif', 'png', 'bmp', 'webp'])) {
                 if ($file->isValid()) {
                     $url = $this->model->save($file, $request->user()->id);

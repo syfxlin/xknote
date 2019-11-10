@@ -131,6 +131,11 @@ if (document.querySelector('[name=user-id]').content !== '1') {
     1
   );
 }
+
+navBarListR[1].mainItem.name = document.querySelector(
+  '[name=nick-name]'
+).content;
+
 export default {
   navBarListC: navBarListC,
   navBarListR: navBarListR

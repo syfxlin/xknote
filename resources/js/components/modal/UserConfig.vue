@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import iSettingList from "../../utils/settingList";
 import FormGroup from "../FormGroup";
 export default {
@@ -27,7 +27,49 @@ export default {
     };
   },
   computed: {
-    ...mapState("conf", ["userConfig"])
+    ...mapState("conf", ["userConfig"]),
+    ...mapState({
+      data: state => state.tools.lgModal.data,
+      modal: state => state.tools.lgModal
+    })
+  },
+  methods: {
+    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
+    ...mapActions("conf", ["configOperate"]),
+    ...mapActions("toast", ["timeToast"])
+  },
+  created() {
+    this.modal.title = "用户设置";
+    this.modal.confirm = () => {
+      document
+        .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+        .classList.add("loading");
+      this.configOperate({
+        operate: "setUserConfig",
+        config: this.userConfig
+      })
+        .then(data => {
+          document
+            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+            .classList.remove("loading");
+          this.modal.cancel();
+          this.timeToast({
+            message: "设置成功！",
+            status: "success",
+            delay: 1000
+          });
+        })
+        .catch(err => {
+          this.timeToast({
+            message: "设置遇到问题",
+            status: "error",
+            delay: 1000
+          });
+        });
+    };
+    this.modal.cancel = () => {
+      this.hideLgModal();
+    };
   }
 };
 </script>

@@ -5,11 +5,29 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Models\UserModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
     public function __construct()
     {
+    }
+
+    public function validator($data, $isEdit = false)
+    {
+        $val = [
+            'nickname' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'password' => ['required', 'string', 'min:8', 'confirmed']
+        ];
+        if (!$isEdit) {
+            $val['username'] = ['required', 'string', 'max:255'];
+            $val['email'][] = 'unique:users';
+        }
+        return Validator::make($data, $val);
     }
 
     public function get(Request $request)
@@ -58,20 +76,47 @@ class UserController extends Controller
 
     public function delete(Request $request)
     {
+        $old_password = $request->old_password;
+        if (
+            !Auth::attempt([
+                'id' => $request->user()->id,
+                'password' => $old_password
+            ])
+        ) {
+            return response(
+                [
+                    'error' => 'Old password does not match.'
+                ],
+                401
+            );
+        }
         $request->user()->delete();
         return ['error' => false];
     }
 
     public function edit(Request $request)
     {
+        $old_password = $request->old_password;
+        if (
+            !Auth::attempt([
+                'id' => $request->user()->id,
+                'password' => $old_password
+            ])
+        ) {
+            return response(
+                [
+                    'error' => 'Old password does not match.'
+                ],
+                401
+            );
+        }
         $data = [
-            'username' => $request->username,
             'nickname' => $request->nickname,
             'email' => $request->email,
             'password' => $request->password,
             'password_confirmation' => $request->password_confirmation
         ];
-        $right = $this->validator($data)->passes();
+        $right = $this->validator($data, true)->passes();
         if (!$right) {
             return response(
                 [
@@ -80,6 +125,7 @@ class UserController extends Controller
                 400
             );
         }
+        $data['password'] = Hash::make($data['password']);
         $request->user()->update($data);
         return [
             'error' => false,

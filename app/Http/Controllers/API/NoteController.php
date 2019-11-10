@@ -52,6 +52,7 @@ class NoteController extends Controller
         return ['error' => false, 'note' => $res];
     }
 
+    // TODO: 设置文本格式
     public function create(Request $request)
     {
         $id = $request->user()->id;

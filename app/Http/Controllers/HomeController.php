@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -23,6 +24,12 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        return view('home', ['user_id' => $request->user()->id]);
+        return view('home', [
+            'user_id' => $request->user()->id,
+            'nick_name' => $request->user()->nickname,
+            'xknote_name' => DB::table('config')
+                ->where('config_name', 'xknote_name')
+                ->get()[0]->config_value
+        ]);
     }
 }

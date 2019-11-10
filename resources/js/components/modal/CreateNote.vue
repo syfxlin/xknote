@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import OnlyFolderItem from "../OnlyFolderItem";
 export default {
   name: "create-note",
@@ -62,8 +62,135 @@ export default {
   },
   computed: {
     ...mapState({
-      data: state => state.tools.lgModal.data
+      data: state => state.tools.lgModal.data,
+      modal: state => state.tools.lgModal
     })
+  },
+  methods: {
+    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
+    ...mapActions("toast", ["timeToast"]),
+    ...mapActions("note", [
+      "noteOperate",
+      "folderOperate",
+      "listOperate",
+      "openNote"
+    ])
+  },
+  created() {
+    this.modal.title = "新建MD笔记";
+    let wTimeout = null;
+    let watch = () => {
+      if (wTimeout) {
+        clearTimeout(wTimeout);
+      }
+      wTimeout = setTimeout(() => {
+        this.setLgModalData({
+          ...this.data,
+          status: "loading"
+        });
+        // TODO: 设置格式
+        if (!/\.(md|txt)/gi.test(this.data.filename)) {
+          this.setLgModalData({
+            ...this.data,
+            status: "error"
+          });
+          return;
+        }
+        this.noteOperate({
+          operate: "exist",
+          storage: this.data.storage,
+          noteInfo: {
+            path: this.data.select + "/" + this.data.filename
+          }
+        }).then(data => {
+          if (data.exist) {
+            this.setLgModalData({
+              ...this.data,
+              status: "error"
+            });
+          } else {
+            this.setLgModalData({
+              ...this.data,
+              status: ""
+            });
+          }
+        });
+      }, 500);
+    };
+    let uwFileName = this.$watch("data.filename", watch);
+    let uwTitle = this.$watch("data.select", watch);
+    let uwStorage = this.$watch("data.storage", watch);
+    this.modal.confirm = () => {
+      if (
+        !this.data.filename ||
+        !this.data.title ||
+        !this.data.storage ||
+        this.data.status !== ""
+      ) {
+        return;
+      }
+      document
+        .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+        .classList.add("loading");
+      let d = new Date();
+      let date =
+        d.getFullYear() +
+        "/" +
+        (d.getMonth() + 1) +
+        "/" +
+        d.getDate() +
+        " " +
+        d.getHours() +
+        ":" +
+        d.getMinutes() +
+        ":" +
+        d.getSeconds();
+      let path = this.data.select + "/" + this.data.filename;
+      let noteInfo = {
+        type: "note",
+        path: path,
+        name: this.data.filename,
+        status: "N",
+        note: {
+          title: this.data.title,
+          created_at: date,
+          updated_at: date,
+          author: "",
+          content: ""
+        }
+      };
+      this.openNote({
+        note: noteInfo,
+        source: {
+          path: path,
+          storage: this.data.storage
+        },
+        mode: "normal",
+        isNew: true
+      });
+      this.listOperate({
+        operate: "add",
+        storage: this.data.storage,
+        path: path,
+        noteInfo: noteInfo
+      });
+      document
+        .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+        .classList.remove("loading");
+      this.modal.cancel();
+    };
+    this.modal.cancel = () => {
+      uwFileName();
+      uwTitle();
+      uwStorage();
+      this.hideLgModal();
+    };
+    this.folderOperate({ operate: "readOnly", folderInfo: null }).then(data => {
+      this.setLgModalData({
+        ...this.data,
+        folders: data.folders
+      });
+    });
   }
 };
 </script>

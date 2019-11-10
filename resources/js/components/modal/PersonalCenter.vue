@@ -2,28 +2,53 @@
   <div class="form-horizontal">
     <div class="form-group">
       <div class="col-3 col-sm-12">
-        <label class="form-label">Git用户名</label>
+        <label class="form-label">用户名</label>
       </div>
       <div class="col-9 col-sm-12 has-icon-right">
-        <input class="form-input" type="text" v-model="data.git_name" required />
+        <input :value="data.username" class="form-input" type="text" disabled />
         <i :class="'form-icon icon' + (data.status === 'loading' ? ' loading' : '')"></i>
       </div>
     </div>
     <div class="form-group">
       <div class="col-3 col-sm-12">
-        <label class="form-label">Git邮箱</label>
+        <label class="form-label">昵称</label>
       </div>
       <div class="col-9 col-sm-12 has-icon-right">
-        <input class="form-input" type="email" v-model="data.git_email" required />
+        <input v-model="data.nickname" class="form-input" type="text" required />
         <i :class="'form-icon icon' + (data.status === 'loading' ? ' loading' : '')"></i>
       </div>
     </div>
     <div class="form-group">
       <div class="col-3 col-sm-12">
-        <label class="form-label">Git密码</label>
+        <label class="form-label">邮箱</label>
+      </div>
+      <div class="col-9 col-sm-12 has-icon-right">
+        <input v-model="data.email" class="form-input" type="email" required />
+        <i :class="'form-icon icon' + (data.status === 'loading' ? ' loading' : '')"></i>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-3 col-sm-12">
+        <label class="form-label">旧密码</label>
       </div>
       <div class="col-9 col-sm-12">
-        <input class="form-input" type="password" v-model="data.git_password" required />
+        <input v-model="data.old_password" class="form-input" type="password" required />
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-3 col-sm-12">
+        <label class="form-label">新密码</label>
+      </div>
+      <div class="col-9 col-sm-12">
+        <input v-model="data.password" class="form-input" type="password" required />
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-3 col-sm-12">
+        <label class="form-label">确认密码</label>
+      </div>
+      <div class="col-9 col-sm-12">
+        <input v-model="data.password_confirmation" class="form-input" type="password" required />
       </div>
     </div>
   </div>
@@ -32,7 +57,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 export default {
-  name: "git-config",
+  name: "personal-center",
   computed: {
     ...mapState({
       data: state => state.tools.lgModal.data,
@@ -41,25 +66,23 @@ export default {
   },
   methods: {
     ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
-    ...mapActions("conf", ["configOperate"]),
+    ...mapActions("user", ["getUser", "setUser"]),
     ...mapActions("toast", ["timeToast"])
   },
   created() {
-    this.modal.title = "Git设置";
+    this.modal.title = "个人中心";
     this.setLgModalData({
       ...this.data,
       status: "loading"
     });
-    this.configOperate({
-      operate: "getGitConfig",
-      config: null
-    })
+    this.getUser()
       .then(info => {
         this.setLgModalData({
           ...this.data,
           status: "",
-          git_name: info.git_name,
-          git_email: info.git_email
+          username: info.username,
+          nickname: info.nickname,
+          email: info.email
         });
       })
       .catch(error => {
@@ -75,9 +98,11 @@ export default {
       });
     this.modal.confirm = () => {
       if (
-        !this.data.git_name ||
-        !this.data.git_email ||
-        !this.data.git_password ||
+        !this.data.email ||
+        !this.data.nickname ||
+        !this.data.password_confirmation ||
+        !this.data.password ||
+        !this.data.old_password ||
         this.data.status !== ""
       ) {
         return;
@@ -85,13 +110,8 @@ export default {
       document
         .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
         .classList.add("loading");
-      this.configOperate({
-        operate: "setGitConfig",
-        config: {
-          git_name: this.data.git_name,
-          git_email: this.data.git_email,
-          git_password: this.data.git_password
-        }
+      this.setUser({
+        user: this.data
       })
         .then(() => {
           document

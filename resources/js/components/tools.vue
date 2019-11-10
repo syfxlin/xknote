@@ -19,7 +19,7 @@
     <modal :data="lgModal" :size="'lg'">
       <create-note v-if="lgModal.content==='CreateNote'"></create-note>
       <create-folder v-if="lgModal.content==='CreateFolder'"></create-folder>
-      <template v-if="lgModal.content==='PersonalCenter'">personalCenter</template>
+      <personal-center v-if="lgModal.content==='PersonalCenter'"></personal-center>
       <user-config v-if="lgModal.content==='UserConfig'"></user-config>
       <git-config v-if="lgModal.content==='GitConfig'"></git-config>
       <system-config v-if="lgModal.content==='SystemConfig'"></system-config>
@@ -43,6 +43,7 @@ import CheckLocalStatus from "./modal/CheckLocalStatus";
 import GitInitClone from "./modal/GitInitClone";
 import GitItemConfig from "./modal/GitItemConfig";
 import SystemConfig from "./modal/SystemConfig";
+import PersonalCenter from "./modal/PersonalCenter";
 import Modal from "./Modal";
 import { mapState, mapActions } from "vuex";
 export default {
@@ -56,6 +57,7 @@ export default {
     "git-init-clone": GitInitClone,
     "git-item-config": GitItemConfig,
     "system-config": SystemConfig,
+    "personal-center": PersonalCenter,
     modal: Modal
   },
   computed: {

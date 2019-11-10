@@ -11930,7 +11930,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return {
       navBarListC: _utils_dropdownList__WEBPACK_IMPORTED_MODULE_4__["default"].navBarListC,
       navBarListR: _utils_dropdownList__WEBPACK_IMPORTED_MODULE_4__["default"].navBarListR,
-      loadedEditor: false
+      loadedEditor: false,
+      xknoteName: document.querySelector("[name=xknote-name]").content
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])("note", ["xknoteOpened"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])("tools", ["writeMode"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])("conf", ["userSetting"])),
@@ -12531,8 +12532,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modal_GitInitClone__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modal/GitInitClone */ "./resources/js/components/modal/GitInitClone.vue");
 /* harmony import */ var _modal_GitItemConfig__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modal/GitItemConfig */ "./resources/js/components/modal/GitItemConfig.vue");
 /* harmony import */ var _modal_SystemConfig__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modal/SystemConfig */ "./resources/js/components/modal/SystemConfig.vue");
-/* harmony import */ var _Modal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Modal */ "./resources/js/components/Modal.vue");
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _modal_PersonalCenter__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./modal/PersonalCenter */ "./resources/js/components/modal/PersonalCenter.vue");
+/* harmony import */ var _Modal__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Modal */ "./resources/js/components/Modal.vue");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -12585,6 +12587,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "tools",
   components: {
@@ -12596,14 +12599,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     "git-init-clone": _modal_GitInitClone__WEBPACK_IMPORTED_MODULE_5__["default"],
     "git-item-config": _modal_GitItemConfig__WEBPACK_IMPORTED_MODULE_6__["default"],
     "system-config": _modal_SystemConfig__WEBPACK_IMPORTED_MODULE_7__["default"],
-    modal: _Modal__WEBPACK_IMPORTED_MODULE_8__["default"]
+    "personal-center": _modal_PersonalCenter__WEBPACK_IMPORTED_MODULE_8__["default"],
+    modal: _Modal__WEBPACK_IMPORTED_MODULE_9__["default"]
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_9__["mapState"])("tools", ["smModal", "lgModal", "floatMenu"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_9__["mapState"])({
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_10__["mapState"])("tools", ["smModal", "lgModal", "floatMenu"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_10__["mapState"])({
     toast: function toast(state) {
       return state.toast;
     }
   })),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_9__["mapActions"])("menu", ["floatMenuOperate"]))
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_10__["mapActions"])("menu", ["floatMenuOperate"]))
 });
 
 /***/ }),
@@ -12728,11 +12732,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -12743,8 +12742,106 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
     data: function data(state) {
       return state.tools.lgModal.data;
+    },
+    modal: function modal(state) {
+      return state.tools.lgModal;
     }
-  }))
+  })),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["setLgModalData", "hideLgModal"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("note", ["folderOperate", "listOperate", "loadCloudFolders"])),
+  created: function created() {
+    var _this = this;
+
+    this.modal.title = "新建文件夹";
+    var wTimeout = null;
+
+    var watch = function watch() {
+      if (wTimeout) {
+        clearTimeout(wTimeout);
+      }
+
+      wTimeout = setTimeout(function () {
+        _this.setLgModalData(_objectSpread({}, _this.data, {
+          status: "loading"
+        }));
+
+        _this.folderOperate({
+          operate: "exist",
+          folderInfo: {
+            path: _this.data.select + "/" + _this.data.foldername
+          }
+        }).then(function (data) {
+          if (data.exist) {
+            _this.setLgModalData(_objectSpread({}, _this.data, {
+              status: "error"
+            }));
+          } else {
+            _this.setLgModalData(_objectSpread({}, _this.data, {
+              status: ""
+            }));
+          }
+        });
+      }, 500);
+    };
+
+    var uwFolderName = this.$watch("data.foldername", watch);
+    var uwTitle = this.$watch("data.select", watch);
+
+    this.modal.confirm = function () {
+      if (!_this.data.foldername || _this.data.status !== "") {
+        return;
+      }
+
+      document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
+      var path = _this.data.select + "/" + _this.data.foldername;
+
+      _this.folderOperate({
+        operate: "create",
+        folderInfo: {
+          path: path
+        }
+      }).then(function () {
+        _this.listOperate({
+          operate: "add",
+          storage: _this.data.storage,
+          path: path
+        });
+
+        document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
+
+        _this.modal.cancel();
+
+        _this.loadCloudFolders();
+
+        _this.timeToast({
+          message: "创建文件夹成功！",
+          status: "success",
+          delay: 1000
+        });
+      })["catch"](function (err) {
+        _this.timeToast({
+          message: "创建文件夹失败！请重试。",
+          status: "error",
+          delay: 1000
+        });
+      });
+    };
+
+    this.modal.cancel = function () {
+      uwFolderName();
+      uwTitle();
+
+      _this.hideLgModal();
+    };
+
+    this.folderOperate({
+      operate: "readOnly",
+      folderInfo: null
+    }).then(function (data) {
+      _this.setLgModalData(_objectSpread({}, _this.data, {
+        folders: data.folders
+      }));
+    });
+  }
 });
 
 /***/ }),
@@ -12830,8 +12927,123 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
     data: function data(state) {
       return state.tools.lgModal.data;
+    },
+    modal: function modal(state) {
+      return state.tools.lgModal;
     }
-  }))
+  })),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["setLgModalData", "hideLgModal"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("toast", ["timeToast"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("note", ["noteOperate", "folderOperate", "listOperate", "openNote"])),
+  created: function created() {
+    var _this = this;
+
+    this.modal.title = "新建MD笔记";
+    var wTimeout = null;
+
+    var watch = function watch() {
+      if (wTimeout) {
+        clearTimeout(wTimeout);
+      }
+
+      wTimeout = setTimeout(function () {
+        _this.setLgModalData(_objectSpread({}, _this.data, {
+          status: "loading"
+        })); // TODO: 设置格式
+
+
+        if (!/\.(md|txt)/gi.test(_this.data.filename)) {
+          _this.setLgModalData(_objectSpread({}, _this.data, {
+            status: "error"
+          }));
+
+          return;
+        }
+
+        _this.noteOperate({
+          operate: "exist",
+          storage: _this.data.storage,
+          noteInfo: {
+            path: _this.data.select + "/" + _this.data.filename
+          }
+        }).then(function (data) {
+          if (data.exist) {
+            _this.setLgModalData(_objectSpread({}, _this.data, {
+              status: "error"
+            }));
+          } else {
+            _this.setLgModalData(_objectSpread({}, _this.data, {
+              status: ""
+            }));
+          }
+        });
+      }, 500);
+    };
+
+    var uwFileName = this.$watch("data.filename", watch);
+    var uwTitle = this.$watch("data.select", watch);
+    var uwStorage = this.$watch("data.storage", watch);
+
+    this.modal.confirm = function () {
+      if (!_this.data.filename || !_this.data.title || !_this.data.storage || _this.data.status !== "") {
+        return;
+      }
+
+      document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
+      var d = new Date();
+      var date = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+      var path = _this.data.select + "/" + _this.data.filename;
+      var noteInfo = {
+        type: "note",
+        path: path,
+        name: _this.data.filename,
+        status: "N",
+        note: {
+          title: _this.data.title,
+          created_at: date,
+          updated_at: date,
+          author: "",
+          content: ""
+        }
+      };
+
+      _this.openNote({
+        note: noteInfo,
+        source: {
+          path: path,
+          storage: _this.data.storage
+        },
+        mode: "normal",
+        isNew: true
+      });
+
+      _this.listOperate({
+        operate: "add",
+        storage: _this.data.storage,
+        path: path,
+        noteInfo: noteInfo
+      });
+
+      document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
+
+      _this.modal.cancel();
+    };
+
+    this.modal.cancel = function () {
+      uwFileName();
+      uwTitle();
+      uwStorage();
+
+      _this.hideLgModal();
+    };
+
+    this.folderOperate({
+      operate: "readOnly",
+      folderInfo: null
+    }).then(function (data) {
+      _this.setLgModalData(_objectSpread({}, _this.data, {
+        folders: data.folders
+      }));
+    });
+  }
 });
 
 /***/ }),
@@ -12889,8 +13101,77 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
     data: function data(state) {
       return state.tools.lgModal.data;
+    },
+    modal: function modal(state) {
+      return state.tools.lgModal;
     }
-  }))
+  })),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["setLgModalData", "hideLgModal"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("conf", ["configOperate"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("toast", ["timeToast"])),
+  created: function created() {
+    var _this = this;
+
+    this.modal.title = "Git设置";
+    this.setLgModalData(_objectSpread({}, this.data, {
+      status: "loading"
+    }));
+    this.configOperate({
+      operate: "getGitConfig",
+      config: null
+    }).then(function (info) {
+      _this.setLgModalData(_objectSpread({}, _this.data, {
+        status: "",
+        git_name: info.git_name,
+        git_email: info.git_email
+      }));
+    })["catch"](function (error) {
+      _this.timeToast({
+        message: "获取信息失败！",
+        status: "error",
+        delay: 1000
+      });
+
+      _this.setLgModalData(_objectSpread({}, _this.data, {
+        status: ""
+      }));
+    });
+
+    this.modal.confirm = function () {
+      if (!_this.data.git_name || !_this.data.git_email || !_this.data.git_password || _this.data.status !== "") {
+        return;
+      }
+
+      document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
+
+      _this.configOperate({
+        operate: "setGitConfig",
+        config: {
+          git_name: _this.data.git_name,
+          git_email: _this.data.git_email,
+          git_password: _this.data.git_password
+        }
+      }).then(function () {
+        document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
+
+        _this.modal.cancel();
+
+        _this.timeToast({
+          message: "设置成功！",
+          status: "success",
+          delay: 1000
+        });
+      })["catch"](function (error) {
+        _this.timeToast({
+          message: "设置失败，请重试！",
+          status: "error",
+          delay: 1000
+        });
+      });
+    };
+
+    this.modal.cancel = function () {
+      _this.hideLgModal();
+    };
+  }
 });
 
 /***/ }),
@@ -13059,6 +13340,152 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return state.tools.lgModal.data;
     }
   }))
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modal/PersonalCenter.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/modal/PersonalCenter.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "personal-center",
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
+    data: function data(state) {
+      return state.tools.lgModal.data;
+    },
+    modal: function modal(state) {
+      return state.tools.lgModal;
+    }
+  })),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["setLgModalData", "hideLgModal"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("user", ["getUser", "setUser"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("toast", ["timeToast"])),
+  created: function created() {
+    var _this = this;
+
+    this.modal.title = "个人中心";
+    this.setLgModalData(_objectSpread({}, this.data, {
+      status: "loading"
+    }));
+    this.getUser().then(function (info) {
+      _this.setLgModalData(_objectSpread({}, _this.data, {
+        status: "",
+        username: info.username,
+        nickname: info.nickname,
+        email: info.email
+      }));
+    })["catch"](function (error) {
+      _this.timeToast({
+        message: "获取信息失败！",
+        status: "error",
+        delay: 1000
+      });
+
+      _this.setLgModalData(_objectSpread({}, _this.data, {
+        status: ""
+      }));
+    });
+
+    this.modal.confirm = function () {
+      if (!_this.data.email || !_this.data.nickname || !_this.data.password_confirmation || !_this.data.password || !_this.data.old_password || _this.data.status !== "") {
+        return;
+      }
+
+      document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
+
+      _this.setUser({
+        user: _this.data
+      }).then(function () {
+        document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
+
+        _this.modal.cancel();
+
+        _this.timeToast({
+          message: "设置成功！",
+          status: "success",
+          delay: 1000
+        });
+      })["catch"](function (error) {
+        _this.timeToast({
+          message: "设置失败，请重试！",
+          status: "error",
+          delay: 1000
+        });
+      });
+    };
+
+    this.modal.cancel = function () {
+      _this.hideLgModal();
+    };
+  }
 });
 
 /***/ }),
@@ -13313,7 +13740,49 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       settingList: _utils_settingList__WEBPACK_IMPORTED_MODULE_1__["default"]
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])("conf", ["userConfig"]))
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])("conf", ["userConfig"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
+    data: function data(state) {
+      return state.tools.lgModal.data;
+    },
+    modal: function modal(state) {
+      return state.tools.lgModal;
+    }
+  })),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("tools", ["setLgModalData", "hideLgModal"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("conf", ["configOperate"]), {}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])("toast", ["timeToast"])),
+  created: function created() {
+    var _this = this;
+
+    this.modal.title = "用户设置";
+
+    this.modal.confirm = function () {
+      document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.add("loading");
+
+      _this.configOperate({
+        operate: "setUserConfig",
+        config: _this.userConfig
+      }).then(function (data) {
+        document.querySelector(".xknote-lg-modal .modal-footer .btn-primary").classList.remove("loading");
+
+        _this.modal.cancel();
+
+        _this.timeToast({
+          message: "设置成功！",
+          status: "success",
+          delay: 1000
+        });
+      })["catch"](function (err) {
+        _this.timeToast({
+          message: "设置遇到问题",
+          status: "error",
+          delay: 1000
+        });
+      });
+    };
+
+    this.modal.cancel = function () {
+      _this.hideLgModal();
+    };
+  }
 });
 
 /***/ }),
@@ -13444,7 +13913,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.active {\r\n  color: #585858;\n}\n#toc li img {\r\n  width: 1.05em;\n}\r\n", ""]);
+exports.push([module.i, "\n.active {\n  color: #585858;\n}\n#toc li img {\n  width: 1.05em;\n}\n", ""]);
 
 // exports
 
@@ -23857,7 +24326,7 @@ var render = function() {
           _c(
             "a",
             { staticClass: "btn btn-link text-large", attrs: { href: "#" } },
-            [_vm._v("{ XK-Note }")]
+            [_vm._v(_vm._s(_vm.xknoteName))]
           ),
           _vm._v(" "),
           _c("transition", { attrs: { name: "fade", mode: "out-in" } }, [
@@ -24941,7 +25410,7 @@ var render = function() {
             : _vm._e(),
           _vm._v(" "),
           _vm.lgModal.content === "PersonalCenter"
-            ? [_vm._v("personalCenter")]
+            ? _c("personal-center")
             : _vm._e(),
           _vm._v(" "),
           _vm.lgModal.content === "UserConfig" ? _c("user-config") : _vm._e(),
@@ -24964,7 +25433,7 @@ var render = function() {
             ? _c("git-item-config")
             : _vm._e()
         ],
-        2
+        1
       ),
       _vm._v(" "),
       _c("div", { class: "toast toast-" + _vm.toast.status }, [
@@ -25197,7 +25666,7 @@ var render = function() {
                 _vm._l(_vm.data.folders, function(item) {
                   return _c("only-folder-item", {
                     key: item.id,
-                    attrs: { info: item, lgModal: _vm.lgModal }
+                    attrs: { info: item }
                   })
                 })
               ]
@@ -26030,6 +26499,246 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-3 col-sm-12" }, [
       _c("label", { staticClass: "form-label" }, [_vm._v("Git密码")])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modal/PersonalCenter.vue?vue&type=template&id=313f6bc2&":
+/*!***********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/modal/PersonalCenter.vue?vue&type=template&id=313f6bc2& ***!
+  \***********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "form-horizontal" }, [
+    _c("div", { staticClass: "form-group" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-9 col-sm-12 has-icon-right" }, [
+        _c("input", {
+          staticClass: "form-input",
+          attrs: { type: "text", disabled: "" },
+          domProps: { value: _vm.data.username }
+        }),
+        _vm._v(" "),
+        _c("i", {
+          class:
+            "form-icon icon" + (_vm.data.status === "loading" ? " loading" : "")
+        })
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _vm._m(1),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-9 col-sm-12 has-icon-right" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.data.nickname,
+              expression: "data.nickname"
+            }
+          ],
+          staticClass: "form-input",
+          attrs: { type: "text", required: "" },
+          domProps: { value: _vm.data.nickname },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.data, "nickname", $event.target.value)
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c("i", {
+          class:
+            "form-icon icon" + (_vm.data.status === "loading" ? " loading" : "")
+        })
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _vm._m(2),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-9 col-sm-12 has-icon-right" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.data.email,
+              expression: "data.email"
+            }
+          ],
+          staticClass: "form-input",
+          attrs: { type: "email", required: "" },
+          domProps: { value: _vm.data.email },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.data, "email", $event.target.value)
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c("i", {
+          class:
+            "form-icon icon" + (_vm.data.status === "loading" ? " loading" : "")
+        })
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _vm._m(3),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-9 col-sm-12" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.data.old_password,
+              expression: "data.old_password"
+            }
+          ],
+          staticClass: "form-input",
+          attrs: { type: "password", required: "" },
+          domProps: { value: _vm.data.old_password },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.data, "old_password", $event.target.value)
+            }
+          }
+        })
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _vm._m(4),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-9 col-sm-12" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.data.password,
+              expression: "data.password"
+            }
+          ],
+          staticClass: "form-input",
+          attrs: { type: "password", required: "" },
+          domProps: { value: _vm.data.password },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.data, "password", $event.target.value)
+            }
+          }
+        })
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _vm._m(5),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-9 col-sm-12" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.data.password_confirmation,
+              expression: "data.password_confirmation"
+            }
+          ],
+          staticClass: "form-input",
+          attrs: { type: "password", required: "" },
+          domProps: { value: _vm.data.password_confirmation },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.data, "password_confirmation", $event.target.value)
+            }
+          }
+        })
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-3 col-sm-12" }, [
+      _c("label", { staticClass: "form-label" }, [_vm._v("用户名")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-3 col-sm-12" }, [
+      _c("label", { staticClass: "form-label" }, [_vm._v("昵称")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-3 col-sm-12" }, [
+      _c("label", { staticClass: "form-label" }, [_vm._v("邮箱")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-3 col-sm-12" }, [
+      _c("label", { staticClass: "form-label" }, [_vm._v("旧密码")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-3 col-sm-12" }, [
+      _c("label", { staticClass: "form-label" }, [_vm._v("新密码")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-3 col-sm-12" }, [
+      _c("label", { staticClass: "form-label" }, [_vm._v("确认密码")])
     ])
   }
 ]
@@ -32021,6 +32730,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/modal/PersonalCenter.vue":
+/*!**********************************************************!*\
+  !*** ./resources/js/components/modal/PersonalCenter.vue ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _PersonalCenter_vue_vue_type_template_id_313f6bc2___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PersonalCenter.vue?vue&type=template&id=313f6bc2& */ "./resources/js/components/modal/PersonalCenter.vue?vue&type=template&id=313f6bc2&");
+/* harmony import */ var _PersonalCenter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PersonalCenter.vue?vue&type=script&lang=js& */ "./resources/js/components/modal/PersonalCenter.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _PersonalCenter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _PersonalCenter_vue_vue_type_template_id_313f6bc2___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _PersonalCenter_vue_vue_type_template_id_313f6bc2___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/modal/PersonalCenter.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/modal/PersonalCenter.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/modal/PersonalCenter.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonalCenter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./PersonalCenter.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modal/PersonalCenter.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonalCenter_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/modal/PersonalCenter.vue?vue&type=template&id=313f6bc2&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/components/modal/PersonalCenter.vue?vue&type=template&id=313f6bc2& ***!
+  \*****************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonalCenter_vue_vue_type_template_id_313f6bc2___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./PersonalCenter.vue?vue&type=template&id=313f6bc2& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/modal/PersonalCenter.vue?vue&type=template&id=313f6bc2&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonalCenter_vue_vue_type_template_id_313f6bc2___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonalCenter_vue_vue_type_template_id_313f6bc2___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/modal/SystemConfig.vue":
 /*!********************************************************!*\
   !*** ./resources/js/components/modal/SystemConfig.vue ***!
@@ -32633,12 +33411,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _syncActions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../syncActions */ "./resources/js/store/syncActions.js");
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 
 
 var state = {};
@@ -33175,365 +33947,6 @@ var actions = {
     if (operate.indexOf('show') === 0) {
       var modal = {};
       modal.content = operate.substring(4);
-
-      if (modal.content === 'CreateNote') {
-        modal.title = '新建MD笔记';
-        var wTimeout = null;
-
-        var watch = function watch() {
-          if (wTimeout) {
-            clearTimeout(wTimeout);
-          }
-
-          wTimeout = setTimeout(function () {
-            dispatch('tools/setLgModalData', _objectSpread({}, rootState.tools.lgModal.data, {
-              status: 'loading'
-            }), {
-              root: true
-            }); // TODO: 设置格式
-
-            if (!/\.(md|txt)/gi.test(rootState.tools.lgModal.data.filename)) {
-              dispatch('tools/setLgModalData', _objectSpread({}, rootState.tools.lgModal.data, {
-                status: 'error'
-              }), {
-                root: true
-              });
-              return;
-            }
-
-            dispatch('note/noteOperate', {
-              operate: 'exist',
-              storage: rootState.tools.lgModal.data.storage,
-              noteInfo: {
-                path: rootState.tools.lgModal.data.select + '/' + rootState.tools.lgModal.data.filename
-              }
-            }, {
-              root: true
-            }).then(function (data) {
-              if (data.exist) {
-                dispatch('tools/setLgModalData', _objectSpread({}, rootState.tools.lgModal.data, {
-                  status: 'error'
-                }), {
-                  root: true
-                });
-              } else {
-                dispatch('tools/setLgModalData', _objectSpread({}, rootState.tools.lgModal.data, {
-                  status: ''
-                }), {
-                  root: true
-                });
-              }
-            });
-          }, 500);
-        };
-
-        var uwFileName = this.watch(function (state) {
-          return state.tools.lgModal.data.filename;
-        }, watch);
-        var uwTitle = this.watch(function (state) {
-          return state.tools.lgModal.data.select;
-        }, watch);
-        var uwStorage = this.watch(function (state) {
-          return state.tools.lgModal.data.storage;
-        }, watch);
-
-        modal.confirm = function () {
-          if (!rootState.tools.lgModal.data.filename || !rootState.tools.lgModal.data.title || !rootState.tools.lgModal.data.storage || rootState.tools.lgModal.data.status !== '') {
-            return;
-          }
-
-          document.querySelector('.xknote-lg-modal .modal-footer .btn-primary').classList.add('loading');
-          var d = new Date();
-          var date = d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
-          var path = rootState.tools.lgModal.data.select + '/' + rootState.tools.lgModal.data.filename;
-          var noteInfo = {
-            type: 'note',
-            path: path,
-            name: rootState.tools.lgModal.data.filename,
-            status: 'N',
-            note: {
-              title: rootState.tools.lgModal.data.title,
-              created_at: date,
-              updated_at: date,
-              author: '',
-              content: ''
-            }
-          };
-          dispatch('note/openNote', {
-            note: noteInfo,
-            source: {
-              path: path,
-              storage: rootState.tools.lgModal.data.storage
-            },
-            mode: 'normal',
-            isNew: true
-          }, {
-            root: true
-          });
-          Object(_syncActions__WEBPACK_IMPORTED_MODULE_1__["dispatchSync"])('note/listOperate', {
-            operate: 'add',
-            storage: rootState.tools.lgModal.data.storage,
-            path: path,
-            noteInfo: noteInfo
-          });
-          document.querySelector('.xknote-lg-modal .modal-footer .btn-primary').classList.remove('loading');
-          rootState.tools.lgModal.cancel();
-        };
-
-        modal.cancel = function () {
-          uwFileName();
-          uwTitle();
-          uwStorage();
-          dispatch('tools/hideLgModal', null, {
-            root: true
-          });
-        };
-
-        dispatch('note/folderOperate', {
-          operate: 'readOnly',
-          folderInfo: null
-        }, {
-          root: true
-        }).then(function (data) {
-          dispatch('tools/setLgModalData', _objectSpread({}, rootState.tools.lgModal.data, {
-            folders: data.folders
-          }), {
-            root: true
-          });
-        });
-      }
-
-      if (modal.content === 'CreateFolder') {
-        modal.title = '新建文件夹';
-        var _wTimeout = null;
-
-        var _watch = function _watch() {
-          if (_wTimeout) {
-            clearTimeout(_wTimeout);
-          }
-
-          _wTimeout = setTimeout(function () {
-            dispatch('tools/setLgModalData', _objectSpread({}, rootState.tools.lgModal.data, {
-              status: 'loading'
-            }), {
-              root: true
-            });
-            dispatch('note/folderOperate', {
-              operate: 'exist',
-              folderInfo: {
-                path: rootState.tools.lgModal.data.select + '/' + rootState.tools.lgModal.data.foldername
-              }
-            }, {
-              root: true
-            }).then(function (data) {
-              if (data.exist) {
-                dispatch('tools/setLgModalData', _objectSpread({}, rootState.tools.lgModal.data, {
-                  status: 'error'
-                }), {
-                  root: true
-                });
-              } else {
-                dispatch('tools/setLgModalData', _objectSpread({}, rootState.tools.lgModal.data, {
-                  status: ''
-                }), {
-                  root: true
-                });
-              }
-            });
-          }, 500);
-        };
-
-        var uwFolderName = this.watch(function (state) {
-          return state.tools.lgModal.data.foldername;
-        }, _watch);
-
-        var _uwTitle = this.watch(function (state) {
-          return state.tools.lgModal.data.select;
-        }, _watch);
-
-        modal.confirm = function () {
-          if (!rootState.tools.lgModal.data.foldername || rootState.tools.lgModal.data.status !== '') {
-            return;
-          }
-
-          document.querySelector('.xknote-lg-modal .modal-footer .btn-primary').classList.add('loading');
-          var path = rootState.tools.lgModal.data.select + '/' + rootState.tools.lgModal.data.foldername;
-          dispatch('note/folderOperate', {
-            operate: 'create',
-            folderInfo: {
-              path: path
-            }
-          }, {
-            root: true
-          }).then(function () {
-            Object(_syncActions__WEBPACK_IMPORTED_MODULE_1__["dispatchSync"])('note/listOperate', {
-              operate: 'add',
-              storage: rootState.tools.lgModal.data.storage,
-              path: path
-            });
-            document.querySelector('.xknote-lg-modal .modal-footer .btn-primary').classList.remove('loading');
-            rootState.tools.lgModal.cancel();
-            dispatch('note/loadCloudFolders', null, {
-              root: true
-            });
-            dispatch('toast/timeToast', {
-              message: '创建文件夹成功！',
-              status: 'success',
-              delay: 1000
-            }, {
-              root: true
-            });
-          })["catch"](function (err) {
-            dispatch('toast/timeToast', {
-              message: '创建文件夹失败！请重试。',
-              status: 'error',
-              delay: 1000
-            }, {
-              root: true
-            });
-          });
-        };
-
-        modal.cancel = function () {
-          uwFolderName();
-
-          _uwTitle();
-
-          dispatch('tools/hideLgModal', null, {
-            root: true
-          });
-        };
-
-        dispatch('note/folderOperate', {
-          operate: 'readOnly',
-          folderInfo: null
-        }, {
-          root: true
-        }).then(function (data) {
-          dispatch('tools/setLgModalData', _objectSpread({}, rootState.tools.lgModal.data, {
-            folders: data.folders
-          }), {
-            root: true
-          });
-        });
-      }
-
-      if (modal.content === 'GitConfig') {
-        modal.title = 'Git设置';
-        dispatch('tools/setLgModalData', _objectSpread({}, rootState.tools.lgModal.data, {
-          status: 'loading'
-        }), {
-          root: true
-        });
-        dispatch('conf/configOperate', {
-          operate: 'getGitConfig',
-          config: null
-        }, {
-          root: true
-        }).then(function (info) {
-          dispatch('tools/setLgModalData', _objectSpread({}, rootState.tools.lgModal.data, {
-            status: '',
-            git_name: info.git_name,
-            git_email: info.git_email
-          }), {
-            root: true
-          });
-        })["catch"](function (error) {
-          dispatch('toast/timeToast', {
-            message: '获取信息失败！',
-            status: 'error',
-            delay: 1000
-          }, {
-            root: true
-          });
-          dispatch('tools/setLgModalData', _objectSpread({}, rootState.tools.lgModal.data, {
-            status: ''
-          }), {
-            root: true
-          });
-        });
-
-        modal.confirm = function () {
-          if (!rootState.tools.lgModal.data.git_name || !rootState.tools.lgModal.data.git_email || !rootState.tools.lgModal.data.git_password || rootState.tools.lgModal.data.status !== '') {
-            return;
-          }
-
-          document.querySelector('.xknote-lg-modal .modal-footer .btn-primary').classList.add('loading');
-          dispatch('conf/configOperate', {
-            operate: 'setGitConfig',
-            config: {
-              git_name: rootState.tools.lgModal.data.git_name,
-              git_email: rootState.tools.lgModal.data.git_email,
-              git_password: rootState.tools.lgModal.data.git_password
-            }
-          }, {
-            root: true
-          }).then(function () {
-            document.querySelector('.xknote-lg-modal .modal-footer .btn-primary').classList.remove('loading');
-            rootState.tools.lgModal.cancel();
-            dispatch('toast/timeToast', {
-              message: '设置成功！',
-              status: 'success',
-              delay: 1000
-            }, {
-              root: true
-            });
-          })["catch"](function (error) {
-            dispatch('toast/timeToast', {
-              message: '设置失败，请重试！',
-              status: 'error',
-              delay: 1000
-            }, {
-              root: true
-            });
-          });
-        };
-
-        modal.cancel = function () {
-          dispatch('tools/hideLgModal', null, {
-            root: true
-          });
-        };
-      }
-
-      if (modal.content === 'UserConfig') {
-        modal.title = '用户设置';
-
-        modal.confirm = function () {
-          document.querySelector('.xknote-lg-modal .modal-footer .btn-primary').classList.add('loading');
-          dispatch('conf/configOperate', {
-            operate: 'setUserConfig',
-            config: rootState.conf.userConfig
-          }, {
-            root: true
-          }).then(function (data) {
-            document.querySelector('.xknote-lg-modal .modal-footer .btn-primary').classList.remove('loading');
-            rootState.tools.lgModal.cancel();
-            dispatch('toast/timeToast', {
-              message: '设置成功！',
-              status: 'success',
-              delay: 1000
-            }, {
-              root: true
-            });
-          })["catch"](function (err) {
-            dispatch('toast/timeToast', {
-              message: '设置遇到问题',
-              status: 'error',
-              delay: 1000
-            }, {
-              root: true
-            });
-          });
-        };
-
-        modal.cancel = function () {
-          dispatch('tools/hideLgModal', null, {
-            root: true
-          });
-        };
-      }
-
       dispatch('tools/showLgModal', modal, {
         root: true
       });
@@ -35227,8 +35640,9 @@ var actions = {
       });
     });
   },
-  deleteUser: function deleteUser(_ref2, id) {
+  deleteUser: function deleteUser(_ref2) {
     var dispatch = _ref2.dispatch;
+    var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
     var url = '';
 
     if (id) {
@@ -35240,6 +35654,54 @@ var actions = {
     return new Promise(function (resolve, reject) {
       window.axios["delete"](url).then(function (res) {
         resolve(res.data);
+      })["catch"](function (err) {
+        console.error(err);
+        reject(err);
+      });
+    });
+  },
+  getUser: function getUser(_ref3) {
+    var dispatch = _ref3.dispatch;
+    var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    var url = '';
+
+    if (id) {
+      url = '/api/admin/users/' + id;
+    } else {
+      url = '/api/user';
+    }
+
+    return new Promise(function (resolve, reject) {
+      window.axios.get(url).then(function (res) {
+        resolve(res.data.user);
+      })["catch"](function (err) {
+        console.error(err);
+        reject(err);
+      });
+    });
+  },
+  setUser: function setUser(_ref4, _ref5) {
+    var dispatch = _ref4.dispatch;
+    var user = _ref5.user,
+        _ref5$id = _ref5.id,
+        id = _ref5$id === void 0 ? null : _ref5$id;
+    var url = '';
+
+    if (id) {
+      url = '/api/admin/users/' + id;
+    } else {
+      url = '/api/user';
+    }
+
+    return new Promise(function (resolve, reject) {
+      window.axios.put(url, {
+        old_password: user.old_password,
+        nickname: user.nickname,
+        email: user.email,
+        password: user.password,
+        password_confirmation: user.password_confirmation
+      }).then(function (res) {
+        resolve(res.data.user);
       })["catch"](function (err) {
         console.error(err);
         reject(err);
@@ -35451,6 +35913,7 @@ if (document.querySelector('[name=user-id]').content !== '1') {
   }), 1);
 }
 
+navBarListR[1].mainItem.name = document.querySelector('[name=nick-name]').content;
 /* harmony default export */ __webpack_exports__["default"] = ({
   navBarListC: navBarListC,
   navBarListR: navBarListR

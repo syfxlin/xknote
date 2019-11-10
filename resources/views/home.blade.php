@@ -11,6 +11,8 @@
         <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
         <title>XK-Note</title>
         <meta name="user-id" content="{{ $user_id }}">
+        <meta name="nick-name" content="{{ $nick_name }}">
+        <meta name="xknote-name" content="{{ $xknote_name }}">
     </head>
     <body>
         <div id="app">

@@ -3,7 +3,7 @@
     <header class="navbar xknote-header">
       <section class="navbar-section col-2">
         <img class="xknote-icon" src="https://note.ixk.me/img/logo.png" alt="XK-Note icon" />
-        <a href="#" class="btn btn-link text-large">{ XK-Note }</a>
+        <a href="#" class="btn btn-link text-large">{{ xknoteName }}</a>
         <transition name="fade" mode="out-in">
           <button
             class="btn btn-action btn-lg"
@@ -107,7 +107,8 @@ export default {
     return {
       navBarListC: dropdownList.navBarListC,
       navBarListR: dropdownList.navBarListR,
-      loadedEditor: false
+      loadedEditor: false,
+      xknoteName: document.querySelector("[name=xknote-name]").content
     };
   },
   computed: {
