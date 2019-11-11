@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
-    ...mapActions("toast", ["timeToast"]),
+    ...mapActions("toast", ["timeToast", "showLoadToast", "hideLoadToast"]),
     ...mapActions("note", ["folderOperate", "listOperate", "loadCloudFolders"])
   },
   created() {
@@ -101,17 +101,18 @@ export default {
         }
       })
         .then(() => {
-          this.listOperate({
-            operate: "add",
-            storage: this.data.storage,
-            path: path
-          });
           document
             .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
             .classList.remove("loading");
           this.modal.cancel();
-          // TODO: 加载时提示
-          this.loadCloudFolders();
+          this.showLoadToast({ message: "重新读取文件夹列表中..." });
+          this.loadCloudFolders()
+            .then(() => {
+              this.hideLoadToast();
+            })
+            .catch(err => {
+              this.hideLoadToast();
+            });
           this.timeToast({
             message: "创建文件夹成功！",
             status: "success",

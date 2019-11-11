@@ -134,8 +134,14 @@ export default {
             .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
             .classList.remove("loading");
           this.modal.cancel();
-          // TODO: 加载时提示
-          this.loadCloudFolders();
+          this.showLoadToast({ message: "重新读取文件夹列表中..." });
+          this.loadCloudFolders()
+            .then(() => {
+              this.hideLoadToast();
+            })
+            .catch(err => {
+              this.hideLoadToast();
+            });
           this.timeToast({
             message: "移动成功！",
             status: "success",

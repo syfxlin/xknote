@@ -11,6 +11,13 @@ const actions = {
   gitOperate({ dispatch, rootState }, { operate, path }) {
     if (operate === 'gitPull') {
       dispatch(
+        'toast/showLoadToast',
+        {
+          message: '操作中...'
+        },
+        { root: true }
+      );
+      dispatch(
         'note/folderOperate',
         {
           operate: operate,
@@ -28,6 +35,7 @@ const actions = {
             },
             { root: true }
           );
+          dispatch('toast/hideLoadToast', null, { root: true });
         })
         .catch(error => {
           dispatch(
@@ -39,38 +47,17 @@ const actions = {
             },
             { root: true }
           );
+          dispatch('toast/hideLoadToast', null, { root: true });
         });
     }
     if (operate === 'gitPush') {
       dispatch(
-        'note/folderOperate',
-        { operate: operate, folderInfo: { path: path } },
+        'toast/showLoadToast',
+        {
+          message: '操作中...'
+        },
         { root: true }
-      )
-        .then(() => {
-          dispatch(
-            'toast/timeToast',
-            {
-              message: 'Git Push成功！',
-              status: 'success',
-              delay: 1000
-            },
-            { root: true }
-          );
-        })
-        .catch(error => {
-          dispatch(
-            'toast/timeToast',
-            {
-              message: 'Git Push失败，请重试！',
-              status: 'error',
-              delay: 1000
-            },
-            { root: true }
-          );
-        });
-    }
-    if (operate === 'gitPushForce') {
+      );
       dispatch(
         'note/folderOperate',
         { operate: operate, folderInfo: { path: path } },
@@ -86,6 +73,7 @@ const actions = {
             },
             { root: true }
           );
+          dispatch('toast/hideLoadToast', null, { root: true });
         })
         .catch(error => {
           dispatch(
@@ -97,6 +85,45 @@ const actions = {
             },
             { root: true }
           );
+          dispatch('toast/hideLoadToast', null, { root: true });
+        });
+    }
+    if (operate === 'gitPushForce') {
+      dispatch(
+        'toast/showLoadToast',
+        {
+          message: '操作中...'
+        },
+        { root: true }
+      );
+      dispatch(
+        'note/folderOperate',
+        { operate: operate, folderInfo: { path: path } },
+        { root: true }
+      )
+        .then(() => {
+          dispatch(
+            'toast/timeToast',
+            {
+              message: 'Git Push成功！',
+              status: 'success',
+              delay: 1000
+            },
+            { root: true }
+          );
+          dispatch('toast/hideLoadToast', null, { root: true });
+        })
+        .catch(error => {
+          dispatch(
+            'toast/timeToast',
+            {
+              message: 'Git Push失败，请重试！',
+              status: 'error',
+              delay: 1000
+            },
+            { root: true }
+          );
+          dispatch('toast/hideLoadToast', null, { root: true });
         });
     }
     if (operate === 'gitInitClone') {

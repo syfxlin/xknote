@@ -230,7 +230,6 @@ const actions = {
             reject(err);
           });
       }
-      // TODO: 添加加载时提示
       if (operate === 'gitPush' || operate === 'gitPushForce') {
         window.axios
           .put('/api/repo', {

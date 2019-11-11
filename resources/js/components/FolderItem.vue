@@ -91,7 +91,7 @@ export default {
             operate: "rename"
           },
           {
-            name: "移动", // TODO: 未完成
+            name: "移动",
             operate: "move"
           },
           {

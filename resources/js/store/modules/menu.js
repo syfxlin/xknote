@@ -453,14 +453,17 @@ const actions = {
         }
       }
       if (operate === 'saveCloud') {
-        let note = dispatchSync(
-          'note/listOperate',
+        let note = dispatchSync('note/listOperate', {
+          operate: 'get',
+          storage: storage,
+          path: path
+        });
+        dispatch(
+          'toast/showLoadToast',
           {
-            operate: 'get',
-            storage: storage,
-            path: path
-          }
-          // { root: true }
+            message: '保存中...'
+          },
+          { root: true }
         );
         dispatch(
           'note/noteOperate',
@@ -472,6 +475,7 @@ const actions = {
           { root: true }
         )
           .then(() => {
+            dispatch('toast/hideLoadToast', null, { root: true });
             note.status = 'C';
             if (storage === 'curr') {
               if (rootState.note.currListSource[path].storage === 'local') {
@@ -486,15 +490,11 @@ const actions = {
                 );
               }
               if (rootState.tools.floatMenu.saveAndClose) {
-                dispatchSync(
-                  'note/listOperate',
-                  {
-                    operate: 'delete',
-                    storage: 'curr',
-                    path: path
-                  }
-                  // { root: true }
-                );
+                dispatchSync('note/listOperate', {
+                  operate: 'delete',
+                  storage: 'curr',
+                  path: path
+                });
                 dispatch(
                   'note/setXknoteOpened',
                   JSON.parse(JSON.stringify(rootState.note.noteBaseInfo)),

@@ -329,10 +329,10 @@ body {
     position: fixed;
     right: 0;
     bottom: 2rem;
-    width: 9rem;
+    min-width: 9rem;
     display: flex;
     align-items: center;
-    padding: 0.5rem 0rem 0.5rem 0.5rem;
+    padding: 0.5rem;
     border-radius: 2rem 0rem 0 2rem;
     background-color: rgba(87, 85, 217, 0.85);
     box-shadow: 0 1px 20px -6px rgba(0, 0, 0, 0.2);
