@@ -61,6 +61,7 @@
         <router-link to="/read" class="btn btn-link">阅读模式</router-link>
         <router-link v-if="!writeMode" to="/write" class="btn btn-link">写作模式</router-link>
         <router-link v-if="writeMode" to="/" class="btn btn-link">普通模式</router-link>
+        <a @click="navBarOperate('showImageItem')" class="btn btn-link">图片</a>
         <dropdown
           :mainItem="navBarListR[1].mainItem"
           :items="navBarListR[1].items"

@@ -452,6 +452,32 @@ const actions = {
           .querySelector('.xknote-check-local')
           .classList.remove('loading');
       });
+  },
+  imageOperate({ dispatch, rootState }, { operate, name = null }) {
+    return new Promise((resolve, reject) => {
+      if (operate === 'getAll') {
+        window.axios
+          .get('/api/images/all')
+          .then(res => {
+            resolve(res.data.images);
+          })
+          .catch(err => {
+            console.error(err);
+            reject(err);
+          });
+      }
+      if (operate === 'delete') {
+        window.axios
+          .delete('/api/images', { params: { name: name } })
+          .then(res => {
+            resolve(res.data);
+          })
+          .catch(err => {
+            console.error(err);
+            reject(err);
+          });
+      }
+    });
   }
 };
 

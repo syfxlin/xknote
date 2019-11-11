@@ -371,6 +371,25 @@ body {
     cursor: pointer;
 }
 
+.image-item img {
+    width: 100%;
+}
+
+.image-item .input-group {
+    padding-left: 1rem;
+    width: 100%;
+}
+
+.image-item .col-9,
+.image-item .col-3 {
+    display: flex;
+    align-items: center;
+}
+
+.image-item .columns:not(:last-child) {
+    margin-bottom: 1rem;
+}
+
 .fade-enter-active,
 .fade-leave-active {
     transition: opacity 0.5s;
