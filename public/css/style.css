@@ -276,7 +276,8 @@ body {
     padding: 0.8em 0;
     text-align: center;
 }
-.xknote-check-local {
+.xknote-check-local,
+.xknote-reload-cloud {
     margin-left: 50%;
     margin-top: 1rem;
     transform: translateX(-50%);

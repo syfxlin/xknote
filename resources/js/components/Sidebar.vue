@@ -43,6 +43,7 @@
             :storage="'cloud'"
             :mode="'normal'"
           />
+          <button @click="reloadCloud()" class="btn xknote-reload-cloud" title="重新加载云端笔记">重新加载</button>
           <div class="cloud-tab-loading" v-if="cloudList.length===0">
             <div class="loading loading-lg"></div>
             <div class="text-gray text-center">正在加载，客官莫急。</div>
@@ -94,8 +95,33 @@ export default {
     ...mapState("tools", ["writeMode", "showSidebar"])
   },
   methods: {
-    ...mapActions("note", ["switchTab"]),
-    ...mapActions("other", ["checkLocalStatus"])
+    ...mapActions("note", ["switchTab", "loadCloudFolders"]),
+    ...mapActions("other", ["checkLocalStatus"]),
+    ...mapActions("toast", ["timeToast"]),
+    reloadCloud() {
+      document.querySelector(".xknote-reload-cloud").classList.add("loading");
+      this.loadCloudFolders()
+        .then(() => {
+          document
+            .querySelector(".xknote-reload-cloud")
+            .classList.remove("loading");
+          this.timeToast({
+            message: "重新加载成功！",
+            status: "success",
+            delay: 1000
+          });
+        })
+        .catch(err => {
+          document
+            .querySelector(".xknote-reload-cloud")
+            .classList.remove("loading");
+          this.timeToast({
+            message: "重新加载失败，请重试！",
+            status: "error",
+            delay: 1000
+          });
+        });
+    }
   }
 };
 </script>
