@@ -29,6 +29,7 @@
       <move-item v-if="lgModal.content==='MoveItem'"></move-item>
       <image-item v-if="lgModal.content==='ImageItem'"></image-item>
     </modal>
+    <modal :data="llgModal" :size="'llgModal'"></modal>
     <div :class="'toast toast-' + toast.status">
       <button class="btn btn-clear float-right"></button>
       <p>{{ toast.message }}</p>

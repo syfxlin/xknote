@@ -200,4 +200,10 @@ class GitRepoModel
     {
         return Storage::exists('/uid_' . $id . $path . '/.git');
     }
+
+    public function diff($path, $id, $commit, $file = null)
+    {
+        $repo = new XkGitRepository(storage_path() . '/app/uid_' . $id . $path);
+        return $repo->getDiffForCommit($commit, $file);
+    }
 }

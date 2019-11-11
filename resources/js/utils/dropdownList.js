@@ -44,6 +44,10 @@ const navBarListC = [
     },
     items: [
       {
+        name: '查看笔记历史',
+        operate: 'showNoteHistory'
+      },
+      {
         name: 'divider',
         content: 'Git'
       },

@@ -275,4 +275,19 @@ class GitRepoController extends Controller
         }
         return ['error' => false];
     }
+
+    public function diff(Request $request)
+    {
+        if (!$request->has('path')) {
+            return response(['error' => 'Parameter not found. (path)'], 400);
+        }
+        $id = $request->user()->id;
+        $diff = $this->model->diff(
+            $request->path,
+            $id,
+            $request->commit,
+            $request->file
+        );
+        return ['error' => false, 'diff' => $diff];
+    }
 }
