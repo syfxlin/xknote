@@ -295,6 +295,9 @@ const actions = {
             });
         }
       }
+      if (operate === 'export') {
+        window.location.href = '/api/export?path=' + folderInfo.path;
+      }
     });
   },
   noteOperate(

@@ -10,9 +10,6 @@
         <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
         <title>XK-Note</title>
-        <meta name="user-id" content="{{ $user_id }}">
-        <meta name="nick-name" content="{{ $nick_name }}">
-        <meta name="xknote-name" content="{{ $xknote_name }}">
     </head>
     <body>
         <div id="app">
@@ -22,6 +19,9 @@
                 <p>加载中，请稍后...</p>
             </div>
         </div>
+        <script>
+            window.xknote = @json($xknote_data);
+        </script>
         <!-- Vue -->
         {{-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue-router@3.0.6/dist/vue-router.min.js"></script> --}}

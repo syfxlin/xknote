@@ -23,12 +23,6 @@ export default {
     // 是否是通过输入URL引发的query变动
     window.inputQueryChangeFlag = true;
   },
-  data() {
-    return {};
-  },
-  mounted() {
-    window.xknote = {};
-  },
   computed: {
     ...mapState("note", [
       "xknoteOpened",

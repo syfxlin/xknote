@@ -108,7 +108,7 @@ export default {
       navBarListC: dropdownList.navBarListC,
       navBarListR: dropdownList.navBarListR,
       loadedEditor: false,
-      xknoteName: document.querySelector("[name=xknote-name]").content
+      xknoteName: window.xknote.xknote_name
     };
   },
   computed: {

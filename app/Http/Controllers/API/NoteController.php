@@ -63,8 +63,7 @@ class NoteController extends Controller
         $document_ext = DB::table('config')
             ->where('config_name', 'document_ext')
             ->get()[0]->config_value;
-        $document_ext_preg = str_replace('|', '|.', '.' . $document_ext);
-        if (!preg_match('/(' . $document_ext_preg . ')$/i', $path)) {
+        if (!preg_match('/.+\.(' . $document_ext . ')$/i', $path)) {
             return response(['error' => 'Parameter error. (path)'], 400);
         }
         $info = [

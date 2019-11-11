@@ -35,10 +35,6 @@ const navBarListC = [
       {
         name: '导出带样式的HTML文件',
         operate: 'downloadFullHTML'
-      },
-      {
-        name: '导出阅读模式的HTML文件',
-        operate: 'downloadReadHTML'
       }
     ]
   },
@@ -123,7 +119,7 @@ const navBarListR = [
   }
 ];
 
-if (document.querySelector('[name=user-id]').content !== '1') {
+if (window.xknote.user_id != '1') {
   navBarListR[1].items.splice(
     navBarListR[1].items.findIndex(item => {
       return item.operate === 'showSystemConfig';
@@ -132,9 +128,7 @@ if (document.querySelector('[name=user-id]').content !== '1') {
   );
 }
 
-navBarListR[1].mainItem.name = document.querySelector(
-  '[name=nick-name]'
-).content;
+navBarListR[1].mainItem.name = window.xknote.nickname;
 
 export default {
   navBarListC: navBarListC,

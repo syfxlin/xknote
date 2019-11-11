@@ -88,8 +88,11 @@ export default {
           ...this.data,
           status: "loading"
         });
-        // TODO: 设置格式
-        if (!/\.(md|txt)/gi.test(this.data.filename)) {
+        if (
+          !new RegExp(".+\\.(" + window.xknote.document_ext + ")").test(
+            this.data.filename
+          )
+        ) {
           this.setLgModalData({
             ...this.data,
             status: "error"

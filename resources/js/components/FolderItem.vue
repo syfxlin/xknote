@@ -57,8 +57,8 @@ export default {
             operate: "delete"
           },
           {
-            name: "打包导出", // TODO: 未完成
-            operate: "downloadFolder"
+            name: "打包导出",
+            operate: "export"
           },
           {
             name: "divider",
@@ -99,8 +99,8 @@ export default {
             operate: "delete"
           },
           {
-            name: "打包导出", // TODO: 未完成
-            operate: "downloadFolder"
+            name: "打包导出",
+            operate: "export"
           }
         ]
       }

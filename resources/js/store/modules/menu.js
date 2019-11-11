@@ -622,6 +622,18 @@ const actions = {
           { root: true }
         );
       }
+      if (operate === 'export') {
+        dispatch(
+          'note/folderOperate',
+          {
+            operate: 'export',
+            folderInfo: {
+              path: path
+            }
+          },
+          { root: true }
+        );
+      }
     }
   },
   floatMenuOperate({ dispatch, rootState }, operate) {
@@ -688,7 +700,6 @@ const actions = {
         'fullhtml'
       );
     }
-    // TODO: 导出阅读模式的HTML
     if (operate === 'logout') {
       dispatch('other/logout', null, { root: true });
     }
