@@ -29,7 +29,9 @@
       <move-item v-if="lgModal.content==='MoveItem'"></move-item>
       <image-item v-if="lgModal.content==='ImageItem'"></image-item>
     </modal>
-    <modal :data="llgModal" :size="'llgModal'"></modal>
+    <modal :data="llgModal" :size="'llg'">
+      <note-history v-if="llgModal.content==='NoteHistory'"></note-history>
+    </modal>
     <div :class="'toast toast-' + toast.status">
       <button class="btn btn-clear float-right"></button>
       <p>{{ toast.message }}</p>
@@ -53,6 +55,7 @@ import SystemConfig from "./modal/SystemConfig";
 import PersonalCenter from "./modal/PersonalCenter";
 import MoveItem from "./modal/MoveItem";
 import ImageItem from "./modal/ImageItem";
+import NoteHistory from "./modal/NoteHistory";
 import Modal from "./Modal";
 import { mapState, mapActions } from "vuex";
 export default {
@@ -69,10 +72,11 @@ export default {
     "personal-center": PersonalCenter,
     "move-item": MoveItem,
     "image-item": ImageItem,
+    "note-history": NoteHistory,
     modal: Modal
   },
   computed: {
-    ...mapState("tools", ["smModal", "lgModal", "floatMenu"]),
+    ...mapState("tools", ["smModal", "lgModal", "floatMenu", "llgModal"]),
     ...mapState("toast", ["toast", "loadToast"])
   },
   methods: {

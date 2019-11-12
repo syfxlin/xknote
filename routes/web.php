@@ -91,5 +91,6 @@ Route::prefix('api')
         Route::put('/blog', 'BlogController@setConfig');
         Route::get('/blog', 'BlogController@getConfig');
 
-        Route::get('/diff', 'GitRepoController@diff');
+        Route::get('/repo/log', 'GitRepoController@getLog');
+        Route::get('/repo/diff', 'GitRepoController@getDiff');
     });

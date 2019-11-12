@@ -113,7 +113,7 @@ class GitRepoController extends Controller
                 [
                     'error' => true,
                     'message' =>
-                        'The settings are not found in the current repo, please reset them.'
+                    'The settings are not found in the current repo, please reset them.'
                 ],
                 404
             );
@@ -276,10 +276,20 @@ class GitRepoController extends Controller
         return ['error' => false];
     }
 
-    public function diff(Request $request)
+    public function getLog(Request $request)
     {
-        if (!$request->has('path')) {
-            return response(['error' => 'Parameter not found. (path)'], 400);
+        if (!$request->has('path') || !$request->has('file')) {
+            return response(['error' => 'Parameter not found. (path,file)'], 400);
+        }
+        $id = $request->user()->id;
+        $log = $this->model->log($request->path, $id, $request->file);
+        return ['error' => false, 'logs' => $log];
+    }
+
+    public function getDiff(Request $request)
+    {
+        if (!$request->has('path') || !$request->has('commit') || !$request->has('file')) {
+            return response(['error' => 'Parameter not found. (path,commit,file)'], 400);
         }
         $id = $request->user()->id;
         $diff = $this->model->diff(
@@ -288,6 +298,6 @@ class GitRepoController extends Controller
             $request->commit,
             $request->file
         );
-        return ['error' => false, 'diff' => $diff];
+        return ['error' => false, 'diffs' => $diff];
     }
 }

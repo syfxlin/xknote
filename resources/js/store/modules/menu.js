@@ -1,5 +1,5 @@
-import Vue from 'vue';
-import { dispatchSync } from '../syncActions';
+import Vue from "vue";
+import { dispatchSync } from "../syncActions";
 
 const state = {};
 
@@ -10,26 +10,26 @@ const actions = {
     { dispatch, rootState },
     { operate, type, storage, path, curr = null }
   ) {
-    dispatch('tools/hideFloatMenu', null, { root: true });
-    if (operate === 'delete') {
+    dispatch("tools/hideFloatMenu", null, { root: true });
+    if (operate === "delete") {
       dispatch(
-        'tools/showSmModal',
+        "tools/showSmModal",
         {
-          title: '删除',
-          content: '是否删除该文件(文件夹)？(此操作不可逆)',
+          title: "删除",
+          content: "是否删除该文件(文件夹)？(此操作不可逆)",
           confirm: () => {
             let info = dispatchSync(
-              'note/listOperate',
+              "note/listOperate",
               {
-                operate: 'get',
+                operate: "get",
                 storage: storage,
                 path: path
               }
               // { root: true }
             );
-            if (type === 'note') {
+            if (type === "note") {
               dispatch(
-                'note/noteOperate',
+                "note/noteOperate",
                 {
                   operate: operate,
                   storage: storage,
@@ -39,19 +39,19 @@ const actions = {
               )
                 .then(res => {
                   dispatchSync(
-                    'note/listOperate',
+                    "note/listOperate",
                     {
-                      operate: 'delete',
+                      operate: "delete",
                       storage: storage,
                       path: path
                     }
                     // { root: true }
                   );
                   dispatch(
-                    'toast/timeToast',
+                    "toast/timeToast",
                     {
-                      message: '删除成功！',
-                      status: 'success',
+                      message: "删除成功！",
+                      status: "success",
                       delay: 1000
                     },
                     { root: true }
@@ -59,10 +59,10 @@ const actions = {
                 })
                 .catch(err => {
                   dispatch(
-                    'toast/timeToast',
+                    "toast/timeToast",
                     {
-                      message: '删除失败！请重试。',
-                      status: 'error',
+                      message: "删除失败！请重试。",
+                      status: "error",
                       delay: 1000
                     },
                     { root: true }
@@ -70,15 +70,15 @@ const actions = {
                 });
             } else {
               dispatch(
-                'note/folderOperate',
+                "note/folderOperate",
                 { operate: operate, noteInfo: info },
                 { root: true }
               )
                 .then(res => {
                   dispatchSync(
-                    'note/listOperate',
+                    "note/listOperate",
                     {
-                      operate: 'delete',
+                      operate: "delete",
                       storage: storage,
                       path: path
                     }
@@ -87,10 +87,10 @@ const actions = {
                 })
                 .then(() => {
                   dispatch(
-                    'toast/timeToast',
+                    "toast/timeToast",
                     {
-                      message: '删除成功！',
-                      status: 'success',
+                      message: "删除成功！",
+                      status: "success",
                       delay: 1000
                     },
                     { root: true }
@@ -98,31 +98,31 @@ const actions = {
                 })
                 .catch(err => {
                   dispatch(
-                    'toast/timeToast',
+                    "toast/timeToast",
                     {
-                      message: '删除失败！请重试。',
-                      status: 'error',
+                      message: "删除失败！请重试。",
+                      status: "error",
                       delay: 1000
                     },
                     { root: true }
                   );
                 });
             }
-            dispatch('tools/hideSmModal', null, { root: true });
+            dispatch("tools/hideSmModal", null, { root: true });
           },
           cancel: () => {
-            dispatch('tools/hideSmModal', null, { root: true });
+            dispatch("tools/hideSmModal", null, { root: true });
           }
         },
         { root: true }
       );
     }
-    if (operate === 'rename') {
+    if (operate === "rename") {
       // 先获取到旧的Note信息，为了防止对象的变动所以需要克隆对象，利用json转换即可方便克隆对象
       let info = dispatchSync(
-        'note/listOperate',
+        "note/listOperate",
         {
-          operate: 'get',
+          operate: "get",
           storage: storage,
           path: path
         }
@@ -131,31 +131,31 @@ const actions = {
       let oldInfo = JSON.parse(JSON.stringify(info));
       // 更改item为输入框
       let input = null;
-      if (type === 'note') {
-        curr.querySelector('.tile-content').setAttribute('children', 'input');
-        input = curr.querySelector('.tile-content > input');
+      if (type === "note") {
+        curr.querySelector(".tile-content").setAttribute("children", "input");
+        input = curr.querySelector(".tile-content > input");
       } else {
         curr
-          .querySelector('.accordion-header')
-          .setAttribute('children', 'input');
-        input = curr.querySelector('.accordion-header > input');
+          .querySelector(".accordion-header")
+          .setAttribute("children", "input");
+        input = curr.querySelector(".accordion-header > input");
       }
       let keyEv = e => {
-        if (e.key === 'Enter') {
+        if (e.key === "Enter") {
           let value = e.target.value;
-          let newPath = info.path.replace(new RegExp(info.name + '$'), value);
+          let newPath = info.path.replace(new RegExp(info.name + "$"), value);
           let oldPath = info.path;
           let s = storage;
-          if (type === 'note' && storage === 'curr') {
+          if (type === "note" && storage === "curr") {
             s = rootState.note.currListSource[oldPath].storage;
           }
           let opList = () => {
-            dispatchSync('note/listOperate', {
-              operate: 'add',
+            dispatchSync("note/listOperate", {
+              operate: "add",
               storage: storage,
               path: newPath,
               noteInfo:
-                storage === 'curr'
+                storage === "curr"
                   ? {
                       note: info,
                       source: {
@@ -165,18 +165,18 @@ const actions = {
                     }
                   : info
             });
-            dispatchSync('note/listOperate', {
-              operate: 'delete',
+            dispatchSync("note/listOperate", {
+              operate: "delete",
               storage: storage,
               path: oldPath
             });
           };
           info.path = newPath;
           info.name = value;
-          input.setAttribute('disabled', 'disabled');
-          if (type === 'note') {
+          input.setAttribute("disabled", "disabled");
+          if (type === "note") {
             dispatch(
-              'note/noteOperate',
+              "note/noteOperate",
               {
                 operate: operate,
                 storage: s,
@@ -188,15 +188,15 @@ const actions = {
               { root: true }
             )
               .then(res => {
-                curr.querySelector('.tile-content').removeAttribute('children');
-                input.removeEventListener('keydown', keyEv);
-                input.removeAttribute('disabled');
+                curr.querySelector(".tile-content").removeAttribute("children");
+                input.removeEventListener("keydown", keyEv);
+                input.removeAttribute("disabled");
                 opList();
                 dispatch(
-                  'toast/timeToast',
+                  "toast/timeToast",
                   {
-                    message: '重命名成功！',
-                    status: 'success',
+                    message: "重命名成功！",
+                    status: "success",
                     delay: 1000
                   },
                   { root: true }
@@ -205,12 +205,12 @@ const actions = {
               .catch(err => {
                 info.path = oldInfo.path;
                 info.name = oldInfo.name;
-                input.removeAttribute('disabled');
+                input.removeAttribute("disabled");
                 dispatch(
-                  'toast/timeToast',
+                  "toast/timeToast",
                   {
-                    message: '重命名失败！请重试。',
-                    status: 'error',
+                    message: "重命名失败！请重试。",
+                    status: "error",
                     delay: 1000
                   },
                   { root: true }
@@ -218,7 +218,7 @@ const actions = {
               });
           } else {
             dispatch(
-              'note/folderOperate',
+              "note/folderOperate",
               {
                 operate: operate,
                 folderInfo: {
@@ -230,16 +230,16 @@ const actions = {
             )
               .then(res => {
                 curr
-                  .querySelector('.accordion-header')
-                  .removeAttribute('children');
-                input.removeEventListener('keydown', keyEv);
-                input.removeAttribute('disabled');
-                dispatch('note/loadCloudFolders', null, { root: true });
+                  .querySelector(".accordion-header")
+                  .removeAttribute("children");
+                input.removeEventListener("keydown", keyEv);
+                input.removeAttribute("disabled");
+                dispatch("note/loadCloudFolders", null, { root: true });
                 dispatch(
-                  'toast/timeToast',
+                  "toast/timeToast",
                   {
-                    message: '重命名成功！',
-                    status: 'success',
+                    message: "重命名成功！",
+                    status: "success",
                     delay: 1000
                   },
                   { root: true }
@@ -248,12 +248,12 @@ const actions = {
               .catch(err => {
                 info.path = oldInfo.path;
                 info.name = oldInfo.name;
-                input.removeAttribute('disabled');
+                input.removeAttribute("disabled");
                 dispatch(
-                  'toast/timeToast',
+                  "toast/timeToast",
                   {
-                    message: '重命名失败！请重试。',
-                    status: 'error',
+                    message: "重命名失败！请重试。",
+                    status: "error",
                     delay: 1000
                   },
                   { root: true }
@@ -262,13 +262,13 @@ const actions = {
           }
         }
       };
-      input.addEventListener('keydown', keyEv);
+      input.addEventListener("keydown", keyEv);
     }
-    if (operate === 'move') {
+    if (operate === "move") {
       dispatch(
-        'tools/showLgModal',
+        "tools/showLgModal",
         {
-          content: 'MoveItem',
+          content: "MoveItem",
           data: {
             type: type,
             path: path,
@@ -279,12 +279,12 @@ const actions = {
       );
     }
     // noteItem专有操作
-    if (type === 'note') {
-      if (operate === 'saveLocal') {
+    if (type === "note") {
+      if (operate === "saveLocal") {
         let note = dispatchSync(
-          'note/listOperate',
+          "note/listOperate",
           {
-            operate: 'get',
+            operate: "get",
             storage: storage,
             path: path
           }
@@ -292,24 +292,24 @@ const actions = {
         );
         // Path相同的时候视为同一文档，但保存时并未删除，所以需要调整判断
         dispatchSync(
-          'note/listOperate',
+          "note/listOperate",
           {
-            operate: 'delete',
-            storage: 'local',
+            operate: "delete",
+            storage: "local",
             path: path
           }
           // { root: true }
         );
-        if (storage === 'curr') {
-          if (note.status != 'C') {
-            note.status = 'L';
+        if (storage === "curr") {
+          if (note.status != "C") {
+            note.status = "L";
           }
           // 保存到本地（实际操作）
           dispatch(
-            'note/noteOperate',
+            "note/noteOperate",
             {
-              operate: 'save',
-              storage: 'local',
+              operate: "save",
+              storage: "local",
               noteInfo: note
             },
             { root: true }
@@ -317,25 +317,25 @@ const actions = {
             .then(() => {
               if (rootState.tools.floatMenu.saveAndClose) {
                 note = dispatchSync(
-                  'note/listOperate',
+                  "note/listOperate",
                   {
-                    operate: 'delete',
-                    storage: 'curr',
+                    operate: "delete",
+                    storage: "curr",
                     path: path
                   }
                   // { root: true }
                 );
                 dispatch(
-                  'note/setXknoteOpened',
+                  "note/setXknoteOpened",
                   JSON.parse(JSON.stringify(rootState.note.noteBaseInfo)),
                   { root: true }
                 );
               }
               let localIndex = dispatchSync(
-                'note/listOperate',
+                "note/listOperate",
                 {
-                  operate: 'add',
-                  storage: 'local',
+                  operate: "add",
+                  storage: "local",
                   path: path,
                   noteInfo: note
                 }
@@ -344,22 +344,22 @@ const actions = {
               // 若不是从localList中打开的文件就不会有currListSource的信息，如果用户选择不关闭保存，则需要添加source信息，防止后续操作出现问题
               if (!rootState.tools.floatMenu.saveAndClose) {
                 dispatch(
-                  'note/setCurrListSourceA',
+                  "note/setCurrListSourceA",
                   {
                     path: path,
                     source: {
                       path: localIndex,
-                      storage: 'local'
+                      storage: "local"
                     }
                   },
                   { root: true }
                 );
               }
               dispatch(
-                'toast/timeToast',
+                "toast/timeToast",
                 {
-                  message: '保存到本地成功！',
-                  status: 'success',
+                  message: "保存到本地成功！",
+                  status: "success",
                   delay: 1000
                 },
                 { root: true }
@@ -367,61 +367,61 @@ const actions = {
             })
             .catch(
               err => {
-                dispatch('toast/timeToast', {
-                  message: '保存到本地失败！',
-                  status: 'error',
+                dispatch("toast/timeToast", {
+                  message: "保存到本地失败！",
+                  status: "error",
                   delay: 1000
                 });
               },
               { root: true }
             );
         }
-        if (storage === 'cloud') {
+        if (storage === "cloud") {
           let noteEle = document.querySelector(
             '[data-path="' + path + '"][data-storage="cloud"]'
           );
-          let icon = noteEle.querySelector('.tile-action');
-          icon.style.display = 'unset';
-          let btn = icon.querySelector('.btn');
+          let icon = noteEle.querySelector(".tile-action");
+          icon.style.display = "unset";
+          let btn = icon.querySelector(".btn");
           dispatch(
-            'note/noteOperate',
+            "note/noteOperate",
             {
-              operate: 'read',
-              storage: 'cloud',
+              operate: "read",
+              storage: "cloud",
               noteInfo: note
             },
             { root: true }
           )
             .then(data => {
-              Vue.set(note, 'note', data.note);
-              note.status = 'C';
-              btn.querySelector('.loading').style.display = 'none';
-              icon.style.display = '';
+              Vue.set(note, "note", data.note);
+              note.status = "C";
+              btn.querySelector(".loading").style.display = "none";
+              icon.style.display = "";
               dispatch(
-                'note/noteOperate',
+                "note/noteOperate",
                 {
-                  operate: 'save',
-                  storage: 'local',
+                  operate: "save",
+                  storage: "local",
                   noteInfo: note
                 },
                 { root: true }
               )
                 .then(() => {
                   dispatchSync(
-                    'note/listOperate',
+                    "note/listOperate",
                     {
-                      operate: 'add',
-                      storage: 'local',
+                      operate: "add",
+                      storage: "local",
                       path: path,
                       noteInfo: note
                     }
                     // { root: true }
                   );
                   dispatch(
-                    'toast/timeToast',
+                    "toast/timeToast",
                     {
-                      message: '保存到本地成功！',
-                      status: 'success',
+                      message: "保存到本地成功！",
+                      status: "success",
                       delay: 1000
                     },
                     { root: true }
@@ -429,10 +429,10 @@ const actions = {
                 })
                 .catch(err => {
                   dispatch(
-                    'toast/timeToast',
+                    "toast/timeToast",
                     {
-                      message: '保存到本地失败！请重试。',
-                      status: 'error',
+                      message: "保存到本地失败！请重试。",
+                      status: "error",
                       delay: 1000
                     },
                     { root: true }
@@ -441,10 +441,10 @@ const actions = {
             })
             .catch(err => {
               dispatch(
-                'toast/timeToast',
+                "toast/timeToast",
                 {
-                  message: '加载失败！请重试。',
-                  status: 'error',
+                  message: "加载失败！请重试。",
+                  status: "error",
                   delay: 1000
                 },
                 { root: true }
@@ -452,71 +452,71 @@ const actions = {
             });
         }
       }
-      if (operate === 'saveCloud') {
-        let note = dispatchSync('note/listOperate', {
-          operate: 'get',
+      if (operate === "saveCloud") {
+        let note = dispatchSync("note/listOperate", {
+          operate: "get",
           storage: storage,
           path: path
         });
         dispatch(
-          'toast/showLoadToast',
+          "toast/showLoadToast",
           {
-            message: '保存中...'
+            message: "保存中..."
           },
           { root: true }
         );
         dispatch(
-          'note/noteOperate',
+          "note/noteOperate",
           {
-            operate: 'save',
-            storage: 'cloud',
+            operate: "save",
+            storage: "cloud",
             noteInfo: note
           },
           { root: true }
         )
           .then(() => {
-            dispatch('toast/hideLoadToast', null, { root: true });
-            note.status = 'C';
-            if (storage === 'curr') {
-              if (rootState.note.currListSource[path].storage === 'local') {
+            dispatch("toast/hideLoadToast", null, { root: true });
+            note.status = "C";
+            if (storage === "curr") {
+              if (rootState.note.currListSource[path].storage === "local") {
                 dispatch(
-                  'note/noteOperate',
+                  "note/noteOperate",
                   {
-                    operate: 'save',
-                    storage: 'local',
+                    operate: "save",
+                    storage: "local",
                     noteInfo: note
                   },
                   { root: true }
                 );
               }
               if (rootState.tools.floatMenu.saveAndClose) {
-                dispatchSync('note/listOperate', {
-                  operate: 'delete',
-                  storage: 'curr',
+                dispatchSync("note/listOperate", {
+                  operate: "delete",
+                  storage: "curr",
                   path: path
                 });
                 dispatch(
-                  'note/setXknoteOpened',
+                  "note/setXknoteOpened",
                   JSON.parse(JSON.stringify(rootState.note.noteBaseInfo)),
                   { root: true }
                 );
               }
             }
-            if (storage === 'local') {
+            if (storage === "local") {
               if (rootState.tools.floatMenu.saveAndClose) {
                 dispatch(
-                  'note/noteOperate',
+                  "note/noteOperate",
                   {
-                    operate: 'delete',
-                    storage: 'local',
+                    operate: "delete",
+                    storage: "local",
                     noteInfo: note
                   },
                   { root: true }
                 );
                 dispatchSync(
-                  'note/listOperate',
+                  "note/listOperate",
                   {
-                    operate: 'delete',
+                    operate: "delete",
                     storage: storage,
                     path: path
                   }
@@ -524,10 +524,10 @@ const actions = {
                 );
               } else {
                 dispatch(
-                  'note/noteOperate',
+                  "note/noteOperate",
                   {
-                    operate: 'save',
-                    storage: 'local',
+                    operate: "save",
+                    storage: "local",
                     noteInfo: note
                   },
                   { root: true }
@@ -535,20 +535,20 @@ const actions = {
               }
             }
             dispatchSync(
-              'note/listOperate',
+              "note/listOperate",
               {
-                operate: 'add',
-                storage: 'cloud',
+                operate: "add",
+                storage: "cloud",
                 path: path,
                 noteInfo: note
               }
               // { root: true }
             );
             dispatch(
-              'toast/timeToast',
+              "toast/timeToast",
               {
-                message: '保存到云端成功！',
-                status: 'success',
+                message: "保存到云端成功！",
+                status: "success",
                 delay: 1000
               },
               { root: true }
@@ -556,31 +556,31 @@ const actions = {
           })
           .catch(err => {
             dispatch(
-              'toast/timeToast',
+              "toast/timeToast",
               {
-                message: '保存到云端失败！请重试。',
-                status: 'error',
+                message: "保存到云端失败！请重试。",
+                status: "error",
                 delay: 1000
               },
               { root: true }
             );
           });
       }
-      if (operate === 'closeCurr') {
+      if (operate === "closeCurr") {
         // 如果笔记在未保存状态关闭则先弹出modal提示是否下关闭
         let closeCurr = () => {
           if (path == rootState.note.xknoteOpenedIndex.curr) {
             dispatch(
-              'note/setXknoteOpened',
+              "note/setXknoteOpened",
               JSON.parse(JSON.stringify(rootState.note.noteBaseInfo)),
               { root: true }
             );
           }
           dispatchSync(
-            'note/listOperate',
+            "note/listOperate",
             {
-              operate: 'delete',
-              storage: 'curr',
+              operate: "delete",
+              storage: "curr",
               path: path
             }
             // { root: true }
@@ -588,22 +588,22 @@ const actions = {
         };
         if (
           dispatchSync(
-            'note/listOperate',
-            { operate: 'get', storage: storage, path: path }
+            "note/listOperate",
+            { operate: "get", storage: storage, path: path }
             // { root: true }
-          ).status === 'N'
+          ).status === "N"
         ) {
           dispatch(
-            'tools/showSmModal',
+            "tools/showSmModal",
             {
-              title: '关闭',
-              content: '该文件未保存，是否关闭该文件？(此操作不可逆)',
+              title: "关闭",
+              content: "该文件未保存，是否关闭该文件？(此操作不可逆)",
               confirm: () => {
                 closeCurr();
-                dispatch('tools/hideSmModal', null, { root: true });
+                dispatch("tools/hideSmModal", null, { root: true });
               },
               cancel: () => {
-                dispatch('tools/hideSmModal', null, { root: true });
+                dispatch("tools/hideSmModal", null, { root: true });
               }
             },
             { root: true }
@@ -614,19 +614,19 @@ const actions = {
       }
     }
     // folderItem专有操作
-    if (type === 'folder') {
-      if (operate.indexOf('git') === 0) {
+    if (type === "folder") {
+      if (operate.indexOf("git") === 0) {
         dispatch(
-          'other/gitOperate',
+          "other/gitOperate",
           { operate: operate, path: path },
           { root: true }
         );
       }
-      if (operate === 'export') {
+      if (operate === "export") {
         dispatch(
-          'note/folderOperate',
+          "note/folderOperate",
           {
-            operate: 'export',
+            operate: "export",
             folderInfo: {
               path: path
             }
@@ -637,7 +637,7 @@ const actions = {
     }
   },
   floatMenuOperate({ dispatch, rootState }, operate) {
-    dispatch('menuOperate', {
+    dispatch("menuOperate", {
       operate: operate,
       type: rootState.tools.floatMenu.data.type,
       storage: rootState.tools.floatMenu.data.storage,
@@ -646,62 +646,67 @@ const actions = {
     });
   },
   navBarOperate({ dispatch, rootState }, operate) {
-    if (operate.indexOf('show') === 0) {
+    if (operate.indexOf("lshow" === 0)) {
+      let modal = {};
+      modal.content = operate.substring(5);
+      dispatch("tools/showLlgModal", modal, { root: true });
+    }
+    if (operate.indexOf("show") === 0) {
       let modal = {};
       modal.content = operate.substring(4);
-      dispatch('tools/showLgModal', modal, { root: true });
+      dispatch("tools/showLgModal", modal, { root: true });
     }
-    if (operate.indexOf('git') === 0) {
+    if (operate.indexOf("git") === 0) {
       let path = rootState.note.xknoteOpened.path;
       dispatch(
-        'other/gitOperate',
+        "other/gitOperate",
         {
           operate: operate,
-          path: path.substring(0, path.indexOf('/', 1))
+          path: path.substring(0, path.indexOf("/", 1))
         },
         { root: true }
       );
     }
-    if (operate === 'saveLocal' || operate === 'saveCloud') {
-      dispatch('tools/setSaveAndClose', false, { root: true });
-      dispatch('menuOperate', {
+    if (operate === "saveLocal" || operate === "saveCloud") {
+      dispatch("tools/setSaveAndClose", false, { root: true });
+      dispatch("menuOperate", {
         operate: operate,
-        type: 'note',
-        storage: 'curr',
+        type: "note",
+        storage: "curr",
         path: rootState.note.xknoteOpenedIndex.curr
       });
     }
-    if (operate === 'saveAllLocal' || operate === 'saveAllCloud') {
-      dispatch('tools/setSaveAndClose', false, { root: true });
+    if (operate === "saveAllLocal" || operate === "saveAllCloud") {
+      dispatch("tools/setSaveAndClose", false, { root: true });
       for (let key in rootState.note.currList) {
-        dispatch('menuOperate', {
-          operate: operate.replace('All', ''),
-          type: 'note',
-          storage: 'curr',
+        dispatch("menuOperate", {
+          operate: operate.replace("All", ""),
+          type: "note",
+          storage: "curr",
           path: key
         });
       }
     }
-    if (operate === 'downloadMarkdown') {
+    if (operate === "downloadMarkdown") {
       window.XKEditor.download(
-        rootState.note.xknoteOpened.name.replace('.md', ''),
-        'markdown'
+        rootState.note.xknoteOpened.name.replace(".md", ""),
+        "markdown"
       );
     }
-    if (operate === 'downloadHTML') {
+    if (operate === "downloadHTML") {
       window.XKEditor.download(
-        rootState.note.xknoteOpened.name.replace('.md', ''),
-        'html'
+        rootState.note.xknoteOpened.name.replace(".md", ""),
+        "html"
       );
     }
-    if (operate === 'downloadFullHTML') {
+    if (operate === "downloadFullHTML") {
       window.XKEditor.download(
-        rootState.note.xknoteOpened.name.replace('.md', ''),
-        'fullhtml'
+        rootState.note.xknoteOpened.name.replace(".md", ""),
+        "fullhtml"
       );
     }
-    if (operate === 'logout') {
-      dispatch('other/logout', null, { root: true });
+    if (operate === "logout") {
+      dispatch("other/logout", null, { root: true });
     }
   }
 };
