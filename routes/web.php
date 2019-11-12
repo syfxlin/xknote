@@ -93,4 +93,6 @@ Route::prefix('api')
 
         Route::get('/repo/log', 'GitRepoController@getLog');
         Route::get('/repo/diff', 'GitRepoController@getDiff');
+        Route::post('/repo/rollback', 'GitRepoController@rollback');
+        Route::get('/repo/status', 'GitRepoController@getStatus');
     });

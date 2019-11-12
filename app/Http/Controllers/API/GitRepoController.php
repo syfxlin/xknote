@@ -113,7 +113,7 @@ class GitRepoController extends Controller
                 [
                     'error' => true,
                     'message' =>
-                    'The settings are not found in the current repo, please reset them.'
+                        'The settings are not found in the current repo, please reset them.'
                 ],
                 404
             );
@@ -279,19 +279,47 @@ class GitRepoController extends Controller
     public function getLog(Request $request)
     {
         if (!$request->has('path') || !$request->has('file')) {
-            return response(['error' => 'Parameter not found. (path,file)'], 400);
+            return response(
+                ['error' => 'Parameter not found. (path,file)'],
+                400
+            );
         }
         $id = $request->user()->id;
+        if (!$this->model->check($request->path, $id)) {
+            return response(
+                [
+                    'error' => true,
+                    'message' => 'There is no repo under this path'
+                ],
+                404
+            );
+        }
         $log = $this->model->log($request->path, $id, $request->file);
         return ['error' => false, 'logs' => $log];
     }
 
     public function getDiff(Request $request)
     {
-        if (!$request->has('path') || !$request->has('commit') || !$request->has('file')) {
-            return response(['error' => 'Parameter not found. (path,commit,file)'], 400);
+        if (
+            !$request->has('path') ||
+            !$request->has('commit') ||
+            !$request->has('file')
+        ) {
+            return response(
+                ['error' => 'Parameter not found. (path,commit,file)'],
+                400
+            );
         }
         $id = $request->user()->id;
+        if (!$this->model->check($request->path, $id)) {
+            return response(
+                [
+                    'error' => true,
+                    'message' => 'There is no repo under this path'
+                ],
+                404
+            );
+        }
         $diff = $this->model->diff(
             $request->path,
             $id,
@@ -299,5 +327,55 @@ class GitRepoController extends Controller
             $request->file
         );
         return ['error' => false, 'diffs' => $diff];
+    }
+
+    public function rollback(Request $request)
+    {
+        if (
+            !$request->has('path') ||
+            !$request->has('commit') ||
+            !$request->has('file')
+        ) {
+            return response(
+                ['error' => 'Parameter not found. (path,commit,file)'],
+                400
+            );
+        }
+        $id = $request->user()->id;
+        if (!$this->model->check($request->path, $id)) {
+            return response(
+                [
+                    'error' => true,
+                    'message' => 'There is no repo under this path'
+                ],
+                404
+            );
+        }
+        $this->model->rollback(
+            $request->path,
+            $id,
+            $request->commit,
+            $request->file
+        );
+        return ['error' => false];
+    }
+
+    public function getStatus(Request $request)
+    {
+        if (!$request->has('path')) {
+            return response(['error' => 'Parameter not found. (path)'], 400);
+        }
+        $id = $request->user()->id;
+        if (!$this->model->check($request->path, $id)) {
+            return response(
+                [
+                    'error' => true,
+                    'message' => 'There is no repo under this path'
+                ],
+                404
+            );
+        }
+        $status = $this->model->status($request->path, $id);
+        return ['error' => false, 'status' => $status];
     }
 }

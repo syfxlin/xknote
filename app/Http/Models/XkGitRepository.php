@@ -40,7 +40,8 @@ class XkGitRepository extends GitRepository
         $log_ori = $this->extractFromCommand(
             'git --no-pager log -' .
                 escapeshellarg($count) .
-                ' --date=format:"%Y-%m-%d_%H:%M:%S" --pretty=format:"%h %cd %s"' . ($file ? ' -- ' . escapeshellarg('.' . $file) : '')
+                ' --date=format:"%Y-%m-%d_%H:%M:%S" --pretty=format:"%h %cd %s"' .
+                ($file ? ' -- ' . escapeshellarg('.' . $file) : '')
         );
         $log = [];
         foreach ($log_ori as $log_item) {
@@ -55,18 +56,34 @@ class XkGitRepository extends GitRepository
 
     public function getDiffForCommit($commit, $file = null)
     {
-        $test = escapeshellarg('.' . $file);
         $diff_ori = $this->extractFromCommand(
             'git --no-pager diff ' .
-                escapeshellarg($commit) . ($file ? ' -- ' . escapeshellarg('.' . $file) : '')
+                escapeshellarg($commit) .
+                ($file ? ' -- ' . escapeshellarg('.' . $file) : '')
         );
         if (!$diff_ori) {
-            return "Not Diff";
+            return 'Not Diff';
         }
         $diff = '';
         foreach ($diff_ori as $value) {
             $diff .= $value . "\n";
         }
         return $diff;
+    }
+
+    public function rollback($commit, $file = null)
+    {
+        $message = $this->extractFromCommand(
+            'git --no-pager checkout ' .
+                escapeshellarg($commit) .
+                ' ' .
+                ($file ? escapeshellarg('.' . $file) : '')
+        )[0];
+        return $message;
+    }
+
+    public function getStatus()
+    {
+        return $this->extractFromCommand('git --no-pager status -s');
     }
 }

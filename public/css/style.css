@@ -220,16 +220,16 @@ body {
 .xknote-tab-content .tile-click {
     cursor: pointer;
 }
-.xknote-tab-content .tile-content[children="input"] .tile-click,
-.xknote-tab-content .accordion-header[children="input"] span {
+.xknote-tab-content .tile-content[children='input'] .tile-click,
+.xknote-tab-content .accordion-header[children='input'] span {
     display: none;
 }
 .xknote-tab-content .tile-content input,
 .xknote-tab-content .accordion-header input {
     display: none;
 }
-.xknote-tab-content .tile-content[children="input"] input,
-.xknote-tab-content .accordion-header[children="input"] input {
+.xknote-tab-content .tile-content[children='input'] input,
+.xknote-tab-content .accordion-header[children='input'] input {
     display: block;
 }
 .xknote-tab-content .tile-action .loading {
@@ -404,14 +404,17 @@ body {
 
 .NoteHistory .modal-body {
     flex: 1;
+    overflow: hidden;
 }
 
 .NoteHistory .tile {
     padding-left: 0.5rem;
+    padding-right: 0.5rem;
     border-radius: 0.25rem;
 }
 
-.NoteHistory .tile:hover {
+.NoteHistory .tile:hover,
+.NoteHistory .tile.active {
     background: #f1f1fc;
     color: #5755d9;
 }
@@ -420,6 +423,32 @@ body {
 .NoteHistory .tile-title,
 .NoteHistory .tile-subtitle {
     cursor: pointer;
+}
+
+.NoteHistory .diff-html {
+    overflow: auto;
+    height: 100%;
+    position: relative;
+}
+
+.NoteHistory .content,
+.NoteHistory .columns,
+.NoteHistory .column {
+    height: 100%;
+}
+
+.NoteHistory .col-2 {
+    overflow: auto;
+}
+
+.NoteHistory .col-10 {
+    display: flex;
+    flex-direction: column;
+}
+
+.NoteHistory .col-10 .input-group {
+    margin-bottom: 0.5rem;
+    width: max-content;
 }
 
 .fade-enter-active,

@@ -36,9 +36,18 @@ class UserModel extends Model
     {
         $user_config_m = self::where('uid', $id)->get()[0];
         $config = [
-            'tinymce_setting' => json_encode($config['tinymceSetting']),
-            'ace_setting' => json_encode($config['aceSetting']),
-            'xk_setting' => json_encode($config['xkSetting'])
+            'tinymce_setting' => json_encode(
+                $config['tinymceSetting'],
+                JSON_UNESCAPED_UNICODE
+            ),
+            'ace_setting' => json_encode(
+                $config['aceSetting'],
+                JSON_UNESCAPED_UNICODE
+            ),
+            'xk_setting' => json_encode(
+                $config['xkSetting'],
+                JSON_UNESCAPED_UNICODE
+            )
         ];
         if ($user_config_m->count() <= 0) {
             self::create($config);

@@ -5,7 +5,11 @@
         <div class="loading"></div>
         <div class="text-gray text-center">正在加载，客官莫急。</div>
       </div>
-      <div v-for="log in logs" :key="log.id" class="tile tile-centered">
+      <div
+        v-for="log in logs"
+        :key="log.id"
+        :class="'tile tile-centered' + (log.commit === curr.commit ? ' active' : '')"
+      >
         <div class="tile-content" @click="loadDiff(log)">
           <div class="tile-title" :title="log.message">{{ log.message }}</div>
           <small
@@ -14,13 +18,19 @@
           >{{ log.commit }} - {{ log.date }}</small>
         </div>
         <div class="tile-action">
-          <button class="btn btn-link">
-            <i class="icon icon-more-vert"></i>
-          </button>
+          <i v-if="log.commit === curr.commit && status==='loading'" class="icon loading"></i>
         </div>
       </div>
     </section>
     <section class="column col-10">
+      <div class="input-group">
+        <span class="input-group-addon">若你不知道这是什么请不要随意修改</span>
+        <input type="text" class="form-input" placeholder="回滚到指定commit" v-model="curr.commit" />
+        <button
+          @click="rollback()"
+          :class="'btn btn-primary input-group-btn' + (confirm === 'loading' ? ' loading' : '')"
+        >{{ confirm ? '确定？' : '从该版本还原' }}</button>
+      </div>
       <div class="diff-html" v-html="diffHtml"></div>
     </section>
   </div>
@@ -35,7 +45,10 @@ export default {
       logs: [],
       repoPath: "",
       filePath: "",
-      diffHtml: ""
+      diffHtml: "",
+      curr: {},
+      status: "",
+      confirm: false
     };
   },
   computed: {
@@ -48,13 +61,18 @@ export default {
   methods: {
     ...mapActions("tools", ["setLlgModalData", "hideLlgModal"]),
     ...mapActions("other", ["diffOperate"]),
+    ...mapActions("toast", ["timeToast"]),
+    ...mapActions("note", ["openNote"]),
     loadDiff(log) {
+      this.curr = log;
+      this.status = "loading";
       this.diffOperate({
         operate: "getDiff",
         path: this.repoPath,
         file: this.filePath,
         commit: log.commit
       }).then(diffs => {
+        this.status = "";
         this.diffHtml = window.Diff2Html.getPrettyHtml(diffs, {
           inputFormat: "diff",
           showFiles: false,
@@ -62,6 +80,42 @@ export default {
           outputFormat: "side-by-side"
         });
       });
+    },
+    rollback() {
+      if (!this.confirm) {
+        this.confirm = true;
+        return;
+      }
+      this.confirm = "loading";
+      this.diffOperate({
+        operate: "rollback",
+        commit: this.curr.commit,
+        path: this.repoPath,
+        file: this.filePath
+      })
+        .then(() => {
+          this.confirm = false;
+          this.hideLlgModal();
+          this.timeToast({
+            message: "回滚成功！",
+            status: "success",
+            delay: 1000
+          });
+          this.openNote({
+            note: this.xknoteOpened,
+            source: {
+              path: this.xknoteOpened.path,
+              storage: "cloud"
+            }
+          });
+        })
+        .catch(err => {
+          this.timeToast({
+            message: "回滚失败！",
+            status: "error",
+            delay: 1000
+          });
+        });
     }
   },
   created() {
@@ -80,9 +134,17 @@ export default {
       operate: "getLog",
       path: this.repoPath,
       file: this.filePath
-    }).then(logs => {
-      this.logs = logs;
-    });
+    })
+      .then(logs => {
+        this.logs = logs;
+      })
+      .catch(err => {
+        this.timeToast({
+          message: "读取历史记录失败！",
+          status: "error",
+          delay: 1000
+        });
+      });
   }
 };
 </script>

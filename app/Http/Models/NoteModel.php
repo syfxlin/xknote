@@ -14,7 +14,7 @@ class NoteModel
         $content = Storage::get($path);
         $note = [];
         if (stripos($content, '===NoteInfo===') !== false) {
-            $note = explode("===NoteInfo===\n\n", $content);
+            $note = preg_split("/===NoteInfo===[\\r\\n]*/", $content);
             $note[0] = json_decode($note[0]);
         } else {
             $note[1] = $content;
@@ -48,7 +48,10 @@ class NoteModel
 
     private function set($path, $info, $content)
     {
-        $contents = json_encode($info) . "===NoteInfo===\n\n" . $content;
+        $contents =
+            json_encode($info, JSON_UNESCAPED_UNICODE) .
+            "===NoteInfo===\n\n" .
+            $content;
         Storage::put($path, $contents);
         return 200;
     }

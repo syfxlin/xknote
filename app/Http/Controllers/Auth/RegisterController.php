@@ -85,9 +85,18 @@ class RegisterController extends Controller
         $default = UserModel::getDefaultConfig();
         DB::table('user_config')->insert([
             'uid' => $user->id,
-            'tinymce_setting' => json_encode($default['tinymceSetting']),
-            'ace_setting' => json_encode($default['aceSetting']),
-            'xk_setting' => json_encode($default['xkSetting'])
+            'tinymce_setting' => json_encode(
+                $default['tinymceSetting'],
+                JSON_UNESCAPED_UNICODE
+            ),
+            'ace_setting' => json_encode(
+                $default['aceSetting'],
+                JSON_UNESCAPED_UNICODE
+            ),
+            'xk_setting' => json_encode(
+                $default['xkSetting'],
+                JSON_UNESCAPED_UNICODE
+            )
         ]);
         return $user;
     }

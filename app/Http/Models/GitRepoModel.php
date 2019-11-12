@@ -212,4 +212,16 @@ class GitRepoModel
         $repo = new XkGitRepository(storage_path() . '/app/uid_' . $id . $path);
         return $repo->getLogOneLine(10, $file);
     }
+
+    public function rollback($path, $id, $commit, $file)
+    {
+        $repo = new XkGitRepository(storage_path() . '/app/uid_' . $id . $path);
+        return $repo->rollback($commit, $file);
+    }
+
+    public function status($path, $id)
+    {
+        $repo = new XkGitRepository(storage_path() . '/app/uid_' . $id . $path);
+        return $repo->getStatus();
+    }
 }

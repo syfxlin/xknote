@@ -28,6 +28,7 @@
       <git-item-config v-if="lgModal.content==='GitItemConfig'"></git-item-config>
       <move-item v-if="lgModal.content==='MoveItem'"></move-item>
       <image-item v-if="lgModal.content==='ImageItem'"></image-item>
+      <git-status v-if="lgModal.content==='GitStatus'"></git-status>
     </modal>
     <modal :data="llgModal" :size="'llg'">
       <note-history v-if="llgModal.content==='NoteHistory'"></note-history>
@@ -56,6 +57,7 @@ import PersonalCenter from "./modal/PersonalCenter";
 import MoveItem from "./modal/MoveItem";
 import ImageItem from "./modal/ImageItem";
 import NoteHistory from "./modal/NoteHistory";
+import GitStatus from "./modal/GitStatus";
 import Modal from "./Modal";
 import { mapState, mapActions } from "vuex";
 export default {
@@ -73,6 +75,7 @@ export default {
     "move-item": MoveItem,
     "image-item": ImageItem,
     "note-history": NoteHistory,
+    "git-status": GitStatus,
     modal: Modal
   },
   computed: {

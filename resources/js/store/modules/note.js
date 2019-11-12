@@ -298,6 +298,17 @@ const actions = {
       if (operate === 'export') {
         window.location.href = '/api/export?path=' + folderInfo.path;
       }
+      if (operate === 'gitStatus') {
+        window.axios
+          .get('/api/repo/status', { params: { path: folderInfo.path } })
+          .then(res => {
+            resolve(res.data.status);
+          })
+          .catch(err => {
+            console.error(err);
+            reject(err);
+          });
+      }
     });
   },
   noteOperate(

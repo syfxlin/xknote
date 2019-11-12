@@ -83,6 +83,10 @@ export default {
           {
             name: "Git Config",
             operate: "gitConfig"
+          },
+          {
+            name: "Status",
+            operate: "gitStatus"
           }
         ],
         children: [
