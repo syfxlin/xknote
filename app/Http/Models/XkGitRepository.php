@@ -54,11 +54,11 @@ class XkGitRepository extends GitRepository
         return $log;
     }
 
-    public function getDiffForCommit($commit, $file = null)
+    public function getDiff($commit = null, $file = null)
     {
         $diff_ori = $this->extractFromCommand(
             'git --no-pager diff ' .
-                escapeshellarg($commit) .
+                escapeshellarg($commit ? $commit : '.') .
                 ($file ? ' -- ' . escapeshellarg('.' . $file) : '')
         );
         if (!$diff_ori) {

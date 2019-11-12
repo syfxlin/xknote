@@ -95,4 +95,5 @@ Route::prefix('api')
         Route::get('/repo/diff', 'GitRepoController@getDiff');
         Route::post('/repo/rollback', 'GitRepoController@rollback');
         Route::get('/repo/status', 'GitRepoController@getStatus');
+        Route::get('/repo/diff/all', 'GitRepoController@getAllDiff');
     });

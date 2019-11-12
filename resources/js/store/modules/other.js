@@ -387,6 +387,14 @@ const actions = {
       };
       dispatch('tools/showLgModal', modal, { root: true });
     }
+    if (operate === 'gitDiff') {
+      let modal = {};
+      modal.content = 'AllNoteHistory';
+      modal.data = {
+        path: path
+      };
+      dispatch('tools/showLlgModal', modal, { root: true });
+    }
   },
   checkLocalOperate({ dispatch, rootState }, { operate, index }) {
     let path = rootState.tools.lgModal.data[index].path;
@@ -517,7 +525,10 @@ const actions = {
       }
     });
   },
-  diffOperate({ dispatch, rootState }, { operate, path, file, commit = null }) {
+  diffOperate(
+    { dispatch, rootState },
+    { operate, path, file = null, commit = null }
+  ) {
     return new Promise((resolve, reject) => {
       if (operate === 'getLog') {
         window.axios
@@ -552,6 +563,19 @@ const actions = {
           })
           .then(res => {
             resolve(res.data);
+          })
+          .catch(err => {
+            console.error(err);
+            reject(err);
+          });
+      }
+      if (operate === 'getAllDiff') {
+        window.axios
+          .get('/api/repo/diff/all', {
+            params: { path: path }
+          })
+          .then(res => {
+            resolve(res.data.diffs);
           })
           .catch(err => {
             console.error(err);

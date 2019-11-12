@@ -32,6 +32,7 @@
     </modal>
     <modal :data="llgModal" :size="'llg'">
       <note-history v-if="llgModal.content==='NoteHistory'"></note-history>
+      <all-note-history v-if="llgModal.content==='AllNoteHistory'"></all-note-history>
     </modal>
     <div :class="'toast toast-' + toast.status">
       <button class="btn btn-clear float-right"></button>
@@ -58,6 +59,7 @@ import MoveItem from "./modal/MoveItem";
 import ImageItem from "./modal/ImageItem";
 import NoteHistory from "./modal/NoteHistory";
 import GitStatus from "./modal/GitStatus";
+import AllNoteHistory from "./modal/AllNoteHistory";
 import Modal from "./Modal";
 import { mapState, mapActions } from "vuex";
 export default {
@@ -76,6 +78,7 @@ export default {
     "image-item": ImageItem,
     "note-history": NoteHistory,
     "git-status": GitStatus,
+    "all-note-history": AllNoteHistory,
     modal: Modal
   },
   computed: {

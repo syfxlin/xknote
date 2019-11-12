@@ -329,6 +329,25 @@ class GitRepoController extends Controller
         return ['error' => false, 'diffs' => $diff];
     }
 
+    public function getAllDiff(Request $request)
+    {
+        if (!$request->has('path')) {
+            return response(['error' => 'Parameter not found. (path)'], 400);
+        }
+        $id = $request->user()->id;
+        if (!$this->model->check($request->path, $id)) {
+            return response(
+                [
+                    'error' => true,
+                    'message' => 'There is no repo under this path'
+                ],
+                404
+            );
+        }
+        $diffs = $this->model->allDiff($request->path, $id);
+        return ['error' => false, 'diffs' => $diffs];
+    }
+
     public function rollback(Request $request)
     {
         if (

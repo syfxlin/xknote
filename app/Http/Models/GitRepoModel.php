@@ -204,7 +204,13 @@ class GitRepoModel
     public function diff($path, $id, $commit, $file = null)
     {
         $repo = new XkGitRepository(storage_path() . '/app/uid_' . $id . $path);
-        return $repo->getDiffForCommit($commit, $file);
+        return $repo->getDiff($commit, $file);
+    }
+
+    public function allDiff($path, $id)
+    {
+        $repo = new XkGitRepository(storage_path() . '/app/uid_' . $id . $path);
+        return $repo->getDiff();
     }
 
     public function log($path, $id, $file = null)

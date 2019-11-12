@@ -394,12 +394,17 @@ body {
     max-width: 100%;
 }
 
+.AllNoteHistory,
 .NoteHistory {
     height: 100%;
     max-width: 90% !important;
     max-height: 100%;
     display: flex;
     flex-direction: column;
+}
+
+.AllNoteHistory .modal-body {
+    flex: 1;
 }
 
 .NoteHistory .modal-body {

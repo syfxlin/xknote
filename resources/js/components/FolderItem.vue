@@ -87,6 +87,10 @@ export default {
           {
             name: "Status",
             operate: "gitStatus"
+          },
+          {
+            name: "Diff",
+            operate: "gitDiff"
           }
         ],
         children: [
