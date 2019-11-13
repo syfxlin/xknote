@@ -46,6 +46,24 @@ body {
     overflow: hidden;
 }
 
+@media (min-width: 768px) {
+    .xknote-container {
+        max-width: 740px;
+    }
+}
+
+@media (min-width: 992px) {
+    .xknote-container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .xknote-container {
+        max-width: 1160px;
+    }
+}
+
 /*
  * Login Register
  */
@@ -520,6 +538,80 @@ body {
     bottom: 1rem;
     right: 1rem;
     position: fixed;
+}
+
+.welcome-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.welcome-header * {
+    margin-top: 0.5rem;
+    margin-bottom: 0.2rem;
+}
+
+.welcome-header img {
+    width: 15rem;
+}
+
+.welcome-header h1 {
+    color: #0d3d88;
+    font-weight: 300;
+    font-size: 3rem;
+}
+
+.welcome-header h3 {
+    font-weight: 300;
+    color: #0d3d88;
+    font-size: 1.2rem;
+}
+
+.welcome-header .btn {
+    width: 5rem;
+}
+
+.welcome-header .label {
+    padding: 0.2rem 0.3rem;
+}
+
+.welcome-body {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    border-top: 1px solid #ddd;
+    padding-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.welcome-body .xknote-container {
+    width: 100%;
+    text-align: center;
+}
+
+.welcome-body h2 {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.welcome-body p {
+    font-size: 0.7rem;
+}
+
+.welcome-body h4 {
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+.welcome-body img {
+    width: 1.5rem;
+    height: 1.5rem;
+    position: relative;
+    top: 0.3rem;
+}
+
+.xknote-copyright p {
+    margin: 0.5rem 0 0.3rem;
 }
 
 @media screen and (max-width: 991px) {

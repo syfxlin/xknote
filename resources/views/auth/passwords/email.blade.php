@@ -17,7 +17,7 @@
 
 @section('main')
     <div class="reset">
-        <h1>Reset Password</h1>
+        <h1>重置密码</h1>
         @if (session('status'))
             <div class="toast toast-success" role="alert">
                 {{ session('status') }}
@@ -27,7 +27,7 @@
             @csrf
             <div class="form-group">
                 <div class="col-4 col-sm-12">
-                    <label for="account" class="form-label">Email Address</label>
+                    <label for="account" class="form-label">Email地址</label>
                 </div>
                 <div class="col-8 col-sm-12">
                     <input id="email" type="email" class="form-input @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
@@ -41,9 +41,17 @@
             <div class="form-group">
                 <div class="col-4 col-sm-12"></div>
                 <div class="col-8 col-sm-12">
-                    <button type="submit" class="btn btn-primary">Send Password Reset Link</button>
+                    <button type="submit" class="btn btn-primary">发送重置链接到邮箱</button>
                 </div>
             </div>
         </form>
+    </div>
+@endsection
+
+@section('footer')
+    <div class="xknote-copyright bg-gray">
+        <span>©</span>
+        <a href="https://github.com/syfxlin/xknote">XK-Note</a> By
+        <a href="https://ixk.me">Otstar Lin</a>
     </div>
 @endsection

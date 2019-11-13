@@ -20,7 +20,7 @@
         </footer>
       </section>
       <transition name="fade" mode="out-in">
-        <aside v-show="showSidebar" class="col-3 p-fixed read-sidebar">
+        <aside v-show="!isMinScreen||showSidebar" class="col-3 p-fixed read-sidebar">
           <ul class="tab tab-block xknote-tab">
             <li class="tab-item">
               <a :class="xknoteTab==='toc' ? 'active' : ''" @click="switchTab('toc')">大纲</a>

@@ -17,13 +17,13 @@
 
 @section('main')
     <div class="reset">
-        <h1>Reset Password</h1>
+        <h1>重置密码</h1>
         <form action="{{ route('password.update') }}" method="post" class="form-horizontal">
             @csrf
             <input type="hidden" name="token" value="{{ $token }}">
             <div class="form-group">
                 <div class="col-4 col-sm-12">
-                    <label for="username" class="form-label">Email Address</label>
+                    <label for="username" class="form-label">Email地址</label>
                 </div>
                 <div class="col-8 col-sm-12">
                     <input id="email" type="email" class="form-input @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}" required autocomplete="email" autofocus>
@@ -36,7 +36,7 @@
             </div>
             <div class="form-group">
                 <div class="col-4 col-sm-12">
-                    <label for="password" class="form-label">Password</label>
+                    <label for="password" class="form-label">密码</label>
                 </div>
                 <div class="col-8 col-sm-12">
                     <input id="password" type="password" class="form-input @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
@@ -49,7 +49,7 @@
             </div>
             <div class="form-group">
                 <div class="col-4 col-sm-12">
-                    <label for="password-confirm" class="form-label">Confirm Password</label>
+                    <label for="password-confirm" class="form-label">确认密码</label>
                 </div>
                 <div class="col-8 col-sm-12">
                     <input id="password-confirm" type="password" class="form-input" name="password_confirmation" required autocomplete="new-password">
@@ -58,9 +58,17 @@
             <div class="form-group">
                 <div class="col-4 col-sm-12"></div>
                 <div class="col-8 col-sm-12">
-                    <button type="submit" class="btn btn-primary">Reset Password</button>
+                    <button type="submit" class="btn btn-primary">重置密码</button>
                 </div>
             </div>
         </form>
+    </div>
+@endsection
+
+@section('footer')
+    <div class="xknote-copyright bg-gray">
+        <span>©</span>
+        <a href="https://github.com/syfxlin/xknote">XK-Note</a> By
+        <a href="https://ixk.me">Otstar Lin</a>
     </div>
 @endsection
