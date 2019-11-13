@@ -2,7 +2,7 @@
   <transition name="fade" mode="out-in">
     <section
       :class="'column col-2 xknote-sidebar' + (!writeMode ? '' : ' write-mode')"
-      v-show="!writeMode||showSidebar"
+      v-show="(!writeMode&&!isMinScreen)||showSidebar"
     >
       <ul class="tab tab-block xknote-tab">
         <li class="tab-item">
@@ -92,7 +92,8 @@ export default {
       "currBadgeCount",
       "localBadgeCount"
     ]),
-    ...mapState("tools", ["writeMode", "showSidebar"])
+    ...mapState("tools", ["writeMode", "showSidebar"]),
+    ...mapState("other", ["isMinScreen"])
   },
   methods: {
     ...mapActions("note", ["switchTab", "loadCloudFolders"]),

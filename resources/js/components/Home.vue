@@ -8,7 +8,7 @@
           <button
             class="btn btn-action btn-lg"
             title="开启/关闭侧边栏"
-            v-if="writeMode"
+            v-if="isMinScreen||writeMode"
             @click="switchShowSidebar()"
           >
             <i class="icon icon-menu"></i>
@@ -115,13 +115,14 @@ export default {
       navBarListR: dropdownList.navBarListR,
       loadedEditor: false,
       xknoteName: window.xknote.xknote_name,
-      showNavBarRight: true
+      showNavBarRight: !(window.innerWidth < 991)
     };
   },
   computed: {
     ...mapState("note", ["xknoteOpened"]),
     ...mapState("tools", ["writeMode"]),
-    ...mapGetters("conf", ["userSetting"])
+    ...mapGetters("conf", ["userSetting"]),
+    ...mapState("other", ["isMinScreen"])
   },
   methods: {
     ...mapActions("note", ["loadFirstNote"]),

@@ -1,24 +1,26 @@
-const state = {};
+const state = {
+  isMinScreen: window.innerWidth < 991
+};
 
 const getters = {};
 
 const actions = {
   logout() {
-    window.axios.post('/logout').then(function() {
-      window.location.href = '/';
+    window.axios.post("/logout").then(function() {
+      window.location.href = "/";
     });
   },
   gitOperate({ dispatch, rootState }, { operate, path }) {
-    if (operate === 'gitPull') {
+    if (operate === "gitPull") {
       dispatch(
-        'toast/showLoadToast',
+        "toast/showLoadToast",
         {
-          message: '操作中...'
+          message: "操作中..."
         },
         { root: true }
       );
       dispatch(
-        'note/folderOperate',
+        "note/folderOperate",
         {
           operate: operate,
           folderInfo: { path: path }
@@ -27,109 +29,109 @@ const actions = {
       )
         .then(() => {
           dispatch(
-            'toast/timeToast',
+            "toast/timeToast",
             {
-              message: 'Git Pull成功！',
-              status: 'success',
+              message: "Git Pull成功！",
+              status: "success",
               delay: 1000
             },
             { root: true }
           );
-          dispatch('toast/hideLoadToast', null, { root: true });
+          dispatch("toast/hideLoadToast", null, { root: true });
         })
         .catch(error => {
           dispatch(
-            'toast/timeToast',
+            "toast/timeToast",
             {
-              message: 'Git Pull失败，请重试！',
-              status: 'error',
+              message: "Git Pull失败，请重试！",
+              status: "error",
               delay: 1000
             },
             { root: true }
           );
-          dispatch('toast/hideLoadToast', null, { root: true });
+          dispatch("toast/hideLoadToast", null, { root: true });
         });
     }
-    if (operate === 'gitPush') {
+    if (operate === "gitPush") {
       dispatch(
-        'toast/showLoadToast',
+        "toast/showLoadToast",
         {
-          message: '操作中...'
+          message: "操作中..."
         },
         { root: true }
       );
       dispatch(
-        'note/folderOperate',
+        "note/folderOperate",
         { operate: operate, folderInfo: { path: path } },
         { root: true }
       )
         .then(() => {
           dispatch(
-            'toast/timeToast',
+            "toast/timeToast",
             {
-              message: 'Git Push成功！',
-              status: 'success',
+              message: "Git Push成功！",
+              status: "success",
               delay: 1000
             },
             { root: true }
           );
-          dispatch('toast/hideLoadToast', null, { root: true });
+          dispatch("toast/hideLoadToast", null, { root: true });
         })
         .catch(error => {
           dispatch(
-            'toast/timeToast',
+            "toast/timeToast",
             {
-              message: 'Git Push失败，请重试！',
-              status: 'error',
+              message: "Git Push失败，请重试！",
+              status: "error",
               delay: 1000
             },
             { root: true }
           );
-          dispatch('toast/hideLoadToast', null, { root: true });
+          dispatch("toast/hideLoadToast", null, { root: true });
         });
     }
-    if (operate === 'gitPushForce') {
+    if (operate === "gitPushForce") {
       dispatch(
-        'toast/showLoadToast',
+        "toast/showLoadToast",
         {
-          message: '操作中...'
+          message: "操作中..."
         },
         { root: true }
       );
       dispatch(
-        'note/folderOperate',
+        "note/folderOperate",
         { operate: operate, folderInfo: { path: path } },
         { root: true }
       )
         .then(() => {
           dispatch(
-            'toast/timeToast',
+            "toast/timeToast",
             {
-              message: 'Git Push成功！',
-              status: 'success',
+              message: "Git Push成功！",
+              status: "success",
               delay: 1000
             },
             { root: true }
           );
-          dispatch('toast/hideLoadToast', null, { root: true });
+          dispatch("toast/hideLoadToast", null, { root: true });
         })
         .catch(error => {
           dispatch(
-            'toast/timeToast',
+            "toast/timeToast",
             {
-              message: 'Git Push失败，请重试！',
-              status: 'error',
+              message: "Git Push失败，请重试！",
+              status: "error",
               delay: 1000
             },
             { root: true }
           );
-          dispatch('toast/hideLoadToast', null, { root: true });
+          dispatch("toast/hideLoadToast", null, { root: true });
         });
     }
-    if (operate === 'gitInitClone') {
+    if (operate === "gitInitClone") {
       let modal = {};
-      modal.content = 'GitInitClone';
-      modal.title = 'Git InitClone';
+      modal.content = "GitInitClone";
+      modal.title = "Git InitClone";
       let wTimeout = null;
       let watch = () => {
         if (wTimeout) {
@@ -137,38 +139,38 @@ const actions = {
         }
         wTimeout = setTimeout(() => {
           dispatch(
-            'tools/setLgModalData',
+            "tools/setLgModalData",
             {
               ...rootState.tools.lgModal.data,
-              status: 'loading'
+              status: "loading"
             },
             { root: true }
           );
           dispatch(
-            'note/folderOperate',
+            "note/folderOperate",
             {
-              operate: 'exist',
+              operate: "exist",
               folderInfo: {
-                path: rootState.tools.lgModal.data.foldername + '/.git'
+                path: rootState.tools.lgModal.data.foldername + "/.git"
               }
             },
             { root: true }
           ).then(data => {
             if (data.exist) {
               dispatch(
-                'tools/setLgModalData',
+                "tools/setLgModalData",
                 {
                   ...rootState.tools.lgModal.data,
-                  status: 'error'
+                  status: "error"
                 },
                 { root: true }
               );
             } else {
               dispatch(
-                'tools/setLgModalData',
+                "tools/setLgModalData",
                 {
                   ...rootState.tools.lgModal.data,
-                  status: ''
+                  status: ""
                 },
                 { root: true }
               );
@@ -184,13 +186,13 @@ const actions = {
           !rootState.tools.lgModal.data.foldername ||
           !rootState.tools.lgModal.data.repo ||
           !rootState.tools.lgModal.data.init_or_clone ||
-          rootState.tools.lgModal.data.status !== ''
+          rootState.tools.lgModal.data.status !== ""
         ) {
           return;
         }
         document
-          .querySelector('.xknote-lg-modal .modal-footer .btn-primary')
-          .classList.add('loading');
+          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+          .classList.add("loading");
         let git_user = {};
         if (
           rootState.tools.lgModal.data.git_name &&
@@ -204,12 +206,12 @@ const actions = {
           };
         }
         dispatch(
-          'note/folderOperate',
+          "note/folderOperate",
           {
             operate:
-              rootState.tools.lgModal.data.init_or_clone === 'init'
-                ? 'gitInit'
-                : 'gitClone',
+              rootState.tools.lgModal.data.init_or_clone === "init"
+                ? "gitInit"
+                : "gitClone",
             folderInfo: {
               path: rootState.tools.lgModal.data.foldername,
               repo: rootState.tools.lgModal.data.repo,
@@ -219,14 +221,14 @@ const actions = {
           { root: true }
         ).then(() => {
           document
-            .querySelector('.xknote-lg-modal .modal-footer .btn-primary')
-            .classList.remove('loading');
+            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+            .classList.remove("loading");
           rootState.tools.lgModal.cancel();
           dispatch(
-            'toast/timeToast',
+            "toast/timeToast",
             {
-              message: 'Git Init或Clone成功！',
-              status: 'success',
+              message: "Git Init或Clone成功！",
+              status: "success",
               delay: 1000
             },
             { root: true }
@@ -235,36 +237,36 @@ const actions = {
       };
       modal.cancel = () => {
         uwFolderName();
-        dispatch('tools/hideLgModal', null, { root: true });
+        dispatch("tools/hideLgModal", null, { root: true });
       };
-      dispatch('tools/showLgModal', modal, { root: true });
+      dispatch("tools/showLgModal", modal, { root: true });
     }
-    if (operate === 'gitConfig') {
+    if (operate === "gitConfig") {
       let modal = {};
-      modal.title = 'Git设置';
-      modal.content = 'GitItemConfig';
+      modal.title = "Git设置";
+      modal.content = "GitItemConfig";
       dispatch(
-        'tools/setLgModalData',
+        "tools/setLgModalData",
         {
           ...rootState.tools.lgModal.data,
-          status: 'loading'
+          status: "loading"
         },
         { root: true }
       );
       dispatch(
-        'note/folderOperate',
+        "note/folderOperate",
         {
-          operate: 'getGitConfig',
+          operate: "getGitConfig",
           folderInfo: { path: path }
         },
         { root: true }
       )
         .then(info => {
           dispatch(
-            'tools/setLgModalData',
+            "tools/setLgModalData",
             {
               ...rootState.tools.lgModal.data,
-              status: '',
+              status: "",
               repo: info.repo,
               git_name: info.git_name,
               git_email: info.git_email
@@ -274,19 +276,19 @@ const actions = {
         })
         .catch(error => {
           dispatch(
-            'toast/timeToast',
+            "toast/timeToast",
             {
-              message: '获取信息失败！',
-              status: 'error',
+              message: "获取信息失败！",
+              status: "error",
               delay: 1000
             },
             { root: true }
           );
           dispatch(
-            'tools/setLgModalData',
+            "tools/setLgModalData",
             {
               ...rootState.tools.lgModal.data,
-              status: ''
+              status: ""
             },
             { root: true }
           );
@@ -296,17 +298,17 @@ const actions = {
           !rootState.tools.lgModal.data.git_name ||
           !rootState.tools.lgModal.data.git_email ||
           !rootState.tools.lgModal.data.git_password ||
-          rootState.tools.lgModal.data.status !== ''
+          rootState.tools.lgModal.data.status !== ""
         ) {
           return;
         }
         document
-          .querySelector('.xknote-lg-modal .modal-footer .btn-primary')
-          .classList.add('loading');
+          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+          .classList.add("loading");
         dispatch(
-          'note/folderOperate',
+          "note/folderOperate",
           {
-            operate: 'setGitConfig',
+            operate: "setGitConfig",
             folderInfo: {
               repo: rootState.tools.lgModal.data.repo,
               git_name: rootState.tools.lgModal.data.git_name,
@@ -319,14 +321,14 @@ const actions = {
         )
           .then(() => {
             document
-              .querySelector('.xknote-lg-modal .modal-footer .btn-primary')
-              .classList.remove('loading');
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.remove("loading");
             rootState.tools.lgModal.cancel();
             dispatch(
-              'toast/timeToast',
+              "toast/timeToast",
               {
-                message: '设置成功！',
-                status: 'success',
+                message: "设置成功！",
+                status: "success",
                 delay: 1000
               },
               { root: true }
@@ -334,10 +336,10 @@ const actions = {
           })
           .catch(error => {
             dispatch(
-              'toast/timeToast',
+              "toast/timeToast",
               {
-                message: '设置失败，请重试！',
-                status: 'error',
+                message: "设置失败，请重试！",
+                status: "error",
                 delay: 1000
               },
               { root: true }
@@ -345,86 +347,86 @@ const actions = {
           });
       };
       modal.cancel = () => {
-        dispatch('tools/hideLgModal', null, { root: true });
+        dispatch("tools/hideLgModal", null, { root: true });
       };
-      dispatch('tools/showLgModal', modal, { root: true });
+      dispatch("tools/showLgModal", modal, { root: true });
     }
-    if (operate === 'gitStatus') {
+    if (operate === "gitStatus") {
       let modal = {};
-      modal.title = 'Git状态';
-      modal.content = 'GitStatus';
+      modal.title = "Git状态";
+      modal.content = "GitStatus";
       dispatch(
-        'tools/setLgModalData',
+        "tools/setLgModalData",
         {
           ...rootState.tools.lgModal.data,
-          status: 'loading'
+          status: "loading"
         },
         { root: true }
       );
       dispatch(
-        'note/folderOperate',
+        "note/folderOperate",
         {
-          operate: 'gitStatus',
+          operate: "gitStatus",
           folderInfo: { path: path }
         },
         { root: true }
       ).then(status => {
         dispatch(
-          'tools/setLgModalData',
+          "tools/setLgModalData",
           {
             ...rootState.tools.lgModal.data,
-            status: '',
+            status: "",
             statusData: status
           },
           { root: true }
         );
       });
       modal.confirm = () => {
-        dispatch('tools/hideLgModal', null, { root: true });
+        dispatch("tools/hideLgModal", null, { root: true });
       };
       modal.cancel = () => {
-        dispatch('tools/hideLgModal', null, { root: true });
+        dispatch("tools/hideLgModal", null, { root: true });
       };
-      dispatch('tools/showLgModal', modal, { root: true });
+      dispatch("tools/showLgModal", modal, { root: true });
     }
-    if (operate === 'gitDiff') {
+    if (operate === "gitDiff") {
       let modal = {};
-      modal.content = 'AllNoteHistory';
+      modal.content = "AllNoteHistory";
       modal.data = {
         path: path
       };
-      dispatch('tools/showLlgModal', modal, { root: true });
+      dispatch("tools/showLlgModal", modal, { root: true });
     }
   },
   checkLocalOperate({ dispatch, rootState }, { operate, index }) {
     let path = rootState.tools.lgModal.data[index].path;
-    if (operate === 'keepLocal') {
+    if (operate === "keepLocal") {
       dispatch(
-        'note/noteOperate',
+        "note/noteOperate",
         {
-          operate: 'read',
-          storage: 'local',
+          operate: "read",
+          storage: "local",
           noteInfo: { path: path }
         },
         { root: true }
       ).then(data => {
         dispatch(
-          'note/noteOperate',
+          "note/noteOperate",
           {
-            operate: 'save',
-            storage: 'cloud',
+            operate: "save",
+            storage: "cloud",
             noteInfo: data
           },
           { root: true }
         ).then(() => {
-          rootState.note.localList[path].status = 'C';
-          dispatch('tools/delLgModalData', index, { root: true });
+          rootState.note.localList[path].status = "C";
+          dispatch("tools/delLgModalData", index, { root: true });
           // 将更新后的状态保存到本地
           dispatch(
-            'note/noteOperate',
+            "note/noteOperate",
             {
-              operate: 'save',
-              storage: 'local',
+              operate: "save",
+              storage: "local",
               noteInfo: rootState.note.localList[path]
             },
             { root: true }
@@ -432,39 +434,39 @@ const actions = {
         });
       });
     }
-    if (operate === 'keepCloud') {
+    if (operate === "keepCloud") {
       dispatch(
-        'note/noteOperate',
+        "note/noteOperate",
         {
-          operate: 'read',
-          storage: 'cloud',
+          operate: "read",
+          storage: "cloud",
           noteInfo: { path: path }
         },
         { root: true }
       ).then(data => {
         dispatch(
-          'note/noteOperate',
+          "note/noteOperate",
           {
-            operate: 'save',
-            storage: 'local',
+            operate: "save",
+            storage: "local",
             noteInfo: data
           },
           { root: true }
         ).then(() => {
-          rootState.note.localList[path].status = 'C';
+          rootState.note.localList[path].status = "C";
           // this.$delete(this.lgModal.data, index);
-          dispatch('tools/delLgModalData', index, { root: true });
+          dispatch("tools/delLgModalData", index, { root: true });
         });
       });
     }
-    if (operate === 'notOpe') {
-      dispatch('tools/delLgModalData', index, { root: true });
+    if (operate === "notOpe") {
+      dispatch("tools/delLgModalData", index, { root: true });
     }
   },
   checkLocalStatus({ dispatch, rootState }) {
-    document.querySelector('.xknote-check-local').classList.add('loading');
+    document.querySelector(".xknote-check-local").classList.add("loading");
     window.axios
-      .post('/api/notes/check', {
+      .post("/api/notes/check", {
         check_list: Object.keys(rootState.note.localList)
       })
       .then(res => {
@@ -479,31 +481,31 @@ const actions = {
             updated_at_c: res.data.check_list[key].updated_at
           };
         }
-        dispatch('tools/setLgModalData', data, { root: true });
+        dispatch("tools/setLgModalData", data, { root: true });
         dispatch(
-          'tools/showLgModal',
+          "tools/showLgModal",
           {
-            title: '检查状态',
-            content: 'CheckLocalStatus',
+            title: "检查状态",
+            content: "CheckLocalStatus",
             confirm: () => {
-              dispatch('tools/hideLgModal', null, { root: true });
+              dispatch("tools/hideLgModal", null, { root: true });
             },
             cancel: () => {
-              dispatch('tools/hideLgModal', null, { root: true });
+              dispatch("tools/hideLgModal", null, { root: true });
             }
           },
           { root: true }
         );
         document
-          .querySelector('.xknote-check-local')
-          .classList.remove('loading');
+          .querySelector(".xknote-check-local")
+          .classList.remove("loading");
       });
   },
   imageOperate({ dispatch, rootState }, { operate, name = null }) {
     return new Promise((resolve, reject) => {
-      if (operate === 'getAll') {
+      if (operate === "getAll") {
         window.axios
-          .get('/api/images/all')
+          .get("/api/images/all")
           .then(res => {
             resolve(res.data.images);
           })
@@ -512,9 +514,9 @@ const actions = {
             reject(err);
           });
       }
-      if (operate === 'delete') {
+      if (operate === "delete") {
         window.axios
-          .delete('/api/images', { params: { name: name } })
+          .delete("/api/images", { params: { name: name } })
           .then(res => {
             resolve(res.data);
           })
@@ -530,9 +532,9 @@ const actions = {
     { operate, path, file = null, commit = null }
   ) {
     return new Promise((resolve, reject) => {
-      if (operate === 'getLog') {
+      if (operate === "getLog") {
         window.axios
-          .get('/api/repo/log', { params: { path: path, file: file } })
+          .get("/api/repo/log", { params: { path: path, file: file } })
           .then(res => {
             resolve(res.data.logs);
           })
@@ -541,9 +543,9 @@ const actions = {
             reject(err);
           });
       }
-      if (operate === 'getDiff') {
+      if (operate === "getDiff") {
         window.axios
-          .get('/api/repo/diff', {
+          .get("/api/repo/diff", {
             params: { path: path, file: file, commit: commit }
           })
           .then(res => {
@@ -554,9 +556,9 @@ const actions = {
             reject(err);
           });
       }
-      if (operate === 'rollback') {
+      if (operate === "rollback") {
         window.axios
-          .post('/api/repo/rollback', {
+          .post("/api/repo/rollback", {
             path: path,
             file: file,
             commit: commit
@@ -569,9 +571,9 @@ const actions = {
             reject(err);
           });
       }
-      if (operate === 'getAllDiff') {
+      if (operate === "getAllDiff") {
         window.axios
-          .get('/api/repo/diff/all', {
+          .get("/api/repo/diff/all", {
             params: { path: path }
           })
           .then(res => {
