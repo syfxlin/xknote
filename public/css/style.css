@@ -171,7 +171,7 @@ body {
     max-height: 100%;
 }
 .xknote-sidebar.write-mode {
-    position: fixed;
+    position: absolute;
     height: 100%;
     z-index: 1000;
     background: #fff;
@@ -460,8 +460,66 @@ body {
     position: relative;
 }
 
-.navbar-right-mbtn {
+.navbar-right {
+    justify-content: flex-end;
+}
+
+.navbar-right-mbtn,
+.navbar-center-mbtn {
     display: none;
+    flex: none;
+}
+
+.read-show-sidebar-btn {
+    top: 1rem;
+    right: 1rem;
+    position: fixed;
+}
+
+.read-toc li img {
+    width: 1.05em;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.4em;
+    padding-top: 0.1em;
+}
+.read-toc li a {
+    font-size: 1.05em;
+    vertical-align: middle;
+}
+.hero-body p {
+    margin: 0;
+}
+.read-sidebar {
+    top: 0;
+    right: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.read-sidebar .xknote-tab-content {
+    margin: 0.8rem 0 0.8rem 1.6rem;
+}
+.read-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    border-right: 1px solid #ddd;
+}
+.read-header .hero-body {
+    padding: 0.4rem 3rem;
+}
+.read-content {
+    flex: 1;
+    padding: 2rem 3rem;
+}
+.read-footer {
+    padding: 1.5em 0 !important;
+}
+.to-normal-btn {
+    bottom: 1rem;
+    right: 1rem;
+    position: fixed;
 }
 
 @media screen and (max-width: 991px) {
@@ -487,10 +545,58 @@ body {
         width: auto;
     }
 
-    .xknote-header .navbar-center {
-        display: none;
+    .navbar-center-mbtn {
+        display: flex;
+        height: 60px;
+        align-items: center;
     }
 
+    .xknote-header .navbar-section.navbar-left {
+        flex: 1 !important;
+    }
+
+    .xknote-header .navbar-center {
+        display: flex;
+        flex-direction: column;
+        z-index: 1;
+        flex: none;
+        top: 55px;
+        right: 0.5rem;
+        position: absolute;
+        background: #fff;
+        border-radius: 0.1rem;
+        box-shadow: 0 0.05rem 0.2rem rgba(48, 55, 66, 0.3);
+        padding: 0.4rem;
+        animation: slide-down 0.15s ease 1;
+    }
+
+    .xknote-header .navbar-center .btn {
+        border: none;
+    }
+
+    .read-container {
+        width: 100%;
+    }
+
+    .read-sidebar {
+        width: 80vw;
+        background: #fff;
+        border-left: 1px solid #ddd;
+    }
+
+    .xknote-tab-content .accordion-header button,
+    .xknote-tab-content .tile-action {
+        display: block;
+        height: auto;
+        padding: 0;
+    }
+
+    #xknote-editor.write-mode > .xkeditor {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 1300px) {
     .xknote-header .navbar-right {
         display: flex;
         flex-direction: column;
@@ -509,9 +615,6 @@ body {
     .navbar-right-mbtn {
         display: flex;
         height: 60px;
-        position: fixed;
-        top: 0;
-        right: 0.5rem;
         align-items: center;
     }
 }

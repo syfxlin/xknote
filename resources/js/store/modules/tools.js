@@ -11,7 +11,9 @@ const types = {
   SET_FLOAT_MENU: "SET_FLOAT_MENU",
   SET_SAVE_AND_CLOSE: "SET_SAVE_AND_CLOSE",
   SET_WRITE_MODE: "SET_WRITE_MODE",
-  SET_SHOW_SIDEBAR: "SET_SHOW_SIDEBAR"
+  SET_SHOW_SIDEBAR: "SET_SHOW_SIDEBAR",
+  SET_SHOW_NAVBAR_RIGHT: "SET_SHOW_NAVBAR_RIGHT",
+  SET_SHOW_NAVBAR_CENTER: "SET_SHOW_NAVBAR_CENTER"
 };
 
 const state = {
@@ -46,7 +48,10 @@ const state = {
     saveAndClose: true
   },
   writeMode: false,
-  showSidebar: false
+  showSidebar: false,
+  showNavBarRight: !(window.innerWidth < 1300),
+  showNavBarCenter: !(window.innerWidth < 991),
+  isMinScreen: window.innerWidth < 991
 };
 
 const getters = {};
@@ -132,6 +137,18 @@ const actions = {
   },
   switchShowSidebar({ commit, state }, show = null) {
     commit(types.SET_SHOW_SIDEBAR, show === null ? !state.showSidebar : show);
+  },
+  switchShowNavBarRight({ commit, state }, show = null) {
+    commit(
+      types.SET_SHOW_NAVBAR_RIGHT,
+      show === null ? !state.showNavBarRight : show
+    );
+  },
+  switchShowNavBarCenter({ commit, state }, show = null) {
+    commit(
+      types.SET_SHOW_NAVBAR_CENTER,
+      show === null ? !state.showNavBarCenter : show
+    );
   }
 };
 
@@ -170,6 +187,12 @@ const mutations = {
   },
   [types.SET_SHOW_SIDEBAR](state, show) {
     state.showSidebar = show;
+  },
+  [types.SET_SHOW_NAVBAR_RIGHT](state, show) {
+    state.showNavBarRight = show;
+  },
+  [types.SET_SHOW_NAVBAR_CENTER](state, show) {
+    state.showNavBarCenter = show;
   }
 };
 

@@ -15,7 +15,7 @@
           </button>
         </transition>
       </section>
-      <section class="navbar-center">
+      <section v-show="showNavBarCenter" class="navbar-center">
         <input
           id="xknote-title"
           class="form-input"
@@ -29,6 +29,7 @@
           :mainItem="item.mainItem"
           :items="item.items"
           :operate="navBarOperate"
+          :right="true"
         />
         <div class="popover popover-bottom">
           <button class="btn">信息</button>
@@ -57,6 +58,7 @@
           :mainItem="navBarListR[0].mainItem"
           :items="navBarListR[0].items"
           :operate="navBarOperate"
+          :right="true"
         />
         <router-link to="/read" class="btn btn-link">阅读模式</router-link>
         <router-link v-if="!writeMode" to="/write" class="btn btn-link">写作模式</router-link>
@@ -69,15 +71,23 @@
           :right="true"
         />
       </section>
+      <div class="navbar-center-mbtn">
+        <button class="btn btn-action btn-lg" @click="switchShowNavBarCenter()">
+          <i class="icon icon-menu"></i>
+        </button>
+      </div>
       <div class="navbar-right-mbtn">
-        <button class="btn btn-action btn-lg" @click="showNavBarRight=!showNavBarRight">
+        <button class="btn btn-action btn-lg" @click="switchShowNavBarRight()">
           <i class="icon icon-menu"></i>
         </button>
       </div>
     </header>
     <div class="columns xknote-main">
       <sidebar></sidebar>
-      <section :class="'column ' + (!writeMode ? 'col-10' : 'col-12')" id="xknote-editor">
+      <section
+        :class="'column ' + (!writeMode ? 'col-10' : 'col-12 write-mode')"
+        id="xknote-editor"
+      >
         <xk-editor
           :settingProps="userSetting"
           :contentProps="xknoteOpened.note.content"
@@ -114,20 +124,27 @@ export default {
       navBarListC: dropdownList.navBarListC,
       navBarListR: dropdownList.navBarListR,
       loadedEditor: false,
-      xknoteName: window.xknote.xknote_name,
-      showNavBarRight: !(window.innerWidth < 991)
+      xknoteName: window.xknote.xknote_name
     };
   },
   computed: {
     ...mapState("note", ["xknoteOpened"]),
-    ...mapState("tools", ["writeMode"]),
-    ...mapGetters("conf", ["userSetting"]),
-    ...mapState("other", ["isMinScreen"])
+    ...mapState("tools", [
+      "writeMode",
+      "isMinScreen",
+      "showNavBarRight",
+      "showNavBarCenter"
+    ]),
+    ...mapGetters("conf", ["userSetting"])
   },
   methods: {
     ...mapActions("note", ["loadFirstNote"]),
     ...mapActions("menu", ["navBarOperate"]),
-    ...mapActions("tools", ["switchShowSidebar"]),
+    ...mapActions("tools", [
+      "switchShowSidebar",
+      "switchShowNavBarRight",
+      "switchShowNavBarCenter"
+    ]),
     editorLoaded(e) {
       if (e === "interfaceLoad") {
         window.XKEditor.ace.getSession().on("change", () => {

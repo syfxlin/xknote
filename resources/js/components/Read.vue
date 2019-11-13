@@ -19,46 +19,56 @@
           <a href="https://ixk.me">Otstar Lin</a>
         </footer>
       </section>
-      <aside class="col-3 p-fixed read-sidebar">
-        <ul class="tab tab-block xknote-tab">
-          <li class="tab-item">
-            <a :class="xknoteTab==='toc' ? 'active' : ''" @click="switchTab('toc')">大纲</a>
-          </li>
-          <li :class="'tab-item ' + (xknoteTab==='cloud' ? 'active' : '')">
-            <a @click="switchTab('cloud')">云端</a>
-          </li>
-          <li class="tab-item">
-            <a :class="xknoteTab==='local' ? 'active' : ''" @click="switchTab('local')">本地</a>
-          </li>
-        </ul>
-        <ul class="xknote-tab-content">
-          <li v-show="xknoteTab==='toc'" v-html="tocHtml" class="read-toc"></li>
-          <li v-show="xknoteTab==='cloud'" class="cloud-tab">
-            <folder-item
-              v-for="item in cloudList"
-              :key="item.id"
-              :info="item"
-              :storage="'cloud'"
-              :mode="'read'"
-            />
-            <template v-if="cloudList.length===0">
-              <div class="loading loading-lg"></div>
-              <div class="text-gray text-center">正在加载，客官莫急。</div>
-            </template>
-          </li>
-          <li v-show="xknoteTab==='local'" class="local-tab">
-            <ul class="menu menu-nav">
-              <li class="menu-item" v-for="item in localList" :key="item.id">
-                <note-item :info="item" :status="item.status" :storage="'local'" :mode="'read'" />
-              </li>
-              <div class="text-gray text-center" v-if="localList.length===0">这里什么都没有哦（￣︶￣）↗</div>
-            </ul>
-          </li>
-        </ul>
-      </aside>
+      <transition name="fade" mode="out-in">
+        <aside v-show="showSidebar" class="col-3 p-fixed read-sidebar">
+          <ul class="tab tab-block xknote-tab">
+            <li class="tab-item">
+              <a :class="xknoteTab==='toc' ? 'active' : ''" @click="switchTab('toc')">大纲</a>
+            </li>
+            <li :class="'tab-item ' + (xknoteTab==='cloud' ? 'active' : '')">
+              <a @click="switchTab('cloud')">云端</a>
+            </li>
+            <li class="tab-item">
+              <a :class="xknoteTab==='local' ? 'active' : ''" @click="switchTab('local')">本地</a>
+            </li>
+          </ul>
+          <ul class="xknote-tab-content">
+            <li v-show="xknoteTab==='toc'" v-html="tocHtml" class="read-toc"></li>
+            <li v-show="xknoteTab==='cloud'" class="cloud-tab">
+              <folder-item
+                v-for="item in cloudList"
+                :key="item.id"
+                :info="item"
+                :storage="'cloud'"
+                :mode="'read'"
+              />
+              <template v-if="cloudList.length===0">
+                <div class="loading loading-lg"></div>
+                <div class="text-gray text-center">正在加载，客官莫急。</div>
+              </template>
+            </li>
+            <li v-show="xknoteTab==='local'" class="local-tab">
+              <ul class="menu menu-nav">
+                <li class="menu-item" v-for="item in localList" :key="item.id">
+                  <note-item :info="item" :status="item.status" :storage="'local'" :mode="'read'" />
+                </li>
+                <div class="text-gray text-center" v-if="localList.length===0">这里什么都没有哦（￣︶￣）↗</div>
+              </ul>
+            </li>
+          </ul>
+        </aside>
+      </transition>
     </div>
     <div class="components">
       <router-link to="/" class="btn to-normal-btn">普通模式</router-link>
+      <button
+        class="btn btn-action read-show-sidebar-btn"
+        title="开启/关闭侧边栏"
+        v-if="isMinScreen"
+        @click="switchShowSidebar()"
+      >
+        <i class="icon icon-menu"></i>
+      </button>
     </div>
   </main>
 </template>
@@ -86,10 +96,12 @@ export default {
     };
   },
   computed: {
-    ...mapState("note", ["cloudList", "localList", "readOpened"])
+    ...mapState("note", ["cloudList", "localList", "readOpened"]),
+    ...mapState("tools", ["showSidebar", "isMinScreen"])
   },
   methods: {
     ...mapActions("note", ["loadFirstNote"]),
+    ...mapActions("tools", ["switchShowSidebar"]),
     switchTab(tabName) {
       this.xknoteTab = tabName;
     },
@@ -151,49 +163,4 @@ export default {
 </script>
 
 <style>
-.read-toc li img {
-  width: 1.05em;
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 0.4em;
-  padding-top: 0.1em;
-}
-.read-toc li a {
-  font-size: 1.05em;
-  vertical-align: middle;
-}
-.hero-body p {
-  margin: 0;
-}
-.read-sidebar {
-  top: 0;
-  right: 0;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-.read-sidebar .xknote-tab-content {
-  margin: 0.8rem 0 0.8rem 1.6rem;
-}
-.read-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  border-right: 1px solid #ddd;
-}
-.read-header .hero-body {
-  padding: 0.4rem 3rem;
-}
-.read-content {
-  flex: 1;
-  padding: 2rem 3rem;
-}
-.read-footer {
-  padding: 1.5em 0 !important;
-}
-.to-normal-btn {
-  bottom: 1rem;
-  right: 1rem;
-  position: fixed;
-}
 </style>

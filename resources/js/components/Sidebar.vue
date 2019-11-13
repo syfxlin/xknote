@@ -76,7 +76,7 @@
 <script>
 import NoteItem from "./NoteItem";
 import FolderItem from "./FolderItem";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   name: "sidebar",
   components: {
@@ -92,8 +92,7 @@ export default {
       "currBadgeCount",
       "localBadgeCount"
     ]),
-    ...mapState("tools", ["writeMode", "showSidebar"]),
-    ...mapState("other", ["isMinScreen"])
+    ...mapState("tools", ["writeMode", "showSidebar", "isMinScreen"])
   },
   methods: {
     ...mapActions("note", ["switchTab", "loadCloudFolders"]),

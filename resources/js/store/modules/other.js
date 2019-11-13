@@ -1,6 +1,4 @@
-const state = {
-  isMinScreen: window.innerWidth < 991
-};
+const state = {};
 
 const getters = {};
 

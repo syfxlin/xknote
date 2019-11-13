@@ -48,7 +48,8 @@ export default {
           inputFormat: "diff",
           showFiles: true,
           matching: "lines",
-          outputFormat: "side-by-side"
+          outputFormat:
+            window.innerWidth < 991 ? "line-by-line" : "side-by-side"
         });
       })
       .catch(err => {

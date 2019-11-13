@@ -114,6 +114,18 @@ export default {
         }
       });
       this.$nextTick(() => {
+        if (n.offsetTop + n.clientHeight > window.innerHeight) {
+          n.style.top =
+            n.offsetTop -
+            (n.offsetTop + n.clientHeight - window.innerHeight) +
+            "px";
+        }
+        if (n.offsetLeft + n.clientWidth > window.innerWidth) {
+          n.style.left =
+            n.offsetLeft -
+            (n.offsetLeft + n.clientWidth - window.innerWidth) +
+            "px";
+        }
         var offset = {
           xS: e.clientX,
           yS: e.clientY,

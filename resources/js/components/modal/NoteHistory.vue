@@ -77,7 +77,8 @@ export default {
           inputFormat: "diff",
           showFiles: false,
           matching: "lines",
-          outputFormat: "side-by-side"
+          outputFormat:
+            window.innerWidth < 991 ? "line-by-line" : "side-by-side"
         });
       });
     },
