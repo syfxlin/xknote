@@ -1,7 +1,7 @@
 <template>
   <main class="home">
     <header class="navbar xknote-header">
-      <section class="navbar-section col-2">
+      <section class="navbar-section col-2 navbar-left">
         <img class="xknote-icon" src="https://note.ixk.me/img/logo.png" alt="XK-Note icon" />
         <a href="#" class="btn btn-link text-large">{{ xknoteName }}</a>
         <transition name="fade" mode="out-in">
@@ -52,7 +52,7 @@
           </div>
         </div>
       </section>
-      <section class="navbar-section">
+      <section v-show="showNavBarRight" class="navbar-section navbar-right">
         <dropdown
           :mainItem="navBarListR[0].mainItem"
           :items="navBarListR[0].items"
@@ -69,8 +69,13 @@
           :right="true"
         />
       </section>
+      <div class="navbar-right-mbtn">
+        <button class="btn btn-action btn-lg" @click="showNavBarRight=!showNavBarRight">
+          <i class="icon icon-menu"></i>
+        </button>
+      </div>
     </header>
-    <div class="columns">
+    <div class="columns xknote-main">
       <sidebar></sidebar>
       <section :class="'column ' + (!writeMode ? 'col-10' : 'col-12')" id="xknote-editor">
         <xk-editor
@@ -109,7 +114,8 @@ export default {
       navBarListC: dropdownList.navBarListC,
       navBarListR: dropdownList.navBarListR,
       loadedEditor: false,
-      xknoteName: window.xknote.xknote_name
+      xknoteName: window.xknote.xknote_name,
+      showNavBarRight: true
     };
   },
   computed: {

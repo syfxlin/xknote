@@ -143,6 +143,15 @@ export default {
           currEle: currEle
         }
       });
+      this.$nextTick(() => {
+        console.log(f.offsetTop + f.clientHeight > window.innerHeight);
+        if (f.offsetTop + f.clientHeight > window.innerHeight) {
+          f.style.top =
+            f.offsetTop -
+            (f.offsetTop + f.clientHeight - window.innerHeight) +
+            "px";
+        }
+      });
       var offset = {
         xS: e.clientX,
         yS: e.clientY,

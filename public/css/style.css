@@ -220,16 +220,16 @@ body {
 .xknote-tab-content .tile-click {
     cursor: pointer;
 }
-.xknote-tab-content .tile-content[children='input'] .tile-click,
-.xknote-tab-content .accordion-header[children='input'] span {
+.xknote-tab-content .tile-content[children="input"] .tile-click,
+.xknote-tab-content .accordion-header[children="input"] span {
     display: none;
 }
 .xknote-tab-content .tile-content input,
 .xknote-tab-content .accordion-header input {
     display: none;
 }
-.xknote-tab-content .tile-content[children='input'] input,
-.xknote-tab-content .accordion-header[children='input'] input {
+.xknote-tab-content .tile-content[children="input"] input,
+.xknote-tab-content .accordion-header[children="input"] input {
     display: block;
 }
 .xknote-tab-content .tile-action .loading {
@@ -454,6 +454,66 @@ body {
 .NoteHistory .col-10 .input-group {
     margin-bottom: 0.5rem;
     width: max-content;
+}
+
+.xknote-main {
+    position: relative;
+}
+
+.navbar-right-mbtn {
+    display: none;
+}
+
+@media screen and (max-width: 991px) {
+    .xknote-sidebar {
+        position: absolute;
+        top: 0;
+        z-index: 1;
+        background: #fff;
+        height: 100%;
+        width: 80vw;
+        border-right: 1px solid #ddd;
+    }
+
+    #xknote-editor {
+        width: 100%;
+    }
+
+    .xknote-header {
+        position: relative;
+    }
+
+    .xknote-header .navbar-left {
+        width: auto;
+    }
+
+    .xknote-header .navbar-center {
+        display: none;
+    }
+
+    .xknote-header .navbar-right {
+        display: flex;
+        flex-direction: column;
+        z-index: 1;
+        flex: none;
+        top: 55px;
+        right: 0.5rem;
+        position: absolute;
+        background: #fff;
+        border-radius: 0.1rem;
+        box-shadow: 0 0.05rem 0.2rem rgba(48, 55, 66, 0.3);
+        padding: 0.4rem;
+        animation: slide-down 0.15s ease 1;
+    }
+
+    .navbar-right-mbtn {
+        display: flex;
+        height: 60px;
+        position: fixed;
+        top: 0;
+        right: 0.5rem;
+        align-items: center;
+    }
 }
 
 .fade-enter-active,
