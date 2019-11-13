@@ -1,7 +1,7 @@
-import otherConfig from '../../utils/otherConfig';
+import otherConfig from "../../utils/otherConfig";
 
 const types = {
-  SET_USER_CONFIG: 'SET_USER_CONFIG'
+  SET_USER_CONFIG: "SET_USER_CONFIG"
 };
 
 const state = {
@@ -33,7 +33,7 @@ const actions = {
   },
   loadUserConfig({ dispatch, commit }) {
     return new Promise((resolve, reject) => {
-      dispatch('configOperate', { operate: 'getUserConfig' })
+      dispatch("configOperate", { operate: "getUserConfig" })
         .then(config => {
           commit(types.SET_USER_CONFIG, config);
           resolve(config);
@@ -43,9 +43,9 @@ const actions = {
   },
   configOperate({ state }, { operate, config = null }) {
     return new Promise((resolve, reject) => {
-      if (operate === 'getUserConfig') {
+      if (operate === "getUserConfig") {
         window.axios
-          .get('/api/user/conf')
+          .get("/api/user/conf")
           .then(res => {
             resolve(res.data.config);
           })
@@ -54,9 +54,9 @@ const actions = {
             reject(err);
           });
       }
-      if (operate === 'setUserConfig') {
+      if (operate === "setUserConfig") {
         window.axios
-          .put('/api/user/conf', { ...config })
+          .put("/api/user/conf", { ...config })
           .then(res => {
             resolve(res.data);
           })
@@ -65,9 +65,9 @@ const actions = {
             reject(err);
           });
       }
-      if (operate === 'getGitConfig') {
+      if (operate === "getGitConfig") {
         window.axios
-          .get('/api/repo/git')
+          .get("/api/repo/git")
           .then(res => {
             resolve(res.data.config);
           })
@@ -76,9 +76,9 @@ const actions = {
             reject(err);
           });
       }
-      if (operate === 'setGitConfig') {
+      if (operate === "setGitConfig") {
         window.axios
-          .put('/api/repo/git', { ...config })
+          .put("/api/repo/git", { ...config })
           .then(res => {
             resolve(res.data);
           })
@@ -87,9 +87,9 @@ const actions = {
             reject(err);
           });
       }
-      if (operate === 'getSystemConfig') {
+      if (operate === "getSystemConfig") {
         window.axios
-          .get('/api/admin/conf')
+          .get("/api/admin/conf")
           .then(res => {
             resolve(res.data.config);
           })
@@ -98,9 +98,31 @@ const actions = {
             reject(err);
           });
       }
-      if (operate === 'setSystemConfig') {
+      if (operate === "setSystemConfig") {
         window.axios
-          .put('/api/admin/conf', { ...config })
+          .put("/api/admin/conf", { ...config })
+          .then(res => {
+            resolve(res.data);
+          })
+          .catch(err => {
+            console.log(err);
+            reject(err);
+          });
+      }
+      if (operate === "getBlogConfig") {
+        window.axios
+          .get("/api/blog")
+          .then(res => {
+            resolve(res.data.config);
+          })
+          .catch(err => {
+            console.error(err);
+            reject(err);
+          });
+      }
+      if (operate === "setBlogConfig") {
+        window.axios
+          .put("/api/blog", { ...config })
           .then(res => {
             resolve(res.data);
           })

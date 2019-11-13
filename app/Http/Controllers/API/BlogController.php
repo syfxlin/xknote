@@ -81,7 +81,7 @@ class BlogController extends Controller
             !$request->has('content') ||
             !$request->has('status')
         ) {
-            return response(['error' => 'Parameter not found. (path)'], 400);
+            return response(['error' => 'Parameter not found. (title,content,status)'], 400);
         }
         $data = [
             'title' => $request->title,

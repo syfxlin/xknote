@@ -29,6 +29,8 @@
       <move-item v-if="lgModal.content==='MoveItem'"></move-item>
       <image-item v-if="lgModal.content==='ImageItem'"></image-item>
       <git-status v-if="lgModal.content==='GitStatus'"></git-status>
+      <blog-config v-if="lgModal.content==='BlogConfig'"></blog-config>
+      <push-blog v-if="lgModal.content==='PushBlog'"></push-blog>
     </modal>
     <modal :data="llgModal" :size="'llg'">
       <note-history v-if="llgModal.content==='NoteHistory'"></note-history>
@@ -60,6 +62,8 @@ import ImageItem from "./modal/ImageItem";
 import NoteHistory from "./modal/NoteHistory";
 import GitStatus from "./modal/GitStatus";
 import AllNoteHistory from "./modal/AllNoteHistory";
+import BlogConfig from "./modal/BlogConfig";
+import PushBlog from "./modal/PushBlog";
 import Modal from "./Modal";
 import { mapState, mapActions } from "vuex";
 export default {
@@ -79,6 +83,8 @@ export default {
     "note-history": NoteHistory,
     "git-status": GitStatus,
     "all-note-history": AllNoteHistory,
+    "blog-config": BlogConfig,
+    "push-blog": PushBlog,
     modal: Modal
   },
   computed: {

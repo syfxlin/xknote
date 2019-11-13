@@ -108,6 +108,10 @@ const navBarListR = [
         operate: "showGitConfig"
       },
       {
+        name: "博客设置",
+        operate: "showBlogConfig"
+      },
+      {
         name: "系统管理",
         operate: "showSystemConfig"
       },

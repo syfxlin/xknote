@@ -50,6 +50,10 @@ export default {
             operate: "closeCurr"
           },
           {
+            name: "发布到博客",
+            operate: "pushBlog"
+          },
+          {
             name: "saveAndClose",
             content: "保存后关闭"
           }
@@ -70,6 +74,10 @@ export default {
           {
             name: "删除",
             operate: "delete"
+          },
+          {
+            name: "发布到博客",
+            operate: "pushBlog"
           }
         ],
         local: [
@@ -88,6 +96,10 @@ export default {
           {
             name: "saveAndClose",
             content: "保存后删除"
+          },
+          {
+            name: "发布到博客",
+            operate: "pushBlog"
           }
         ]
       }
