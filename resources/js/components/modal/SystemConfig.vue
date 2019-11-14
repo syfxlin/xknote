@@ -2,36 +2,14 @@
   <div class="system-config">
     <h4>通用设置</h4>
     <div class="form-horizontal">
-      <div class="form-group">
-        <div class="col-3 col-sm-12">
-          <label class="form-label">开放注册</label>
-        </div>
-        <div class="col-9 col-sm-12 has-icon-right">
-          <label class="form-switch">
-            <input type="checkbox" v-model="data.enable_register" />
-            <i class="form-icon"></i> 开启/关闭
-          </label>
-          <i :class="'form-icon icon' + (data.status === 'loading' ? ' loading' : '')"></i>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="col-3 col-sm-12">
-          <label class="form-label">XK-Note名称</label>
-        </div>
-        <div class="col-9 col-sm-12 has-icon-right">
-          <input class="form-input" type="text" v-model="data.xknote_name" required />
-          <i :class="'form-icon icon' + (data.status === 'loading' ? ' loading' : '')"></i>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="col-3 col-sm-12">
-          <label class="form-label">上传图片限制</label>
-        </div>
-        <div class="col-9 col-sm-12 has-icon-right">
-          <input class="form-input" type="number" v-model="data.upload_limit" required />
-          <i :class="'form-icon icon' + (data.status === 'loading' ? ' loading' : '')"></i>
-        </div>
-      </div>
+      <form-group
+        :config="data"
+        :k="'enable_register'"
+        :info="systemConfigInfo"
+        :status="data.status"
+      ></form-group>
+      <form-group :config="data" :k="'xknote_name'" :info="systemConfigInfo" :status="data.status"></form-group>
+      <form-group :config="data" :k="'upload_limit'" :info="systemConfigInfo" :status="data.status"></form-group>
     </div>
     <h4>用户管理</h4>
     <div v-if="users.length===0">
@@ -73,8 +51,13 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import FormGroup from "../FormGroup";
+import configInfo from "../../utils/configInfo";
 export default {
   name: "system-config",
+  components: {
+    "form-group": FormGroup
+  },
   computed: {
     ...mapState({
       data: state => state.tools.lgModal.data,
@@ -83,7 +66,8 @@ export default {
   },
   data() {
     return {
-      users: []
+      users: [],
+      systemConfigInfo: configInfo.systemConfig
     };
   },
   methods: {

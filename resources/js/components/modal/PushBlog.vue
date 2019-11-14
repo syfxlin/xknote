@@ -1,67 +1,29 @@
 <template>
   <div class="form-horizontal">
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">标题</label>
-      </div>
-      <div class="col-9 col-sm-12">
-        <input class="form-input" type="text" v-model="data.title" required />
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">发布状态</label>
-      </div>
-      <div class="col-9 col-sm-12">
-        <select v-model="data.post_status" class="form-select">
-          <option value="publish">publish</option>
-          <option value="future">publish</option>
-          <option value="draft">draft</option>
-          <option value="pending">pending</option>
-          <option value="private">private</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">别名</label>
-      </div>
-      <div class="col-9 col-sm-12">
-        <input class="form-input" type="text" v-model="data.slug" />
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">摘录</label>
-      </div>
-      <div class="col-9 col-sm-12">
-        <input class="form-input" type="text" v-model="data.excerpt" />
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">分类</label>
-      </div>
-      <div class="col-9 col-sm-12">
-        <input class="form-input" type="text" v-model="data.categories" />
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">标签</label>
-      </div>
-      <div class="col-9 col-sm-12">
-        <input class="form-input" type="text" v-model="data.tags" />
-      </div>
-    </div>
+    <form-group :config="data" :k="'title'" :info="pushBlogInfo"></form-group>
+    <form-group :config="data" :k="'post_status'" :info="pushBlogInfo"></form-group>
+    <form-group :config="data" :k="'slug'" :info="pushBlogInfo"></form-group>
+    <form-group :config="data" :k="'excerpt'" :info="pushBlogInfo"></form-group>
+    <form-group :config="data" :k="'categories'" :info="pushBlogInfo"></form-group>
+    <form-group :config="data" :k="'tags'" :info="pushBlogInfo"></form-group>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
+import FormGroup from "../FormGroup";
+import configInfo from "../../utils/configInfo";
 import { toHtml } from "../../../../node_modules/xkeditor/src/utils/switchContent";
 export default {
   name: "push-blog",
+  components: {
+    "form-group": FormGroup
+  },
+  data() {
+    return {
+      pushBlogInfo: configInfo.pushBlog
+    };
+  },
   computed: {
     ...mapState({
       data: state => state.tools.lgModal.data,

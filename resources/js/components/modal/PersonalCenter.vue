@@ -1,63 +1,28 @@
 <template>
   <div class="form-horizontal">
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">用户名</label>
-      </div>
-      <div class="col-9 col-sm-12 has-icon-right">
-        <input :value="data.username" class="form-input" type="text" disabled />
-        <i :class="'form-icon icon' + (data.status === 'loading' ? ' loading' : '')"></i>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">昵称</label>
-      </div>
-      <div class="col-9 col-sm-12 has-icon-right">
-        <input v-model="data.nickname" class="form-input" type="text" required />
-        <i :class="'form-icon icon' + (data.status === 'loading' ? ' loading' : '')"></i>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">邮箱</label>
-      </div>
-      <div class="col-9 col-sm-12 has-icon-right">
-        <input v-model="data.email" class="form-input" type="email" required />
-        <i :class="'form-icon icon' + (data.status === 'loading' ? ' loading' : '')"></i>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">旧密码</label>
-      </div>
-      <div class="col-9 col-sm-12">
-        <input v-model="data.old_password" class="form-input" type="password" required />
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">新密码</label>
-      </div>
-      <div class="col-9 col-sm-12">
-        <input v-model="data.password" class="form-input" type="password" required />
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">确认密码</label>
-      </div>
-      <div class="col-9 col-sm-12">
-        <input v-model="data.password_confirmation" class="form-input" type="password" required />
-      </div>
-    </div>
+    <form-group :config="data" :k="'username'" :info="personalCenterInfo" :status="data.status"></form-group>
+    <form-group :config="data" :k="'nickname'" :info="personalCenterInfo" :status="data.status"></form-group>
+    <form-group :config="data" :k="'email'" :info="personalCenterInfo" :status="data.status"></form-group>
+    <form-group :config="data" :k="'old_password'" :info="personalCenterInfo"></form-group>
+    <form-group :config="data" :k="'password'" :info="personalCenterInfo"></form-group>
+    <form-group :config="data" :k="'password_confirmation'" :info="personalCenterInfo"></form-group>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
+import FormGroup from "../FormGroup";
+import configInfo from "../../utils/configInfo";
 export default {
   name: "personal-center",
+  components: {
+    "form-group": FormGroup
+  },
+  data() {
+    return {
+      personalCenterInfo: configInfo.personalCenter
+    };
+  },
   computed: {
     ...mapState({
       data: state => state.tools.lgModal.data,

@@ -454,6 +454,105 @@ const configInfo = {
       type: 'text',
       required: true
     }
+  },
+  personalCenter: {
+    username: {
+      label: '用户名',
+      type: 'text',
+      required: true
+    },
+    nickname: {
+      label: '昵称',
+      type: 'text',
+      required: true
+    },
+    email: {
+      label: '邮箱',
+      type: 'email',
+      required: true
+    },
+    old_password: {
+      label: '旧密码',
+      type: 'password',
+      required: true
+    },
+    password: {
+      label: '新密码',
+      type: 'password',
+      required: true
+    },
+    password_confirmation: {
+      label: '确认密码',
+      type: 'password',
+      required: true
+    }
+  },
+  pushBlog: {
+    title: {
+      label: '标题',
+      type: 'text',
+      required: 'true'
+    },
+    post_status: {
+      label: '发布状态',
+      type: 'select',
+      options: [
+        {
+          label: 'publish',
+          value: 'publish'
+        },
+        {
+          label: 'future',
+          value: 'future'
+        },
+        {
+          label: 'draft',
+          value: 'draft'
+        },
+        {
+          label: 'pending',
+          value: 'pending'
+        },
+        {
+          label: 'private',
+          value: 'private'
+        }
+      ],
+      required: true
+    },
+    slug: {
+      label: '别名',
+      type: 'text'
+    },
+    excerpt: {
+      label: '摘录',
+      type: 'text'
+    },
+    categories: {
+      label: '分类',
+      type: 'text'
+    },
+    tags: {
+      label: '标签',
+      type: 'text'
+    }
+  },
+  systemConfig: {
+    enable_register: {
+      label: '开放注册',
+      type: 'switch',
+      required: true
+    },
+    xknote_name: {
+      label: 'XK-Note名称',
+      type: 'text',
+      required: true
+    },
+    upload_limit: {
+      label: '上传图片限制',
+      type: 'number',
+      required: true
+    }
   }
 };
 
