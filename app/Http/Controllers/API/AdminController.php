@@ -145,6 +145,7 @@ class AdminController extends Controller
         foreach ($config_m as $value) {
             $config[$value->config_name] = $value->config_value;
         }
+        $config['enable_register'] = (bool) $config['enable_register'];
         return ['error' => false, 'config' => $config];
     }
 
