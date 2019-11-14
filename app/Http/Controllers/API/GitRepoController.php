@@ -175,7 +175,7 @@ class GitRepoController extends Controller
                 404
             );
         }
-        $this->model->config($path, $id, [
+        $this->model->configInfo($path, $id, [
             'git_name' => $request->git_name,
             'git_email' => $request->git_email
         ]);
