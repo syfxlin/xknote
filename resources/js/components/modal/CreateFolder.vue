@@ -1,45 +1,34 @@
 <template>
   <div class="form-horizontal">
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">文件夹名</label>
+    <form-group :config="data" :k="'foldername'" :info="createFolderInfo" :status="data.status"></form-group>
+    <form-group :config="data" :k="'select'" :info="createFolderInfo">
+      <div v-if="!data.folders">
+        <div class="loading"></div>
+        <div class="text-gray text-center">正在加载，客官莫急。</div>
       </div>
-      <div class="col-9 col-sm-12 has-icon-right">
-        <input
-          :class="'form-input' + (data.status === 'error' ? ' is-error' : '')"
-          type="text"
-          v-model="data.foldername"
-          required
-        />
-        <i :class="'form-icon icon' + (data.status === 'loading' ? ' loading' : '')"></i>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">存放的文件夹</label>
-      </div>
-      <div class="col-9 col-sm-12">
-        <input class="form-input" type="text" v-model="data.select" required />
-        <div v-if="!data.folders">
-          <div class="loading"></div>
-          <div class="text-gray text-center">正在加载，客官莫急。</div>
-        </div>
-        <template v-else>
-          <hr />
-          <only-folder-item v-for="item in data.folders" :key="item.id" :info="item" />
-        </template>
-      </div>
-    </div>
+      <template v-else>
+        <hr />
+        <only-folder-item v-for="item in data.folders" :key="item.id" :info="item" />
+      </template>
+    </form-group>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
 import OnlyFolderItem from "../OnlyFolderItem";
+import FormGroup from "../FormGroup";
+import configInfo from "../../utils/configInfo";
 export default {
   name: "create-folder",
   components: {
-    "only-folder-item": OnlyFolderItem
+    "only-folder-item": OnlyFolderItem,
+    "form-group": FormGroup
+  },
+  data() {
+    return {
+      createFolderInfo: configInfo.createFolder
+    };
   },
   computed: {
     ...mapState({

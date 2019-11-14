@@ -1,59 +1,27 @@
 <template>
   <div class="form-horizontal">
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">博客系统</label>
-      </div>
-      <div class="col-9 col-sm-12 has-icon-right">
-        <select class="form-select" v-model="data.blog_system">
-          <option value="wordpress">WordPress</option>
-        </select>
-        <i :class="'form-icon icon' + (data.status === 'loading' ? ' loading' : '')"></i>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">博客链接</label>
-      </div>
-      <div class="col-9 col-sm-12 has-icon-right">
-        <input class="form-input" type="url" v-model="data.blog_url" required />
-        <i :class="'form-icon icon' + (data.status === 'loading' ? ' loading' : '')"></i>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">用户名</label>
-      </div>
-      <div class="col-9 col-sm-12 has-icon-right">
-        <input class="form-input" type="text" v-model="data.blog_username" required />
-        <i :class="'form-icon icon' + (data.status === 'loading' ? ' loading' : '')"></i>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">密码</label>
-      </div>
-      <div class="col-9 col-sm-12 has-icon-right">
-        <input class="form-input" type="password" v-model="data.blog_password" required />
-        <i :class="'form-icon icon' + (data.status === 'loading' ? ' loading' : '')"></i>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">Token</label>
-      </div>
-      <div class="col-9 col-sm-12 has-icon-right">
-        <input class="form-input" type="password" v-model="data.blog_token" required />
-        <i :class="'form-icon icon' + (data.status === 'loading' ? ' loading' : '')"></i>
-      </div>
-    </div>
+    <form-group :config="data" :k="'blog_system'" :info="blogConfigInfo" :status="data.status"></form-group>
+    <form-group :config="data" :k="'blog_url'" :info="blogConfigInfo" :status="data.status"></form-group>
+    <form-group :config="data" :k="'blog_username'" :info="blogConfigInfo" :status="data.status"></form-group>
+    <form-group :config="data" :k="'blog_password'" :info="blogConfigInfo" :status="data.status"></form-group>
+    <form-group :config="data" :k="'blog_token'" :info="blogConfigInfo" :status="data.status"></form-group>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
+import FormGroup from "../FormGroup";
+import configInfo from "../../utils/configInfo";
 export default {
   name: "blog-config",
+  components: {
+    "form-group": FormGroup
+  },
+  data() {
+    return {
+      blogConfigInfo: configInfo.blogConfig
+    };
+  },
   computed: {
     ...mapState({
       data: state => state.tools.lgModal.data,

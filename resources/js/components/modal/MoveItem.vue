@@ -1,19 +1,6 @@
 <template>
   <div class="form-horizontal">
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">移动到文件夹</label>
-      </div>
-      <div class="col-9 col-sm-12 has-icon-right">
-        <input
-          :class="'form-input' + (data.status === 'error' ? ' is-error' : '')"
-          type="text"
-          v-model="data.select"
-          required
-        />
-        <i :class="'form-icon icon' + (data.status === 'loading' ? ' loading' : '')"></i>
-      </div>
-    </div>
+    <form-group :config="data" :k="'select'" :info="moveItemInfo" :status="data.status"></form-group>
     <div class="form-group">
       <div class="col-3 col-sm-12"></div>
       <div class="col-9 col-sm-12 has-icon-right">
@@ -33,10 +20,18 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import OnlyFolderItem from "../OnlyFolderItem";
+import FormGroup from "../FormGroup";
+import configInfo from "../../utils/configInfo";
 export default {
   name: "move-item",
   components: {
-    "only-folder-item": OnlyFolderItem
+    "only-folder-item": OnlyFolderItem,
+    "form-group": FormGroup
+  },
+  data() {
+    return {
+      moveItemInfo: configInfo.moveItem
+    };
   },
   computed: {
     ...mapState({

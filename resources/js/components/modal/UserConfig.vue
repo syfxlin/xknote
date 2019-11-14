@@ -5,7 +5,7 @@
         v-for="(value, key) in config"
         :key="key"
         :config.sync="config"
-        :info.sync="settingList"
+        :info.sync="userConfigInfo"
         :k="key"
       ></form-group>
     </template>
@@ -14,7 +14,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import iSettingList from "../../utils/settingList";
+import configInfo from "../../utils/configInfo";
 import FormGroup from "../FormGroup";
 export default {
   label: "user-config",
@@ -23,7 +23,7 @@ export default {
   },
   data() {
     return {
-      settingList: iSettingList
+      userConfigInfo: configInfo.userConfig
     };
   },
   computed: {

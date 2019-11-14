@@ -1,38 +1,25 @@
 <template>
   <div class="form-horizontal">
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">Git用户名</label>
-      </div>
-      <div class="col-9 col-sm-12 has-icon-right">
-        <input class="form-input" type="text" v-model="data.git_name" required />
-        <i :class="'form-icon icon' + (data.status === 'loading' ? ' loading' : '')"></i>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">Git邮箱</label>
-      </div>
-      <div class="col-9 col-sm-12 has-icon-right">
-        <input class="form-input" type="email" v-model="data.git_email" required />
-        <i :class="'form-icon icon' + (data.status === 'loading' ? ' loading' : '')"></i>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-3 col-sm-12">
-        <label class="form-label">Git密码</label>
-      </div>
-      <div class="col-9 col-sm-12">
-        <input class="form-input" type="password" v-model="data.git_password" required />
-      </div>
-    </div>
+    <form-group :config="data" :k="'git_name'" :info="gitConfigInfo" :status="data.status"></form-group>
+    <form-group :config="data" :k="'git_email'" :info="gitConfigInfo" :status="data.status"></form-group>
+    <form-group :config="data" :k="'git_password'" :info="gitConfigInfo"></form-group>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
+import FormGroup from "../FormGroup";
+import configInfo from "../../utils/configInfo";
 export default {
   name: "git-config",
+  components: {
+    "form-group": FormGroup
+  },
+  data() {
+    return {
+      gitConfigInfo: configInfo.gitConfig
+    };
+  },
   computed: {
     ...mapState({
       data: state => state.tools.lgModal.data,
