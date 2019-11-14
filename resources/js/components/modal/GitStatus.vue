@@ -11,13 +11,42 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 export default {
   name: "git-status",
   computed: {
     ...mapState({
-      data: state => state.tools.lgModal.data
+      data: state => state.tools.lgModal.data,
+      modal: state => state.tools.lgModal
     })
+  },
+  methods: {
+    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
+    ...mapActions("note", ["folderOperate"]),
+    ...mapActions("toast", ["timeToast"])
+  },
+  created() {
+    this.modal.title = "Git状态";
+    this.setLgModalData({
+      ...this.data,
+      status: "loading"
+    });
+    this.folderOperate({
+      operate: "gitStatus",
+      folderInfo: { path: this.data.path }
+    }).then(status => {
+      this.setLgModalData({
+        ...this.data,
+        status: "",
+        statusData: status
+      });
+    });
+    this.modal.confirm = () => {
+      this.hideLgModal();
+    };
+    this.modal.cancel = () => {
+      this.hideLgModal();
+    };
   }
 };
 </script>

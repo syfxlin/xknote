@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import FormGroup from "../FormGroup";
 import configInfo from "../../utils/configInfo";
 export default {
@@ -25,8 +25,91 @@ export default {
   },
   computed: {
     ...mapState({
-      data: state => state.tools.lgModal.data
+      data: state => state.tools.lgModal.data,
+      modal: state => state.tools.lgModal
     })
+  },
+  methods: {
+    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
+    ...mapActions("note", ["folderOperate"]),
+    ...mapActions("toast", ["timeToast"])
+  },
+  created() {
+    this.modal.title = "Git InitClone";
+    let wTimeout = null;
+    let watch = () => {
+      if (wTimeout) {
+        clearTimeout(wTimeout);
+      }
+      wTimeout = setTimeout(() => {
+        this.setLgModalData({
+          ...this.data,
+          status: "loading"
+        });
+        this.folderOperate({
+          operate: "exist",
+          folderInfo: {
+            path: this.data.foldername + "/.git"
+          }
+        }).then(data => {
+          if (data.exist) {
+            this.setLgModalData({
+              ...this.data,
+              status: "error"
+            });
+          } else {
+            this.setLgModalData({
+              ...this.data,
+              status: ""
+            });
+          }
+        });
+      }, 500);
+    };
+    let uwFolderName = this.$watch("data.foldername", watch);
+    this.modal.confirm = () => {
+      if (
+        !this.data.foldername ||
+        !this.data.repo ||
+        !this.data.init_or_clone ||
+        this.data.status !== ""
+      ) {
+        return;
+      }
+      document
+        .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+        .classList.add("loading");
+      let git_user = {};
+      if (this.data.git_name && this.data.git_email && this.data.git_password) {
+        git_user = {
+          git_name: this.data.git_name,
+          git_email: this.data.git_email,
+          git_password: this.data.git_password
+        };
+      }
+      this.folderOperate({
+        operate: this.data.init_or_clone === "init" ? "gitInit" : "gitClone",
+        folderInfo: {
+          path: this.data.foldername,
+          repo: this.data.repo,
+          git_user: git_user
+        }
+      }).then(() => {
+        document
+          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+          .classList.remove("loading");
+        this.modal.cancel();
+        this.timeToast({
+          message: "Git Init或Clone成功！",
+          status: "success",
+          delay: 1000
+        });
+      });
+    };
+    this.modal.cancel = () => {
+      uwFolderName();
+      this.hideLgModal();
+    };
   }
 };
 </script>
