@@ -143,12 +143,12 @@ export default {
         mode: "normal",
         isNew: true
       });
-      this.listOperate({
-        operate: "add",
-        storage: this.data.storage,
-        path: path,
-        noteInfo: noteInfo
-      });
+      // this.listOperate({
+      //   operate: "add",
+      //   storage: this.data.storage,
+      //   path: path,
+      //   noteInfo: noteInfo
+      // });
       document
         .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
         .classList.remove("loading");

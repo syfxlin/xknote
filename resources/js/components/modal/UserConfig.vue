@@ -4,8 +4,8 @@
       <form-group
         v-for="(value, key) in config"
         :key="key"
-        :config.sync="config"
-        :info.sync="userConfigInfo"
+        :config="config"
+        :info="userConfigInfo"
         :k="key"
       ></form-group>
     </template>
