@@ -6,7 +6,7 @@
 
 @section('header')
     <section class="navbar-section">
-        <img class="xknote-icon" src="https://note.ixk.me/img/logo.png" alt="XK-Note icon" />
+        <img class="xknote-icon" src="/logo.png" alt="XK-Note icon" />
         <a href="/" class="btn btn-link text-large">XK-Note</a>
     </section>
     <section class="navbar-section">
@@ -23,7 +23,7 @@
 
 @section('main')
     <div class="welcome-header">
-        <img src="https://note.ixk.me/img/logo.png" alt="">
+        <img src="/logo.png" alt="">
         <h1>XK-Note</h1>
         <h3>一个集各种神奇功能的云笔记</h3>
         <div>

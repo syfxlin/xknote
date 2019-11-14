@@ -2,7 +2,7 @@
   <main class="home">
     <header class="navbar xknote-header">
       <section class="navbar-section col-2 navbar-left">
-        <img class="xknote-icon" src="https://note.ixk.me/img/logo.png" alt="XK-Note icon" />
+        <img class="xknote-icon" src="/logo.png" alt="XK-Note icon" />
         <a href="#" class="btn btn-link text-large">{{ xknoteName }}</a>
         <transition name="fade" mode="out-in">
           <button

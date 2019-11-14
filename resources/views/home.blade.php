@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spectre.css@0.5.8/dist/spectre-icons.min.css">
         <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
-        <link rel="icon" href="https://note.ixk.me/img/logo.png" sizes="32x32">
+        <link rel="icon" href="/logo.png" sizes="32x32">
         <meta name="description" content="XK-Note | 一个集各种神奇功能的云笔记 | 基于Laravel和Vue开发。">
         <title>XK-Note</title>
     </head>

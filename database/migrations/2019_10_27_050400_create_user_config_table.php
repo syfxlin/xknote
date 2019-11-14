@@ -19,9 +19,9 @@ class CreateUserConfigTable extends Migration
                 ->bigInteger('uid')
                 ->index()
                 ->unique();
-            $table->json('tinymce_setting');
-            $table->json('ace_setting');
-            $table->json('xk_setting');
+            $table->text('tinymce_setting');
+            $table->text('ace_setting');
+            $table->text('xk_setting');
         });
     }
 

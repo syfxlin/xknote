@@ -6,7 +6,7 @@
 
 @section('header')
     <section class="navbar-section">
-        <img class="xknote-icon" src="https://note.ixk.me/img/logo.png" alt="XK-Note icon" />
+        <img class="xknote-icon" src="/logo.png" alt="XK-Note icon" />
         <a href="/" class="btn btn-link text-large">XK-Note</a>
     </section>
     <section class="navbar-section">
