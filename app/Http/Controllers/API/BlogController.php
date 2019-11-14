@@ -67,6 +67,7 @@ class BlogController extends Controller
         }
         $info_m = BlogInfoModel::where('uid', $id);
         if ($info_m->count() <= 0) {
+            $data['uid'] = $id;
             BlogInfoModel::create($data);
         } else {
             $info_m->update($data);

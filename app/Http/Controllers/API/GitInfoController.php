@@ -49,6 +49,7 @@ class GitInfoController extends Controller
         ];
         $info_m = GitInfoModel::where('uid', $id);
         if ($info_m->count() <= 0) {
+            $data['uid'] = $id;
             GitInfoModel::create($data);
         } else {
             $info_m->update($data);
