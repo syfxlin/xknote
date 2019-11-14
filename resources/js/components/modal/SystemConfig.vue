@@ -135,7 +135,6 @@ export default {
       if (
         !this.data.upload_limit ||
         !this.data.xknote_name ||
-        !this.data.enable_register ||
         this.data.status !== ""
       ) {
         return;
