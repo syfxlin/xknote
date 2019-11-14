@@ -641,7 +641,8 @@ const actions = {
               {
                 content: "PushBlog",
                 data: {
-                  note: note
+                  title: note.note.title,
+                  content: note.note.content
                 }
               },
               { root: true }
@@ -654,7 +655,8 @@ const actions = {
             {
               content: "PushBlog",
               data: {
-                note: note
+                title: note.note.title,
+                content: note.note.content
               }
             },
             { root: true }
