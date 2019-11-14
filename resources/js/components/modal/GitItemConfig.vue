@@ -64,6 +64,7 @@ export default {
       });
     this.modal.confirm = () => {
       if (
+        !this.data.repo ||
         !this.data.git_name ||
         !this.data.git_email ||
         !this.data.git_password ||

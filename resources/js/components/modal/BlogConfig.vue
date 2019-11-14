@@ -34,6 +34,7 @@ export default {
     ...mapActions("toast", ["timeToast"])
   },
   created() {
+    // TODO: 上传必须要有token的bug需要修复
     this.modal.title = "博客设置";
     this.setLgModalData({
       ...this.data,
