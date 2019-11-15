@@ -38,9 +38,9 @@ class UserController extends Controller
     public function create(Request $request)
     {
         $enable_register =
-            DB::table('config')
+            ((bool) DB::table('config')
                 ->where('config_name', 'enable_register')
-                ->get()[0]->config_value === 'true';
+                ->get()[0]->config_value) === true;
         if (!$enable_register) {
             return response(
                 ['error' => true, 'message' => 'Register is disable'],
