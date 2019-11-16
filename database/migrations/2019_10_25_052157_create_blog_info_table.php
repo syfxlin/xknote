@@ -30,7 +30,7 @@ class CreateBlogInfoTable extends Migration
                 ->nullable()
                 ->default(null);
             $table
-                ->string('blog_token')
+                ->text('blog_token')
                 ->nullable()
                 ->default(null);
             $table->timestamps();
