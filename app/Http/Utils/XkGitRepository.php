@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Models;
+namespace App\Http\Utils;
 
 use Cz\Git\GitRepository;
 

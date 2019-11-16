@@ -21,6 +21,10 @@ Route::get('/home', 'HomeController@index')
     ->middleware('auth')
     ->name('home');
 
+Route::get('/utils', function() {
+    return view('utils');
+});
+
 Route::prefix('api')
     ->name('api.')
     ->middleware('auth')

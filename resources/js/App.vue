@@ -9,7 +9,6 @@
 
 <script>
 import Tools from "./components/Tools";
-import "./assets/style.css";
 import { mapState, mapActions } from "vuex";
 import { mapSyncActions } from "./store/syncActions";
 export default {

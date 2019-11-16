@@ -122,6 +122,7 @@ class BlogController extends Controller
 
     public function pushWordPress($config, $post_info)
     {
+        // TODO: Bug: 文章标签和分类目录需要特定格式
         $client = new Client([
             'base_uri' => $config['blog_url']
         ]);

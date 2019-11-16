@@ -11,11 +11,11 @@
     </section>
     <section class="navbar-section">
         @auth
-            <a href="{{ url('/home') }}">开始创作</a>
+            <a href="{{ url('/home') }}" class="btn btn-link">开始创作</a>
         @else
-            <a href="{{ route('login') }}">登录</a>
+            <a href="{{ route('login') }}" class="btn btn-link">登录</a>
             @if (Route::has('register'))
-                <a href="{{ route('register') }}">注册</a>
+                <a href="{{ route('register') }}" class="btn btn-link">注册</a>
             @endif
         @endauth
     </section>

@@ -11,6 +11,7 @@
         <link rel="icon" href="/logo.png" sizes="32x32">
         <meta name="description" content="XK-Note | 一个集各种神奇功能的云笔记 | 基于Laravel和Vue开发。">
         <title>@yield('title')</title>
+        @yield('style')
     </head>
     <body class="@yield('body_class')">
         <header class="navbar xknote-header">
@@ -22,5 +23,7 @@
         <footer>
             @yield('footer')
         </footer>
+        <script src="https://cdn.jsdelivr.net/npm/axios@0.19.0/dist/axios.min.js"></script>
+        @yield('script')
     </body>
 </html>

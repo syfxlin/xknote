@@ -238,16 +238,16 @@ body {
 .xknote-tab-content .tile-click {
     cursor: pointer;
 }
-.xknote-tab-content .tile-content[children="input"] .tile-click,
-.xknote-tab-content .accordion-header[children="input"] span {
+.xknote-tab-content .tile-content[children='input'] .tile-click,
+.xknote-tab-content .accordion-header[children='input'] span {
     display: none;
 }
 .xknote-tab-content .tile-content input,
 .xknote-tab-content .accordion-header input {
     display: none;
 }
-.xknote-tab-content .tile-content[children="input"] input,
-.xknote-tab-content .accordion-header[children="input"] input {
+.xknote-tab-content .tile-content[children='input'] input,
+.xknote-tab-content .accordion-header[children='input'] input {
     display: block;
 }
 .xknote-tab-content .tile-action .loading {
@@ -540,18 +540,21 @@ body {
     position: fixed;
 }
 
-.welcome-header {
+.welcome-header,
+.utils-header {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.welcome-header * {
+.welcome-header *,
+.utils-header * {
     margin-top: 0.5rem;
     margin-bottom: 0.2rem;
 }
 
-.welcome-header img {
+.welcome-header,
+.utils-header img {
     width: 15rem;
 }
 
@@ -575,7 +578,8 @@ body {
     padding: 0.2rem 0.3rem;
 }
 
-.welcome-body {
+.welcome-body,
+.utils-body {
     display: flex;
     justify-content: center;
     margin-top: 1rem;
@@ -584,12 +588,18 @@ body {
     margin-bottom: 1rem;
 }
 
-.welcome-body .xknote-container {
+.utils-body .form-horizontal {
+    justify-content: flex-start;
+}
+
+.welcome-body .xknote-container,
+.utils-body .xknote-container {
     width: 100%;
     text-align: center;
 }
 
-.welcome-body h2 {
+.welcome-body h2,
+.utils-body h2 {
     font-size: 1rem;
     font-weight: bold;
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Models;
 
 use Illuminate\Support\Facades\Storage;
-use App\Http\Models\XkGitRepository;
+use App\Http\Utils\XkGitRepository;
 use App\Http\Models\GitInfoModel;
 
 class GitRepoModel
