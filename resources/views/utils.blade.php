@@ -106,7 +106,7 @@
                 return window.CryptoJS.AES.encrypt(
                 data,
                 window.CryptoJS.enc.Utf8.parse(
-                    window.CryptoJS.SHA1('123456')
+                    window.CryptoJS.SHA1(key)
                     .toString()
                     .substring(0, 32)
                 ),
