@@ -67,13 +67,23 @@
                 </div>
             </div>
             <div class="column col-6 col-md-12">
-                <h2>生成AES密钥</h2>
+                <h2>解密笔记</h2>
                 <div class="form-horizontal">
                     <div class="form-group">
-                        <textarea class="form-input" id="aes-key" placeholder="AES Key" rows="3"></textarea>
+                        <div class="col-6 col-sm-12">
+                            <textarea class="form-input" id="note-encrypted" placeholder="加密过的笔记" rows="3"></textarea>
+                        </div>
+                        <div class="col-6 col-sm-12">
+                            <textarea class="form-input" id="note-source" placeholder="原始的笔记" rows="3"></textarea>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-primary" onclick="window.generateAesKey()">生成AES密钥</button>
+                        <div class="col-12 col-sm-12">
+                            <div class="input-group">
+                                <input type="text" class="form-input" id="decrypt-password" placeholder="密码" />
+                                <button class="btn btn-primary" onclick="window.decryptNote()">解密</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -91,6 +101,34 @@
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@3.1.9-1/crypto-js.js"></script>
     <script>
+        window.xkEncryption = {
+            encrypt: (data, key) => {
+                return window.CryptoJS.AES.encrypt(
+                data,
+                window.CryptoJS.enc.Utf8.parse(
+                    window.CryptoJS.SHA1('123456')
+                    .toString()
+                    .substring(0, 32)
+                ),
+                {
+                    mode: window.CryptoJS.mode.ECB
+                }
+                ).toString();
+            },
+            decrypt: (data, key) => {
+                return window.CryptoJS.AES.decrypt(
+                data,
+                window.CryptoJS.enc.Utf8.parse(
+                    window.CryptoJS.SHA1(key)
+                    .toString()
+                    .substring(0, 32)
+                ),
+                {
+                    mode: window.CryptoJS.mode.ECB
+                }
+                ).toString(window.CryptoJS.enc.Utf8);
+            }
+        };
         window.copySelect = function(id) {
             document.getElementById(id).select();
             try {
@@ -117,6 +155,12 @@
                 console.log(err);
                 alert('获取失败，请重试！');
             });
+        }
+        window.decryptNote = function() {
+            let encrypted = document.getElementById('note-encrypted').value;
+            let key = document.getElementById('decrypt-password').value;
+            let source = window.xkEncryption.decrypt(encrypted, key);
+            document.getElementById('note-source').value = source;
         }
     </script>
 @endsection
