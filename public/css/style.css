@@ -624,6 +624,11 @@ body {
     margin: 0.5rem 0 0.3rem;
 }
 
+.accordion input:checked ~ .accordion-body,
+.accordion[open] .accordion-body {
+    max-height: max-content;
+}
+
 @media screen and (max-width: 991px) {
     .xknote-sidebar {
         position: absolute;
