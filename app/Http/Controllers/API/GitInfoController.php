@@ -45,7 +45,7 @@ class GitInfoController extends Controller
         $data = [
             'git_name' => $request->git_name,
             'git_email' => $request->git_email,
-            'git_password' => $request->git_password
+            'git_password' => encrypt($request->git_password)
         ];
         $info_m = GitInfoModel::where('uid', $id);
         if ($info_m->count() <= 0) {
