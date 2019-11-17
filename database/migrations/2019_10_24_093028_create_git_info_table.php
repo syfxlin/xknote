@@ -21,7 +21,7 @@ class CreateGitInfoTable extends Migration
                 ->unique();
             $table->string('git_name');
             $table->string('git_email');
-            $table->string('git_password');
+            $table->text('git_password');
             $table->timestamps();
         });
     }
