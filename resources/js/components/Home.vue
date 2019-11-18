@@ -146,12 +146,31 @@ export default {
       "switchShowNavBarCenter"
     ]),
     editorLoaded(e) {
+      let keys = [
+        {
+          name: "saveCloud",
+          win: "Ctrl-S",
+          mac: "Command-S",
+          exec: () => {
+            this.navBarOperate("saveCloud");
+          }
+        },
+        {
+          name: "saveAllCloud",
+          win: "Ctrl-Shift-S",
+          mac: "Command-Shift-S",
+          exec: () => {
+            this.navBarOperate("saveAllCloud");
+          }
+        }
+      ];
       if (e === "interfaceLoad") {
         window.XKEditor.ace.getSession().on("change", () => {
           if (window.xknoteOpenedChangeFlag) {
             this.xknoteOpened.note.content = window.XKEditor.getMarkdown();
           }
         });
+        window.XKEditor.addKeys(keys);
       }
       if (e === "componentLoad") {
         this.$nextTick(() => {
