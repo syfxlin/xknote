@@ -265,7 +265,7 @@ body {
     background: #f1f1fc;
     color: #5755d9;
 }
-.xknote-tab-content .accordion-header span {
+.xknote-tab-content .accordion-header span:not(.text-gray) {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
