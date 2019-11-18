@@ -258,10 +258,17 @@ body {
     padding: 0.2rem 0.4rem;
     display: flex;
     align-items: center;
+	text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .xknote-tab-content .accordion-header:hover {
     background: #f1f1fc;
     color: #5755d9;
+}
+.xknote-tab-content .accordion-header span:first-child {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
 }
 .xknote-tab-content .accordion-header span:nth-last-of-type(1) {
     flex: 1 1 auto;
