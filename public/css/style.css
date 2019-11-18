@@ -545,6 +545,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
 }
 
 .welcome-header *,
@@ -553,7 +554,7 @@ body {
     margin-bottom: 0.2rem;
 }
 
-.welcome-header,
+.welcome-header img,
 .utils-header img {
     width: 15rem;
 }
