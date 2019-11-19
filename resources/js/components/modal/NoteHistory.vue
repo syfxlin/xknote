@@ -112,7 +112,7 @@ export default {
         })
         .catch(err => {
           this.timeToast({
-            message: "回滚失败！",
+            message: "回滚失败！(" + err.response.data.error + ")",
             status: "error",
             delay: 1000
           });
@@ -141,7 +141,7 @@ export default {
       })
       .catch(err => {
         this.timeToast({
-          message: "读取历史记录失败！",
+          message: "读取历史记录失败！(" + err.response.data.error + ")",
           status: "error",
           delay: 1000
         });

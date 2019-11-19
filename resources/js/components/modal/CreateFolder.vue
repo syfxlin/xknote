@@ -110,7 +110,8 @@ export default {
         })
         .catch(err => {
           this.timeToast({
-            message: "创建文件夹失败！请重试。",
+            message:
+              "创建文件夹失败！请重试。(" + err.response.data.error + ")",
             status: "error",
             delay: 1000
           });

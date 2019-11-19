@@ -690,6 +690,10 @@ body {
         border: none;
     }
 
+    .read-content {
+        padding: 2rem 1.5rem;
+    }
+
     .read-container {
         width: 100%;
     }

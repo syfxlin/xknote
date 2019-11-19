@@ -61,7 +61,7 @@ export default {
         })
         .catch(err => {
           this.timeToast({
-            message: "设置遇到问题",
+            message: "设置遇到问题！(" + err.response.data.error + ")",
             status: "error",
             delay: 1000
           });

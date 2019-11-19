@@ -94,7 +94,7 @@ export default {
         .catch(err => {
           document.getElementById("users-" + id).classList.remove("loading");
           this.timeToast({
-            message: "删除失败！",
+            message: "删除失败！(" + err.response.data.error + ")",
             status: "error",
             delay: 1000
           });
@@ -120,9 +120,9 @@ export default {
           upload_limit: info.upload_limit
         });
       })
-      .catch(error => {
+      .catch(err => {
         this.timeToast({
-          message: "获取信息失败！",
+          message: "获取信息失败！(" + err.response.data.error + ")",
           status: "error",
           delay: 1000
         });
@@ -161,9 +161,9 @@ export default {
             delay: 1000
           });
         })
-        .catch(error => {
+        .catch(err => {
           this.timeToast({
-            message: "设置失败，请重试！",
+            message: "设置失败，请重试！(" + err.response.data.error + ")",
             status: "error",
             delay: 1000
           });

@@ -55,7 +55,7 @@ export default {
       .catch(err => {
         this.status = "";
         this.timeToast({
-          message: "读取历史记录失败！",
+          message: "读取历史记录失败！(" + err.response.data.error + ")",
           status: "error",
           delay: 1000
         });

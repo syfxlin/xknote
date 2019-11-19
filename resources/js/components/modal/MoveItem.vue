@@ -145,7 +145,7 @@ export default {
         })
         .catch(err => {
           this.timeToast({
-            message: "移动失败！请重试。",
+            message: "移动失败！请重试。(" + err.response.data.error + ")",
             status: "error",
             delay: 1000
           });

@@ -61,7 +61,8 @@ const actions = {
                   dispatch(
                     'toast/timeToast',
                     {
-                      message: '删除失败！请重试。',
+                      message:
+                        '删除失败！请重试。(' + err.response.data.error + ')',
                       status: 'error',
                       delay: 1000
                     },
@@ -100,7 +101,8 @@ const actions = {
                   dispatch(
                     'toast/timeToast',
                     {
-                      message: '删除失败！请重试。',
+                      message:
+                        '删除失败！请重试。(' + err.response.data.error + ')',
                       status: 'error',
                       delay: 1000
                     },
@@ -209,7 +211,8 @@ const actions = {
                 dispatch(
                   'toast/timeToast',
                   {
-                    message: '重命名失败！请重试。',
+                    message:
+                      '重命名失败！请重试。(' + err.response.data.error + ')',
                     status: 'error',
                     delay: 1000
                   },
@@ -252,7 +255,8 @@ const actions = {
                 dispatch(
                   'toast/timeToast',
                   {
-                    message: '重命名失败！请重试。',
+                    message:
+                      '重命名失败！请重试。(' + err.response.data.error + ')',
                     status: 'error',
                     delay: 1000
                   },
@@ -443,7 +447,8 @@ const actions = {
               dispatch(
                 'toast/timeToast',
                 {
-                  message: '加载失败！请重试。',
+                  message:
+                    '加载失败！请重试。(' + err.response.data.error + ')',
                   status: 'error',
                   delay: 1000
                 },
@@ -555,10 +560,12 @@ const actions = {
             );
           })
           .catch(err => {
+            dispatch('toast/hideLoadToast', null, { root: true });
             dispatch(
               'toast/timeToast',
               {
-                message: '保存到云端失败！请重试。',
+                message:
+                  '保存到云端失败！请重试。(' + err.response.data.error + ')',
                 status: 'error',
                 delay: 1000
               },
@@ -634,21 +641,25 @@ const actions = {
               noteInfo: note
             },
             { root: true }
-          ).then(data => {
-            Vue.set(note, 'note', data.note);
-            dispatch(
-              'tools/showLgModal',
-              {
-                content: 'PushBlog',
-                data: {
-                  title: note.note.title,
-                  content: note.note.content
-                }
-              },
-              { root: true }
-            );
-            dispatch('toast/hideLoadToast', null, { root: true });
-          });
+          )
+            .then(data => {
+              Vue.set(note, 'note', data.note);
+              dispatch(
+                'tools/showLgModal',
+                {
+                  content: 'PushBlog',
+                  data: {
+                    title: note.note.title,
+                    content: note.note.content
+                  }
+                },
+                { root: true }
+              );
+              dispatch('toast/hideLoadToast', null, { root: true });
+            })
+            .catch(err => {
+              dispatch('toast/hideLoadToast', null, { root: true });
+            });
         } else {
           dispatch(
             'tools/showLgModal',

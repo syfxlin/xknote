@@ -116,7 +116,7 @@ export default {
             .querySelector(".xknote-reload-cloud")
             .classList.remove("loading");
           this.timeToast({
-            message: "重新加载失败，请重试！",
+            message: "重新加载失败，请重试！(" + err.response.data.error + ")",
             status: "error",
             delay: 1000
           });

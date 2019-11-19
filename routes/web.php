@@ -21,7 +21,7 @@ Route::get('/home', 'HomeController@index')
     ->middleware('auth')
     ->name('home');
 
-Route::get('/utils', function() {
+Route::get('/utils', function () {
     return view('utils');
 });
 

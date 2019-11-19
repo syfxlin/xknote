@@ -37,11 +37,12 @@ const actions = {
           );
           dispatch('toast/hideLoadToast', null, { root: true });
         })
-        .catch(error => {
+        .catch(err => {
           dispatch(
             'toast/timeToast',
             {
-              message: 'Git Pull失败，请重试！',
+              message:
+                'Git Pull失败，请重试！(' + err.response.data.error + ')',
               status: 'error',
               delay: 1000
             },
@@ -75,11 +76,12 @@ const actions = {
           );
           dispatch('toast/hideLoadToast', null, { root: true });
         })
-        .catch(error => {
+        .catch(err => {
           dispatch(
             'toast/timeToast',
             {
-              message: 'Git Push失败，请重试！',
+              message:
+                'Git Push失败，请重试！(' + err.response.data.error + ')',
               status: 'error',
               delay: 1000
             },
@@ -113,11 +115,12 @@ const actions = {
           );
           dispatch('toast/hideLoadToast', null, { root: true });
         })
-        .catch(error => {
+        .catch(err => {
           dispatch(
             'toast/timeToast',
             {
-              message: 'Git Push失败，请重试！',
+              message:
+                'Git Push失败，请重试！(' + err.response.data.error + ')',
               status: 'error',
               delay: 1000
             },

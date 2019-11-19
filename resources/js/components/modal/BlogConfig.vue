@@ -55,9 +55,9 @@ export default {
           blog_token: info.blog_token
         });
       })
-      .catch(error => {
+      .catch(err => {
         this.timeToast({
-          message: "获取信息失败！",
+          message: "获取信息失败！(" + err.response.data.error + ")",
           status: "error",
           delay: 1000
         });
@@ -106,9 +106,9 @@ export default {
             delay: 1000
           });
         })
-        .catch(error => {
+        .catch(err => {
           this.timeToast({
-            message: "设置失败，请重试！",
+            message: "设置失败，请重试！(" + err.response.data.error + ")",
             status: "error",
             delay: 1000
           });

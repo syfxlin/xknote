@@ -85,7 +85,7 @@ export default {
         })
         .catch(err => {
           this.timeToast({
-            message: "删除失败！",
+            message: "删除失败！(" + err.response.data.error + ")",
             status: "error",
             delay: 1000
           });
