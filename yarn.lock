@@ -2872,9 +2872,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.3.306:
-  version "1.3.306"
-  resolved "https://registry.npm.taobao.org/electron-to-chromium/download/electron-to-chromium-1.3.306.tgz#e8265301d053d5f74e36cb876486830261fbe946"
-  integrity sha1-6CZTAdBT1fdONsuHZIaDAmH76UY=
+  version "1.3.307"
+  resolved "https://registry.npm.taobao.org/electron-to-chromium/download/electron-to-chromium-1.3.307.tgz#e9b98901371d20164af7c0ca5bc820bd4305ccd3"
+  integrity sha1-6bmJATcdIBZK98DKW8ggvUMFzNM=
 
 elliptic@^6.0.0:
   version "6.5.1"
@@ -8262,9 +8262,9 @@ ws@^6.2.1:
     async-limiter "~1.0.0"
 
 xkeditor@^1.2.1:
-  version "1.3.2"
-  resolved "https://registry.npm.taobao.org/xkeditor/download/xkeditor-1.3.2.tgz#2c33ffb7f68712587472c603597d4d24f07f0aa1"
-  integrity sha1-LDP/t/aHElh0csYDWX1NJPB/CqE=
+  version "1.3.3"
+  resolved "https://registry.npm.taobao.org/xkeditor/download/xkeditor-1.3.3.tgz#0dc5f7719027838e5a654850ba9737da02f168fa"
+  integrity sha1-DcX3cZAng45aZUhQupc32gLxaPo=
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^1.2.17"
     "@fortawesome/free-solid-svg-icons" "^5.8.1"
