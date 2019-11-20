@@ -124,8 +124,14 @@ body {
     justify-content: center;
     border-left: 1px solid #ddd;
 }
+#xknote-editor .xkeditor {
+    width: 100%;
+}
 #xknote-editor .ace-toolbar .xk-button {
     font-size: 0.85em;
+}
+.xkeditor-toast p {
+    margin: 0;
 }
 .xknote-header {
     height: 60px;
@@ -239,16 +245,16 @@ body {
 .xknote-tab-content .tile-click {
     cursor: pointer;
 }
-.xknote-tab-content .tile-content[children='input'] .tile-click,
-.xknote-tab-content .accordion-header[children='input'] span {
+.xknote-tab-content .tile-content[children="input"] .tile-click,
+.xknote-tab-content .accordion-header[children="input"] span {
     display: none;
 }
 .xknote-tab-content .tile-content input,
 .xknote-tab-content .accordion-header input {
     display: none;
 }
-.xknote-tab-content .tile-content[children='input'] input,
-.xknote-tab-content .accordion-header[children='input'] input {
+.xknote-tab-content .tile-content[children="input"] input,
+.xknote-tab-content .accordion-header[children="input"] input {
     display: block;
 }
 .xknote-tab-content .tile-action .loading {
