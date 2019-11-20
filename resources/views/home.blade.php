@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
         <link rel="icon" href="/logo.png" sizes="32x32">
         <meta name="description" content="XK-Note | 一个集各种神奇功能的云笔记 | 基于Laravel和Vue开发。">
+        <link rel="manifest" href="/manifest.json">
         <title>XK-Note</title>
     </head>
     <body>
@@ -57,5 +58,12 @@
         <script src="/js/manifest.js"></script>
         <script src="/js/vendor.js"></script>
         <script src="/js/app.js"></script>
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js');
+                });
+            }
+        </script>
     </body>
 </html>

@@ -1,0 +1,15 @@
+{
+    "short_name": "XK-Note",
+    "name": "XK-Note | 一个集各种神奇功能的云笔记",
+    "icons": [
+        {
+            "src": "/logo.png",
+            "type": "image/png",
+            "sizes": "720x720"
+        }
+    ],
+    "start_url": "/",
+    "background_color": "#FFFFFF",
+    "display": "standalone",
+    "theme_color": "#807FE2"
+}
