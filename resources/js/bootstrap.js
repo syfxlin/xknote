@@ -1,8 +1,8 @@
-window._ = require('lodash');
+window._ = require("lodash");
 
-window.axios = require('axios');
+window.axios = require("axios");
 
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
 // import Echo from 'laravel-echo';
 

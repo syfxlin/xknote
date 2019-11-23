@@ -27,7 +27,8 @@ const otherConfig = {
     imgUpload: "/api/images",
     graffUrl: "static/",
     graffUpload: "http://test.ixk.me/upload.php",
-    scrollMode: "javascript"
+    scrollMode: "javascript",
+    judge0API: "https://run-code.lincdn.top"
   }
 };
 

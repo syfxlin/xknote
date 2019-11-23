@@ -79,6 +79,7 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(/.*\/api.*/i, workbox.strategies.networkOnly());
+workbox.routing.registerRoute(/.*run.*/i, workbox.strategies.networkOnly());
 
 // 其他的默认规则
 workbox.routing.setDefaultHandler(
