@@ -76,6 +76,7 @@
 <script>
 import NoteItem from "./NoteItem";
 import FolderItem from "./FolderItem";
+import xkeditorStore from "../../../node_modules/xkeditor/src/store";
 import {
   toHtml,
   getTocHtml
@@ -125,6 +126,8 @@ export default {
       this.tocHtml = getTocHtml();
       this.$nextTick(() => {
         this.initTocTree();
+        xkeditorStore.actions.updateRunCode();
+        console.log("in");
       });
     }
   },
