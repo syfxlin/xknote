@@ -180,6 +180,7 @@ export default {
         this.$nextTick(() => {
           this.loadFirstNote();
           this.loadedEditor = true;
+          window.XKEditor.addKeys(keys);
         });
       }
     }
