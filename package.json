@@ -26,6 +26,6 @@
     "dependencies": {
         "vue-router": "^3.1.2",
         "vuex": "^3.1.1",
-        "xkeditor": "^1.2.1"
+        "xkeditor": "1.4.3"
     }
 }
