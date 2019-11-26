@@ -7,28 +7,44 @@ workbox.setConfig({
 });
 
 if (workbox) {
-  console.log(`Yay! Workbox is loaded ğŸ‰`);
+  console.log(`Yay! Workbox is loaded ??`);
 } else {
-  console.log(`Boo! Workbox didn't load ğŸ˜¬`);
+  console.log(`Boo! Workbox didn't load ??`);
 }
+
+workbox.setConfig({
+  debug: false
+});
 
 let cacheSuffixVersion = "-191120";
 const maxEntries = 100;
 
+workbox.core.skipWaiting();
+workbox.core.clientsClaim();
+
+workbox.routing.registerRoute(/\/api/ig, new workbox.strategies.NetworkOnly());
+workbox.routing.registerRoute(/run/ig, new workbox.strategies.NetworkOnly());
+workbox.routing.registerRoute(/\/api/ig, new workbox.strategies.NetworkOnly(), 'POST');
+workbox.routing.registerRoute(/run/ig, new workbox.strategies.NetworkOnly(), 'POST');
+workbox.routing.registerRoute(/\/api/ig, new workbox.strategies.NetworkOnly(), 'PUT');
+workbox.routing.registerRoute(/run/ig, new workbox.strategies.NetworkOnly(), 'PUT');
+workbox.routing.registerRoute(/\/api/ig, new workbox.strategies.NetworkOnly(), 'DELETE');
+workbox.routing.registerRoute(/run/ig, new workbox.strategies.NetworkOnly(), 'DELETE');
+
 workbox.routing.registerRoute(
   // Cache Image File
   /.*\.(?:png|jpg|jpeg|svg|gif|webp)/,
-  workbox.strategies.staleWhileRevalidate({
+  new workbox.strategies.StaleWhileRevalidate({
     cacheName: "img-cache" + cacheSuffixVersion,
     plugins: [
-      // ä½¿ç”¨ expiration æ’ä»¶å®ç°ç¼“å­˜æ¡ç›®æ•°ç›®å’Œæ—¶é—´æ§åˆ¶
+      // Ê¹ÓÃ expiration ²å¼şÊµÏÖ»º´æÌõÄ¿ÊıÄ¿ºÍÊ±¼ä¿ØÖÆ
       new workbox.expiration.Plugin({
-        // æœ€å¤§ä¿å­˜é¡¹ç›®
+        // ×î´ó±£´æÏîÄ¿
         maxEntries,
-        // ç¼“å­˜ 30 å¤©
+        // »º´æ 30 Ìì
         maxAgeSeconds: 30 * 24 * 60 * 60
       }),
-      // ä½¿ç”¨ cacheableResponse æ’ä»¶ç¼“å­˜çŠ¶æ€ç ä¸º 0 çš„è¯·æ±‚
+      // Ê¹ÓÃ cacheableResponse ²å¼ş»º´æ×´Ì¬ÂëÎª 0 µÄÇëÇó
       new workbox.cacheableResponse.Plugin({
         statuses: [0, 200]
       })
@@ -39,17 +55,17 @@ workbox.routing.registerRoute(
 workbox.routing.registerRoute(
   // Cache CSS & JS files
   /.*\.(css|js)/,
-  workbox.strategies.staleWhileRevalidate({
+  new workbox.strategies.StaleWhileRevalidate({
     cacheName: "static-assets-cache",
     plugins: [
-      // ä½¿ç”¨ expiration æ’ä»¶å®ç°ç¼“å­˜æ¡ç›®æ•°ç›®å’Œæ—¶é—´æ§åˆ¶
+      // Ê¹ÓÃ expiration ²å¼şÊµÏÖ»º´æÌõÄ¿ÊıÄ¿ºÍÊ±¼ä¿ØÖÆ
       new workbox.expiration.Plugin({
-        // æœ€å¤§ä¿å­˜é¡¹ç›®
+        // ×î´ó±£´æÏîÄ¿
         maxEntries,
-        // ç¼“å­˜ 30 å¤©
+        // »º´æ 30 Ìì
         maxAgeSeconds: 30 * 24 * 60 * 60
       }),
-      // ä½¿ç”¨ cacheableResponse æ’ä»¶ç¼“å­˜çŠ¶æ€ç ä¸º 0 çš„è¯·æ±‚
+      // Ê¹ÓÃ cacheableResponse ²å¼ş»º´æ×´Ì¬ÂëÎª 0 µÄÇëÇó
       new workbox.cacheableResponse.Plugin({
         statuses: [0, 200]
       })
@@ -60,17 +76,17 @@ workbox.routing.registerRoute(
 workbox.routing.registerRoute(
   // Cache Fonts files
   /.*\.(woff|woff2)/,
-  workbox.strategies.staleWhileRevalidate({
+  new workbox.strategies.StaleWhileRevalidate({
     cacheName: "static-assets-cache",
     plugins: [
-      // ä½¿ç”¨ expiration æ’ä»¶å®ç°ç¼“å­˜æ¡ç›®æ•°ç›®å’Œæ—¶é—´æ§åˆ¶
+      // Ê¹ÓÃ expiration ²å¼şÊµÏÖ»º´æÌõÄ¿ÊıÄ¿ºÍÊ±¼ä¿ØÖÆ
       new workbox.expiration.Plugin({
-        // æœ€å¤§ä¿å­˜é¡¹ç›®
+        // ×î´ó±£´æÏîÄ¿
         maxEntries,
-        // ç¼“å­˜ 30 å¤©
+        // »º´æ 30 Ìì
         maxAgeSeconds: 30 * 24 * 60 * 60
       }),
-      // ä½¿ç”¨ cacheableResponse æ’ä»¶ç¼“å­˜çŠ¶æ€ç ä¸º 0 çš„è¯·æ±‚
+      // Ê¹ÓÃ cacheableResponse ²å¼ş»º´æ×´Ì¬ÂëÎª 0 µÄÇëÇó
       new workbox.cacheableResponse.Plugin({
         statuses: [0, 200]
       })
@@ -78,20 +94,14 @@ workbox.routing.registerRoute(
   })
 );
 
-workbox.routing.registerRoute(/.*\/api.*/i, workbox.strategies.networkOnly());
-workbox.routing.registerRoute(/.*run.*/i, workbox.strategies.networkOnly());
-
-// å…¶ä»–çš„é»˜è®¤è§„åˆ™
+// ÆäËûµÄÄ¬ÈÏ¹æÔò
 workbox.routing.setDefaultHandler(
-  workbox.strategies.networkFirst({
+  new workbox.strategies.NetworkFirst({
     options: [
       {
-        // è¶…è¿‡ 3s è¯·æ±‚æ²¡æœ‰å“åº”åˆ™ fallback åˆ° cache
+        // ³¬¹ı 3s ÇëÇóÃ»ÓĞÏìÓ¦Ôò fallback µ½ cache
         networkTimeoutSeconds: 3
       }
     ]
   })
 );
-
-//workbox.skipWaiting();
-//workbox.clientsClaim();
