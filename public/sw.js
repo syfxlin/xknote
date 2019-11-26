@@ -37,14 +37,14 @@ workbox.routing.registerRoute(
   new workbox.strategies.StaleWhileRevalidate({
     cacheName: "img-cache" + cacheSuffixVersion,
     plugins: [
-      // Ê¹ÓÃ expiration ²å¼şÊµÏÖ»º´æÌõÄ¿ÊıÄ¿ºÍÊ±¼ä¿ØÖÆ
+      // ä½¿ç”¨ expiration æ’ä»¶å®ç°ç¼“å­˜æ¡ç›®æ•°ç›®å’Œæ—¶é—´æ§åˆ¶
       new workbox.expiration.Plugin({
-        // ×î´ó±£´æÏîÄ¿
+        // æœ€å¤§ä¿å­˜é¡¹ç›®
         maxEntries,
-        // »º´æ 30 Ìì
+        // ç¼“å­˜ 30 å¤©
         maxAgeSeconds: 30 * 24 * 60 * 60
       }),
-      // Ê¹ÓÃ cacheableResponse ²å¼ş»º´æ×´Ì¬ÂëÎª 0 µÄÇëÇó
+      // ä½¿ç”¨ cacheableResponse æ’ä»¶ç¼“å­˜çŠ¶æ€ç ä¸º 0 çš„è¯·æ±‚
       new workbox.cacheableResponse.Plugin({
         statuses: [0, 200]
       })
@@ -58,14 +58,14 @@ workbox.routing.registerRoute(
   new workbox.strategies.StaleWhileRevalidate({
     cacheName: "static-assets-cache",
     plugins: [
-      // Ê¹ÓÃ expiration ²å¼şÊµÏÖ»º´æÌõÄ¿ÊıÄ¿ºÍÊ±¼ä¿ØÖÆ
+      // ä½¿ç”¨ expiration æ’ä»¶å®ç°ç¼“å­˜æ¡ç›®æ•°ç›®å’Œæ—¶é—´æ§åˆ¶
       new workbox.expiration.Plugin({
-        // ×î´ó±£´æÏîÄ¿
+        // æœ€å¤§ä¿å­˜é¡¹ç›®
         maxEntries,
-        // »º´æ 30 Ìì
+        // ç¼“å­˜ 30 å¤©
         maxAgeSeconds: 30 * 24 * 60 * 60
       }),
-      // Ê¹ÓÃ cacheableResponse ²å¼ş»º´æ×´Ì¬ÂëÎª 0 µÄÇëÇó
+      // ä½¿ç”¨ cacheableResponse æ’ä»¶ç¼“å­˜çŠ¶æ€ç ä¸º 0 çš„è¯·æ±‚
       new workbox.cacheableResponse.Plugin({
         statuses: [0, 200]
       })
@@ -79,14 +79,14 @@ workbox.routing.registerRoute(
   new workbox.strategies.StaleWhileRevalidate({
     cacheName: "static-assets-cache",
     plugins: [
-      // Ê¹ÓÃ expiration ²å¼şÊµÏÖ»º´æÌõÄ¿ÊıÄ¿ºÍÊ±¼ä¿ØÖÆ
+      // ä½¿ç”¨ expiration æ’ä»¶å®ç°ç¼“å­˜æ¡ç›®æ•°ç›®å’Œæ—¶é—´æ§åˆ¶
       new workbox.expiration.Plugin({
-        // ×î´ó±£´æÏîÄ¿
+        // æœ€å¤§ä¿å­˜é¡¹ç›®
         maxEntries,
-        // »º´æ 30 Ìì
+        // ç¼“å­˜ 30 å¤©
         maxAgeSeconds: 30 * 24 * 60 * 60
       }),
-      // Ê¹ÓÃ cacheableResponse ²å¼ş»º´æ×´Ì¬ÂëÎª 0 µÄÇëÇó
+      // ä½¿ç”¨ cacheableResponse æ’ä»¶ç¼“å­˜çŠ¶æ€ç ä¸º 0 çš„è¯·æ±‚
       new workbox.cacheableResponse.Plugin({
         statuses: [0, 200]
       })
@@ -94,12 +94,12 @@ workbox.routing.registerRoute(
   })
 );
 
-// ÆäËûµÄÄ¬ÈÏ¹æÔò
+// å…¶ä»–çš„é»˜è®¤è§„åˆ™
 workbox.routing.setDefaultHandler(
   new workbox.strategies.NetworkFirst({
     options: [
       {
-        // ³¬¹ı 3s ÇëÇóÃ»ÓĞÏìÓ¦Ôò fallback µ½ cache
+        // è¶…è¿‡ 3s è¯·æ±‚æ²¡æœ‰å“åº”åˆ™ fallback åˆ° cache
         networkTimeoutSeconds: 3
       }
     ]
