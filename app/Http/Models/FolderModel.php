@@ -31,9 +31,7 @@ class FolderModel
             }
         }
         if ($mode === 'all') {
-            $document_ext = DB::table('config')
-                ->where('config_name', 'document_ext')
-                ->get()[0]->config_value;
+            $document_ext = ConfigModel::getConfig('document_ext');
             $document_ext_preg = str_replace('|', '|.', '.' . $document_ext);
             $files = Storage::files($dir);
             foreach ($files as $file_name) {

@@ -60,9 +60,7 @@ class NoteController extends Controller
             return response(['error' => 'Parameter not found. (path)'], 400);
         }
         $path = 'uid_' . $id . $request->path;
-        $document_ext = DB::table('config')
-            ->where('config_name', 'document_ext')
-            ->get()[0]->config_value;
+        $document_ext = ConfigModel::getConfig('document_ext');
         if (!preg_match('/.+\.(' . $document_ext . ')$/i', $path)) {
             return response(['error' => 'Parameter error. (path)'], 400);
         }
@@ -103,9 +101,7 @@ class NoteController extends Controller
             return response(['error' => 'Parameter not found. (path)'], 400);
         }
         $path = 'uid_' . $id . $request->path;
-        $document_ext = DB::table('config')
-            ->where('config_name', 'document_ext')
-            ->get()[0]->config_value;
+        $document_ext = ConfigModel::getConfig('document_ext');
         $document_ext_preg = str_replace('|', '|.', '.' . $document_ext);
         if (!preg_match('/(' . $document_ext_preg . ')$/i', $path)) {
             return response(['error' => 'Parameter error. (path)'], 400);
@@ -140,9 +136,7 @@ class NoteController extends Controller
                 400
             );
         }
-        $document_ext = DB::table('config')
-            ->where('config_name', 'document_ext')
-            ->get()[0]->config_value;
+        $document_ext = ConfigModel::getConfig('document_ext');
         $document_ext_preg = str_replace('|', '|.', '.' . $document_ext);
         if (!preg_match('/(' . $document_ext_preg . ')$/i', $new_path)) {
             return response(['error' => 'Parameter error. (path)'], 400);

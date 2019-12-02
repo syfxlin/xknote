@@ -28,13 +28,7 @@ class ImageController extends Controller
             $size = $file->getClientSize();
             if (
                 $size >=
-                1024 *
-                    1024 *
-                    intval(
-                        DB::table('config')
-                            ->where('config_name', 'upload_limit')
-                            ->get()[0]->config_value
-                    )
+                1024 * 1024 * intval(ConfigModel::getConfig('upload_limit'))
             ) {
                 return [
                     'error' => true,
@@ -42,9 +36,7 @@ class ImageController extends Controller
                 ];
             }
             $ext = $file->getClientOriginalExtension();
-            $image_ext = DB::table('config')
-                ->where('config_name', 'image_ext')
-                ->get()[0]->config_value;
+            $image_ext = ConfigModel::getConfig('image_ext');
             if (in_array($ext, explode('|', $image_ext))) {
                 if ($file->isValid()) {
                     $url = $this->model->save($file, $request->user()->id);

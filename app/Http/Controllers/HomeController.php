@@ -28,12 +28,8 @@ class HomeController extends Controller
             'xknote_data' => [
                 'user_id' => $request->user()->id,
                 'nickname' => $request->user()->nickname,
-                'xknote_name' => DB::table('config')
-                    ->where('config_name', 'xknote_name')
-                    ->get()[0]->config_value,
-                'document_ext' => DB::table('config')
-                    ->where('config_name', 'document_ext')
-                    ->get()[0]->config_value
+                'xknote_name' => ConfigModel::getConfig('xknote_name'),
+                'document_ext' => ConfigModel::getConfig('document_ext')
             ]
         ]);
     }

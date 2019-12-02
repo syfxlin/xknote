@@ -40,9 +40,7 @@ class RegisterController extends Controller
     public function __construct()
     {
         $enable_register =
-            ((bool) DB::table('config')
-                ->where('config_name', 'enable_register')
-                ->get()[0]->config_value) === true;
+            ((bool) ConfigModel::getConfig('enable_register')) === true;
         $this->middleware($enable_register ? 'guest' : 'admin');
     }
 
