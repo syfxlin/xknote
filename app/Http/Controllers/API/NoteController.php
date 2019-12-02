@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Models\NoteModel;
 use Illuminate\Support\Facades\DB;
+use App\Http\Models\ConfigModel;
 
 class NoteController extends Controller
 {

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Models\ImageModel;
 use Illuminate\Support\Facades\DB;
+use App\Http\Models\ConfigModel;
 
 class ImageController extends Controller
 {
