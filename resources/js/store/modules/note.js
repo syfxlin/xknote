@@ -658,11 +658,12 @@ const actions = {
           if (ele) {
             ele.classList.remove("active");
           }
-          document
-            .querySelector(
-              "[data-storage='curr'][data-path='" + note.path + "']"
-            )
-            .classList.add("active");
+          ele = document.querySelector(
+            "[data-storage='curr'][data-path='" + note.path + "']"
+          );
+          if (ele) {
+            ele.classList.add("active");
+          }
           window.xknoteOpenedChangeFlag = true;
         });
       }
