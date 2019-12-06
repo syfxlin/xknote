@@ -8268,10 +8268,10 @@ ws@^6.2.1:
   dependencies:
     async-limiter "~1.0.0"
 
-xkeditor@1.4.4:
-  version "1.4.4"
-  resolved "https://registry.npm.taobao.org/xkeditor/download/xkeditor-1.4.4.tgz#8ac98e63adb31ac4d30905493389cdd3634a2adb"
-  integrity sha1-ismOY62zGsTTCQVJM4nN02NKKts=
+xkeditor@1.4.5:
+  version "1.4.5"
+  resolved "https://registry.npm.taobao.org/xkeditor/download/xkeditor-1.4.5.tgz?cache=0&sync_timestamp=1575603161042&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fxkeditor%2Fdownload%2Fxkeditor-1.4.5.tgz#41a61cfd2d04c3b0886ee0b9b943c87fda38918a"
+  integrity sha1-QaYc/S0Ew7CIbuC5uUPIf9o4kYo=
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^1.2.17"
     "@fortawesome/free-solid-svg-icons" "^5.8.1"
