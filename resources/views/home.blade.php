@@ -25,27 +25,32 @@
         <script>
             window.xknote = @json($xknote_data);
         </script>
-        <!-- Vue -->
-        {{-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vue-router@3.0.6/dist/vue-router.min.js"></script> --}}
+        <!-- built files will be auto injected -->
         <!-- ACE Editor -->
         <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.4.4/src-noconflict/ace.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.4.4/src-noconflict/ext-language_tools.js"></script>
+        <!-- Marked -->
+        <script src="https://cdn.jsdelivr.net/npm/marked@0.7.0/lib/marked.min.js"></script>
+        <!-- Turndown -->
+        <script src="https://cdn.jsdelivr.net/npm/turndown@5.0.3/dist/turndown.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/turndown-plugin-gfm@1.0.2/dist/turndown-plugin-gfm.min.js"></script>
         <!-- Preitter -->
         <script src="https://cdn.jsdelivr.net/npm/prettier@1.18.2/standalone.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/prettier@1.18.2/parser-markdown.js"></script>
         <!-- Prism.js -->
         <script src="/static/prism.js"></script>
-        <link rel="stylesheet" href="/static/prism-okaidia.css">
-        <link rel="stylesheet" href="/static/prism-line-numbers.css">
-        <link rel="stylesheet" href="/static/prism-toolbar.css">
-        <link rel="stylesheet" href="/static/prism-copy-to-clipboard.min.css">
+        <link rel="stylesheet" href="/static/prism-okaidia.css" />
+        <link rel="stylesheet" href="/static/prism-line-numbers.css" />
+        <link rel="stylesheet" href="/static/prism-toolbar.css" />
         <!-- Katex -->
         <script src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js"></script>
-        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/auto-render.min.js"></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/auto-render.min.js"></script>
+        <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css"
+        />
         <!-- Mermaid -->
-        <script src="https://cdn.jsdelivr.net/npm/mermaid@8.0.0/dist/mermaid.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mermaid@8.4.3/dist/mermaid.min.js"></script>
         <!-- Emoji-js -->
         <script src="https://cdn.jsdelivr.net/npm/emoji-js@3.4.1/lib/emoji.min.js"></script>
         <!-- TinyMCE -->
