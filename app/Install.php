@@ -20,20 +20,21 @@ class Install
             ->artisan('migrate', ['--force' => true])
             ->artisan('storage:link')
             //            ->dispatch(new MakeCronTask)
-            ->external('yarn', '--production')
+            ->external('yarn')
             ->external('yarn', 'prod')
             ->artisan('route:cache')
             ->artisan('config:cache')
             ->artisan('event:cache')
             ->external('git', 'init')
+            ->external('git', 'remote', 'remove', 'xknote-github')
             ->external(
                 'git',
                 'remote',
                 'add',
-                'origin',
+                'xknote-github',
                 'https://github.com/syfxlin/xknote.git'
             )
-            ->external('git', 'pull', 'origin', 'master');
+            ->external('git', 'pull', 'xknote-github', 'master');
     }
 
     public function local(Runner $run)
@@ -46,13 +47,14 @@ class Install
             ->external('yarn')
             ->external('yarn', 'dev')
             ->external('git', 'init')
+            ->external('git', 'remote', 'remove', 'xknote-github')
             ->external(
                 'git',
                 'remote',
                 'add',
-                'origin',
+                'xknote-github',
                 'https://github.com/syfxlin/xknote.git'
             )
-            ->external('git', 'pull', 'origin', 'master');
+            ->external('git', 'pull', 'xknote-github', 'master');
     }
 }
