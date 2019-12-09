@@ -18,15 +18,16 @@ class Install
             )
             ->artisan('key:generate', ['--force' => true])
             ->artisan('migrate', ['--force' => true])
+            ->artisan('db:seed')
             ->artisan('storage:link')
             //            ->dispatch(new MakeCronTask)
             ->external('yarn')
             ->external('yarn', 'prod')
-            ->artisan('route:cache')
+            // ->artisan('route:cache')
             ->artisan('config:cache')
             ->artisan('event:cache')
             ->external('git', 'init')
-            ->external('git', 'remote', 'remove', 'xknote-github')
+            // ->external('git', 'remote', 'remove', 'xknote-github')
             ->external(
                 'git',
                 'remote',
@@ -43,11 +44,12 @@ class Install
             ->external('composer', 'install')
             ->artisan('key:generate')
             ->artisan('migrate')
+            ->artisan('db:seed')
             ->artisan('storage:link')
             ->external('yarn')
             ->external('yarn', 'dev')
             ->external('git', 'init')
-            ->external('git', 'remote', 'remove', 'xknote-github')
+            // ->external('git', 'remote', 'remove', 'xknote-github')
             ->external(
                 'git',
                 'remote',

@@ -19,7 +19,7 @@ class Update
             )
             ->external('yarn')
             ->external('yarn', 'prod')
-            ->artisan('route:cache')
+            // ->artisan('route:cache')
             ->artisan('config:cache')
             ->artisan('event:cache')
             ->artisan('migrate', ['--force' => true])
