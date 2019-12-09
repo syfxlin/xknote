@@ -52,7 +52,6 @@
 
 1. 前往 [Release](https://github.com/syfxlin/xknote/releases) 下载，然后上传至服务器，并解压到网站根目录，或者克隆本仓库。
 2. 安装依赖
-
 ```bash
 # Ubuntu/Debian 其他系统请自行查阅
 # 鉴于不同用户安装PHP的方法不同，这里就不写PHP的安装方法了
@@ -66,18 +65,12 @@ sudo npm i -g yarn
 sudo npm i -g n
 sudo n stable
 ```
-
-3. 进入网站根目录，并执行以下命令
-
-```bash
-composer install
-php artisan storage:link
-php artisan migrate
-php artisan db:seed
+3. 安装模块
 ```
-
+composer install
+yarn
+```
 4. 复制一份`.env.example`文件，并重命名为`.env`，修改对应的信息，并关闭调试模式，同时运行以下命令生成 app key
-
 ```
 APP_DEBUG=false
 APP_ENV=production
@@ -98,21 +91,22 @@ MAIL_ENCRYPTION=ssl
 MAIL_FROM_ADDRESS=i@example.com
 MAIL_FROM_NAME=XK-Note
 ```
-
 ```
 php artisan key:generate
 ```
-
-5. 编译 Vue
-
+5. 进入网站根目录，并执行以下命令
 ```bash
-yarn
+php artisan storage:link
+php artisan migrate
+php artisan db:seed
+```
+6. 编译 Vue
+```bash
 yarn prod
 ```
-
-6. 修改网站的运行目录到`public`
-7. 打开网站，注册一个账户，并确认账户`id`是否为`1`，若不是则需要修改`.env文件`
-8. enjoy
+7. 修改网站的运行目录到`public`
+8. 打开网站，注册一个账户，并确认账户`id`是否为`1`，若不是则需要修改`.env文件`
+9. enjoy
 
 ## 文档 Doc
 
