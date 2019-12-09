@@ -24,8 +24,8 @@ class Install
             ->external('yarn')
             ->external('yarn', 'prod')
             // ->artisan('route:cache')
-            ->artisan('config:cache')
-            ->artisan('event:cache')
+            // ->artisan('config:cache')
+            // ->artisan('event:cache')
             ->external('git', 'init')
             // ->external('git', 'remote', 'remove', 'xknote-github')
             ->external(

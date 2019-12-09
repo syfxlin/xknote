@@ -20,8 +20,8 @@ class Update
             ->external('yarn')
             ->external('yarn', 'prod')
             // ->artisan('route:cache')
-            ->artisan('config:cache')
-            ->artisan('event:cache')
+            // ->artisan('config:cache')
+            // ->artisan('event:cache')
             ->artisan('migrate', ['--force' => true])
             ->artisan('cache:clear')
             ->artisan('queue:restart'); // ->artisan('horizon:terminate');
