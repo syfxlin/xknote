@@ -17,7 +17,7 @@ const otherConfig = {
   },
   aceSetting: {
     toolbar:
-      "h1 h2 h3 h4 h5 h6 | bold italic underline strikethrough quote mark code | sup sub tex-$ tex-math | flow seq gantt mermaid | ul ol minus table time | link image video graff | toLine search toc typewriter switchPreview fullPreview fullScreen toHtmlEditor toTinyMCE format empty setting | undo redo | setLocalStorage getLocalStorage removeLocalStorage | help info | pasteFormat",
+      "h1 h2 h3 h4 h5 h6 | bold italic underline strikethrough quote mark code | sup sub tex-$ tex-math | flow seq gantt mermaid | ul ol minus table time | link image video graff | toLine search toc typewriter switchPreview fullPreview fullScreen toHtmlEditor toTinyMCE format empty setting | undo redo | help info | pasteFormat",
     minLines: 10,
     mode: "ace/mode/markdown",
     value: "# XK-Note"
@@ -28,23 +28,8 @@ const otherConfig = {
     graffUrl: "static/",
     graffUpload: "http://test.ixk.me/upload.php",
     scrollMode: "javascript",
-    judge0API: "https://run-code.lincdn.top",
-    runCodeLangList: {
-      c: 1,
-      cpp: 2,
-      bash: 3,
-      csharp: 4,
-      go: 5,
-      java: 6,
-      node: 7,
-      php: 8,
-      python: 9,
-      python2: 10,
-      ruby: 11,
-      rust: 12,
-      scala: 13,
-      typescript: 14
-    }
+    judge0API: process.env.JUDGE0API,
+    runCodeLangList: JSON.parse(process.env.RUN_CODE_LANG_LIST)
   }
 };
 

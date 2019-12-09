@@ -767,9 +767,6 @@ const actions = {
         "fullhtml"
       );
     }
-    if (operate === "logout") {
-      dispatch("other/logout", null, { root: true });
-    }
   }
 };
 

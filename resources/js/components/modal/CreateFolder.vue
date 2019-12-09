@@ -109,6 +109,9 @@ export default {
           });
         })
         .catch(err => {
+          document
+            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+            .classList.remove("loading");
           this.timeToast({
             message:
               "创建文件夹失败！请重试。(" + err.response.data.error + ")",

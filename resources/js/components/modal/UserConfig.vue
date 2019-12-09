@@ -60,6 +60,9 @@ export default {
           });
         })
         .catch(err => {
+          document
+            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+            .classList.remove("loading");
           this.timeToast({
             message: "设置遇到问题！(" + err.response.data.error + ")",
             status: "error",

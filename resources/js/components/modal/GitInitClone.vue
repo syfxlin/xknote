@@ -94,17 +94,29 @@ export default {
           repo: this.data.repo,
           git_user: git_user
         }
-      }).then(() => {
-        document
-          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-          .classList.remove("loading");
-        this.modal.cancel();
-        this.timeToast({
-          message: "Git Init或Clone成功！",
-          status: "success",
-          delay: 1000
+      })
+        .then(() => {
+          document
+            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+            .classList.remove("loading");
+          this.modal.cancel();
+          this.timeToast({
+            message: "Git Init或Clone成功！",
+            status: "success",
+            delay: 1000
+          });
+        })
+        .catch(err => {
+          document
+            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+            .classList.remove("loading");
+          this.timeToast({
+            message:
+              "Init/Clone失败，请重试！(" + err.response.data.error + ")",
+            status: "error",
+            delay: 1000
+          });
         });
-      });
     };
     this.modal.cancel = () => {
       uwFolderName();

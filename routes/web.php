@@ -21,6 +21,10 @@ Route::get('/home', 'HomeController@index')
     ->middleware('auth')
     ->name('home');
 
+if (env('INDEX_PAGE') !== 'welcome') {
+    Route::redirect('/', '/home');
+}
+
 Route::get('/utils', function () {
     return view('utils');
 });
