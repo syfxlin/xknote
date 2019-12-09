@@ -12,6 +12,9 @@
   - [特性 Feature](#%e7%89%b9%e6%80%a7-feature)
   - [演示 Demo](#%e6%bc%94%e7%a4%ba-demo)
   - [安装 Install](#%e5%ae%89%e8%a3%85-install)
+    - [一键安装](#%e4%b8%80%e9%94%ae%e5%ae%89%e8%a3%85)
+    - [升级](#%e5%8d%87%e7%ba%a7)
+    - [手动安装](#%e6%89%8b%e5%8a%a8%e5%ae%89%e8%a3%85)
   - [文档 Doc](#%e6%96%87%e6%a1%a3-doc)
   - [维护者 Maintainer](#%e7%bb%b4%e6%8a%a4%e8%80%85-maintainer)
   - [许可证 License](#%e8%ae%b8%e5%8f%af%e8%af%81-license)
@@ -24,19 +27,19 @@
 
 ## 特性 Feature
 
--   [云存储] 云端撰写笔记，随时保存，多端同步。
--   [跨平台] 多平台支持，撰写查阅只需一个浏览器，无惧任何不兼容情况。
--   [响应式] 所有页面均采用响应式设计，即使尺寸极小的设备也能保持良好的体验。
--   [在线浏览] 拥有独立的浏览模式，查看笔记不再困扰。
--   [历史版本] 笔记支持历史版本查看和回滚，您可以切换到任何提交过的历史版本，无惧误删除。(基于 Git)
--   [Git 同步支持] 独有的 Git 支持，支持版本控制，无惧误操作，随时从旧版本恢复笔记。
--   [浏览器临时保存] 独有的浏览器端保存功能，即使断网了也能安心写作，无惧任何网络波动。
--   [发布到博客] 笔记可以在编辑完成后一键推送到 WordPress，Hexo 等博客系统。
--   [多笔记同时打开] 笔记可以随时打开，您无需在编辑其他笔记时关闭之前开启的笔记。
--   [多用户] 笔记主要面向个人使用，但是也支持多人同时使用，每个用户的笔记互相隔离保存，无需担心笔记泄露。
--   [导出笔记] 支持多种导出格式，保存为 MD 文件，html 文件，由本地即时生成，无需繁琐的操作。
--   [多种模式] 拥有多种模式，写作，预览，阅读，满足各种人的需求。
--   还有多种神奇的功能等待你的发掘。
+- [云存储] 云端撰写笔记，随时保存，多端同步。
+- [跨平台] 多平台支持，撰写查阅只需一个浏览器，无惧任何不兼容情况。
+- [响应式] 所有页面均采用响应式设计，即使尺寸极小的设备也能保持良好的体验。
+- [在线浏览] 拥有独立的浏览模式，查看笔记不再困扰。
+- [历史版本] 笔记支持历史版本查看和回滚，您可以切换到任何提交过的历史版本，无惧误删除。(基于 Git)
+- [Git 同步支持] 独有的 Git 支持，支持版本控制，无惧误操作，随时从旧版本恢复笔记。
+- [浏览器临时保存] 独有的浏览器端保存功能，即使断网了也能安心写作，无惧任何网络波动。
+- [发布到博客] 笔记可以在编辑完成后一键推送到 WordPress，Hexo 等博客系统。
+- [多笔记同时打开] 笔记可以随时打开，您无需在编辑其他笔记时关闭之前开启的笔记。
+- [多用户] 笔记主要面向个人使用，但是也支持多人同时使用，每个用户的笔记互相隔离保存，无需担心笔记泄露。
+- [导出笔记] 支持多种导出格式，保存为 MD 文件，html 文件，由本地即时生成，无需繁琐的操作。
+- [多种模式] 拥有多种模式，写作，预览，阅读，满足各种人的需求。
+- 还有多种神奇的功能等待你的发掘。
 
 ## 演示 Demo
 
@@ -50,8 +53,9 @@
 
 > 目前 XK-Note v2 还处于测试阶段，所以可能存在 Bug，若您在使用中遇到了 Bug 或者疑似 Bug 的情况，请提交 issue 或与我取得联系，以便第一时间取得修复。
 
-1. 前往 [Release](https://github.com/syfxlin/xknote/releases) 下载，然后上传至服务器，并解压到网站根目录，或者克隆本仓库。
-2. 安装依赖
+### 一键安装
+
+1. 安装依赖
 ```bash
 # Ubuntu/Debian 其他系统请自行查阅
 # 鉴于不同用户安装PHP的方法不同，这里就不写PHP的安装方法了
@@ -64,6 +68,64 @@ sudo npm i -g npm
 sudo npm i -g yarn
 sudo npm i -g n
 sudo n stable
+```
+2. 克隆本仓库
+```
+git clone https://github.com/syfxlin/xknote.git
+```
+1. 复制一份`.env.example`文件，并重命名为`.env`，修改对应的信息，并关闭调试模式
+```
+APP_DEBUG=false
+APP_ENV=production
+APP_ADMIN_ID=1 #一般来说第一位注册的用户自动升级为管理员，也就是id为1的用户，如果发现不是可以修改这个参数，改成你的id
+APP_URL=you url
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=xknote
+DB_USERNAME=you mysql username
+DB_PASSWORD=you mysql password
+MAIL_DRIVER=smtp
+MAIL_HOST=smtp.example.com
+MAIL_PORT=465
+MAIL_USERNAME=you mail username
+MAIL_PASSWORD=you main password
+MAIL_ENCRYPTION=ssl
+MAIL_FROM_ADDRESS=i@example.com
+MAIL_FROM_NAME=XK-Note
+```
+4. 安装
+```
+composer xknote-install
+```
+
+### 升级
+
+> 若您是使用手动安装的话请先确认git是否存在xknote-github的remote，如果没有，请添加后运行下方命令
+
+```
+composer xknote-update
+```
+
+### 手动安装
+
+1. 安装依赖
+```bash
+# Ubuntu/Debian 其他系统请自行查阅
+# 鉴于不同用户安装PHP的方法不同，这里就不写PHP的安装方法了
+sudo apt-get install curl git
+curl -sS https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
+# 安装NodeJS和yarn/npm
+sudo apt install npm
+sudo npm i -g npm
+sudo npm i -g yarn
+sudo npm i -g n
+sudo n stable
+```
+2. 克隆本仓库
+```
+git clone https://github.com/syfxlin/xknote.git
 ```
 3. 安装模块
 ```
