@@ -27,6 +27,6 @@
         "dotenv": "^8.2.0",
         "vue-router": "^3.1.2",
         "vuex": "^3.1.1",
-        "xkeditor": "1.4.6"
+        "xkeditor": "1.4.8"
     }
 }

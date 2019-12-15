@@ -312,7 +312,7 @@ const actions = {
     });
   },
   noteOperate(
-    { commit, dispatch, state },
+    { commit, dispatch, state, rootState },
     { operate, storage, noteInfo = null }
   ) {
     return new Promise((resolve, reject) => {
@@ -406,6 +406,11 @@ const actions = {
         }
       }
       if (operate === "save") {
+        if (rootState.conf.userConfig.xkSetting.saveFormat) {
+          window.xknoteOpenedChangeFlag = true;
+          window.XKEditor.formatContent();
+          window.xknoteOpenedChangeFlag = false;
+        }
         if (storage === "local") {
           dispatch(
             "db/noteLocalDB",

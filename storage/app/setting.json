@@ -39,6 +39,7 @@
         "scrollBind": "both",
         "pasteFormat": true,
         "pasteImageUpload": true,
-        "enableTinyMCE": true
+        "enableTinyMCE": true,
+        "saveFormat": true
     }
 }

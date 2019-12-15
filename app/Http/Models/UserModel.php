@@ -20,11 +20,11 @@ class UserModel extends Model
     public static function getConfig($id)
     {
         $user_config_m = self::where('uid', $id)->get()[0];
-        $config = [
+        $config = self::processConfig([
             'tinymce_setting' => json_decode($user_config_m->tinymce_setting),
             'ace_setting' => json_decode($user_config_m->ace_setting),
             'xk_setting' => json_decode($user_config_m->xk_setting)
-        ];
+        ]);
         return [
             'tinymceSetting' => $config['tinymce_setting'],
             'aceSetting' => $config['ace_setting'],
@@ -54,5 +54,12 @@ class UserModel extends Model
         } else {
             $user_config_m->update($config);
         }
+    }
+
+    public static function processConfig($config) {
+        if (!isset($config['xk_setting']->saveFormat)) {
+            $config['xk_setting']->saveFormat = true;
+        }
+        return $config;
     }
 }
