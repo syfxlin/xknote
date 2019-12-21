@@ -677,6 +677,12 @@ const actions = {
     }
     // folderItem专有操作
     if (type === "folder") {
+      if (operate.indexOf("create") === 0) {
+        let modal = {};
+        modal.content = operate.replace(/^c/, "C");
+        modal.data = { select: path, storage: "cloud" };
+        dispatch("tools/showLgModal", modal, { root: true });
+      }
       if (operate.indexOf("git") === 0) {
         dispatch(
           "other/gitOperate",

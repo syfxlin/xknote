@@ -62,6 +62,18 @@ export default {
           },
           {
             name: "divider",
+            content: "新建"
+          },
+          {
+            name: "新建笔记",
+            operate: "createNote"
+          },
+          {
+            name: "新建文件夹",
+            operate: "createFolder"
+          },
+          {
+            name: "divider",
             content: "Git"
           },
           {
@@ -109,6 +121,18 @@ export default {
           {
             name: "打包导出",
             operate: "export"
+          },
+          {
+            name: "divider",
+            content: "新建"
+          },
+          {
+            name: "新建笔记",
+            operate: "createNote"
+          },
+          {
+            name: "新建文件夹",
+            operate: "createFolder"
           }
         ]
       }
