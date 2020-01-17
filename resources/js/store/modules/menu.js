@@ -145,7 +145,9 @@ const actions = {
       let keyEv = e => {
         if (e.key === "Enter") {
           let value = e.target.value;
-          let newPath = info.path.replace(new RegExp(info.name + "$"), value);
+          // let newPath = info.path.replace(new RegExp(info.name + "$"), value);
+          let newPath =
+            info.path.substring(0, info.path.length - info.name.length) + value;
           let oldPath = info.path;
           let s = storage;
           if (type === "note" && storage === "curr") {

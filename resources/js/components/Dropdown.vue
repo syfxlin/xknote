@@ -53,7 +53,7 @@ export default {
 </script>
 
 <style>
-.menu-item button {
+.dropdown .menu-item button {
   border-radius: 0.1rem;
   color: inherit;
   display: block;
@@ -66,7 +66,7 @@ export default {
   width: calc(100% + 0.8rem);
   text-align: left;
 }
-.menu-item button:hover {
+.dropdown .menu-item button:hover {
   background: #f1f1fc;
   color: #5755d9;
 }
