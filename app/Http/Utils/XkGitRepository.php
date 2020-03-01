@@ -13,6 +13,7 @@ class XkGitRepository extends GitRepository
             $output[$c] = $this->extractFromCommand(
                 'git config --local --get ' . escapeshellarg($c)
             )[0];
+            $output[$c] = str_replace(["'", "\""], "", $output[$c]);
         }
         return $output;
     }

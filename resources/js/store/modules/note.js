@@ -673,7 +673,7 @@ const actions = {
         });
       }
       if (mode === "read") {
-        commit(types.SET_READED, JSON.parse(JSON.stringify(note)));
+        commit(types.SET_READED, note);
       }
     };
     if (!isNew && source.storage === "cloud") {
@@ -848,7 +848,7 @@ const mutations = {
     state.xknoteOpened = noteInfo;
   },
   [types.SET_READED](state, noteInfo) {
-    state.readOpened = noteInfo;
+    state.readOpened = JSON.parse(JSON.stringify(noteInfo));
   },
   [types.SET_OPENED_INDEX](state, index) {
     state.xknoteOpenedIndex = index;

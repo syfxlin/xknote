@@ -107,6 +107,7 @@ export default {
       this.xknoteTab = tabName;
     },
     initTocTree() {
+      // TODO: 新版本XK-Editor需要更改
       var items = document.querySelectorAll(
         ".read-toc .toc-img ~ ul,.toc .toc-img ~ ul"
       );
@@ -125,9 +126,31 @@ export default {
       this.previewHtml = toHtml(this.readOpened.note.content, true);
       this.tocHtml = getTocHtml();
       this.$nextTick(() => {
+        //制作文章内TOC
+        for (
+          let i = 0;
+          i < document.getElementsByClassName("toc").length;
+          i++
+        ) {
+          document.getElementsByClassName("toc")[i].innerHTML = this.tocHtml;
+        }
         this.initTocTree();
+        //转换Tex公式
+        window.renderMathInElement(document.querySelector(".read-content"), {
+          delimiters: [
+            { left: "$$", right: "$$" },
+            { left: "```math", right: "```" },
+            { left: "```tex", right: "```" }
+          ],
+          ignoredTags: ["script", "noscript", "style", "textarea", "code"]
+        });
+        //转换Mermaid图
+        try {
+          window.mermaid.init({ noteMargin: 10 }, ".xkeditor-mermaid");
+        } catch (error) {
+          console.log("May have errors");
+        }
         xkeditorStore.actions.updateRunCode();
-        console.log("in");
       });
     }
   },
@@ -136,6 +159,7 @@ export default {
       await this.loadFirstNote("read");
       await this.watchNote();
       if (!window.toggleToc) {
+        // TODO: 新版本XK-Editor需要更改
         window.toggleToc = ele => {
           var display = ele.nextElementSibling.nextElementSibling.style.display;
           if (display === "" || display === "block") {

@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
-    ...mapActions("toast", ["timeToast"]),
+    ...mapActions("toast", ["timeToast", "showLoadToast"]),
     ...mapActions("note", [
       "noteOperate",
       "folderOperate",
