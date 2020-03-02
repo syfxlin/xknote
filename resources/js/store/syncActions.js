@@ -1,11 +1,11 @@
-import { syncActions } from './index';
+import { syncActions } from "./index";
 
 function addMethod(object, name, fn) {
   var old = object[name];
   object[name] = function() {
     if (fn.length === arguments.length) {
       return fn.apply(this, arguments);
-    } else if (typeof old === 'function') {
+    } else if (typeof old === "function") {
       return old.apply(this, arguments);
     }
   };
@@ -13,12 +13,12 @@ function addMethod(object, name, fn) {
 
 const mod = {};
 
-addMethod(mod, 'mapSyncActions', map => {
+addMethod(mod, "mapSyncActions", map => {
   let fn = {};
-  let namespace = '';
-  let action = '';
+  let namespace = "";
+  let action = "";
   for (let i = 0; i < map.length; i++) {
-    [namespace, action] = map[i].split('/');
+    [namespace, action] = map[i].split("/");
     if (syncActions[namespace]) {
       fn[action] = syncActions[namespace][action];
     }
@@ -26,7 +26,7 @@ addMethod(mod, 'mapSyncActions', map => {
   return fn;
 });
 
-addMethod(mod, 'mapSyncActions', (namespace, map) => {
+addMethod(mod, "mapSyncActions", (namespace, map) => {
   let fn = {};
   for (let i = 0; i < map.length; i++) {
     if (syncActions[namespace]) {
@@ -38,9 +38,9 @@ addMethod(mod, 'mapSyncActions', (namespace, map) => {
 
 export const mapSyncActions = mod.mapSyncActions;
 export function dispatchSync(type, payload = null) {
-  let namespace = '';
-  let action = '';
-  [namespace, action] = type.split('/');
+  let namespace = "";
+  let action = "";
+  [namespace, action] = type.split("/");
   if (syncActions[namespace]) {
     return syncActions[namespace][action](payload);
   }

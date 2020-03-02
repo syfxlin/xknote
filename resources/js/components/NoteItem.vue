@@ -1,6 +1,8 @@
 <template>
   <a
-    :class="'tile tile-centered' + (status!=='C'&&mode!=='read' ? ' badge' : '')"
+    :class="
+      'tile tile-centered' + (status !== 'C' && mode !== 'read' ? ' badge' : '')
+    "
     :data-badge="status"
     :title="hoverTitle"
     :data-storage="storage"
@@ -12,11 +14,20 @@
         <div class="tile-title text-bold">{{ info.name }}</div>
         <div class="tile-subtitle">{{ info.path }}</div>
       </div>
-      <input class="form-input" type="text" placeholder="Name" :value="info.name" />
+      <input
+        class="form-input"
+        type="text"
+        placeholder="Name"
+        :value="info.name"
+      />
     </div>
     <div class="tile-action">
       <button class="btn btn-link btn-action" @click="showNoteSettings($event)">
-        <img class="icon" src="/static/svg/settings.svg" v-if="mode!=='read'" />
+        <img
+          class="icon"
+          src="/static/svg/settings.svg"
+          v-if="mode !== 'read'"
+        />
         <div class="loading"></div>
       </button>
     </div>

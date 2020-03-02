@@ -23,13 +23,22 @@
           <div class="btn-group btn-group-block">
             <button
               class="btn"
-              @click="checkLocalOperate({operate: 'keepLocal', index: index})"
-            >保留本地</button>
+              @click="checkLocalOperate({ operate: 'keepLocal', index: index })"
+            >
+              保留本地
+            </button>
             <button
               class="btn"
-              @click="checkLocalOperate({operate: 'keepCloud', index: index})"
-            >保留云端</button>
-            <button class="btn" @click="checkLocalOperate({operate: 'notOpe', index: index})">不操作</button>
+              @click="checkLocalOperate({ operate: 'keepCloud', index: index })"
+            >
+              保留云端
+            </button>
+            <button
+              class="btn"
+              @click="checkLocalOperate({ operate: 'notOpe', index: index })"
+            >
+              不操作
+            </button>
           </div>
         </td>
       </tr>
@@ -43,7 +52,7 @@ export default {
   name: "check-local-status",
   computed: {
     ...mapState({
-      data: state => state.tools.lgModal.data
+      data: state => state.tools.miModal.data
     })
   },
   methods: {

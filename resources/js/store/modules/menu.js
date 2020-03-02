@@ -272,9 +272,9 @@ const actions = {
     }
     if (operate === "move") {
       dispatch(
-        "tools/showLgModal",
+        "tools/showMiModal",
         {
-          content: "MoveItem",
+          operate: "MoveItem",
           data: {
             type: type,
             path: path,
@@ -647,9 +647,9 @@ const actions = {
             .then(data => {
               Vue.set(note, "note", data.note);
               dispatch(
-                "tools/showLgModal",
+                "tools/showMiModal",
                 {
-                  content: "PushBlog",
+                  operate: "PushBlog",
                   data: {
                     title: note.note.title,
                     content: note.note.content
@@ -664,9 +664,9 @@ const actions = {
             });
         } else {
           dispatch(
-            "tools/showLgModal",
+            "tools/showMiModal",
             {
-              content: "PushBlog",
+              operate: "PushBlog",
               data: {
                 title: note.note.title,
                 content: note.note.content
@@ -681,9 +681,9 @@ const actions = {
     if (type === "folder") {
       if (operate.indexOf("create") === 0) {
         let modal = {};
-        modal.content = operate.replace(/^c/, "C");
+        modal.operate = operate.replace(/^c/, "C");
         modal.data = { select: path, storage: "cloud" };
-        dispatch("tools/showLgModal", modal, { root: true });
+        dispatch("tools/showMiModal", modal, { root: true });
       }
       if (operate.indexOf("git") === 0) {
         dispatch(
@@ -718,13 +718,13 @@ const actions = {
   navBarOperate({ dispatch, rootState }, operate) {
     if (operate.indexOf("lshow") === 0) {
       let modal = {};
-      modal.content = operate.substring(5);
-      dispatch("tools/showLlgModal", modal, { root: true });
+      modal.operate = operate.substring(5);
+      dispatch("tools/showLgModal", modal, { root: true });
     }
     if (operate.indexOf("show") === 0) {
       let modal = {};
-      modal.content = operate.substring(4);
-      dispatch("tools/showLgModal", modal, { root: true });
+      modal.operate = operate.substring(4);
+      dispatch("tools/showMiModal", modal, { root: true });
     }
     if (operate.indexOf("git") === 0) {
       let path = rootState.note.xknoteOpened.path;

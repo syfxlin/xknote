@@ -6,7 +6,7 @@ const actions = {
   getAllUser({ dispatch }) {
     return new Promise((resolve, reject) => {
       window.axios
-        .get('/api/admin/users')
+        .get("/api/admin/users")
         .then(res => {
           resolve(res.data.users);
         })
@@ -17,11 +17,11 @@ const actions = {
     });
   },
   deleteUser({ dispatch }, id = null) {
-    let url = '';
+    let url = "";
     if (id) {
-      url = '/api/admin/users/' + id;
+      url = "/api/admin/users/" + id;
     } else {
-      url = '/api/user';
+      url = "/api/user";
     }
     return new Promise((resolve, reject) => {
       window.axios
@@ -36,11 +36,11 @@ const actions = {
     });
   },
   getUser({ dispatch }, id = null) {
-    let url = '';
+    let url = "";
     if (id) {
-      url = '/api/admin/users/' + id;
+      url = "/api/admin/users/" + id;
     } else {
-      url = '/api/user';
+      url = "/api/user";
     }
     return new Promise((resolve, reject) => {
       window.axios
@@ -55,11 +55,11 @@ const actions = {
     });
   },
   setUser({ dispatch }, { user, id = null }) {
-    let url = '';
+    let url = "";
     if (id) {
-      url = '/api/admin/users/' + id;
+      url = "/api/admin/users/" + id;
     } else {
-      url = '/api/user';
+      url = "/api/user";
     }
     return new Promise((resolve, reject) => {
       window.axios

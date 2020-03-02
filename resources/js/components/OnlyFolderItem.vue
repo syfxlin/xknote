@@ -1,6 +1,11 @@
 <template>
   <div class="accordion only-folder-item">
-    <input :id="'accordion-' + idHash" type="checkbox" name="accordion-checkbox" hidden />
+    <input
+      :id="'accordion-' + idHash"
+      type="checkbox"
+      name="accordion-checkbox"
+      hidden
+    />
     <div
       :class="'accordion-header c-hand' + (isActive ? ' active' : '')"
       :title="info.path"
@@ -8,7 +13,9 @@
     >
       <label
         :for="'accordion-' + idHash"
-        :class="'icon mr-1' + (info.sub.length !== 0 ? ' icon-arrow-right' : '')"
+        :class="
+          'icon mr-1' + (info.sub.length !== 0 ? ' icon-arrow-right' : '')
+        "
         @click="$event.stopPropagation()"
       ></label>
       {{ info.name }}
@@ -37,13 +44,13 @@ export default {
   },
   computed: {
     isActive() {
-      return this.lgModal.data.select === this.info.path;
+      return this.miModal.data.select === this.info.path;
     },
-    ...mapState("tools", ["lgModal"])
+    ...mapState("tools", ["miModal"])
   },
   methods: {
     select() {
-      this.$set(this.lgModal.data, "select", this.info.path);
+      this.$set(this.miModal.data, "select", this.info.path);
     }
   }
 };

@@ -1,22 +1,20 @@
 const types = {
-  SHOW_TOAST: 'SHOW_TOAST',
-  HIDE_TOAST: 'HIDE_TOAST',
-  SHIFT_TOAST_LIST: 'SHIFT_TOAST_LIST',
-  PUSH_TOAST_LIST: 'PUSH_TOAST_LIST',
-  SHOW_LOAD_TOAST: 'SHOW_LOAD_TOAST',
-  HIDE_LOAD_TOAST: 'HIDE_LOAD_TOAST'
+  SHOW_TOAST: "SHOW_TOAST",
+  HIDE_TOAST: "HIDE_TOAST",
+  SHIFT_TOAST_LIST: "SHIFT_TOAST_LIST",
+  PUSH_TOAST_LIST: "PUSH_TOAST_LIST",
+  SHOW_LOAD_TOAST: "SHOW_LOAD_TOAST",
+  HIDE_LOAD_TOAST: "HIDE_LOAD_TOAST"
 };
 
 const state = {
   toast: {
-    show: false,
-    message: '',
-    status: '',
+    message: "",
+    status: "",
     toastList: []
   },
   loadToast: {
-    show: false,
-    message: ''
+    message: ""
   }
 };
 
@@ -24,18 +22,10 @@ const getters = {};
 
 const actions = {
   showToast({ commit, state }, toast) {
-    let t = document.querySelector('.toast');
-    t.style.visibility = 'visible';
-    t.style.opacity = '1';
     commit(types.SHOW_TOAST, { message: toast.message, status: toast.status });
   },
   hideToast({ commit, state }) {
     return new Promise((resolve, reject) => {
-      let t = document.querySelector('.toast');
-      setTimeout(() => {
-        t.style.visibility = 'hidden';
-      }, 500);
-      t.style.opacity = '0';
       commit(types.HIDE_TOAST);
       resolve();
     });
@@ -44,11 +34,11 @@ const actions = {
     return new Promise((resolve, reject) => {
       let toast = state.toast.toastList[0];
       commit(types.SHIFT_TOAST_LIST);
-      dispatch('showToast', { message: toast.message, status: toast.status });
+      dispatch("showToast", { message: toast.message, status: toast.status });
       setTimeout(() => {
-        dispatch('hideToast').then(() => {
+        dispatch("hideToast").then(() => {
           if (state.toast.toastList.length !== 0) {
-            dispatch('popToast').then(() => {
+            dispatch("popToast").then(() => {
               resolve();
             });
           }
@@ -63,7 +53,7 @@ const actions = {
       delay: toast.delay
     });
     if (state.toast.toastList.length === 1) {
-      dispatch('popToast');
+      dispatch("popToast");
     }
   },
   showLoadToast({ commit }, toast) {
@@ -78,10 +68,9 @@ const mutations = {
   [types.SHOW_TOAST](state, toast) {
     state.toast.message = toast.message;
     state.toast.status = toast.status;
-    state.toast.show = true;
   },
   [types.HIDE_TOAST](state) {
-    state.toast.show = false;
+    state.toast.message = "";
   },
   [types.SHIFT_TOAST_LIST](state) {
     state.toast.toastList.shift();
@@ -90,11 +79,10 @@ const mutations = {
     state.toast.toastList.push(toast);
   },
   [types.SHOW_LOAD_TOAST](state, toast) {
-    state.loadToast.show = true;
     state.loadToast.message = toast.message;
   },
   [types.HIDE_LOAD_TOAST](state) {
-    state.loadToast.show = false;
+    state.loadToast.message = "";
   }
 };
 

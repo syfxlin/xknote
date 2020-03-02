@@ -29,12 +29,12 @@ export default {
   computed: {
     ...mapState("conf", ["userConfig"]),
     ...mapState({
-      data: state => state.tools.lgModal.data,
-      modal: state => state.tools.lgModal
+      data: state => state.tools.miModal.data,
+      modal: state => state.tools.miModal
     })
   },
   methods: {
-    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
+    ...mapActions("tools", ["setMiModalData", "hideMiModal"]),
     ...mapActions("conf", ["configOperate"]),
     ...mapActions("toast", ["timeToast"])
   },
@@ -71,7 +71,7 @@ export default {
         });
     };
     this.modal.cancel = () => {
-      this.hideLgModal();
+      this.hideMiModal();
     };
   }
 };

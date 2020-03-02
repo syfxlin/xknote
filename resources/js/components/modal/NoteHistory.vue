@@ -1,35 +1,51 @@
 <template>
   <div class="columns">
     <section class="column col-2">
-      <div v-if="logs.length===0">
+      <div v-if="logs.length === 0">
         <div class="loading"></div>
         <div class="text-gray text-center">正在加载，客官莫急。</div>
       </div>
       <div
         v-for="log in logs"
         :key="log.id"
-        :class="'tile tile-centered' + (log.commit === curr.commit ? ' active' : '')"
+        :class="
+          'tile tile-centered' + (log.commit === curr.commit ? ' active' : '')
+        "
       >
         <div class="tile-content" @click="loadDiff(log)">
           <div class="tile-title" :title="log.message">{{ log.message }}</div>
           <small
             class="tile-subtitle text-gray"
             :title="log.commit + ' - ' + log.date"
-          >{{ log.commit }} - {{ log.date }}</small>
+            >{{ log.commit }} - {{ log.date }}</small
+          >
         </div>
         <div class="tile-action">
-          <i v-if="log.commit === curr.commit && status==='loading'" class="icon loading"></i>
+          <i
+            v-if="log.commit === curr.commit && status === 'loading'"
+            class="icon loading"
+          ></i>
         </div>
       </div>
     </section>
     <section class="column col-10">
       <div class="input-group">
         <span class="input-group-addon">若你不知道这是什么请不要随意修改</span>
-        <input type="text" class="form-input" placeholder="回滚到指定commit" v-model="curr.commit" />
+        <input
+          type="text"
+          class="form-input"
+          placeholder="回滚到指定commit"
+          v-model="curr.commit"
+        />
         <button
           @click="rollback()"
-          :class="'btn btn-primary input-group-btn' + (confirm === 'loading' ? ' loading' : '')"
-        >{{ confirm ? '确定？' : '从该版本还原' }}</button>
+          :class="
+            'btn btn-primary input-group-btn' +
+              (confirm === 'loading' ? ' loading' : '')
+          "
+        >
+          {{ confirm ? "确定？" : "从该版本还原" }}
+        </button>
       </div>
       <div class="diff-html" v-html="diffHtml"></div>
     </section>
@@ -53,13 +69,13 @@ export default {
   },
   computed: {
     ...mapState({
-      data: state => state.tools.llgModal.data,
-      modal: state => state.tools.llgModal
+      data: state => state.tools.lgModal.data,
+      modal: state => state.tools.lgModal
     }),
     ...mapState("note", ["xknoteOpened"])
   },
   methods: {
-    ...mapActions("tools", ["setLlgModalData", "hideLlgModal"]),
+    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
     ...mapActions("other", ["diffOperate"]),
     ...mapActions("toast", ["timeToast"]),
     ...mapActions("note", ["openNote"]),
@@ -96,7 +112,7 @@ export default {
       })
         .then(() => {
           this.confirm = false;
-          this.hideLlgModal();
+          this.hideLgModal();
           this.timeToast({
             message: "回滚成功！",
             status: "success",
@@ -122,10 +138,10 @@ export default {
   created() {
     this.modal.title = "笔记历史";
     this.modal.confirm = () => {
-      this.hideLlgModal();
+      this.hideLgModal();
     };
     this.modal.cancel = () => {
-      this.hideLlgModal();
+      this.hideLgModal();
     };
     let pathIndex = this.xknoteOpened.path.indexOf("/", 1);
     this.repoPath = this.xknoteOpened.path.substring(0, pathIndex);

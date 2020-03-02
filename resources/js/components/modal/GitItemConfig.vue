@@ -1,9 +1,28 @@
 <template>
   <div class="form-horizontal">
-    <form-group :config="data" :k="'repo'" :info="gitItemConfigInfo" :status="data.status"></form-group>
-    <form-group :config="data" :k="'git_name'" :info="gitItemConfigInfo" :status="data.status"></form-group>
-    <form-group :config="data" :k="'git_email'" :info="gitItemConfigInfo" :status="data.status"></form-group>
-    <form-group :config="data" :k="'git_password'" :info="gitItemConfigInfo"></form-group>
+    <form-group
+      :config="data"
+      :k="'repo'"
+      :info="gitItemConfigInfo"
+      :status="data.status"
+    ></form-group>
+    <form-group
+      :config="data"
+      :k="'git_name'"
+      :info="gitItemConfigInfo"
+      :status="data.status"
+    ></form-group>
+    <form-group
+      :config="data"
+      :k="'git_email'"
+      :info="gitItemConfigInfo"
+      :status="data.status"
+    ></form-group>
+    <form-group
+      :config="data"
+      :k="'git_password'"
+      :info="gitItemConfigInfo"
+    ></form-group>
   </div>
 </template>
 
@@ -23,18 +42,18 @@ export default {
   },
   computed: {
     ...mapState({
-      data: state => state.tools.lgModal.data,
-      modal: state => state.tools.lgModal
+      data: state => state.tools.miModal.data,
+      modal: state => state.tools.miModal
     })
   },
   methods: {
-    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
+    ...mapActions("tools", ["setMiModalData", "hideMiModal"]),
     ...mapActions("note", ["folderOperate"]),
     ...mapActions("toast", ["timeToast"])
   },
   created() {
     this.modal.title = "Git设置";
-    this.setLgModalData({
+    this.setMiModalData({
       ...this.data,
       status: "loading"
     });
@@ -43,7 +62,7 @@ export default {
       folderInfo: { path: this.data.path }
     })
       .then(info => {
-        this.setLgModalData({
+        this.setMiModalData({
           ...this.data,
           status: "",
           repo: info.repo,
@@ -57,7 +76,7 @@ export default {
           status: "error",
           delay: 1000
         });
-        this.setLgModalData({
+        this.setMiModalData({
           ...this.data,
           status: ""
         });
@@ -108,7 +127,7 @@ export default {
         });
     };
     this.modal.cancel = () => {
-      this.hideLgModal();
+      this.hideMiModal();
     };
   }
 };

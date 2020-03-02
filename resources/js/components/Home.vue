@@ -93,9 +93,10 @@
         id="xknote-editor"
       >
         <xk-editor
-          :settingProps="userSetting"
-          :contentProps="xknoteOpened.note.content"
-          v-on:loadHook="editorLoaded"
+          v-model="xknoteOpened.note.content"
+          :config="userSetting"
+          :data.sync="xkeditorData"
+          v-on:loaded="editorLoaded"
           v-show="loadedEditor"
           :class="!writeMode ? '' : 'col-8'"
           ref="xkeditor"
@@ -128,7 +129,10 @@ export default {
       navBarListC: dropdownList.navBarListC,
       navBarListR: dropdownList.navBarListR,
       loadedEditor: false,
-      xknoteName: window.xknote.xknote_name
+      xknoteName: window.xknote.xknote_name,
+      xkeditorData: {
+        graff: {}
+      }
     };
   },
   computed: {
@@ -168,21 +172,11 @@ export default {
           }
         }
       ];
-      if (e === "interfaceLoad") {
-        window.XKEditor.ace.getSession().on("change", () => {
-          if (window.xknoteOpenedChangeFlag) {
-            this.xknoteOpened.note.content = window.XKEditor.getMarkdown();
-          }
-        });
+      this.$nextTick(() => {
+        this.loadFirstNote();
+        this.loadedEditor = true;
         window.XKEditor.addKeys(keys);
-      }
-      if (e === "componentLoad") {
-        this.$nextTick(() => {
-          this.loadFirstNote();
-          this.loadedEditor = true;
-          window.XKEditor.addKeys(keys);
-        });
-      }
+      });
     }
   }
 };
@@ -194,5 +188,8 @@ export default {
 }
 #toc li img {
   width: 1.05em;
+}
+#resizor {
+  z-index: 99;
 }
 </style>

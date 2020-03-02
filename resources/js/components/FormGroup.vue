@@ -5,24 +5,38 @@
     </div>
     <div class="col-9 col-sm-12 has-icon-right">
       <select
-        v-if="info[k].type==='select'"
+        v-if="info[k].type === 'select'"
         class="form-select"
         v-model="config[k]"
         :required="info[k].required"
         :disabled="info[k].disabled"
         :readonly="info[k].readonly"
       >
-        <option v-for="item in info[k].options" :key="item.id" :value="item.value">{{ item.label }}</option>
+        <option
+          v-for="item in info[k].options"
+          :key="item.id"
+          :value="item.value"
+          >{{ item.label }}</option
+        >
       </select>
-      <template v-else-if="info[k].type==='radio'">
-        <label v-for="item in info[k].options" :key="item.id" class="form-radio form-inline">
-          <input type="radio" :name="key" :value="item.value" v-model="config[k]" />
+      <template v-else-if="info[k].type === 'radio'">
+        <label
+          v-for="item in info[k].options"
+          :key="item.id"
+          class="form-radio form-inline"
+        >
+          <input
+            type="radio"
+            :name="key"
+            :value="item.value"
+            v-model="config[k]"
+          />
           <i class="form-icon"></i>
           {{ item.label }}
         </label>
       </template>
       <label
-        v-else-if="info[k].type==='switch'"
+        v-else-if="info[k].type === 'switch'"
         class="form-switch"
         :disabled="info[k].disabled"
         :readonly="info[k].readonly"
@@ -40,7 +54,9 @@
         :disabled="info[k].disabled"
         :readonly="info[k].readonly"
       />
-      <i :class="'form-icon icon' + (status === 'loading' ? ' loading' : '')"></i>
+      <i
+        :class="'form-icon icon' + (status === 'loading' ? ' loading' : '')"
+      ></i>
       <slot></slot>
     </div>
   </div>

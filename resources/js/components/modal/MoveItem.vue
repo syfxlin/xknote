@@ -1,6 +1,11 @@
 <template>
   <div class="form-horizontal">
-    <form-group :config="data" :k="'select'" :info="moveItemInfo" :status="data.status"></form-group>
+    <form-group
+      :config="data"
+      :k="'select'"
+      :info="moveItemInfo"
+      :status="data.status"
+    ></form-group>
     <div class="form-group">
       <div class="col-3 col-sm-12"></div>
       <div class="col-9 col-sm-12 has-icon-right">
@@ -10,7 +15,11 @@
         </div>
         <template v-else>
           <hr />
-          <only-folder-item v-for="item in data.folders" :key="item.id" :info="item" />
+          <only-folder-item
+            v-for="item in data.folders"
+            :key="item.id"
+            :info="item"
+          />
         </template>
       </div>
     </div>
@@ -35,12 +44,12 @@ export default {
   },
   computed: {
     ...mapState({
-      data: state => state.tools.lgModal.data,
-      modal: state => state.tools.lgModal
+      data: state => state.tools.miModal.data,
+      modal: state => state.tools.miModal
     })
   },
   methods: {
-    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
+    ...mapActions("tools", ["setMiModalData", "hideMiModal"]),
     ...mapActions("toast", ["timeToast", "showLoadToast"]),
     ...mapActions("note", [
       "noteOperate",
@@ -60,7 +69,7 @@ export default {
         clearTimeout(wTimeout);
       }
       wTimeout = setTimeout(() => {
-        this.setLgModalData({
+        this.setMiModalData({
           ...this.data,
           status: "loading"
         });
@@ -83,12 +92,12 @@ export default {
         }
         operatePro.then(data => {
           if (data.exist) {
-            this.setLgModalData({
+            this.setMiModalData({
               ...this.data,
               status: "error"
             });
           } else {
-            this.setLgModalData({
+            this.setMiModalData({
               ...this.data,
               status: ""
             });
@@ -156,10 +165,10 @@ export default {
     };
     this.modal.cancel = () => {
       uwFolder();
-      this.hideLgModal();
+      this.hideMiModal();
     };
     this.folderOperate({ operate: "readOnly", folderInfo: null }).then(data => {
-      this.setLgModalData({
+      this.setMiModalData({
         ...this.data,
         folders: data.folders
       });

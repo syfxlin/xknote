@@ -126,36 +126,36 @@ const actions = {
     }
     if (operate === "gitInitClone") {
       let modal = {};
-      modal.content = "GitInitClone";
-      dispatch("tools/showLgModal", modal, { root: true });
+      modal.operate = "GitInitClone";
+      dispatch("tools/showMiModal", modal, { root: true });
     }
     if (operate === "gitConfig") {
       let modal = {};
-      modal.content = "GitItemConfig";
+      modal.operate = "GitItemConfig";
       modal.data = {
         path: path
       };
-      dispatch("tools/showLgModal", modal, { root: true });
+      dispatch("tools/showMiModal", modal, { root: true });
     }
     if (operate === "gitStatus") {
       let modal = {};
-      modal.content = "GitStatus";
+      modal.operate = "GitStatus";
+      modal.data = {
+        path: path
+      };
+      dispatch("tools/showMiModal", modal, { root: true });
+    }
+    if (operate === "gitDiff") {
+      let modal = {};
+      modal.operate = "AllNoteHistory";
       modal.data = {
         path: path
       };
       dispatch("tools/showLgModal", modal, { root: true });
     }
-    if (operate === "gitDiff") {
-      let modal = {};
-      modal.content = "AllNoteHistory";
-      modal.data = {
-        path: path
-      };
-      dispatch("tools/showLlgModal", modal, { root: true });
-    }
   },
   checkLocalOperate({ dispatch, rootState }, { operate, index }) {
-    let path = rootState.tools.lgModal.data[index].path;
+    let path = rootState.tools.miModal.data[index].path;
     if (operate === "keepLocal") {
       dispatch(
         "note/noteOperate",
@@ -210,7 +210,7 @@ const actions = {
           { root: true }
         ).then(() => {
           rootState.note.localList[path].status = "C";
-          // this.$delete(this.lgModal.data, index);
+          // this.$delete(this.miModal.data, index);
           dispatch("tools/delLgModalData", index, { root: true });
         });
       });
@@ -237,17 +237,17 @@ const actions = {
             updated_at_c: res.data.check_list[key].updated_at
           };
         }
-        dispatch("tools/setLgModalData", data, { root: true });
+        dispatch("tools/setMiModalData", data, { root: true });
         dispatch(
-          "tools/showLgModal",
+          "tools/showMiModal",
           {
             title: "检查状态",
-            content: "CheckLocalStatus",
+            operate: "CheckLocalStatus",
             confirm: () => {
-              dispatch("tools/hideLgModal", null, { root: true });
+              dispatch("tools/hideMiModal", null, { root: true });
             },
             cancel: () => {
-              dispatch("tools/hideLgModal", null, { root: true });
+              dispatch("tools/hideMiModal", null, { root: true });
             }
           },
           { root: true }

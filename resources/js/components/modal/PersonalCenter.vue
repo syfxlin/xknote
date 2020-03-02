@@ -1,11 +1,38 @@
 <template>
   <div class="form-horizontal">
-    <form-group :config="data" :k="'username'" :info="personalCenterInfo" :status="data.status"></form-group>
-    <form-group :config="data" :k="'nickname'" :info="personalCenterInfo" :status="data.status"></form-group>
-    <form-group :config="data" :k="'email'" :info="personalCenterInfo" :status="data.status"></form-group>
-    <form-group :config="data" :k="'old_password'" :info="personalCenterInfo"></form-group>
-    <form-group :config="data" :k="'password'" :info="personalCenterInfo"></form-group>
-    <form-group :config="data" :k="'password_confirmation'" :info="personalCenterInfo"></form-group>
+    <form-group
+      :config="data"
+      :k="'username'"
+      :info="personalCenterInfo"
+      :status="data.status"
+    ></form-group>
+    <form-group
+      :config="data"
+      :k="'nickname'"
+      :info="personalCenterInfo"
+      :status="data.status"
+    ></form-group>
+    <form-group
+      :config="data"
+      :k="'email'"
+      :info="personalCenterInfo"
+      :status="data.status"
+    ></form-group>
+    <form-group
+      :config="data"
+      :k="'old_password'"
+      :info="personalCenterInfo"
+    ></form-group>
+    <form-group
+      :config="data"
+      :k="'password'"
+      :info="personalCenterInfo"
+    ></form-group>
+    <form-group
+      :config="data"
+      :k="'password_confirmation'"
+      :info="personalCenterInfo"
+    ></form-group>
   </div>
 </template>
 
@@ -25,24 +52,24 @@ export default {
   },
   computed: {
     ...mapState({
-      data: state => state.tools.lgModal.data,
-      modal: state => state.tools.lgModal
+      data: state => state.tools.miModal.data,
+      modal: state => state.tools.miModal
     })
   },
   methods: {
-    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
+    ...mapActions("tools", ["setMiModalData", "hideMiModal"]),
     ...mapActions("user", ["getUser", "setUser"]),
     ...mapActions("toast", ["timeToast"])
   },
   created() {
     this.modal.title = "个人中心";
-    this.setLgModalData({
+    this.setMiModalData({
       ...this.data,
       status: "loading"
     });
     this.getUser()
       .then(info => {
-        this.setLgModalData({
+        this.setMiModalData({
           ...this.data,
           status: "",
           username: info.username,
@@ -56,7 +83,7 @@ export default {
           status: "error",
           delay: 1000
         });
-        this.setLgModalData({
+        this.setMiModalData({
           ...this.data,
           status: ""
         });
@@ -101,7 +128,7 @@ export default {
         });
     };
     this.modal.cancel = () => {
-      this.hideLgModal();
+      this.hideMiModal();
     };
   }
 };

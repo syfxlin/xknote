@@ -1,6 +1,6 @@
 <template>
   <div class="git-status">
-    <div v-if="data.status==='loading'">
+    <div v-if="data.status === 'loading'">
       <div class="loading"></div>
       <div class="text-gray text-center">正在加载，客官莫急。</div>
     </div>
@@ -16,18 +16,18 @@ export default {
   name: "git-status",
   computed: {
     ...mapState({
-      data: state => state.tools.lgModal.data,
-      modal: state => state.tools.lgModal
+      data: state => state.tools.miModal.data,
+      modal: state => state.tools.miModal
     })
   },
   methods: {
-    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
+    ...mapActions("tools", ["setMiModalData", "hideMiModal"]),
     ...mapActions("note", ["folderOperate"]),
     ...mapActions("toast", ["timeToast"])
   },
   created() {
     this.modal.title = "Git状态";
-    this.setLgModalData({
+    this.setMiModalData({
       ...this.data,
       status: "loading"
     });
@@ -35,17 +35,17 @@ export default {
       operate: "gitStatus",
       folderInfo: { path: this.data.path }
     }).then(status => {
-      this.setLgModalData({
+      this.setMiModalData({
         ...this.data,
         status: "",
         statusData: status
       });
     });
     this.modal.confirm = () => {
-      this.hideLgModal();
+      this.hideMiModal();
     };
     this.modal.cancel = () => {
-      this.hideLgModal();
+      this.hideMiModal();
     };
   }
 };

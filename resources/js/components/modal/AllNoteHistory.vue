@@ -1,6 +1,6 @@
 <template>
   <div class="all-note-history">
-    <div v-if="status==='loading'">
+    <div v-if="status === 'loading'">
       <div class="loading"></div>
       <div class="text-gray text-center">正在加载，客官莫急。</div>
     </div>
@@ -20,22 +20,22 @@ export default {
   },
   computed: {
     ...mapState({
-      data: state => state.tools.llgModal.data,
-      modal: state => state.tools.llgModal
+      data: state => state.tools.lgModal.data,
+      modal: state => state.tools.lgModal
     })
   },
   methods: {
-    ...mapActions("tools", ["setLlgModalData", "hideLlgModal"]),
+    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
     ...mapActions("other", ["diffOperate"]),
     ...mapActions("toast", ["timeToast"])
   },
   created() {
     this.modal.title = "所有笔记历史";
     this.modal.confirm = () => {
-      this.hideLlgModal();
+      this.hideLgModal();
     };
     this.modal.cancel = () => {
-      this.hideLlgModal();
+      this.hideLgModal();
     };
     this.status = "loading";
     this.diffOperate({

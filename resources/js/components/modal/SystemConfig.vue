@@ -8,11 +8,21 @@
         :info="systemConfigInfo"
         :status="data.status"
       ></form-group>
-      <form-group :config="data" :k="'xknote_name'" :info="systemConfigInfo" :status="data.status"></form-group>
-      <form-group :config="data" :k="'upload_limit'" :info="systemConfigInfo" :status="data.status"></form-group>
+      <form-group
+        :config="data"
+        :k="'xknote_name'"
+        :info="systemConfigInfo"
+        :status="data.status"
+      ></form-group>
+      <form-group
+        :config="data"
+        :k="'upload_limit'"
+        :info="systemConfigInfo"
+        :status="data.status"
+      ></form-group>
     </div>
     <h4>用户管理</h4>
-    <div v-if="users.length===0">
+    <div v-if="users.length === 0">
       <div class="loading"></div>
       <div class="text-gray text-center">正在加载，客官莫急。</div>
     </div>
@@ -36,12 +46,13 @@
           <td>{{ user.created_at }}</td>
           <td>
             <a
-              v-if="user.id!=1"
+              v-if="user.id != 1"
               @click="thisDeleteUser(user.id)"
               class="btn btn-link"
               :id="'users-' + user.id"
               style="padding: 0;height: auto;"
-            >删除</a>
+              >删除</a
+            >
           </td>
         </tr>
       </tbody>
@@ -60,8 +71,8 @@ export default {
   },
   computed: {
     ...mapState({
-      data: state => state.tools.lgModal.data,
-      modal: state => state.tools.lgModal
+      data: state => state.tools.miModal.data,
+      modal: state => state.tools.miModal
     })
   },
   data() {
@@ -71,7 +82,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
+    ...mapActions("tools", ["setMiModalData", "hideMiModal"]),
     ...mapActions("conf", ["configOperate"]),
     ...mapActions("toast", ["timeToast"]),
     ...mapActions("user", ["getAllUser", "deleteUser"]),
@@ -103,7 +114,7 @@ export default {
   },
   created() {
     this.modal.title = "系统设置";
-    this.setLgModalData({
+    this.setMiModalData({
       ...this.data,
       status: "loading"
     });
@@ -112,7 +123,7 @@ export default {
       config: null
     })
       .then(info => {
-        this.setLgModalData({
+        this.setMiModalData({
           ...this.data,
           status: "",
           enable_register: info.enable_register,
@@ -126,7 +137,7 @@ export default {
           status: "error",
           delay: 1000
         });
-        this.setLgModalData({
+        this.setMiModalData({
           ...this.data,
           status: ""
         });
@@ -173,7 +184,7 @@ export default {
         });
     };
     this.modal.cancel = () => {
-      this.hideLgModal();
+      this.hideMiModal();
     };
     this.getAllUser().then(users => {
       this.users = users;

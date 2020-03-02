@@ -1,10 +1,10 @@
 <template>
   <div class="image-item grid-lg">
-    <div v-if="images.length===0">
+    <div v-if="images.length === 0">
       <div class="loading"></div>
       <div class="text-gray text-center">正在加载，客官莫急。</div>
     </div>
-    <template v-if="images.length!==0">
+    <template v-if="images.length !== 0">
       <div v-for="(image, index) in images" :key="image.id" class="columns">
         <div class="col-3 col-sm-12">
           <img :src="image" alt />
@@ -18,8 +18,15 @@
               :id="'image-item-' + index"
               :readonly="true"
             />
-            <button @click="copyMD(image, index)" class="btn input-group-btn">复制MD</button>
-            <button @click="deleteImage(image, index, $event)" class="btn input-group-btn">删除</button>
+            <button @click="copyMD(image, index)" class="btn input-group-btn">
+              复制MD
+            </button>
+            <button
+              @click="deleteImage(image, index, $event)"
+              class="btn input-group-btn"
+            >
+              删除
+            </button>
           </div>
         </div>
       </div>
@@ -38,12 +45,12 @@ export default {
   },
   computed: {
     ...mapState({
-      data: state => state.tools.lgModal.data,
-      modal: state => state.tools.lgModal
+      data: state => state.tools.miModal.data,
+      modal: state => state.tools.miModal
     })
   },
   methods: {
-    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
+    ...mapActions("tools", ["setMiModalData", "hideMiModal"]),
     ...mapActions("other", ["imageOperate"]),
     ...mapActions("toast", ["timeToast"]),
     copyMD(image, index) {
@@ -96,10 +103,10 @@ export default {
   created() {
     this.modal.title = "图片";
     this.modal.confirm = () => {
-      this.hideLgModal();
+      this.hideMiModal();
     };
     this.modal.cancel = () => {
-      this.hideLgModal();
+      this.hideMiModal();
     };
     this.imageOperate({ operate: "getAll" }).then(images => {
       this.$set(this, "images", images);
@@ -108,5 +115,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

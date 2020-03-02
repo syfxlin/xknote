@@ -1,11 +1,36 @@
 <template>
   <div class="form-horizontal">
-    <form-group :config="data" :k="'repo'" :info="gitInitCloneInfo"></form-group>
-    <form-group :config="data" :k="'foldername'" :info="gitInitCloneInfo" :status="data.status"></form-group>
-    <form-group :config="data" :k="'init_or_clone'" :info="gitInitCloneInfo"></form-group>
-    <form-group :config="data" :k="'git_name'" :info="gitInitCloneInfo"></form-group>
-    <form-group :config="data" :k="'git_email'" :info="gitInitCloneInfo"></form-group>
-    <form-group :config="data" :k="'git_password'" :info="gitInitCloneInfo"></form-group>
+    <form-group
+      :config="data"
+      :k="'repo'"
+      :info="gitInitCloneInfo"
+    ></form-group>
+    <form-group
+      :config="data"
+      :k="'foldername'"
+      :info="gitInitCloneInfo"
+      :status="data.status"
+    ></form-group>
+    <form-group
+      :config="data"
+      :k="'init_or_clone'"
+      :info="gitInitCloneInfo"
+    ></form-group>
+    <form-group
+      :config="data"
+      :k="'git_name'"
+      :info="gitInitCloneInfo"
+    ></form-group>
+    <form-group
+      :config="data"
+      :k="'git_email'"
+      :info="gitInitCloneInfo"
+    ></form-group>
+    <form-group
+      :config="data"
+      :k="'git_password'"
+      :info="gitInitCloneInfo"
+    ></form-group>
   </div>
 </template>
 
@@ -25,12 +50,12 @@ export default {
   },
   computed: {
     ...mapState({
-      data: state => state.tools.lgModal.data,
-      modal: state => state.tools.lgModal
+      data: state => state.tools.miModal.data,
+      modal: state => state.tools.miModal
     })
   },
   methods: {
-    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
+    ...mapActions("tools", ["setMiModalData", "hideMiModal"]),
     ...mapActions("note", ["folderOperate"]),
     ...mapActions("toast", ["timeToast"])
   },
@@ -42,7 +67,7 @@ export default {
         clearTimeout(wTimeout);
       }
       wTimeout = setTimeout(() => {
-        this.setLgModalData({
+        this.setMiModalData({
           ...this.data,
           status: "loading"
         });
@@ -53,12 +78,12 @@ export default {
           }
         }).then(data => {
           if (data.exist) {
-            this.setLgModalData({
+            this.setMiModalData({
               ...this.data,
               status: "error"
             });
           } else {
-            this.setLgModalData({
+            this.setMiModalData({
               ...this.data,
               status: ""
             });
@@ -120,7 +145,7 @@ export default {
     };
     this.modal.cancel = () => {
       uwFolderName();
-      this.hideLgModal();
+      this.hideMiModal();
     };
   }
 };

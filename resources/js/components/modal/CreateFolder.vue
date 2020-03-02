@@ -1,6 +1,11 @@
 <template>
   <div class="form-horizontal">
-    <form-group :config="data" :k="'foldername'" :info="createFolderInfo" :status="data.status"></form-group>
+    <form-group
+      :config="data"
+      :k="'foldername'"
+      :info="createFolderInfo"
+      :status="data.status"
+    ></form-group>
     <form-group :config="data" :k="'select'" :info="createFolderInfo">
       <div v-if="!data.folders">
         <div class="loading"></div>
@@ -8,7 +13,11 @@
       </div>
       <template v-else>
         <hr />
-        <only-folder-item v-for="item in data.folders" :key="item.id" :info="item" />
+        <only-folder-item
+          v-for="item in data.folders"
+          :key="item.id"
+          :info="item"
+        />
       </template>
     </form-group>
   </div>
@@ -32,12 +41,12 @@ export default {
   },
   computed: {
     ...mapState({
-      data: state => state.tools.lgModal.data,
-      modal: state => state.tools.lgModal
+      data: state => state.tools.miModal.data,
+      modal: state => state.tools.miModal
     })
   },
   methods: {
-    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
+    ...mapActions("tools", ["setMiModalData", "hideMiModal"]),
     ...mapActions("toast", ["timeToast", "showLoadToast", "hideLoadToast"]),
     ...mapActions("note", ["folderOperate", "listOperate", "loadCloudFolders"])
   },
@@ -49,7 +58,7 @@ export default {
         clearTimeout(wTimeout);
       }
       wTimeout = setTimeout(() => {
-        this.setLgModalData({
+        this.setMiModalData({
           ...this.data,
           status: "loading"
         });
@@ -60,12 +69,12 @@ export default {
           }
         }).then(data => {
           if (data.exist) {
-            this.setLgModalData({
+            this.setMiModalData({
               ...this.data,
               status: "error"
             });
           } else {
-            this.setLgModalData({
+            this.setMiModalData({
               ...this.data,
               status: ""
             });
@@ -123,10 +132,10 @@ export default {
     this.modal.cancel = () => {
       uwFolderName();
       uwTitle();
-      this.hideLgModal();
+      this.hideMiModal();
     };
     this.folderOperate({ operate: "readOnly", folderInfo: null }).then(data => {
-      this.setLgModalData({
+      this.setMiModalData({
         ...this.data,
         folders: data.folders
       });

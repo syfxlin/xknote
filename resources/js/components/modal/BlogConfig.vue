@@ -1,10 +1,35 @@
 <template>
   <div class="form-horizontal">
-    <form-group :config="data" :k="'blog_system'" :info="blogConfigInfo" :status="data.status"></form-group>
-    <form-group :config="data" :k="'blog_url'" :info="blogConfigInfo" :status="data.status"></form-group>
-    <form-group :config="data" :k="'blog_username'" :info="blogConfigInfo" :status="data.status"></form-group>
-    <form-group :config="data" :k="'blog_password'" :info="blogConfigInfo" :status="data.status"></form-group>
-    <form-group :config="data" :k="'blog_token'" :info="blogConfigInfo" :status="data.status"></form-group>
+    <form-group
+      :config="data"
+      :k="'blog_system'"
+      :info="blogConfigInfo"
+      :status="data.status"
+    ></form-group>
+    <form-group
+      :config="data"
+      :k="'blog_url'"
+      :info="blogConfigInfo"
+      :status="data.status"
+    ></form-group>
+    <form-group
+      :config="data"
+      :k="'blog_username'"
+      :info="blogConfigInfo"
+      :status="data.status"
+    ></form-group>
+    <form-group
+      :config="data"
+      :k="'blog_password'"
+      :info="blogConfigInfo"
+      :status="data.status"
+    ></form-group>
+    <form-group
+      :config="data"
+      :k="'blog_token'"
+      :info="blogConfigInfo"
+      :status="data.status"
+    ></form-group>
   </div>
 </template>
 
@@ -24,19 +49,19 @@ export default {
   },
   computed: {
     ...mapState({
-      data: state => state.tools.lgModal.data,
-      modal: state => state.tools.lgModal
+      data: state => state.tools.miModal.data,
+      modal: state => state.tools.miModal
     })
   },
   methods: {
-    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
+    ...mapActions("tools", ["setMiModalData", "hideMiModal"]),
     ...mapActions("conf", ["configOperate"]),
     ...mapActions("toast", ["timeToast"])
   },
   created() {
     // TODO: 上传必须要有token的bug需要修复
     this.modal.title = "博客设置";
-    this.setLgModalData({
+    this.setMiModalData({
       ...this.data,
       status: "loading"
     });
@@ -45,7 +70,7 @@ export default {
       config: null
     })
       .then(info => {
-        this.setLgModalData({
+        this.setMiModalData({
           ...this.data,
           status: "",
           blog_system: info.blog_system,
@@ -61,7 +86,7 @@ export default {
           status: "error",
           delay: 1000
         });
-        this.setLgModalData({
+        this.setMiModalData({
           ...this.data,
           status: ""
         });
@@ -118,7 +143,7 @@ export default {
         });
     };
     this.modal.cancel = () => {
-      this.hideLgModal();
+      this.hideMiModal();
     };
   }
 };

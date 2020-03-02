@@ -1,8 +1,22 @@
 <template>
   <div class="form-horizontal">
-    <form-group :config="data" :k="'git_name'" :info="gitConfigInfo" :status="data.status"></form-group>
-    <form-group :config="data" :k="'git_email'" :info="gitConfigInfo" :status="data.status"></form-group>
-    <form-group :config="data" :k="'git_password'" :info="gitConfigInfo"></form-group>
+    <form-group
+      :config="data"
+      :k="'git_name'"
+      :info="gitConfigInfo"
+      :status="data.status"
+    ></form-group>
+    <form-group
+      :config="data"
+      :k="'git_email'"
+      :info="gitConfigInfo"
+      :status="data.status"
+    ></form-group>
+    <form-group
+      :config="data"
+      :k="'git_password'"
+      :info="gitConfigInfo"
+    ></form-group>
   </div>
 </template>
 
@@ -22,18 +36,18 @@ export default {
   },
   computed: {
     ...mapState({
-      data: state => state.tools.lgModal.data,
-      modal: state => state.tools.lgModal
+      data: state => state.tools.miModal.data,
+      modal: state => state.tools.miModal
     })
   },
   methods: {
-    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
+    ...mapActions("tools", ["setMiModalData", "hideMiModal"]),
     ...mapActions("conf", ["configOperate"]),
     ...mapActions("toast", ["timeToast"])
   },
   created() {
     this.modal.title = "Git设置";
-    this.setLgModalData({
+    this.setMiModalData({
       ...this.data,
       status: "loading"
     });
@@ -42,7 +56,7 @@ export default {
       config: null
     })
       .then(info => {
-        this.setLgModalData({
+        this.setMiModalData({
           ...this.data,
           status: "",
           git_name: info.git_name,
@@ -55,7 +69,7 @@ export default {
           status: "error",
           delay: 1000
         });
-        this.setLgModalData({
+        this.setMiModalData({
           ...this.data,
           status: ""
         });
@@ -103,7 +117,7 @@ export default {
         });
     };
     this.modal.cancel = () => {
-      this.hideLgModal();
+      this.hideMiModal();
     };
   }
 };

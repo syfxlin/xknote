@@ -6,7 +6,7 @@ module.exports = {
     node: true,
     worker: true
   },
-  extends: ["eslint:recommended", "plugin:vue/essential"],
+  extends: ["eslint:recommended", "plugin:vue/essential", "@vue/prettier"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly"
@@ -17,7 +17,7 @@ module.exports = {
   },
   plugins: ["vue"],
   rules: {
-    "no-useless-escape": [0],
-    "no-unused-vars": [1]
+    "no-useless-escape": "off",
+    "no-unused-vars": "warn"
   }
 };

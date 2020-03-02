@@ -362,9 +362,6 @@ body {
     top: 1rem;
     z-index: 10000;
     max-width: 30%;
-    opacity: 0;
-    transition: opacity 0.5s;
-    visibility: hidden;
 }
 
 .toast-progress {

@@ -1,16 +1,30 @@
 <template>
   <div class="accordion" :data-storage="storage" :data-path="info.path">
     <!-- mark checked代表已经开启 -->
-    <input :id="'accordion-' + idHash" type="checkbox" name="accordion-checkbox" hidden />
-    <label class="accordion-header c-hand" :for="'accordion-' + idHash" :title="info.path">
+    <input
+      :id="'accordion-' + idHash"
+      type="checkbox"
+      name="accordion-checkbox"
+      hidden
+    />
+    <label
+      class="accordion-header c-hand"
+      :for="'accordion-' + idHash"
+      :title="info.path"
+    >
       <img class="icon mr-1" src="/static/svg/folder.svg" />
       <span>{{ info.name }}</span>
       <span class="text-gray" v-if="info.git">-Git</span>
-      <input class="form-input" type="text" placeholder="Name" :value="info.name" />
+      <input
+        class="form-input"
+        type="text"
+        placeholder="Name"
+        :value="info.name"
+      />
       <button
         class="btn btn-link btn-action"
         @click="showFolderSetting($event)"
-        v-if="mode!=='read'"
+        v-if="mode !== 'read'"
       >
         <img class="icon" src="/static/svg/settings.svg" />
       </button>
@@ -19,13 +33,18 @@
       <ul class="menu menu-nav">
         <li class="menu-item" v-for="item in info.sub" :key="item.id">
           <note-item
-            v-if="item.type==='note'"
+            v-if="item.type === 'note'"
             :info="item"
             :status="'C'"
             :storage="storage"
             :mode="mode"
           />
-          <folder-item v-if="item.type==='folder'" :info="item" :storage="storage" :mode="mode" />
+          <folder-item
+            v-if="item.type === 'folder'"
+            :info="item"
+            :storage="storage"
+            :mode="mode"
+          />
         </li>
       </ul>
     </div>
@@ -204,4 +223,3 @@ export default {
   }
 };
 </script>
-

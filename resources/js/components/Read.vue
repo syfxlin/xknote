@@ -7,12 +7,19 @@
             <h1>{{ readOpened.note.title }}</h1>
             <div class="columns">
               <p class="column col-4">作者：{{ readOpened.note.author }}</p>
-              <p class="column col-4">创建时间：{{ readOpened.note.created_at }}</p>
-              <p class="column col-4">修改时间：{{ readOpened.note.updated_at }}</p>
+              <p class="column col-4">
+                创建时间：{{ readOpened.note.created_at }}
+              </p>
+              <p class="column col-4">
+                修改时间：{{ readOpened.note.updated_at }}
+              </p>
             </div>
           </div>
         </header>
-        <article class="markdown-body read-content" v-html="previewHtml"></article>
+        <article
+          class="markdown-body read-content"
+          v-html="previewHtml"
+        ></article>
         <footer class="xknote-copyright bg-gray read-footer">
           ©
           <a href="https://github.com/syfxlin/xknote">XK-Note</a> By
@@ -20,21 +27,36 @@
         </footer>
       </section>
       <transition name="fade" mode="out-in">
-        <aside v-show="!isMinScreen||showSidebar" class="col-3 p-fixed read-sidebar">
+        <aside
+          v-show="!isMinScreen || showSidebar"
+          class="col-3 p-fixed read-sidebar"
+        >
           <ul class="tab tab-block xknote-tab">
             <li class="tab-item">
-              <a :class="xknoteTab==='toc' ? 'active' : ''" @click="switchTab('toc')">大纲</a>
+              <a
+                :class="xknoteTab === 'toc' ? 'active' : ''"
+                @click="switchTab('toc')"
+                >大纲</a
+              >
             </li>
-            <li :class="'tab-item ' + (xknoteTab==='cloud' ? 'active' : '')">
+            <li :class="'tab-item ' + (xknoteTab === 'cloud' ? 'active' : '')">
               <a @click="switchTab('cloud')">云端</a>
             </li>
             <li class="tab-item">
-              <a :class="xknoteTab==='local' ? 'active' : ''" @click="switchTab('local')">本地</a>
+              <a
+                :class="xknoteTab === 'local' ? 'active' : ''"
+                @click="switchTab('local')"
+                >本地</a
+              >
             </li>
           </ul>
           <ul class="xknote-tab-content">
-            <li v-show="xknoteTab==='toc'" v-html="tocHtml" class="read-toc"></li>
-            <li v-show="xknoteTab==='cloud'" class="cloud-tab">
+            <li
+              v-show="xknoteTab === 'toc'"
+              v-html="tocHtml"
+              class="read-toc"
+            ></li>
+            <li v-show="xknoteTab === 'cloud'" class="cloud-tab">
               <folder-item
                 v-for="item in cloudList"
                 :key="item.id"
@@ -42,17 +64,27 @@
                 :storage="'cloud'"
                 :mode="'read'"
               />
-              <template v-if="cloudList.length===0">
+              <template v-if="cloudList.length === 0">
                 <div class="loading loading-lg"></div>
                 <div class="text-gray text-center">正在加载，客官莫急。</div>
               </template>
             </li>
-            <li v-show="xknoteTab==='local'" class="local-tab">
+            <li v-show="xknoteTab === 'local'" class="local-tab">
               <ul class="menu menu-nav">
                 <li class="menu-item" v-for="item in localList" :key="item.id">
-                  <note-item :info="item" :status="item.status" :storage="'local'" :mode="'read'" />
+                  <note-item
+                    :info="item"
+                    :status="item.status"
+                    :storage="'local'"
+                    :mode="'read'"
+                  />
                 </li>
-                <div class="text-gray text-center" v-if="localList.length===0">这里什么都没有哦（￣︶￣）↗</div>
+                <div
+                  class="text-gray text-center"
+                  v-if="localList.length === 0"
+                >
+                  这里什么都没有哦（￣︶￣）↗
+                </div>
               </ul>
             </li>
           </ul>
@@ -189,5 +221,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

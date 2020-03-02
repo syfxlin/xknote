@@ -2,12 +2,12 @@ import Vue from "vue";
 
 const types = {
   SET_SM_MODAL: "SET_SM_MODAL",
+  SET_MI_MODAL: "SET_MI_MODAL",
+  SET_MI_MODAL_DATA: "SET_MI_MODAL_DATA",
+  DEL_MI_MODAL_DATA: "DEL_MI_MODAL_DATA",
   SET_LG_MODAL: "SET_LG_MODAL",
   SET_LG_MODAL_DATA: "SET_LG_MODAL_DATA",
   DEL_LG_MODAL_DATA: "DEL_LG_MODAL_DATA",
-  SET_LLG_MODAL: "SET_LLG_MODAL",
-  SET_LLG_MODAL_DATA: "SET_LLG_MODAL_DATA",
-  DEL_LLG_MODAL_DATA: "DEL_LLG_MODAL_DATA",
   SET_FLOAT_MENU: "SET_FLOAT_MENU",
   SET_SAVE_AND_CLOSE: "SET_SAVE_AND_CLOSE",
   SET_WRITE_MODE: "SET_WRITE_MODE",
@@ -20,7 +20,15 @@ const state = {
   smModal: {
     show: false,
     title: "",
-    content: "",
+    operate: "",
+    data: {},
+    confirm: () => {},
+    cancel: () => {}
+  },
+  miModal: {
+    show: false,
+    title: "",
+    operate: "",
     data: {},
     confirm: () => {},
     cancel: () => {}
@@ -28,15 +36,7 @@ const state = {
   lgModal: {
     show: false,
     title: "",
-    content: "",
-    data: {},
-    confirm: () => {},
-    cancel: () => {}
-  },
-  llgModal: {
-    show: false,
-    title: "",
-    content: "",
+    operate: "",
     data: {},
     confirm: () => {},
     cancel: () => {}
@@ -67,11 +67,33 @@ const actions = {
     commit(types.SET_SM_MODAL, {
       show: false,
       title: "",
-      content: "",
+      operate: "",
       data: {},
       confirm: () => {},
       cancel: () => {}
     });
+  },
+  showMiModal({ commit }, modal) {
+    commit(types.SET_MI_MODAL, {
+      ...modal,
+      show: true
+    });
+  },
+  hideMiModal({ commit }) {
+    commit(types.SET_MI_MODAL, {
+      show: false,
+      title: "",
+      operate: "",
+      data: {},
+      confirm: () => {},
+      cancel: () => {}
+    });
+  },
+  setMiModalData({ commit }, data) {
+    commit(types.SET_MI_MODAL_DATA, data);
+  },
+  delMiModalData({ commit }, index) {
+    commit(types.DEL_MI_MODAL_DATA, index);
   },
   showLgModal({ commit }, modal) {
     commit(types.SET_LG_MODAL, {
@@ -83,7 +105,7 @@ const actions = {
     commit(types.SET_LG_MODAL, {
       show: false,
       title: "",
-      content: "",
+      operate: "",
       data: {},
       confirm: () => {},
       cancel: () => {}
@@ -94,28 +116,6 @@ const actions = {
   },
   delLgModalData({ commit }, index) {
     commit(types.DEL_LG_MODAL_DATA, index);
-  },
-  showLlgModal({ commit }, modal) {
-    commit(types.SET_LLG_MODAL, {
-      ...modal,
-      show: true
-    });
-  },
-  hideLlgModal({ commit }) {
-    commit(types.SET_LLG_MODAL, {
-      show: false,
-      title: "",
-      content: "",
-      data: {},
-      confirm: () => {},
-      cancel: () => {}
-    });
-  },
-  setLlgModalData({ commit }, data) {
-    commit(types.SET_LLG_MODAL_DATA, data);
-  },
-  delLlgModalData({ commit }, index) {
-    commit(types.DEL_LLG_MODAL_DATA, index);
   },
   showFloatMenu({ commit }, menu) {
     commit(types.SET_FLOAT_MENU, { ...menu, show: true });
@@ -156,6 +156,15 @@ const mutations = {
   [types.SET_SM_MODAL](state, modal) {
     state.smModal = { ...state.smModal, ...modal };
   },
+  [types.SET_MI_MODAL](state, modal) {
+    state.miModal = { ...state.miModal, ...modal };
+  },
+  [types.SET_MI_MODAL_DATA](state, data) {
+    state.miModal.data = data;
+  },
+  [types.DEL_MI_MODAL_DATA](state, index) {
+    Vue.delete(state.miModal.data, index);
+  },
   [types.SET_LG_MODAL](state, modal) {
     state.lgModal = { ...state.lgModal, ...modal };
   },
@@ -163,18 +172,7 @@ const mutations = {
     state.lgModal.data = data;
   },
   [types.DEL_LG_MODAL_DATA](state, index) {
-    // delete state.lgModal.data[index];
     Vue.delete(state.lgModal.data, index);
-  },
-  [types.SET_LLG_MODAL](state, modal) {
-    state.llgModal = { ...state.llgModal, ...modal };
-  },
-  [types.SET_LLG_MODAL_DATA](state, data) {
-    state.llgModal.data = data;
-  },
-  [types.DEL_LLG_MODAL_DATA](state, index) {
-    // delete state.lgModal.data[index];
-    Vue.delete(state.llgModal.data, index);
   },
   [types.SET_FLOAT_MENU](state, menu) {
     state.floatMenu = { ...state.floatMenu, ...menu };

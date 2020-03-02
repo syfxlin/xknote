@@ -56,7 +56,8 @@ class UserModel extends Model
         }
     }
 
-    public static function processConfig($config) {
+    public static function processConfig($config)
+    {
         if (!isset($config['xk_setting']->saveFormat)) {
             $config['xk_setting']->saveFormat = true;
         }

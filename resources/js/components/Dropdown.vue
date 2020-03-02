@@ -5,27 +5,29 @@
         v-if="mainItem.operate"
         @click="operate(mainItem.operate)"
         :class="'btn' + (mainItem.style ? ' ' + mainItem.style : '')"
-      >{{ mainItem.name }}</a>
+        >{{ mainItem.name }}</a
+      >
       <a
         href="#"
-        :class="'btn dropdown-toggle' + (mainItem.style ? ' ' + mainItem.style : '')"
+        :class="
+          'btn dropdown-toggle' + (mainItem.style ? ' ' + mainItem.style : '')
+        "
         tabindex="0"
       >
-        {{ !mainItem.operate ? mainItem.name : '' }}
+        {{ !mainItem.operate ? mainItem.name : "" }}
         <i class="icon icon-caret"></i>
       </a>
       <ul class="menu">
         <li v-for="item in items" :key="item.id" class="menu-item">
-          <template v-if="item.operate==='logout'">
+          <template v-if="item.operate === 'logout'">
             <form action="/logout" method="post">
               <button type="submit">{{ item.name }}</button>
               <input type="hidden" name="_token" :value="csrfToken" />
             </form>
           </template>
-          <template v-else-if="item.name!=='divider'">
+          <template v-else-if="item.name !== 'divider'">
             <a @click="operate(item.operate)">{{ item.name }}</a>
           </template>
-
           <template v-else>
             <li class="divider" :data-content="item.content"></li>
           </template>

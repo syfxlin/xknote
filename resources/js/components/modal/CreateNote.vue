@@ -1,8 +1,17 @@
 <template>
   <div class="form-horizontal">
-    <form-group :config="data" :k="'filename'" :info="createNoteInfo" :status="data.status"></form-group>
+    <form-group
+      :config="data"
+      :k="'filename'"
+      :info="createNoteInfo"
+      :status="data.status"
+    ></form-group>
     <form-group :config="data" :k="'title'" :info="createNoteInfo"></form-group>
-    <form-group :config="data" :k="'storage'" :info="createNoteInfo"></form-group>
+    <form-group
+      :config="data"
+      :k="'storage'"
+      :info="createNoteInfo"
+    ></form-group>
     <form-group :config="data" :k="'select'" :info="createNoteInfo">
       <div v-if="!data.folders">
         <div class="loading"></div>
@@ -10,7 +19,11 @@
       </div>
       <template v-else>
         <hr />
-        <only-folder-item v-for="item in data.folders" :key="item.id" :info="item" />
+        <only-folder-item
+          v-for="item in data.folders"
+          :key="item.id"
+          :info="item"
+        />
       </template>
     </form-group>
   </div>
@@ -34,12 +47,12 @@ export default {
   },
   computed: {
     ...mapState({
-      data: state => state.tools.lgModal.data,
-      modal: state => state.tools.lgModal
+      data: state => state.tools.miModal.data,
+      modal: state => state.tools.miModal
     })
   },
   methods: {
-    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
+    ...mapActions("tools", ["setMiModalData", "hideMiModal"]),
     ...mapActions("toast", ["timeToast"]),
     ...mapActions("note", [
       "noteOperate",
@@ -56,7 +69,7 @@ export default {
         clearTimeout(wTimeout);
       }
       wTimeout = setTimeout(() => {
-        this.setLgModalData({
+        this.setMiModalData({
           ...this.data,
           status: "loading"
         });
@@ -65,7 +78,7 @@ export default {
             this.data.filename
           )
         ) {
-          this.setLgModalData({
+          this.setMiModalData({
             ...this.data,
             status: "error"
           });
@@ -79,12 +92,12 @@ export default {
           }
         }).then(data => {
           if (data.exist) {
-            this.setLgModalData({
+            this.setMiModalData({
               ...this.data,
               status: "error"
             });
           } else {
-            this.setLgModalData({
+            this.setMiModalData({
               ...this.data,
               status: ""
             });
@@ -158,10 +171,10 @@ export default {
       uwFileName();
       uwTitle();
       uwStorage();
-      this.hideLgModal();
+      this.hideMiModal();
     };
     this.folderOperate({ operate: "readOnly", folderInfo: null }).then(data => {
-      this.setLgModalData({
+      this.setMiModalData({
         ...this.data,
         folders: data.folders
       });

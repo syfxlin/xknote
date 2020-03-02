@@ -74,13 +74,12 @@ class XkGitRepository extends GitRepository
 
     public function rollback($commit, $file = null)
     {
-        $message = $this->extractFromCommand(
+        return $this->extractFromCommand(
             'git --no-pager checkout ' .
                 escapeshellarg($commit) .
                 ' ' .
                 ($file ? escapeshellarg('.' . $file) : '')
         )[0];
-        return $message;
     }
 
     public function getStatus()

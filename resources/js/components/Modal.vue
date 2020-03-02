@@ -1,9 +1,17 @@
 <template>
   <div
-    :class="'modal ' + (size === 'sm' ? 'modal-sm' : '') + (size === 'llg' ? 'modal-lg' : '') + ' xknote-' + size + '-modal' + (data.show ? ' active' : '')"
+    :class="
+      'modal ' +
+        (size === 'sm' ? 'modal-sm' : '') +
+        (size === 'lg' ? 'modal-lg' : '') +
+        ' xknote-' +
+        size +
+        '-modal' +
+        (data.show ? ' active' : '')
+    "
   >
     <a class="modal-overlay"></a>
-    <div :class="'modal-container ' +  data.content">
+    <div :class="'modal-container ' + data.operate">
       <div class="modal-header">
         <div class="modal-title h5">{{ data.title }}</div>
       </div>

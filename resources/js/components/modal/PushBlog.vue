@@ -1,10 +1,18 @@
 <template>
   <div class="form-horizontal">
     <form-group :config="data" :k="'title'" :info="pushBlogInfo"></form-group>
-    <form-group :config="data" :k="'post_status'" :info="pushBlogInfo"></form-group>
+    <form-group
+      :config="data"
+      :k="'post_status'"
+      :info="pushBlogInfo"
+    ></form-group>
     <form-group :config="data" :k="'slug'" :info="pushBlogInfo"></form-group>
     <form-group :config="data" :k="'excerpt'" :info="pushBlogInfo"></form-group>
-    <form-group :config="data" :k="'categories'" :info="pushBlogInfo"></form-group>
+    <form-group
+      :config="data"
+      :k="'categories'"
+      :info="pushBlogInfo"
+    ></form-group>
     <form-group :config="data" :k="'tags'" :info="pushBlogInfo"></form-group>
   </div>
 </template>
@@ -26,12 +34,12 @@ export default {
   },
   computed: {
     ...mapState({
-      data: state => state.tools.lgModal.data,
-      modal: state => state.tools.lgModal
+      data: state => state.tools.miModal.data,
+      modal: state => state.tools.miModal
     })
   },
   methods: {
-    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
+    ...mapActions("tools", ["setMiModalData", "hideMiModal"]),
     ...mapActions("note", ["noteOperate"]),
     ...mapActions("toast", ["timeToast"])
   },
@@ -89,7 +97,7 @@ export default {
         });
     };
     this.modal.cancel = () => {
-      this.hideLgModal();
+      this.hideMiModal();
     };
   }
 };
