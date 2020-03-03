@@ -16,7 +16,7 @@ const actions = {
         "tools/showSmModal",
         {
           title: "删除",
-          content: "是否删除该文件(文件夹)？(此操作不可逆)",
+          operate: "是否删除该文件(文件夹)？(此操作不可逆)",
           confirm: () => {
             let info = dispatchSync(
               "note/listOperate",
@@ -286,6 +286,7 @@ const actions = {
     }
     // noteItem专有操作
     if (type === "note") {
+      // TODO: not used
       if (operate === "saveLocal") {
         let note = dispatchSync(
           "note/listOperate",
@@ -459,6 +460,7 @@ const actions = {
             });
         }
       }
+      // TODO: not used
       if (operate === "saveCloud") {
         let note = dispatchSync("note/listOperate", {
           operate: "get",
@@ -606,7 +608,7 @@ const actions = {
             "tools/showSmModal",
             {
               title: "关闭",
-              content: "该文件未保存，是否关闭该文件？(此操作不可逆)",
+              operate: "该文件未保存，是否关闭该文件？(此操作不可逆)",
               confirm: () => {
                 closeCurr();
                 dispatch("tools/hideSmModal", null, { root: true });
@@ -705,15 +707,6 @@ const actions = {
         );
       }
     }
-  },
-  floatMenuOperate({ dispatch, rootState }, operate) {
-    dispatch("menuOperate", {
-      operate: operate,
-      type: rootState.tools.floatMenu.data.type,
-      storage: rootState.tools.floatMenu.data.storage,
-      path: rootState.tools.floatMenu.data.path,
-      curr: rootState.tools.floatMenu.data.currEle
-    });
   },
   navBarOperate({ dispatch, rootState }, operate) {
     if (operate.indexOf("lshow") === 0) {

@@ -10,9 +10,9 @@
           </label>
         </template>
         <template v-else-if="item.name === 'divider'">
-          <li :data-content="item.content" class="divider"></li>
+          <div :data-content="item.content" class="divider"></div>
         </template>
-        <a @click="floatMenuOperate(item.operate)" v-else>{{ item.name }}</a>
+        <a @click="item.handler()" v-else>{{ item.name }}</a>
       </li>
     </ul>
     <modal :data="smModal" :size="'sm'">{{ smModal.operate }}</modal>
@@ -102,9 +102,6 @@ export default {
   computed: {
     ...mapState("tools", ["smModal", "miModal", "floatMenu", "lgModal"]),
     ...mapState("toast", ["toast", "loadToast"])
-  },
-  methods: {
-    ...mapActions("menu", ["floatMenuOperate"])
   }
 };
 </script>

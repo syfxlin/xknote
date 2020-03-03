@@ -24,11 +24,6 @@ export default {
       modal: state => state.tools.lgModal
     })
   },
-  methods: {
-    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
-    ...mapActions("other", ["diffOperate"]),
-    ...mapActions("toast", ["timeToast"])
-  },
   created() {
     this.modal.title = "所有笔记历史";
     this.modal.confirm = () => {
@@ -60,6 +55,11 @@ export default {
           delay: 1000
         });
       });
+  },
+  methods: {
+    ...mapActions("tools", ["setLgModalData", "hideLgModal"]),
+    ...mapActions("other", ["diffOperate"]),
+    ...mapActions("toast", ["timeToast"])
   }
 };
 </script>

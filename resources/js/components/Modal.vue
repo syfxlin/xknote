@@ -7,7 +7,7 @@
         ' xknote-' +
         size +
         '-modal' +
-        (data.show ? ' active' : '')
+        (data.operate ? ' active' : '')
     "
   >
     <a class="modal-overlay"></a>

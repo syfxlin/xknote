@@ -36,84 +36,13 @@
 
 <script>
 import { mapActions } from "vuex";
+import { getFloatItems } from "../menuItem";
 export default {
   name: "note-item",
   props: ["info", "status", "storage", "mode"],
   data() {
     return {
-      hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path,
-      floatMenuItems: {
-        curr: [
-          {
-            name: "保存到云端",
-            operate: "saveCloud"
-          },
-          {
-            name: "保存到本地",
-            operate: "saveLocal"
-          },
-          {
-            name: "重命名",
-            operate: "rename"
-          },
-          {
-            name: "关闭",
-            operate: "closeCurr"
-          },
-          {
-            name: "发布到博客",
-            operate: "pushBlog"
-          },
-          {
-            name: "saveAndClose",
-            content: "保存后关闭"
-          }
-        ],
-        cloud: [
-          {
-            name: "保存到本地",
-            operate: "saveLocal"
-          },
-          {
-            name: "重命名",
-            operate: "rename"
-          },
-          {
-            name: "移动",
-            operate: "move"
-          },
-          {
-            name: "删除",
-            operate: "delete"
-          },
-          {
-            name: "发布到博客",
-            operate: "pushBlog"
-          }
-        ],
-        local: [
-          {
-            name: "保存至云端",
-            operate: "saveCloud"
-          },
-          {
-            name: "重命名",
-            operate: "rename"
-          },
-          {
-            name: "删除",
-            operate: "delete"
-          },
-          {
-            name: "saveAndClose",
-            content: "保存后删除"
-          },
-          {
-            name: "发布到博客",
-            operate: "pushBlog"
-          }
-        ]
-      }
+      hoverTitle: "文件名: " + this.info.name + "\n路径: " + this.info.path
     };
   },
   methods: {
@@ -128,13 +57,12 @@ export default {
       n.style.top = e.clientY + "px";
       n.style.left = e.clientX + "px";
       this.showFloatMenu({
-        items: this.floatMenuItems[this.storage],
-        data: {
+        items: getFloatItems("note", this.storage, {
           storage: this.storage,
           path: this.info.path,
           type: "note",
           currEle: currEle
-        }
+        })
       });
       this.$nextTick(() => {
         if (n.offsetTop + n.clientHeight > window.innerHeight) {

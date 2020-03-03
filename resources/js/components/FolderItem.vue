@@ -54,6 +54,7 @@
 <script>
 import NoteItem from "./NoteItem";
 import { mapActions } from "vuex";
+import { getFloatItems } from "../menuItem";
 export default {
   name: "folder-item",
   props: ["info", "storage", "mode"],
@@ -178,13 +179,12 @@ export default {
       f.style.top = e.clientY + "px";
       f.style.left = e.clientX + "px";
       this.showFloatMenu({
-        items: this.floatMenuItems[this.selectMenuItem],
-        data: {
+        items: getFloatItems("folder", this.selectMenuItem, {
           storage: this.storage,
           path: this.info.path,
           type: "folder",
           currEle: currEle
-        }
+        })
       });
       this.$nextTick(() => {
         if (f.offsetTop + f.clientHeight > window.innerHeight) {

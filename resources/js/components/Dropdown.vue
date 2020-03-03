@@ -29,7 +29,7 @@
             <a @click="operate(item.operate)">{{ item.name }}</a>
           </template>
           <template v-else>
-            <li class="divider" :data-content="item.content"></li>
+            <div class="divider" :data-content="item.content"></div>
           </template>
         </li>
       </ul>

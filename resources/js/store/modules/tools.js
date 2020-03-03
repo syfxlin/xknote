@@ -18,7 +18,6 @@ const types = {
 
 const state = {
   smModal: {
-    show: false,
     title: "",
     operate: "",
     data: {},
@@ -26,7 +25,6 @@ const state = {
     cancel: () => {}
   },
   miModal: {
-    show: false,
     title: "",
     operate: "",
     data: {},
@@ -59,13 +57,11 @@ const getters = {};
 const actions = {
   showSmModal({ commit }, modal) {
     commit(types.SET_SM_MODAL, {
-      ...modal,
-      show: true
+      ...modal
     });
   },
   hideSmModal({ commit }) {
     commit(types.SET_SM_MODAL, {
-      show: false,
       title: "",
       operate: "",
       data: {},
@@ -75,13 +71,11 @@ const actions = {
   },
   showMiModal({ commit }, modal) {
     commit(types.SET_MI_MODAL, {
-      ...modal,
-      show: true
+      ...modal
     });
   },
   hideMiModal({ commit }) {
     commit(types.SET_MI_MODAL, {
-      show: false,
       title: "",
       operate: "",
       data: {},
@@ -97,13 +91,11 @@ const actions = {
   },
   showLgModal({ commit }, modal) {
     commit(types.SET_LG_MODAL, {
-      ...modal,
-      show: true
+      ...modal
     });
   },
   hideLgModal({ commit }) {
     commit(types.SET_LG_MODAL, {
-      show: false,
       title: "",
       operate: "",
       data: {},
