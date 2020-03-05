@@ -1,1 +1,866 @@
+html {
+    width: 100%;
+    height: 100%;
+}
 
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+/* 滚动槽 */
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.06);
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);
+}
+
+/* 滚动条滑块 */
+
+::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.12);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+#toc li img {
+    width: 1.05em;
+}
+
+#app {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        flex-direction: column;
+
+        p {
+            margin-top: 1rem;
+        }
+    }
+}
+
+.home {
+    overflow: hidden;
+}
+
+@media (min-width: 768px) {
+    .xknote-container {
+        max-width: 740px;
+    }
+}
+
+@media (min-width: 992px) {
+    .xknote-container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .xknote-container {
+        max-width: 1160px;
+    }
+}
+
+/*
+ * Login Register
+ */
+
+.xknote-register,
+.xknote-login,
+.xknote-reset {
+    main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: calc(100% - 60px);
+    }
+}
+
+.xknote-register .register,
+.xknote-login .login,
+.xknote-reset .reset {
+    max-width: 90%;
+    width: 25rem;
+
+    h1 {
+        text-align: center;
+    }
+
+    footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+    }
+}
+
+/*
+ * Home
+ */
+
+.home {
+    height: 100%;
+
+    .columns {
+        height: calc(100% - 60px);
+        margin: 0;
+    }
+}
+
+.loading.loading-lg {
+    width: 2rem;
+}
+
+.editor-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    p {
+        margin: 0 0 0 1rem;
+    }
+}
+
+#xknote-editor {
+    height: 100%;
+    padding: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-left: 1px solid #ddd;
+
+    .xkeditor {
+        width: 100%;
+    }
+
+    .ace-toolbar .xk-button {
+        font-size: 0.85em;
+    }
+}
+
+.xkeditor-toast p {
+    margin: 0;
+}
+
+.xknote-header {
+    height: 60px;
+    z-index: 100;
+    border-bottom: 1px solid #dfdfdf;
+    padding: 0 20px 0 0;
+
+    .btn {
+        margin-left: 5px;
+    }
+
+    .btn-link {
+        &:focus,
+        &:hover {
+            box-shadow: 0 0 0 0.1rem rgba(87, 85, 217, 0.2);
+            text-decoration: none;
+        }
+
+        &:focus {
+            background: #f1f1fc;
+        }
+    }
+
+    .navbar-section.col-2 {
+        flex: 0 0 auto !important;
+        margin-right: 0.3rem;
+    }
+
+    .form-input {
+        width: auto;
+    }
+}
+
+.navbar-center .menu-item a {
+    cursor: pointer;
+}
+
+/* Fix xknote-header button hover and active color */
+
+.dropdown {
+    .btn-group a:not(.btn-primary) {
+        &:hover {
+            color: #5755d9;
+        }
+
+        &:active {
+            color: #5755d9;
+            background: #f1f1fc;
+            border-color: #4b48d6;
+        }
+    }
+
+    a {
+        cursor: pointer;
+    }
+}
+
+.xknote-header > * {
+    &.disabled,
+    &:disabled,
+    &[disabled] {
+        cursor: default;
+        opacity: 0.5;
+        pointer-events: none;
+    }
+}
+
+.popover-container p {
+    padding: 0 0 0 0.3rem;
+}
+
+.xknote-icon {
+    width: 39px;
+    height: 39px;
+    margin-left: 20px;
+}
+
+.xknote-sidebar {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    max-height: 100%;
+
+    &.write-mode {
+        position: absolute;
+        height: 100%;
+        z-index: 1000;
+        background: #fff;
+    }
+}
+
+.xknote-tab-content {
+    margin: 0 0.8rem;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    li {
+        list-style: none;
+    }
+
+    .menu {
+        padding: 0;
+        min-width: unset;
+    }
+
+    .cloud-tab .menu .menu-item {
+        padding-right: 0;
+    }
+
+    .cloud-tab-loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .menu-item > a.tile {
+        display: flex;
+    }
+
+    .tile.badge:after {
+        transform: none;
+    }
+
+    .tile-action {
+        display: none;
+    }
+
+    .tile:hover .tile-action {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-width: 1.8rem;
+    }
+}
+
+/* Fix tab tile */
+
+.accordion-header .btn-action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.xknote-tab-content {
+    .tile-action .btn-action {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .accordion .accordion-header .icon {
+        transform: none !important;
+    }
+
+    .tile-subtitle,
+    .tile-title {
+        line-height: 1rem;
+        font-size: 0.67rem;
+    }
+
+    .tile-click {
+        cursor: pointer;
+    }
+
+    .tile-content[children="input"] .tile-click,
+    .accordion-header[children="input"] span,
+    .tile-content input,
+    .accordion-header input {
+        display: none;
+    }
+
+    .tile-content[children="input"] input,
+    .accordion-header[children="input"] input {
+        display: block;
+    }
+
+    .tile-action .loading {
+        display: none;
+    }
+
+    .accordion-header {
+        margin: 0 -0.4rem;
+        padding: 0.2rem 0.4rem;
+        display: flex;
+        align-items: center;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        &:hover {
+            background: #f1f1fc;
+            color: #5755d9;
+        }
+
+        span {
+            &:not(.text-gray) {
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+
+            &:nth-last-of-type(1) {
+                flex: 1 1 auto;
+            }
+        }
+
+        .text-gray {
+            margin-left: 0.2em;
+            font-size: 0.9em;
+        }
+
+        button {
+            flex: 0 0 auto;
+            display: none;
+        }
+
+        &:hover button {
+            display: flex;
+            width: 1.8em;
+            height: 1.5em;
+            padding: 0;
+            margin-right: 0.2rem;
+
+            img {
+                vertical-align: auto;
+            }
+        }
+    }
+
+    .accordion-body .menu {
+        border-left: 3.5px solid #5755d940;
+        padding-left: 0.2rem;
+        margin-left: 0.3rem;
+        border-radius: 0;
+    }
+}
+
+.xknote-copyright {
+    padding: 0.8em 0;
+    text-align: center;
+}
+
+.xknote-check-local,
+.xknote-reload-cloud {
+    margin-left: 50%;
+    margin-top: 1rem;
+    transform: translateX(-50%);
+}
+
+.float-menu {
+    position: fixed;
+    z-index: 1001;
+
+    .menu-item a {
+        cursor: pointer;
+    }
+}
+
+.xknote-sm-modal {
+    color: #585858;
+}
+
+.modal .modal-container.CheckLocalStatus {
+    max-width: 90%;
+}
+
+.only-folder-item {
+    .accordion-header.active {
+        background: #f1f1fc;
+        color: #5755d9;
+    }
+
+    .menu {
+        padding: 0;
+    }
+
+    .menu-item {
+        padding-right: 0;
+    }
+
+    .accordion-body {
+        margin-bottom: 0.2rem;
+    }
+}
+
+#app-main .toast {
+    position: fixed;
+    right: 1rem;
+    top: 1rem;
+    z-index: 10000;
+    max-width: 30%;
+}
+
+.toast-progress {
+    position: fixed;
+    right: 0;
+    bottom: 2rem;
+    min-width: 9rem;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 2rem 0rem 0 2rem;
+    background-color: rgba(87, 85, 217, 0.85);
+    box-shadow: 0 1px 20px -6px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    transform: translate3d(100%, 0, 0);
+    transition: transform 0.5s;
+
+    &.active {
+        transform: translate3d(0, 0, 0);
+    }
+
+    .loading {
+        width: 2rem;
+        height: 1.5rem;
+
+        &::after {
+            border-bottom-color: #fff;
+            border-left-color: #fff;
+        }
+    }
+
+    p {
+        margin: 0;
+        color: #fff;
+    }
+}
+
+.form-switch > .form-icon,
+.form-radio.form-inline > .form-icon {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.tab .tab-item a {
+    cursor: pointer;
+}
+
+.image-item {
+    img {
+        width: 100%;
+    }
+
+    .input-group {
+        padding-left: 1rem;
+        width: 100%;
+    }
+
+    .col-9,
+    .col-3 {
+        display: flex;
+        align-items: center;
+    }
+
+    .columns:not(:last-child) {
+        margin-bottom: 1rem;
+    }
+}
+
+.read-content img {
+    max-width: 100%;
+}
+
+.AllNoteHistory,
+.NoteHistory {
+    height: 100%;
+    max-width: 90% !important;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.AllNoteHistory .modal-body {
+    flex: 1;
+}
+
+.NoteHistory {
+    .modal-body {
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .tile {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        border-radius: 0.25rem;
+
+        &:hover,
+        &.active {
+            background: #f1f1fc;
+            color: #5755d9;
+        }
+    }
+
+    .tile-content,
+    .tile-title,
+    .tile-subtitle {
+        cursor: pointer;
+    }
+
+    .diff-html {
+        overflow: auto;
+        height: 100%;
+        position: relative;
+    }
+
+    .content,
+    .columns,
+    .column {
+        height: 100%;
+    }
+
+    .col-2 {
+        overflow: auto;
+    }
+
+    .col-10 {
+        display: flex;
+        flex-direction: column;
+
+        .input-group {
+            margin-bottom: 0.5rem;
+            width: max-content;
+        }
+    }
+}
+
+.xknote-main {
+    position: relative;
+}
+
+.navbar-right {
+    justify-content: flex-end;
+}
+
+.navbar-right-mbtn,
+.navbar-center-mbtn {
+    display: none;
+    flex: none;
+}
+
+.read-show-sidebar-btn {
+    top: 1rem;
+    right: 1rem;
+    position: fixed;
+}
+
+.hero-body p {
+    margin: 0;
+}
+
+.read-sidebar {
+    top: 0;
+    right: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .xknote-tab-content {
+        margin: 0.8rem 0 0.8rem 1.6rem;
+    }
+}
+
+.read-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    border-right: 1px solid #ddd;
+}
+
+.read-header .hero-body {
+    padding: 0.4rem 3rem;
+}
+
+.read-content {
+    flex: 1;
+    padding: 2rem 3rem;
+}
+
+.read-footer {
+    padding: 1.5em 0 !important;
+}
+
+.to-normal-btn {
+    bottom: 1rem;
+    right: 1rem;
+    position: fixed;
+}
+
+.welcome-header,
+.utils-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.welcome-header *,
+.utils-header * {
+    margin-top: 0.5rem;
+    margin-bottom: 0.2rem;
+}
+
+.welcome-header img,
+.utils-header img {
+    width: 15rem;
+}
+
+.welcome-header {
+    h1 {
+        color: #0d3d88;
+        font-weight: 300;
+        font-size: 3rem;
+    }
+
+    h3 {
+        font-weight: 300;
+        color: #0d3d88;
+        font-size: 1.2rem;
+    }
+
+    .btn {
+        width: 5rem;
+    }
+
+    .label {
+        padding: 0.2rem 0.3rem;
+    }
+}
+
+.welcome-body {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    border-top: 1px solid #ddd;
+    padding-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.utils-body {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    border-top: 1px solid #ddd;
+    padding-top: 1rem;
+    margin-bottom: 1rem;
+
+    .form-horizontal {
+        justify-content: flex-start;
+    }
+}
+
+.welcome-body .xknote-container,
+.utils-body .xknote-container {
+    width: 100%;
+    text-align: center;
+}
+
+.welcome-body h2,
+.utils-body h2 {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.welcome-body {
+    p {
+        font-size: 0.7rem;
+    }
+
+    h4 {
+        font-size: 0.7rem;
+        font-weight: bold;
+    }
+
+    img {
+        width: 1.5rem;
+        height: 1.5rem;
+        position: relative;
+        top: 0.3rem;
+    }
+}
+
+.xknote-copyright p {
+    margin: 0.5rem 0 0.3rem;
+}
+
+.accordion {
+    input:checked ~ .accordion-body,
+    &[open] .accordion-body {
+        max-height: max-content;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .xknote-sidebar {
+        position: absolute;
+        top: 0;
+        z-index: 1;
+        background: #fff;
+        height: 100%;
+        width: 80vw;
+        border-right: 1px solid #ddd;
+    }
+
+    #xknote-editor {
+        width: 100%;
+    }
+
+    .xknote-header {
+        position: relative;
+
+        .navbar-left {
+            width: auto;
+        }
+    }
+
+    .navbar-center-mbtn {
+        display: flex;
+        height: 60px;
+        align-items: center;
+    }
+
+    .xknote-header {
+        .navbar-section.navbar-left {
+            flex: 1 !important;
+        }
+
+        .navbar-center {
+            display: flex;
+            flex-direction: column;
+            z-index: 1;
+            flex: none;
+            top: 55px;
+            right: 0.5rem;
+            position: absolute;
+            background: #fff;
+            border-radius: 0.1rem;
+            box-shadow: 0 0.05rem 0.2rem rgba(48, 55, 66, 0.3);
+            padding: 0.4rem;
+            animation: slide-down 0.15s ease 1;
+
+            .btn {
+                border: none;
+            }
+        }
+    }
+
+    .read-content {
+        padding: 2rem 1.5rem;
+    }
+
+    .read-container {
+        width: 100%;
+    }
+
+    .read-sidebar {
+        width: 80vw;
+        background: #fff;
+        border-left: 1px solid #ddd;
+    }
+
+    .xknote-tab-content {
+        .accordion-header button,
+        .tile-action {
+            display: block;
+            height: auto;
+            padding: 0;
+        }
+    }
+
+    #xknote-editor.write-mode > .xkeditor {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 1300px) {
+    .xknote-header .navbar-right {
+        display: flex;
+        flex-direction: column;
+        z-index: 1;
+        flex: none;
+        top: 55px;
+        right: 0.5rem;
+        position: absolute;
+        background: #fff;
+        border-radius: 0.1rem;
+        box-shadow: 0 0.05rem 0.2rem rgba(48, 55, 66, 0.3);
+        padding: 0.4rem;
+        animation: slide-down 0.15s ease 1;
+    }
+
+    .navbar-right-mbtn {
+        display: flex;
+        height: 60px;
+        align-items: center;
+    }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
+}
