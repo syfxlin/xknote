@@ -84,55 +84,60 @@ export default {
     };
     let uwFolderName = this.$watch("data.foldername", watch);
     let uwTitle = this.$watch("data.select", watch);
-    this.modal.confirm = () => {
-      if (!this.data.foldername || this.data.status !== "") {
-        return;
-      }
-      document
-        .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-        .classList.add("loading");
-      let path = this.data.select + "/" + this.data.foldername;
-      this.folderOperate({
-        operate: "create",
-        folderInfo: {
-          path: path
+    this.modal.confirm = {
+      content: "新建",
+      handler: () => {
+        if (!this.data.foldername || this.data.status !== "") {
+          return;
         }
-      })
-        .then(() => {
-          document
-            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-            .classList.remove("loading");
-          this.modal.cancel();
-          this.showLoadToast({ message: "重新读取文件夹列表中..." });
-          this.loadCloudFolders()
-            .then(() => {
-              this.hideLoadToast();
-            })
-            .catch(err => {
-              this.hideLoadToast();
-            });
-          this.timeToast({
-            message: "创建文件夹成功！",
-            status: "success",
-            delay: 1000
-          });
+        document
+          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+          .classList.add("loading");
+        let path = this.data.select + "/" + this.data.foldername;
+        this.folderOperate({
+          operate: "create",
+          folderInfo: {
+            path: path
+          }
         })
-        .catch(err => {
-          document
-            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-            .classList.remove("loading");
-          this.timeToast({
-            message:
-              "创建文件夹失败！请重试。(" + err.response.data.error + ")",
-            status: "error",
-            delay: 1000
+          .then(() => {
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.remove("loading");
+            this.modal.cancel();
+            this.showLoadToast({ message: "重新读取文件夹列表中..." });
+            this.loadCloudFolders()
+              .then(() => {
+                this.hideLoadToast();
+              })
+              .catch(err => {
+                this.hideLoadToast();
+              });
+            this.timeToast({
+              message: "创建文件夹成功！",
+              status: "success",
+              delay: 1000
+            });
+          })
+          .catch(err => {
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.remove("loading");
+            this.timeToast({
+              message:
+                "创建文件夹失败！请重试。(" + err.response.data.error + ")",
+              status: "error",
+              delay: 1000
+            });
           });
-        });
+      }
     };
-    this.modal.cancel = () => {
-      uwFolderName();
-      uwTitle();
-      this.hideMiModal();
+    this.modal.cancel = {
+      handler: () => {
+        uwFolderName();
+        uwTitle();
+        this.hideMiModal();
+      }
     };
     this.folderOperate({ operate: "readOnly", folderInfo: null }).then(data => {
       this.setMiModalData({

@@ -40,38 +40,43 @@ export default {
   },
   created() {
     this.modal.title = "用户设置";
-    this.modal.confirm = () => {
-      document
-        .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-        .classList.add("loading");
-      this.configOperate({
-        operate: "setUserConfig",
-        config: this.userConfig
-      })
-        .then(data => {
-          document
-            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-            .classList.remove("loading");
-          this.modal.cancel();
-          this.timeToast({
-            message: "设置成功！",
-            status: "success",
-            delay: 1000
-          });
+    this.modal.confirm = {
+      content: "保存",
+      handler: () => {
+        document
+          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+          .classList.add("loading");
+        this.configOperate({
+          operate: "setUserConfig",
+          config: this.userConfig
         })
-        .catch(err => {
-          document
-            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-            .classList.remove("loading");
-          this.timeToast({
-            message: "设置遇到问题！(" + err.response.data.error + ")",
-            status: "error",
-            delay: 1000
+          .then(data => {
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.remove("loading");
+            this.modal.cancel();
+            this.timeToast({
+              message: "设置成功！",
+              status: "success",
+              delay: 1000
+            });
+          })
+          .catch(err => {
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.remove("loading");
+            this.timeToast({
+              message: "设置遇到问题！(" + err.response.data.error + ")",
+              status: "error",
+              delay: 1000
+            });
           });
-        });
+      }
     };
-    this.modal.cancel = () => {
-      this.hideMiModal();
+    this.modal.cancel = {
+      handler: () => {
+        this.hideMiModal();
+      }
     };
   }
 };

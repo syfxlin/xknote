@@ -74,50 +74,55 @@ export default {
           status: ""
         });
       });
-    this.modal.confirm = () => {
-      if (
-        !this.data.git_name ||
-        !this.data.git_email ||
-        !this.data.git_password ||
-        this.data.status !== ""
-      ) {
-        return;
-      }
-      document
-        .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-        .classList.add("loading");
-      this.configOperate({
-        operate: "setGitConfig",
-        config: {
-          git_name: this.data.git_name,
-          git_email: this.data.git_email,
-          git_password: this.data.git_password
+    this.modal.confirm = {
+      content: "保存",
+      handler: () => {
+        if (
+          !this.data.git_name ||
+          !this.data.git_email ||
+          !this.data.git_password ||
+          this.data.status !== ""
+        ) {
+          return;
         }
-      })
-        .then(() => {
-          document
-            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-            .classList.remove("loading");
-          this.modal.cancel();
-          this.timeToast({
-            message: "设置成功！",
-            status: "success",
-            delay: 1000
-          });
+        document
+          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+          .classList.add("loading");
+        this.configOperate({
+          operate: "setGitConfig",
+          config: {
+            git_name: this.data.git_name,
+            git_email: this.data.git_email,
+            git_password: this.data.git_password
+          }
         })
-        .catch(err => {
-          document
-            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-            .classList.remove("loading");
-          this.timeToast({
-            message: "设置失败，请重试！(" + err.response.data.error + ")",
-            status: "error",
-            delay: 1000
+          .then(() => {
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.remove("loading");
+            this.modal.cancel();
+            this.timeToast({
+              message: "设置成功！",
+              status: "success",
+              delay: 1000
+            });
+          })
+          .catch(err => {
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.remove("loading");
+            this.timeToast({
+              message: "设置失败，请重试！(" + err.response.data.error + ")",
+              status: "error",
+              delay: 1000
+            });
           });
-        });
+      }
     };
-    this.modal.cancel = () => {
-      this.hideMiModal();
+    this.modal.cancel = {
+      handler: () => {
+        this.hideMiModal();
+      }
     };
   }
 };

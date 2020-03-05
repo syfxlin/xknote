@@ -59,6 +59,8 @@
         <!-- Diff2Html -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/diff2html@2.12.1/dist/diff2html.min.css">
         <script src="https://cdn.jsdelivr.net/npm/diff2html@2.12.1/dist/diff2html.min.js"></script>
+        <!-- Zooming -->
+        <script src="https://cdn.jsdelivr.net/npm/zooming@2.1.1/build/zooming.min.js"></script>
         <script src="/js/manifest.js"></script>
         <script src="/js/vendor.js"></script>
         <script src="/js/app.js"></script>

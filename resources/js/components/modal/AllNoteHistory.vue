@@ -10,6 +10,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import diff2html from "diff2html";
 export default {
   name: "all-note-history",
   data() {
@@ -26,11 +27,12 @@ export default {
   },
   created() {
     this.modal.title = "所有笔记历史";
-    this.modal.confirm = () => {
-      this.hideLgModal();
-    };
-    this.modal.cancel = () => {
-      this.hideLgModal();
+    this.modal.confirm = null;
+    this.modal.cancel = {
+      content: "关闭",
+      handler: () => {
+        this.hideLgModal();
+      }
     };
     this.status = "loading";
     this.diffOperate({
@@ -39,7 +41,7 @@ export default {
     })
       .then(diffs => {
         this.status = "";
-        this.diffHtml = window.Diff2Html.getPrettyHtml(diffs, {
+        this.diffHtml = diff2html.getPrettyHtml(diffs, {
           inputFormat: "diff",
           showFiles: true,
           matching: "lines",

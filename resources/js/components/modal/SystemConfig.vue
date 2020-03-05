@@ -142,49 +142,54 @@ export default {
           status: ""
         });
       });
-    this.modal.confirm = () => {
-      if (
-        !this.data.upload_limit ||
-        !this.data.xknote_name ||
-        this.data.status !== ""
-      ) {
-        return;
-      }
-      document
-        .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-        .classList.add("loading");
-      this.configOperate({
-        operate: "setSystemConfig",
-        config: {
-          upload_limit: this.data.upload_limit,
-          xknote_name: this.data.xknote_name,
-          enable_register: this.data.enable_register
+    this.modal.confirm = {
+      content: "保存",
+      handler: () => {
+        if (
+          !this.data.upload_limit ||
+          !this.data.xknote_name ||
+          this.data.status !== ""
+        ) {
+          return;
         }
-      })
-        .then(() => {
-          document
-            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-            .classList.remove("loading");
-          this.modal.cancel();
-          this.timeToast({
-            message: "设置成功！",
-            status: "success",
-            delay: 1000
-          });
+        document
+          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+          .classList.add("loading");
+        this.configOperate({
+          operate: "setSystemConfig",
+          config: {
+            upload_limit: this.data.upload_limit,
+            xknote_name: this.data.xknote_name,
+            enable_register: this.data.enable_register
+          }
         })
-        .catch(err => {
-          document
-            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-            .classList.remove("loading");
-          this.timeToast({
-            message: "设置失败，请重试！(" + err.response.data.error + ")",
-            status: "error",
-            delay: 1000
+          .then(() => {
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.remove("loading");
+            this.modal.cancel();
+            this.timeToast({
+              message: "设置成功！",
+              status: "success",
+              delay: 1000
+            });
+          })
+          .catch(err => {
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.remove("loading");
+            this.timeToast({
+              message: "设置失败，请重试！(" + err.response.data.error + ")",
+              status: "error",
+              delay: 1000
+            });
           });
-        });
+      }
     };
-    this.modal.cancel = () => {
-      this.hideMiModal();
+    this.modal.cancel = {
+      handler: () => {
+        this.hideMiModal();
+      }
     };
     this.getAllUser().then(users => {
       this.users = users;

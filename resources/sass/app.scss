@@ -759,6 +759,12 @@ body {
     margin-right: 0.3rem !important;
 }
 
+.image-item img.open {
+    position: fixed !important;
+    top: -100%;
+    width: 50%;
+}
+
 @media screen and (max-width: 991px) {
     .xknote-sidebar {
         position: absolute;

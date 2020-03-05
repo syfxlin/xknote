@@ -41,11 +41,12 @@ export default {
         statusData: status
       });
     });
-    this.modal.confirm = () => {
-      this.hideMiModal();
-    };
-    this.modal.cancel = () => {
-      this.hideMiModal();
+    this.modal.confirm = null;
+    this.modal.cancel = {
+      content: "关闭",
+      handler: () => {
+        this.hideMiModal();
+      }
     };
   }
 };

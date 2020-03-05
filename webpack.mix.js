@@ -36,7 +36,9 @@ mix.webpackConfig({
     "tinymce/tinymce": "tinyMCE",
     mermaid: "mermaid",
     katex: "katex",
-    "katex/dist/contrib/auto-render": "renderMathInElement"
+    "katex/dist/contrib/auto-render": "renderMathInElement",
+    diff2html: "Diff2Html",
+    zooming: "Zooming"
   },
   plugins: [
     new webpack.DefinePlugin({

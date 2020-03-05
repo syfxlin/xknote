@@ -88,47 +88,52 @@ export default {
           status: ""
         });
       });
-    this.modal.confirm = () => {
-      if (
-        !this.data.email ||
-        !this.data.nickname ||
-        !this.data.password_confirmation ||
-        !this.data.password ||
-        !this.data.old_password ||
-        this.data.status !== ""
-      ) {
-        return;
-      }
-      document
-        .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-        .classList.add("loading");
-      this.setUser({
-        user: this.data
-      })
-        .then(() => {
-          document
-            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-            .classList.remove("loading");
-          this.modal.cancel();
-          this.timeToast({
-            message: "设置成功！",
-            status: "success",
-            delay: 1000
-          });
+    this.modal.confirm = {
+      content: "保存",
+      handler: () => {
+        if (
+          !this.data.email ||
+          !this.data.nickname ||
+          !this.data.password_confirmation ||
+          !this.data.password ||
+          !this.data.old_password ||
+          this.data.status !== ""
+        ) {
+          return;
+        }
+        document
+          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+          .classList.add("loading");
+        this.setUser({
+          user: this.data
         })
-        .catch(err => {
-          document
-            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-            .classList.remove("loading");
-          this.timeToast({
-            message: "设置失败，请重试！(" + err.response.data.error + ")",
-            status: "error",
-            delay: 1000
+          .then(() => {
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.remove("loading");
+            this.modal.cancel();
+            this.timeToast({
+              message: "设置成功！",
+              status: "success",
+              delay: 1000
+            });
+          })
+          .catch(err => {
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.remove("loading");
+            this.timeToast({
+              message: "设置失败，请重试！(" + err.response.data.error + ")",
+              status: "error",
+              delay: 1000
+            });
           });
-        });
+      }
     };
-    this.modal.cancel = () => {
-      this.hideMiModal();
+    this.modal.cancel = {
+      handler: () => {
+        this.hideMiModal();
+      }
     };
   }
 };

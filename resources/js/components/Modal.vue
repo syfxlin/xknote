@@ -21,8 +21,20 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-primary" @click="data.confirm()">确认</button>
-        <button class="btn btn-link" @click="data.cancel()">取消</button>
+        <button
+          v-if="data.confirm"
+          class="btn btn-primary"
+          @click="data.confirm.handler()"
+        >
+          {{ data.confirm.content || "确认" }}
+        </button>
+        <button
+          v-if="data.cancel"
+          class="btn btn-link"
+          @click="data.cancel.handler()"
+        >
+          {{ data.cancel.content || "取消" }}
+        </button>
       </div>
     </div>
   </div>

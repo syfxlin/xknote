@@ -108,70 +108,75 @@ export default {
     let uwFileName = this.$watch("data.filename", watch);
     let uwTitle = this.$watch("data.select", watch);
     let uwStorage = this.$watch("data.storage", watch);
-    this.modal.confirm = () => {
-      if (
-        !this.data.filename ||
-        !this.data.title ||
-        !this.data.storage ||
-        this.data.status !== ""
-      ) {
-        return;
-      }
-      document
-        .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-        .classList.add("loading");
-      let d = new Date();
-      let date =
-        d.getFullYear() +
-        "/" +
-        (d.getMonth() + 1) +
-        "/" +
-        d.getDate() +
-        " " +
-        d.getHours() +
-        ":" +
-        d.getMinutes() +
-        ":" +
-        d.getSeconds();
-      let path = this.data.select + "/" + this.data.filename;
-      let noteInfo = {
-        type: "note",
-        path: path,
-        name: this.data.filename,
-        status: "N",
-        note: {
-          title: this.data.title,
-          created_at: date,
-          updated_at: date,
-          author: "",
-          content: ""
+    this.modal.confirm = {
+      content: "新建",
+      handler: () => {
+        if (
+          !this.data.filename ||
+          !this.data.title ||
+          !this.data.storage ||
+          this.data.status !== ""
+        ) {
+          return;
         }
-      };
-      this.openNote({
-        note: noteInfo,
-        source: {
+        document
+          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+          .classList.add("loading");
+        let d = new Date();
+        let date =
+          d.getFullYear() +
+          "/" +
+          (d.getMonth() + 1) +
+          "/" +
+          d.getDate() +
+          " " +
+          d.getHours() +
+          ":" +
+          d.getMinutes() +
+          ":" +
+          d.getSeconds();
+        let path = this.data.select + "/" + this.data.filename;
+        let noteInfo = {
+          type: "note",
           path: path,
-          storage: this.data.storage
-        },
-        mode: "normal",
-        isNew: true
-      });
-      // this.listOperate({
-      //   operate: "add",
-      //   storage: this.data.storage,
-      //   path: path,
-      //   noteInfo: noteInfo
-      // });
-      document
-        .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-        .classList.remove("loading");
-      this.modal.cancel();
+          name: this.data.filename,
+          status: "N",
+          note: {
+            title: this.data.title,
+            created_at: date,
+            updated_at: date,
+            author: "",
+            content: ""
+          }
+        };
+        this.openNote({
+          note: noteInfo,
+          source: {
+            path: path,
+            storage: this.data.storage
+          },
+          mode: "normal",
+          isNew: true
+        });
+        // this.listOperate({
+        //   operate: "add",
+        //   storage: this.data.storage,
+        //   path: path,
+        //   noteInfo: noteInfo
+        // });
+        document
+          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+          .classList.remove("loading");
+        this.modal.cancel();
+      }
     };
-    this.modal.cancel = () => {
-      uwFileName();
-      uwTitle();
-      uwStorage();
-      this.hideMiModal();
+    this.modal.cancel = {
+      handler: () => {
+        uwFileName();
+        uwTitle();
+        uwStorage();
+        this.hideMiModal();
+      }
     };
     this.folderOperate({ operate: "readOnly", folderInfo: null }).then(data => {
       this.setMiModalData({

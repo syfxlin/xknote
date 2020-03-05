@@ -106,66 +106,71 @@ export default {
       }, 500);
     };
     let uwFolder = this.$watch("data.select", watch);
-    this.modal.confirm = () => {
-      if (!this.data.select || this.data.status !== "") {
-        return;
-      }
-      document
-        .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-        .classList.add("loading");
-      let operatePro;
-      if (type === "note") {
-        operatePro = this.noteOperate({
-          operate: "move",
-          storage: this.data.storage,
-          noteInfo: {
-            oldPath: oldPath,
-            newPath: this.data.select + "/" + name
-          }
-        });
-      } else {
-        operatePro = this.folderOperate({
-          operate: "move",
-          folderInfo: {
-            oldPath: oldPath,
-            newPath: this.data.select + "/" + name
-          }
-        });
-      }
-      operatePro
-        .then(() => {
-          document
-            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-            .classList.remove("loading");
-          this.modal.cancel();
-          this.showLoadToast({ message: "重新读取文件夹列表中..." });
-          this.loadCloudFolders()
-            .then(() => {
-              this.hideLoadToast();
-            })
-            .catch(err => {
-              this.hideLoadToast();
+    this.modal.confirm = {
+      content: "移动",
+      handler: () => {
+        if (!this.data.select || this.data.status !== "") {
+          return;
+        }
+        document
+          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+          .classList.add("loading");
+        let operatePro;
+        if (type === "note") {
+          operatePro = this.noteOperate({
+            operate: "move",
+            storage: this.data.storage,
+            noteInfo: {
+              oldPath: oldPath,
+              newPath: this.data.select + "/" + name
+            }
+          });
+        } else {
+          operatePro = this.folderOperate({
+            operate: "move",
+            folderInfo: {
+              oldPath: oldPath,
+              newPath: this.data.select + "/" + name
+            }
+          });
+        }
+        operatePro
+          .then(() => {
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.remove("loading");
+            this.modal.cancel();
+            this.showLoadToast({ message: "重新读取文件夹列表中..." });
+            this.loadCloudFolders()
+              .then(() => {
+                this.hideLoadToast();
+              })
+              .catch(err => {
+                this.hideLoadToast();
+              });
+            this.timeToast({
+              message: "移动成功！",
+              status: "success",
+              delay: 1000
             });
-          this.timeToast({
-            message: "移动成功！",
-            status: "success",
-            delay: 1000
+          })
+          .catch(err => {
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.remove("loading");
+            this.timeToast({
+              message: "移动失败！请重试。(" + err.response.data.error + ")",
+              status: "error",
+              delay: 1000
+            });
           });
-        })
-        .catch(err => {
-          document
-            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-            .classList.remove("loading");
-          this.timeToast({
-            message: "移动失败！请重试。(" + err.response.data.error + ")",
-            status: "error",
-            delay: 1000
-          });
-        });
+      }
     };
-    this.modal.cancel = () => {
-      uwFolder();
-      this.hideMiModal();
+    this.modal.cancel = {
+      handler: () => {
+        uwFolder();
+        this.hideMiModal();
+      }
     };
     this.folderOperate({ operate: "readOnly", folderInfo: null }).then(data => {
       this.setMiModalData({

@@ -36,6 +36,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import zooming from "zooming";
 export default {
   name: "image-item",
   data() {
@@ -102,14 +103,33 @@ export default {
   },
   created() {
     this.modal.title = "图片";
-    this.modal.confirm = () => {
-      this.hideMiModal();
+    this.modal.confirm = {
+      content: "下载所有图片",
+      handler: () => {
+        // TODO: 下载所有图片
+      }
     };
-    this.modal.cancel = () => {
-      this.hideMiModal();
+    this.modal.cancel = {
+      content: "关闭",
+      handler: () => {
+        this.hideMiModal();
+      }
     };
     this.imageOperate({ operate: "getAll" }).then(images => {
       this.$set(this, "images", images);
+      this.$nextTick(() => {
+        new zooming({
+          bgColor: "rgba(0,0,0,0.5)",
+          custemSize: "90%",
+          zIndex: 399,
+          onBeforeOpen(target) {
+            target.classList.add("open");
+          },
+          onClose(target) {
+            target.classList.remove("open");
+          }
+        }).listen(".image-item img");
+      });
     });
   }
 };

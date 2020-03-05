@@ -21,23 +21,23 @@ const state = {
     title: "",
     operate: "",
     data: {},
-    confirm: () => {},
-    cancel: () => {}
+    confirm: null,
+    cancel: null
   },
   miModal: {
     title: "",
     operate: "",
     data: {},
-    confirm: () => {},
-    cancel: () => {}
+    confirm: null,
+    cancel: null
   },
   lgModal: {
     show: false,
     title: "",
     operate: "",
     data: {},
-    confirm: () => {},
-    cancel: () => {}
+    confirm: null,
+    cancel: null
   },
   floatMenu: {
     show: false,

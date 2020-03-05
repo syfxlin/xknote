@@ -92,60 +92,69 @@ export default {
       }, 500);
     };
     let uwFolderName = this.$watch("data.foldername", watch);
-    this.modal.confirm = () => {
-      if (
-        !this.data.foldername ||
-        !this.data.repo ||
-        !this.data.init_or_clone ||
-        this.data.status !== ""
-      ) {
-        return;
-      }
-      document
-        .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-        .classList.add("loading");
-      let git_user = {};
-      if (this.data.git_name && this.data.git_email && this.data.git_password) {
-        git_user = {
-          git_name: this.data.git_name,
-          git_email: this.data.git_email,
-          git_password: this.data.git_password
-        };
-      }
-      this.folderOperate({
-        operate: this.data.init_or_clone === "init" ? "gitInit" : "gitClone",
-        folderInfo: {
-          path: this.data.foldername,
-          repo: this.data.repo,
-          git_user: git_user
+    this.modal.confirm = {
+      content: "克隆",
+      handler: () => {
+        if (
+          !this.data.foldername ||
+          !this.data.repo ||
+          !this.data.init_or_clone ||
+          this.data.status !== ""
+        ) {
+          return;
         }
-      })
-        .then(() => {
-          document
-            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-            .classList.remove("loading");
-          this.modal.cancel();
-          this.timeToast({
-            message: "Git Init或Clone成功！",
-            status: "success",
-            delay: 1000
-          });
+        document
+          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+          .classList.add("loading");
+        let git_user = {};
+        if (
+          this.data.git_name &&
+          this.data.git_email &&
+          this.data.git_password
+        ) {
+          git_user = {
+            git_name: this.data.git_name,
+            git_email: this.data.git_email,
+            git_password: this.data.git_password
+          };
+        }
+        this.folderOperate({
+          operate: this.data.init_or_clone === "init" ? "gitInit" : "gitClone",
+          folderInfo: {
+            path: this.data.foldername,
+            repo: this.data.repo,
+            git_user: git_user
+          }
         })
-        .catch(err => {
-          document
-            .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-            .classList.remove("loading");
-          this.timeToast({
-            message:
-              "Init/Clone失败，请重试！(" + err.response.data.error + ")",
-            status: "error",
-            delay: 1000
+          .then(() => {
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.remove("loading");
+            this.modal.cancel();
+            this.timeToast({
+              message: "Git Init或Clone成功！",
+              status: "success",
+              delay: 1000
+            });
+          })
+          .catch(err => {
+            document
+              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
+              .classList.remove("loading");
+            this.timeToast({
+              message:
+                "Init/Clone失败，请重试！(" + err.response.data.error + ")",
+              status: "error",
+              delay: 1000
+            });
           });
-        });
+      }
     };
-    this.modal.cancel = () => {
-      uwFolderName();
-      this.hideMiModal();
+    this.modal.cancel = {
+      handler: () => {
+        uwFolderName();
+        this.hideMiModal();
+      }
     };
   }
 };

@@ -54,6 +54,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import diff2html from "diff2html";
 export default {
   name: "note-history",
   data() {
@@ -89,7 +90,7 @@ export default {
         commit: log.commit
       }).then(diffs => {
         this.status = "";
-        this.diffHtml = window.Diff2Html.getPrettyHtml(diffs, {
+        this.diffHtml = diff2html.getPrettyHtml(diffs, {
           inputFormat: "diff",
           showFiles: false,
           matching: "lines",
@@ -137,11 +138,12 @@ export default {
   },
   created() {
     this.modal.title = "笔记历史";
-    this.modal.confirm = () => {
-      this.hideLgModal();
-    };
-    this.modal.cancel = () => {
-      this.hideLgModal();
+    this.modal.confirm = null;
+    this.modal.cancel = {
+      content: "关闭",
+      handler: () => {
+        this.hideLgModal();
+      }
     };
     let pathIndex = this.xknoteOpened.path.indexOf("/", 1);
     this.repoPath = this.xknoteOpened.path.substring(0, pathIndex);
