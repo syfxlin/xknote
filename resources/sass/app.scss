@@ -750,6 +750,15 @@ body {
     }
 }
 
+.run-code-btn,
+.reset-code-btn,
+.input-code-btn {
+    padding: 0.3rem !important;
+    font-size: 0.7rem !important;
+    width: 3rem !important;
+    margin-right: 0.3rem !important;
+}
+
 @media screen and (max-width: 991px) {
     .xknote-sidebar {
         position: absolute;

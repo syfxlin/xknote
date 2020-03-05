@@ -7,11 +7,7 @@
         :class="'btn ' + (data.style || '')"
         >{{ data.name }}</a
       >
-      <a
-        href="#"
-        :class="'btn dropdown-toggle ' + (data.style || '')"
-        tabindex="0"
-      >
+      <a :class="'btn dropdown-toggle ' + (data.style || '')" tabindex="0">
         {{ !data.operate ? data.name : "" }}
         <i class="icon icon-caret"></i>
       </a>

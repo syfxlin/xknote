@@ -18,6 +18,10 @@ export default {
         storage: "curr",
         path: path
       });
+
+      let query = { ...window.vm.$route.query };
+      delete query.note;
+      window.vm.$router.replace({ query });
     };
 
     if (

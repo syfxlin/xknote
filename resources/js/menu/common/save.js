@@ -38,6 +38,10 @@ export default {
               "note/setXknoteOpened",
               JSON.parse(JSON.stringify(store.state.note.noteBaseInfo))
             );
+
+            let query = { ...window.vm.$route.query };
+            delete query.note;
+            window.vm.$router.replace({ query });
           }
         }
         if (storage === "local") {
@@ -115,6 +119,9 @@ export default {
               "note/setXknoteOpened",
               JSON.parse(JSON.stringify(store.state.note.noteBaseInfo))
             );
+            let query = { ...window.vm.$route.query };
+            delete query.note;
+            window.vm.$router.replace({ query });
           }
           let localIndex = store.dispatchSync("note/listOperate", {
             operate: "add",
