@@ -514,17 +514,6 @@ body {
     position: fixed;
 }
 
-.read-toc li img {
-    width: 1.05em;
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 0.4em;
-    padding-top: 0.1em;
-}
-.read-toc li a {
-    font-size: 1.05em;
-    vertical-align: middle;
-}
 .hero-body p {
     margin: 0;
 }

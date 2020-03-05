@@ -36,7 +36,7 @@
 
 <script>
 import { mapActions } from "vuex";
-import { getFloatItems } from "../menuItem";
+import { getFloatItems } from "../menu/float/index";
 export default {
   name: "note-item",
   props: ["info", "status", "storage", "mode"],

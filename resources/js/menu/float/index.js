@@ -1,4 +1,4 @@
-import store from "../store";
+import store from "../../store";
 import save from "./save";
 import rename from "./rename";
 import move from "./move";

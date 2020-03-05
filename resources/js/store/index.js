@@ -6,7 +6,6 @@ import db from "./modules/db";
 import tools from "./modules/tools";
 import conf from "./modules/conf";
 import other from "./modules/other";
-import menu from "./modules/menu";
 import user from "./modules/user";
 
 import { dispatchSync } from "./syncActions";
@@ -21,7 +20,6 @@ const store = new Vuex.Store({
     tools,
     conf,
     other,
-    menu,
     user
   }
 });

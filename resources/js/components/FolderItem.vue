@@ -54,7 +54,7 @@
 <script>
 import NoteItem from "./NoteItem";
 import { mapActions } from "vuex";
-import { getFloatItems } from "../menuItem";
+import { getFloatItems } from "../menu/float/index";
 export default {
   name: "folder-item",
   props: ["info", "storage", "mode"],
@@ -65,97 +65,7 @@ export default {
     return {
       idHash: Math.random()
         .toString(36)
-        .substring(2, 8),
-      floatMenuItems: {
-        parent: [
-          {
-            name: "重命名",
-            operate: "rename"
-          },
-          {
-            name: "删除",
-            operate: "delete"
-          },
-          {
-            name: "打包导出",
-            operate: "export"
-          },
-          {
-            name: "divider",
-            content: "新建"
-          },
-          {
-            name: "新建笔记",
-            operate: "createNote"
-          },
-          {
-            name: "新建文件夹",
-            operate: "createFolder"
-          },
-          {
-            name: "divider",
-            content: "Git"
-          },
-          {
-            name: "Push",
-            operate: "gitPush"
-          },
-          {
-            name: "Pull",
-            operate: "gitPull"
-          },
-          {
-            name: "Init Clone",
-            operate: "gitInitClone"
-          },
-          {
-            name: "Push Force",
-            operate: "gitPushForce"
-          },
-          {
-            name: "Git Config",
-            operate: "gitConfig"
-          },
-          {
-            name: "Status",
-            operate: "gitStatus"
-          },
-          {
-            name: "Diff",
-            operate: "gitDiff"
-          }
-        ],
-        children: [
-          {
-            name: "重命名",
-            operate: "rename"
-          },
-          {
-            name: "移动",
-            operate: "move"
-          },
-          {
-            name: "删除",
-            operate: "delete"
-          },
-          {
-            name: "打包导出",
-            operate: "export"
-          },
-          {
-            name: "divider",
-            content: "新建"
-          },
-          {
-            name: "新建笔记",
-            operate: "createNote"
-          },
-          {
-            name: "新建文件夹",
-            operate: "createFolder"
-          }
-        ]
-      }
+        .substring(2, 8)
     };
   },
   computed: {

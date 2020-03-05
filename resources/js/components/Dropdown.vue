@@ -1,24 +1,22 @@
 <template>
-  <div :class="'dropdown' + (right ? ' dropdown-right' : '')">
+  <div :class="'dropdown' + (data.isRight ? ' dropdown-right' : '')">
     <div class="btn-group">
       <a
-        v-if="mainItem.operate"
-        @click="operate(mainItem.operate)"
-        :class="'btn' + (mainItem.style ? ' ' + mainItem.style : '')"
-        >{{ mainItem.name }}</a
+        v-if="data.operate"
+        @click="data.handler()"
+        :class="'btn ' + (data.style || '')"
+        >{{ data.name }}</a
       >
       <a
         href="#"
-        :class="
-          'btn dropdown-toggle' + (mainItem.style ? ' ' + mainItem.style : '')
-        "
+        :class="'btn dropdown-toggle ' + (data.style || '')"
         tabindex="0"
       >
-        {{ !mainItem.operate ? mainItem.name : "" }}
+        {{ !data.operate ? data.name : "" }}
         <i class="icon icon-caret"></i>
       </a>
       <ul class="menu">
-        <li v-for="item in items" :key="item.id" class="menu-item">
+        <li v-for="item in data.items" :key="item.id" class="menu-item">
           <template v-if="item.operate === 'logout'">
             <form action="/logout" method="post">
               <button type="submit">{{ item.name }}</button>
@@ -26,7 +24,7 @@
             </form>
           </template>
           <template v-else-if="item.name !== 'divider'">
-            <a @click="operate(item.operate)">{{ item.name }}</a>
+            <a @click="item.handler()">{{ item.name }}</a>
           </template>
           <template v-else>
             <div class="divider" :data-content="item.content"></div>
@@ -40,7 +38,7 @@
 <script>
 export default {
   name: "dropdown",
-  props: ["items", "mainItem", "operate", "right"],
+  props: ["data"],
   data() {
     return {
       csrfToken: ""

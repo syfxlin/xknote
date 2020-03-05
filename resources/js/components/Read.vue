@@ -54,7 +54,7 @@
             <li
               v-show="xknoteTab === 'toc'"
               v-html="tocHtml"
-              class="read-toc"
+              class="read-toc toc"
             ></li>
             <li v-show="xknoteTab === 'cloud'" class="cloud-tab">
               <folder-item
@@ -139,16 +139,10 @@ export default {
       this.xknoteTab = tabName;
     },
     initTocTree() {
-      // TODO: 新版本XK-Editor需要更改
-      var items = document.querySelectorAll(
-        ".read-toc .toc-img ~ ul,.toc .toc-img ~ ul"
-      );
+      var items = document.querySelectorAll(".toc .toc-icon ~ ul");
       for (let i = 0; i < items.length; i++) {
-        items[i].parentNode.children[0].setAttribute(
-          "src",
-          "/static/svg/minus-square.svg"
-        );
-        items[i].parentNode.children[0].setAttribute(
+        items[i].parentElement.children[0].classList.add("can-active");
+        items[i].parentElement.children[0].setAttribute(
           "onclick",
           "toggleToc(this)"
         );
@@ -191,16 +185,9 @@ export default {
       await this.loadFirstNote("read");
       await this.watchNote();
       if (!window.toggleToc) {
-        // TODO: 新版本XK-Editor需要更改
         window.toggleToc = ele => {
-          var display = ele.nextElementSibling.nextElementSibling.style.display;
-          if (display === "" || display === "block") {
-            ele.nextElementSibling.nextElementSibling.style.display = "none";
-            ele.setAttribute("src", "/static/svg/plus-square.svg");
-          } else {
-            ele.nextElementSibling.nextElementSibling.style.display = "block";
-            ele.setAttribute("src", "/static/svg/minus-square.svg");
-          }
+          ele.classList.toggle("active");
+          ele.nextElementSibling.nextElementSibling.classList.toggle("active");
         };
       }
       if (!window.sta) {

@@ -1,4 +1,4 @@
-import store from "../store";
+import store from "../../store";
 
 export default {
   name: "重命名",
