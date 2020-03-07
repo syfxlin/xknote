@@ -51,9 +51,7 @@ export default {
         if (!this.data.title || !this.data.content || !this.data.post_status) {
           return;
         }
-        document
-          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-          .classList.add("loading");
+        this.modal.confirm.loading = true;
         let data = {
           title: this.data.title,
           content: toHtml(this.data.content, true),
@@ -77,10 +75,8 @@ export default {
           noteInfo: data
         })
           .then(() => {
-            document
-              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-              .classList.remove("loading");
-            this.modal.cancel();
+            this.modal.confirm.loading = false;
+            this.modal.cancel.handler();
             this.timeToast({
               message: "发布成功！",
               status: "success",
@@ -88,9 +84,7 @@ export default {
             });
           })
           .catch(err => {
-            document
-              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-              .classList.remove("loading");
+            this.modal.confirm.loading = false;
             this.timeToast({
               message: "发布失败，请重试！(" + err.response.data.error + ")",
               status: "error",

@@ -101,17 +101,13 @@ export default {
         ) {
           return;
         }
-        document
-          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-          .classList.add("loading");
+        this.modal.confirm.loading = true;
         this.setUser({
           user: this.data
         })
           .then(() => {
-            document
-              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-              .classList.remove("loading");
-            this.modal.cancel();
+            this.modal.confirm.loading = false;
+            this.modal.cancel.handler();
             this.timeToast({
               message: "设置成功！",
               status: "success",
@@ -119,9 +115,7 @@ export default {
             });
           })
           .catch(err => {
-            document
-              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-              .classList.remove("loading");
+            this.modal.confirm.loading = false;
             this.timeToast({
               message: "设置失败，请重试！(" + err.response.data.error + ")",
               status: "error",

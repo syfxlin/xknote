@@ -90,9 +90,7 @@ export default {
         if (!this.data.foldername || this.data.status !== "") {
           return;
         }
-        document
-          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-          .classList.add("loading");
+        this.modal.confirm.loading = true;
         let path = this.data.select + "/" + this.data.foldername;
         this.folderOperate({
           operate: "create",
@@ -101,10 +99,8 @@ export default {
           }
         })
           .then(() => {
-            document
-              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-              .classList.remove("loading");
-            this.modal.cancel();
+            this.modal.confirm.loading = false;
+            this.modal.cancel.handler();
             this.showLoadToast({ message: "重新读取文件夹列表中..." });
             this.loadCloudFolders()
               .then(() => {
@@ -120,9 +116,7 @@ export default {
             });
           })
           .catch(err => {
-            document
-              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-              .classList.remove("loading");
+            this.modal.confirm.loading = false;
             this.timeToast({
               message:
                 "创建文件夹失败！请重试。(" + err.response.data.error + ")",

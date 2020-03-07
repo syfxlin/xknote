@@ -23,14 +23,22 @@
       <div class="modal-footer">
         <button
           v-if="data.confirm"
-          class="btn btn-primary"
+          :class="
+            'btn btn-primary' +
+              (data.confirm.disabled ? ' disabled' : '') +
+              (data.confirm.loading ? ' loading' : '')
+          "
           @click="data.confirm.handler()"
         >
           {{ data.confirm.content || "确认" }}
         </button>
         <button
           v-if="data.cancel"
-          class="btn btn-link"
+          :class="
+            'btn btn-link' +
+              (data.confirm.disabled ? ' disabled' : '') +
+              (data.confirm.loading ? ' loading' : '')
+          "
           @click="data.cancel.handler()"
         >
           {{ data.cancel.content || "取消" }}

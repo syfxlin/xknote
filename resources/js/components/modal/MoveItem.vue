@@ -112,9 +112,7 @@ export default {
         if (!this.data.select || this.data.status !== "") {
           return;
         }
-        document
-          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-          .classList.add("loading");
+        this.modal.confirm.loading = true;
         let operatePro;
         if (type === "note") {
           operatePro = this.noteOperate({
@@ -136,10 +134,8 @@ export default {
         }
         operatePro
           .then(() => {
-            document
-              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-              .classList.remove("loading");
-            this.modal.cancel();
+            this.modal.confirm.loading = false;
+            this.modal.cancel.handler();
             this.showLoadToast({ message: "重新读取文件夹列表中..." });
             this.loadCloudFolders()
               .then(() => {
@@ -155,9 +151,7 @@ export default {
             });
           })
           .catch(err => {
-            document
-              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-              .classList.remove("loading");
+            this.modal.confirm.loading = false;
             this.timeToast({
               message: "移动失败！请重试。(" + err.response.data.error + ")",
               status: "error",

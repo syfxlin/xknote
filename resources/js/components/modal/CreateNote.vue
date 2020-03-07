@@ -119,9 +119,7 @@ export default {
         ) {
           return;
         }
-        document
-          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-          .classList.add("loading");
+        this.modal.confirm.loading = true;
         let d = new Date();
         let date =
           d.getFullYear() +
@@ -164,10 +162,8 @@ export default {
         //   path: path,
         //   noteInfo: noteInfo
         // });
-        document
-          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-          .classList.remove("loading");
-        this.modal.cancel();
+        this.modal.confirm.loading = false;
+        this.modal.cancel.handler();
       }
     };
     this.modal.cancel = {

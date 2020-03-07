@@ -103,9 +103,7 @@ export default {
         ) {
           return;
         }
-        document
-          .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-          .classList.add("loading");
+        this.modal.confirm.loading = true;
         let git_user = {};
         if (
           this.data.git_name &&
@@ -127,10 +125,8 @@ export default {
           }
         })
           .then(() => {
-            document
-              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-              .classList.remove("loading");
-            this.modal.cancel();
+            this.modal.confirm.loading = false;
+            this.modal.cancel.handler();
             this.timeToast({
               message: "Git Init或Clone成功！",
               status: "success",
@@ -138,9 +134,7 @@ export default {
             });
           })
           .catch(err => {
-            document
-              .querySelector(".xknote-lg-modal .modal-footer .btn-primary")
-              .classList.remove("loading");
+            this.modal.confirm.loading = false;
             this.timeToast({
               message:
                 "Init/Clone失败，请重试！(" + err.response.data.error + ")",
