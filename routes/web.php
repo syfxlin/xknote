@@ -71,6 +71,7 @@ Route::prefix('api')
         Route::get('/folders/exist', 'FolderController@exist');
 
         Route::get('/export', 'FolderController@export');
+        Route::get('/export/images', 'ImageController@export');
 
         Route::get('/notes', 'NoteController@get');
         Route::post('/notes', 'NoteController@create');

@@ -67,4 +67,13 @@ class ImageController extends Controller
         $this->model->delete($request->name, $request->user()->id);
         return ['error' => false];
     }
+
+    public function export(Request $request)
+    {
+        $id = $request->user()->id;
+        $zip_path = sys_get_temp_dir() . '/uid_' . $id . '_img.zip';
+        $path = storage_path() . '/app/public/images/uid_' . $id . '/';
+        $this->model->zip($path, $zip_path);
+        return response()->download($zip_path);
+    }
 }

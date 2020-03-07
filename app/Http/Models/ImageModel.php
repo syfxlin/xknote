@@ -2,6 +2,7 @@
 
 namespace App\Http\Models;
 
+use Chumper\Zipper\Zipper;
 use Illuminate\Support\Facades\Storage;
 
 class ImageModel
@@ -25,6 +26,19 @@ class ImageModel
     public function delete($name, $id)
     {
         Storage::delete('/public/images/uid_' . $id . '/' . $name);
+        return 200;
+    }
+
+    public function zip($path, $zip_path)
+    {
+        if (file_exists($zip_path)) {
+            unlink($zip_path);
+        }
+        $zipper = new Zipper();
+        $zipper
+            ->make($zip_path)
+            ->add($path)
+            ->close();
         return 200;
     }
 }

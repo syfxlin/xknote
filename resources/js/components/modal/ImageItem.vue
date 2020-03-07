@@ -106,7 +106,7 @@ export default {
     this.modal.confirm = {
       content: "下载所有图片",
       handler: () => {
-        // TODO: 下载所有图片
+        window.location.href = "/api/export/images";
       }
     };
     this.modal.cancel = {
