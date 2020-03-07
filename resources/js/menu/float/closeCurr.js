@@ -34,12 +34,18 @@ export default {
       store.dispatch("tools/showSmModal", {
         title: "关闭",
         operate: "该文件未保存，是否关闭该文件？(此操作不可逆)",
-        confirm: function confirm() {
-          closeCurr();
-          store.dispatch("tools/hideSmModal", null);
+        confirm: {
+          content: "确认",
+          handler() {
+            closeCurr();
+            store.dispatch("tools/hideSmModal", null);
+          }
         },
-        cancel: function cancel() {
-          store.dispatch("tools/hideSmModal", null);
+        cancel: {
+          content: "取消",
+          handler() {
+            store.dispatch("tools/hideSmModal", null);
+          }
         }
       });
     } else {
