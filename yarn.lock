@@ -7302,10 +7302,10 @@ ws@^6.2.1:
   dependencies:
     async-limiter "~1.0.0"
 
-xkeditor@1.5.3:
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/xkeditor/-/xkeditor-1.5.3.tgz#ce542fc15933bbb861b4479ef8968c177da288b6"
-  integrity sha512-HgG0PERGXjqA67N7GhoeZQ6PVx8LwZyepcwhCATZwczrDU5g4HHvn2VaI11RtN6BX0amW4MMidYDzYy/IH1Zrw==
+xkeditor@1.5.4:
+  version "1.5.4"
+  resolved "https://registry.npmjs.org/xkeditor/-/xkeditor-1.5.4.tgz#a248a6a33c12afb0de9e38691febe1d6ed5a0f83"
+  integrity sha512-dYBtF7OrB9zRRvd0jt4UveWtfwMBKoQxCIAhJlJN4wP4YNojLU749Y0GKtOcmeUM+6/s9/Ctg3fCWEqJodFnjA==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^1.2.25"
     "@fortawesome/free-solid-svg-icons" "^5.11.2"
