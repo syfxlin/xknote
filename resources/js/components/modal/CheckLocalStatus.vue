@@ -52,11 +52,21 @@ export default {
   name: "check-local-status",
   computed: {
     ...mapState({
-      data: state => state.tools.miModal.data
+      data: state => state.tools.miModal.data,
+      modal: state => state.tools.miModal
     })
   },
+  created() {
+    this.modal.confirm = null;
+    this.modal.cancel = {
+      handler: () => {
+        this.hideMiModal();
+      }
+    };
+  },
   methods: {
-    ...mapActions("other", ["checkLocalOperate"])
+    ...mapActions("other", ["checkLocalOperate"]),
+    ...mapActions("tools", ["hideMiModal"])
   }
 };
 </script>

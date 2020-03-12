@@ -36,8 +36,8 @@
           v-if="data.cancel"
           :class="
             'btn btn-link' +
-              (data.confirm.disabled ? ' disabled' : '') +
-              (data.confirm.loading ? ' loading' : '')
+              (data.cancel.disabled ? ' disabled' : '') +
+              (data.cancel.loading ? ' loading' : '')
           "
           @click="data.cancel.handler()"
         >
